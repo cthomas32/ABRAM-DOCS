@@ -80,18 +80,30 @@ mode: custom
     <Columns cols={3}>
       <Card
         horizontal
-        icon="rocket"
+        icon="compass"
         iconType="light"
-        title="Getting started & account"
-        href="/getting-started"
+        title="Introduction & Concepts"
+        href="/user-guide/0.0-agent-and-human-navigation-guide"
       >
-        Account setup, workspace, billing, and integrations
+        Navigation guide, glossary, order of operations, and workspace memory
       </Card>
-      <Card horizontal icon="book-open" iconType="light" title="Product guides" href="/product">
-        Interface, projects, editor, automation, and workflows
+      <Card
+        horizontal
+        icon="users"
+        iconType="light"
+        title="Setup & Team"
+        href="/user-guide/1.1-signing-in-and-onboarding"
+      >
+        Signing in, profile settings, organization setup, and team permissions
       </Card>
-      <Card horizontal icon="life-buoy" iconType="light" title="Support & policies" href="/support">
-        Help, status, troubleshooting, data, and policies
+      <Card
+        horizontal
+        icon="clipboard-list"
+        iconType="light"
+        title="Project Intake & Scoping"
+        href="/user-guide/2.1-ai-brief-analyzer"
+      >
+        AI brief analyzer, manual project creation, and custom intake forms
       </Card>
     </Columns>
   </div>
@@ -101,60 +113,78 @@ mode: custom
   <div className="flex flex-col gap-4">
     <h3 className="text-base font-medium text-gray-900 dark:text-gray-50">All guides</h3>
     <Columns cols={3}>
-    <Card
-      title="Workspace"
-      icon="users"
-      iconType="light"
-      href="/getting-started/workspace"
-      cta="3 articles"
-    >
-      Invites, roles, and organization settings
-    </Card>
-    <Card
-      title="Billing & plans"
-      icon="credit-card"
-      iconType="light"
-      href="/getting-started/billing"
-      cta="3 articles"
-    >
-      Compare plans, upgrades, and invoices
-    </Card>
-    <Card
-      title="Developer integrations"
-      icon="code-xml"
-      iconType="light"
-      href="/getting-started/integrations/developer"
-      cta="3 articles"
-    >
-      OAuth apps, webhooks, and API keys
-    </Card>
-    <Card
-      title="Projects"
-      icon="folder-kanban"
-      iconType="light"
-      href="/product/projects"
-      cta="2 articles"
-    >
-      Create projects and archive or restore them
-    </Card>
-    <Card
-      title="Troubleshooting"
-      icon="wrench"
-      iconType="light"
-      href="/support/troubleshooting"
-      cta="2 articles"
-    >
-      Login issues and performance troubleshooting
-    </Card>
-    <Card
-      title="Legal & compliance"
-      icon="scale"
-      iconType="light"
-      href="/support/legal"
-      cta="7 articles"
-    >
-      Terms of service, privacy & GDPR, and regional specifics
-    </Card>
+      <Card
+        title="Introduction & Concepts"
+        icon="compass"
+        iconType="light"
+        href="/user-guide/0.0-agent-and-human-navigation-guide"
+        cta="5 articles"
+      >
+        Navigation guide, glossary, order of operations, AI capabilities, and workspace memory.
+      </Card>
+      <Card
+        title="Setup & Team"
+        icon="users"
+        iconType="light"
+        href="/user-guide/1.1-signing-in-and-onboarding"
+        cta="4 articles"
+      >
+        Signing in, user profiles, organization setup, and team permissions.
+      </Card>
+      <Card
+        title="Project Intake & Scoping"
+        icon="clipboard-list"
+        iconType="light"
+        href="/user-guide/2.1-ai-brief-analyzer"
+        cta="3 articles"
+      >
+        AI brief analyzer, manual project creation, and custom intake forms.
+      </Card>
+      <Card
+        title="Projects & Resources"
+        icon="folder-kanban"
+        iconType="light"
+        href="/user-guide/3.1-master-project-detail-overview"
+        cta="5 articles"
+      >
+        Master project overview, work packages, work orders, task lists, and equipment.
+      </Card>
+      <Card
+        title="Crewing & Scheduling"
+        icon="calendar"
+        iconType="light"
+        href="/user-guide/4.1-internal-talent-search"
+        cta="6 articles"
+      >
+        Talent search, AI matchmaking, crew invites, utilization calendar, and sync.
+      </Card>
+      <Card
+        title="Payments & Financials"
+        icon="credit-card"
+        iconType="light"
+        href="/user-guide/5.1-freelancer-stripe-setup"
+        cta="4 articles"
+      >
+        Freelancer Stripe setup, invoicing, billing ledger, and payments.
+      </Card>
+      <Card
+        title="Integrations & Collaboration"
+        icon="plug"
+        iconType="light"
+        href="/user-guide/6.1-slack-notifications"
+        cta="3 articles"
+      >
+        Slack notifications, Frameio integration, and file sharing.
+      </Card>
+      <Card
+        title="FAQs & Support"
+        icon="help-circle"
+        iconType="light"
+        href="/user-guide/7.1-faqs-and-troubleshooting"
+        cta="1 article"
+      >
+        Frequently asked questions and troubleshooting guides.
+      </Card>
     </Columns>
   </div>
 
@@ -163,46 +193,46 @@ mode: custom
   <div className="flex flex-col gap-2">
     <h3 className="text-base font-medium text-gray-900 dark:text-gray-50">Suggested articles</h3>
     <p className="text-base text-gray-600 dark:text-gray-400">
-      Popular starting points from the Help Center
+      Popular starting points from the User Guide
     </p>
   </div>
 
   <Columns cols={2} className="suggested-articles">
     <Card
-      title="Quickstart: get set up in under 15 minutes"
-      icon="timer"
+      title="Order of Operations Guide"
+      icon="list-todo"
       iconType="light"
-      href="/getting-started/quickstart"
+      href="/user-guide/0.2-order-of-operations"
       cta="Read article"
     >
-      A fast path from signup to first project: invites, roles, and your first integration.
+      Chronological step-by-step workflow tracing a project from intake to final payouts.
     </Card>
     <Card
-      title="Conditions and branches"
-      icon="git-branch"
+      title="AI Capabilities & Co-pilot"
+      icon="sparkles"
       iconType="light"
-      href="/product/automation/workflows/conditions-branches"
+      href="/user-guide/0.3-ai-capabilities-and-copilot"
       cta="Read article"
     >
-      Model conditional paths and merge strategies in workflows.
+      Details of Brief Intelligence, crew suggestions, resume importer, and chatbot.
     </Card>
     <Card
-      title="Privacy policy"
-      icon="scroll-text"
+      title="Team Management Dashboard"
+      icon="layout"
       iconType="light"
-      href="/support/legal/privacy/privacy-policy"
+      href="/user-guide/4.6-team-management-dashboard"
       cta="Read article"
     >
-      Demo privacy policy for this help center.
+      Roster scheduling, capacity planning, conflict detection, and team templates.
     </Card>
     <Card
-      title="Connect your CRM"
-      icon="building-2"
+      title="Invoicing & Payouts"
+      icon="receipt"
       iconType="light"
-      href="/getting-started/integrations/connect-crm"
+      href="/user-guide/5.2-invoicing-and-payouts"
       cta="Read article"
     >
-      Link Salesforce or HubSpot through partner connectors or a custom sync strategy.
+      Submitting invoices for approval and tracking Stripe checkout flows.
     </Card>
   </Columns>
 </div>
