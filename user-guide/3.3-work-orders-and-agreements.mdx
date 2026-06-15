@@ -60,8 +60,8 @@ To prevent double-booking crew or equipment, ABRAM performs real-time checks. Th
 * **No Save Block**: Personnel conflicts do not block you from saving the work order; they serve as informational warnings so you can coordinate schedule adjustments.
 
 ### Resource & Kit Conflicts (Hard Blocks)
-* **Hard Database Block**: Physical resource bookings (gear, rooms, vehicles, or kits) are strictly enforced by database rules.
-* **Double-Booking Prevention**: If you attempt to save or confirm a work order that allocates a resource whose quantity is fully booked elsewhere during that timeframe, the database actively throws a hard validation error: 
+* **Strict Booking Lockout**: Physical resource bookings (gear, rooms, vehicles, or kits) are strictly enforced by the system.
+* **Double-Booking Prevention**: If you attempt to save or confirm a work order that allocates a resource whose quantity is fully booked elsewhere during that timeframe, the system actively throws a hard validation error: 
   `Insufficient resource availability for "[Resource Name]" during requested dates.`
 * **Validation Enforcement**: You will be blocked from saving the work order until you resolve the resource double-booking, either by selecting a different piece of gear or shifting the booking timeline.
 
@@ -72,20 +72,20 @@ To prevent double-booking crew or equipment, ABRAM performs real-time checks. Th
 ABRAM synchronizes your physical inventory, kit assignments, and project locations with your active work orders.
 
 ### Kit Expansion & Group Syncing
-* **Kit Expansion**: When you assign a pre-assembled kit (e.g., a "DSMC2 Camera Kit") to a work order, the system automatically expands the kit into its individual constituent items in the database.
+* **Kit Expansion**: When you assign a pre-assembled kit (e.g., a "DSMC2 Camera Kit") to a work order, the system automatically expands the kit into its individual constituent items.
 * **Unified Group Rescheduling**: All allocations within a kit are linked. If you reschedule the work order or change booking dates, the system automatically shifts or deletes all constituent items as a unified group, preventing kits from being fragmented.
 * **Location Auto-Sync**: If you allocate a physical room or studio resource (e.g., "Stage A") to a work order, the platform automatically syncs that resource's location address to the work order's main **Location** field.
 
 ### Work Order Status Cascade
-The database automatically syncs the statuses of linked personnel and resource bookings to the parent Work Order's status:
+The system automatically syncs the statuses of linked personnel and resource bookings to the parent Work Order's status:
 
 | Work Order Status | Linked Resource Booking Status | Crew Booking Status | Operational Behavior |
 | :--- | :--- | :--- | :--- |
-| **Draft** / **On Hold** | `reserved` | Hold | Resources are blocked out; crew calendars show tentative holds. |
-| **Confirmed** / **Pending** | `reserved` | Pending Invite / Hold | Roster invitations are sent; gear remains blocked out. |
-| **In Progress** | `in_use` | Active | Crew is actively checked in; resources are marked in-use. |
-| **Wrapped** / **Completed** | `returned` | Completed | Crew completed assignment; gear is released back to inventory. |
-| **Cancelled** | `cancelled` | Cancelled | Gear and calendar hours are freed up immediately. |
+| **Draft** / **On Hold** | Reserved | Hold | Resources are blocked out; crew calendars show tentative holds. |
+| **Confirmed** / **Pending** | Reserved | Pending Invite / Hold | Roster invitations are sent; gear remains blocked out. |
+| **In Progress** | In Use | Active | Crew is actively checked in; resources are marked in-use. |
+| **Wrapped** / **Completed** | Returned | Completed | Crew completed assignment; gear is released back to inventory. |
+| **Cancelled** | Cancelled | Cancelled | Gear and calendar hours are freed up immediately. |
 
 ---
 

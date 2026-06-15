@@ -22,12 +22,36 @@ function getDocContent(slug: string[]) {
   const slugStr = slug.join("/");
   const contentDir = process.cwd();
 
-  const possiblePaths = [
-    path.join(contentDir, `${slugStr}.mdx`),
-    path.join(contentDir, slugStr, "page.mdx"),
-    path.join(contentDir, `${slugStr}.md`),
-    path.join(contentDir, slugStr, "page.md"),
-  ];
+  // Statically scope the path based on the root directory of the slug
+  // to prevent Next.js from tracing the entire project directory.
+  const rootDir = slug[0];
+  const remainingSlug = slug.slice(1).join("/");
+
+  let possiblePaths: string[] = [];
+  if (rootDir === "user-guide") {
+    const baseDir = path.join(contentDir, "user-guide");
+    possiblePaths = [
+      path.join(baseDir, `${remainingSlug}.mdx`),
+      path.join(baseDir, remainingSlug, "page.mdx"),
+      path.join(baseDir, `${remainingSlug}.md`),
+      path.join(baseDir, remainingSlug, "page.md"),
+    ];
+  } else if (rootDir === "content") {
+    const baseDir = path.join(contentDir, "content");
+    possiblePaths = [
+      path.join(baseDir, `${remainingSlug}.mdx`),
+      path.join(baseDir, remainingSlug, "page.mdx"),
+      path.join(baseDir, `${remainingSlug}.md`),
+      path.join(baseDir, remainingSlug, "page.md"),
+    ];
+  } else {
+    possiblePaths = [
+      path.join(/*turbopackIgnore: true*/ contentDir, `${slugStr}.mdx`),
+      path.join(/*turbopackIgnore: true*/ contentDir, slugStr, "page.mdx"),
+      path.join(/*turbopackIgnore: true*/ contentDir, `${slugStr}.md`),
+      path.join(/*turbopackIgnore: true*/ contentDir, slugStr, "page.md"),
+    ];
+  }
 
   for (const p of possiblePaths) {
     if (fs.existsSync(p)) {
