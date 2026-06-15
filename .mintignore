@@ -5,3 +5,7 @@
 # Draft content
 drafts/
 *.draft.mdx
+
+# Backup of previous docs (not part of published site)
+_mintlify_backup/
+
