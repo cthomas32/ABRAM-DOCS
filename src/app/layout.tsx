@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Archivo } from "next/font/google";
 import "./globals.css";
+import "lenis/dist/lenis.css";
 import AppLayout from "@/components/AppLayout";
+import LenisProvider from "@/components/LenisProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +37,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} h-full antialiased dark`}>
       <body className="min-h-full bg-background-base text-foreground font-sans">
-        <AppLayout>{children}</AppLayout>
+        <LenisProvider>
+          <AppLayout>{children}</AppLayout>
+        </LenisProvider>
       </body>
     </html>
   );

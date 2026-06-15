@@ -272,6 +272,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           <div 
             ref={resultsContainerRef}
             className="max-h-[60vh] overflow-y-auto p-2"
+            data-lenis-prevent
           >
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-12 gap-3 text-neutral-400">

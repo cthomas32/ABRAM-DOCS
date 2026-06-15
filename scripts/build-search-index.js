@@ -23,43 +23,11 @@ function getFiles(dir, ext) {
   return results;
 }
 
-// Function to copy backup files to content
-function ensureContentDir(contentDir, backupDir) {
-  if (!fs.existsSync(contentDir)) {
-    fs.mkdirSync(contentDir, { recursive: true });
-  }
-  
-  // Check if content dir is empty
-  const files = fs.readdirSync(contentDir);
-  if (files.length === 0 && fs.existsSync(backupDir)) {
-    console.log('Populating content folder from _mintlify_backup...');
-    copyRecursiveSync(backupDir, contentDir);
-  }
-}
 
-function copyRecursiveSync(src, dest) {
-  const exists = fs.existsSync(src);
-  const stats = exists && fs.statSync(src);
-  const isDirectory = exists && stats.isDirectory();
-  if (isDirectory) {
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest, { recursive: true });
-    }
-    fs.readdirSync(src).forEach((childItemName) => {
-      if (childItemName === 'docs.json' || childItemName === 'logo' || childItemName === 'search.js') {
-        return;
-      }
-      copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
-    });
-  } else {
-    if (src.endsWith('.mdx') || src.endsWith('.md')) {
-      fs.copyFileSync(src, dest);
-    }
-  }
-}
 
 function stripMdx(content) {
-  let clean = content.replace(/^import\s+[\s\S]*?\s+from\s+['"].*?['"];?/gm, '');
+  let clean = content.replace(/<AgentOnly(?:\s+[^>]*?)?>[\s\S]*?<\/AgentOnly>/gi, '');
+  clean = clean.replace(/^import\s+[\s\S]*?\s+from\s+['"].*?['"];?/gm, '');
   clean = clean.replace(/^export\s+[\s\S]*?;/gm, '');
   clean = clean.replace(/<[A-Z][a-zA-Z0-9]*\b[^>]*>([\s\S]*?)<\/[A-Z][a-zA-Z0-9]*>/g, '$1');
   clean = clean.replace(/<[a-z][a-zA-Z0-9]*\b[^>]*>([\s\S]*?)<\/[a-z][a-zA-Z0-9]*>/g, '$1');
@@ -78,16 +46,11 @@ function stripMdx(content) {
 
 function generateNavigationIndex(contentDir, projectDir) {
   const docsJsonPath = path.join(projectDir, 'docs.json');
-  const backupDocsJsonPath = path.join(projectDir, '_mintlify_backup', 'docs.json');
   
   let docsJson = null;
   
   // Read docs.json
   if (fs.existsSync(docsJsonPath)) {
-    docsJson = JSON.parse(fs.readFileSync(docsJsonPath, 'utf-8'));
-  } else if (fs.existsSync(backupDocsJsonPath)) {
-    // Copy docs.json to project root if it doesn't exist
-    fs.copyFileSync(backupDocsJsonPath, docsJsonPath);
     docsJson = JSON.parse(fs.readFileSync(docsJsonPath, 'utf-8'));
   }
   
@@ -140,6 +103,7 @@ function generateNavigationIndex(contentDir, projectDir) {
           path: pagePath,
           title,
           group: groupName,
+          groupIcon: groupObj.icon || 'book-open',
           product: productName
         });
       });
@@ -157,6 +121,7 @@ function generateNavigationIndex(contentDir, projectDir) {
         path: '',
         title: data.sidebarTitle || data.title || 'Introduction',
         group: 'Introduction',
+        groupIcon: 'book-open',
         product: docsJson.name || 'Help Center'
       });
     } catch (e) {
@@ -171,44 +136,50 @@ function main() {
   console.log('Starting search index generation...');
   
   const projectDir = path.resolve(__dirname, '..');
-  const contentDir = path.join(projectDir, 'content');
   const publicDir = path.join(projectDir, 'public');
   const utilsDir = path.join(projectDir, 'src/utils');
   
-  // Ensure content directory is populated
-  ensureContentDir(contentDir, path.join(projectDir, '_mintlify_backup'));
-  
-  if (!fs.existsSync(contentDir)) {
-    console.error(`Content directory not found at: ${contentDir}`);
-    process.exit(1);
-  }
-  
-  // Find all .mdx and .md files recursively in content directory
-  const files = getFiles(contentDir, ['.mdx', '.md']);
-  console.log(`Found ${files.length} markdown files to index.`);
+  // Generate navigation data first from the project root
+  console.log('Generating navigation data...');
+  const navPages = generateNavigationIndex(projectDir, projectDir);
   
   const indexRecords = [];
   
-  files.forEach((filePath) => {
-    try {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      const { data, content } = matter(fileContent);
-      
-      const relativePath = path.relative(contentDir, filePath);
-      const slug = relativePath.replace(/\\/g, '/').replace(/\.mdx?$/, '');
-      
-      const title = data.title || path.basename(filePath, path.extname(filePath));
-      const description = data.description || '';
-      const cleanContent = stripMdx(content);
-      
-      indexRecords.push({
-        slug,
-        title,
-        description,
-        content: cleanContent
-      });
-    } catch (err) {
-      console.error(`Error parsing ${filePath}:`, err);
+  navPages.forEach((page) => {
+    let filePath = '';
+    if (page.path === '') {
+      filePath = path.join(projectDir, 'index.mdx');
+    } else {
+      const mdxPath = path.join(projectDir, `${page.path}.mdx`);
+      const mdPath = path.join(projectDir, `${page.path}.md`);
+      if (fs.existsSync(mdxPath)) {
+        filePath = mdxPath;
+      } else if (fs.existsSync(mdPath)) {
+        filePath = mdPath;
+      }
+    }
+    
+    if (filePath && fs.existsSync(filePath)) {
+      try {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const { data, content } = matter(fileContent);
+        
+        const slug = page.path === '' ? 'index' : page.path;
+        const title = data.title || page.title;
+        const description = data.description || '';
+        const cleanContent = stripMdx(content);
+        
+        indexRecords.push({
+          slug,
+          title,
+          description,
+          content: cleanContent
+        });
+      } catch (err) {
+        console.error(`Error parsing ${filePath}:`, err);
+      }
+    } else {
+      console.warn(`Warning: File for page ${page.path || 'index'} not found!`);
     }
   });
   
@@ -219,10 +190,6 @@ function main() {
   const outputPath = path.join(publicDir, 'search-index.json');
   fs.writeFileSync(outputPath, JSON.stringify(indexRecords, null, 2), 'utf-8');
   console.log(`Successfully generated search index with ${indexRecords.length} records at ${outputPath}`);
-  
-  // Generate navigation data
-  console.log('Generating navigation data...');
-  const navPages = generateNavigationIndex(contentDir, projectDir);
   
   if (!fs.existsSync(utilsDir)) {
     fs.mkdirSync(utilsDir, { recursive: true });

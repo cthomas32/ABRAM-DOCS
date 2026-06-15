@@ -1,0 +1,167 @@
+---
+title: 'Section 0.2: Order of Operations Guide'
+sidebarTitle: Order of Operations Guide
+description: >-
+  This guide maps out the complete, chronological, step-by-step order of
+  operations for using the ABRAM platform. Tracing a creative project from its
+  init...
+keywords:
+  - ABRAM
+  - ABRAM Network
+  - stripe
+  - milestone
+  - freelancer
+  - producer
+  - calendar
+  - intake
+  - ai
+  - brief
+  - work package
+  - workflow
+  - payout
+  - invoice
+  - collaboration
+  - crew
+  - scheduling
+  - onboarding
+  - billing
+  - ledger
+  - matchmaking
+  - rsvp
+  - order
+  - operations
+---
+# Section 0.2: Order of Operations Guide
+
+This guide maps out the complete, chronological, step-by-step order of operations for using the ABRAM platform. Tracing a creative project from its initial intake to final freelancer payouts, this reference is designed for producers, agencies, production managers, and freelancers.
+
+---
+
+## 🗺️ Chronological Workflow Overview
+
+<StageFlowchart stages={[
+  {
+    title: "1. Scoping",
+    nodes: [
+      { id: "step1", title: "Intake and Scoping", description: "AI or Manual Scoping of project details", icon: "FileText", type: "purple" },
+      { id: "step2", title: "Work Packages and Milestones", description: "Define phases and payment checkpoints", icon: "Package" }
+    ]
+  },
+  {
+    title: "2. Booking",
+    nodes: [
+      { id: "step3", title: "Role Allocations", description: "Match roster to role slots", icon: "Users" },
+      { id: "step4", title: "Invitations and RSVP", description: "Crew accepts holds", icon: "Mail", type: "warning" },
+      { id: "step5", title: "Work Orders and Agreements", description: "Pre-authorize card and lock PO", icon: "Briefcase" }
+    ]
+  },
+  {
+    title: "3. Operations",
+    nodes: [
+      { id: "step6", title: "Calendar Bookings", description: "Lock capacity and sync schedules", icon: "Calendar" },
+      { id: "step7", title: "Task Tracking and Frame.io", description: "Execute deliverables and review assets", icon: "Activity" }
+    ]
+  },
+  {
+    title: "4. Payouts",
+    nodes: [
+      { id: "step8", title: "Timesheet Verification", description: "Approve hours logged", icon: "Clock", type: "warning" },
+      { id: "step9", title: "Invoicing and Stripe Connect", description: "Transfer funds to freelancer", icon: "CreditCard" },
+      { id: "step10", title: "Payout Completed", description: "Ledger reconciled", icon: "ShieldCheck", type: "success", badge: "DONE" }
+    ]
+  }
+]} />
+
+---
+
+## 1. Intake & Scoping
+
+Every project on ABRAM begins with intake, setting up the foundation for scheduling, budgeting, and crew allocations. Producers can initiate a project blueprint using one of two paths:
+
+* **Brief Intelligence (AI-driven Path)**: Producers can upload a creative brief document (PDF, Word, or text files up to 5 MB) or write a project description (minimum 100 characters). The system's intelligence engine automatically extracts the project title, description, work packages, roles, deliverables, dates, technical specs, and a estimated budget range.
+  * **Confidence Gate**: If the extraction confidence falls below **70%**, the system pauses at a **Clarifying Review Gate** to present 3–5 targeted questions. Answering these questions refines the scope before saving the project as a **Planning** draft.
+* **Manual Project Creation (Structured Path)**: Alternatively, producers can use a manual wizard to select pre-designed project archetypes (e.g., *Filmmaker*, *Marketing*, *Creative* templates) and allocate initial budget limits manually.
+
+---
+
+## 2. Work Packages & Milestones
+
+Once the project is initialized, its scope is structured into a hierarchical hierarchy of milestones and work packages.
+
+* **Work Packages**: The project is split into logical phases (e.g., *Pre-Production*, *Production*, *Post-Production*, *Coordination*). Each package progresses through a strict status lifecycle:
+  `Planning` ──> `Matching` ──> `Staffed` ──> `In Progress` ──> `Completed` (or `Cancelled`).
+* **Payment Milestones**: Major checkpoints (e.g., "Script Lock," "Rough Cut Approval," "Final Handover") are established. Producers can tie these checkpoints to percentage-based payment releases (e.g., releasing 25% of the package budget upon script approval). When a milestone is completed, the system unlocks that portion of the budget for invoice generation.
+* **Deliverables**: Actionable creative outputs (files, URLs, or delivery dates) are defined with estimated hours, priority levels, and revision rounds.
+
+---
+
+## 3. Role Allocations & Matchmaking
+
+After defining what needs to be produced and when, the platform identifies the talent required to make it happen.
+
+* **Role Slots**: Producers define specific roles within each Work Package (e.g., *Director of Photography*, *Lead Editor*, *Sound Designer*).
+* **Matchmaking Engine**: The system matches roles to candidates based on specialized skills, day/hourly rates, historical project ratings, and current capacity.
+* **Search Filters**: Managers can look within their private company roster (internal team registry), the external freelancer marketplace, or run a hybrid search.
+
+---
+
+## 4. Invitations & Crew RSVP
+
+Once candidates are identified, managers invite crew members to join the project.
+
+* **Direct Invitations**: Managers select roster members and dispatch invites directly, setting their role slots and rates.
+* **AI Chatbot Invitations**: Managers can ask the chatbot to search the web for external talent (e.g., *"Find food photographers in Chicago"*). The chatbot drafts an invitation action plan. Once the manager clicks **Approve**, the chatbot dispatches email invites. (External invites are rate-limited to 10 per day to prevent spam).
+* **Public RSVP**: External freelancers receive a secure link to a **Public RSVP Screen** showing project details, dates, locations, rates, and guidelines. They can click **Accept**, **Decline**, or **Tentative** without needing to log in.
+* **Crew Assembly**: Under the Crew Assembly dashboard, managers track RSVP statuses in real-time. If an invite is declined, the **Replacement Finder** scans the roster and suggests immediate alternatives.
+
+---
+
+## 5. Work Orders & Agreements
+
+A confirmed RSVP leads to the formalization of the contract and securing of funds.
+
+* **The Work Order**: Serves as the agreement container. It locks down shoot days, campaign sprints, or post-production timelines, specifying rates, locations, guidelines, and resource bookings (like cameras or vehicles).
+* **Conflict Checking**: The system runs checks to ensure booked personnel and physical equipment kits are not double-booked elsewhere in the network.
+* **Agreement Sign-off**: The freelancer accepts the work order terms, shifting the status from *Pending* to *Confirmed*.
+* **Purchase Orders (POs) & Payment Holds**: Confirming the booking generates a **Purchase Order (PO)**. The producer authorizes payment via Stripe Checkout. The platform places a temporary **7-day hold** on the producer's credit card or bank account (ACH) for the total booked amount. This secures the freelancer's funding before work begins.
+
+---
+
+## 6. Calendar Bookings
+
+Once agreements are signed, schedule details are synchronized across all calendars.
+
+* **Utilization Calendar**: Confirmed bookings register as capacity blocks on the freelancer's internal utilization calendar, marking those hours as unavailable.
+* **External Sync**: ABRAM integrates directly with external calendars (Google Calendar and Microsoft Outlook). Work order bookings and schedule holds sync automatically in real-time, preventing scheduling conflicts outside the platform.
+
+---
+
+## 7. Task Tracking & Collaboration
+
+With the crew and schedule locked, the execution phase begins. Freelancers and producers collaborate within the master project workspace.
+
+* **Deliverable Uploads**: Freelancers upload files directly (PDFs, documents up to 100 MB) or attach links to external workspaces (Google Drive, Dropbox, Figma boards).
+* **Frame.io Integration**: For video assets, the platform auto-provisions a dedicated Frame.io project folder. Stakeholders can open review shares directly within ABRAM, tracking presentation links and frame-by-frame drawings.
+* **Feedback Loops**: Every deliverable hosts a comment thread. Team members use `@mentions` to alert colleagues, while nested replies keep revision feedback organized. Once a deliverable is finalized, the producer marks it as *Approved*, locking further edits.
+
+---
+
+## 8. Timesheet Hours Verification
+
+For hourly and day-rate work, actual hours are tracked and verified before payouts are processed.
+
+* **Logging Hours**: Freelancers log their actual hours worked against specific deliverables and work packages in the **Timesheet** tab.
+* **Timesheet Auditing**: Within the Team Management Dashboard (Hours tab), managers compare actual logged hours against the originally planned hours.
+* **Verification & Approval**: Managers review, edit, and approve logged hours. Approved logs are recorded in the billing ledger, finalizing the amount ready for payment.
+
+---
+
+## 9. Invoicing, Stripe Checkout, Capture, and Freelancer Payout Routing
+
+The final phase of the order of operations routes payment from the producer to the freelancer.
+
+* **Invoice Generation**: Freelancers use the Invoice Builder to generate a professional PDF invoice. The builder pre-populates default lines with the approved timesheet hours, project contract rates, and any approved expenses.
+* **Processing Fee Preview**: The platform calculates a standard **5% Payment Processing Fee** on the subtotal.
+* **Purchase Order (PO) Approval**: The freelancer accepts the Purchase Order. This triggers the automated payment capture service.
+* **Stripe Capture**: The system captures the funds from the producer's pre-authorized hold (or requests authorization via a secure payment checkout link if no hold exists).
+* **Stripe Express Routing**: Clear funds are distributed using Stripe Connect. Freelancers who have completed their Stripe Express onboarding receive their cleared earnings directly routed to their verified bank account or debit card, completing the loop.

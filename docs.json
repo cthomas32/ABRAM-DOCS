@@ -8,10 +8,7 @@
     "light": "#f4f4f4",
     "dark": "#0e0e0e"
   },
-  "favicon": {
-    "light": "/images/Favicon_03.png",
-    "dark": "/images/Favicon_02.png"
-  },
+  "favicon": "/favicon.ico",
   "icons": {
     "library": "lucide"
   },
@@ -110,30 +107,12 @@
             ]
           }
         ]
-      },
-      {
-        "product": "Docs",
-        "description": "Mintlify product documentation.",
-        "icon": "book-open",
-        "href": "https://www.mintlify.com/docs"
-      },
-      {
-        "product": "Guides",
-        "description": "Best-practice guides for technical writing.",
-        "icon": "compass",
-        "href": "https://www.mintlify.com/guides/introduction"
-      },
-      {
-        "product": "Articles",
-        "description": "News, announcements, and engineering posts.",
-        "icon": "newspaper",
-        "href": "https://www.mintlify.com/blog"
       }
     ]
   },
   "logo": {
-    "light": "/images/ABRAM_Lockup_Black@300x.png",
-    "dark": "/images/ABRAM_Lockup_Cream@300x.png"
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
   },
   "navbar": {
     "links": [
@@ -144,8 +123,8 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "ABRAM",
+      "href": "https://app.abram.network"
     }
   },
   "fonts": {

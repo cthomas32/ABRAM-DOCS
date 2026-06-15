@@ -2,38 +2,37 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Search, Menu, X, ArrowUpRight } from "lucide-react";
+import { Search, ArrowUpRight, Menu } from "lucide-react";
 
 interface NavbarProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
   onSearchClick: () => void;
+  onMenuClick?: () => void;
 }
 
-export default function Navbar({ sidebarOpen, setSidebarOpen, onSearchClick }: NavbarProps) {
+export default function Navbar({ onSearchClick, onMenuClick }: NavbarProps) {
   return (
-    <header className="fixed top-0 z-40 w-full glass-nav border-b border-border">
+    <header className="fixed top-0 z-40 w-full bg-black/50 backdrop-blur-[20px] border-b border-white/8">
       <div className="mx-auto flex h-16 max-w-8xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* Left Section: Menu Toggle & Logo */}
+        {/* Left Section: Logo */}
         <div className="flex items-center gap-4">
-          <button
-            type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-neutral-400 hover:bg-white/5 hover:text-white lg:hidden transition-all duration-200"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="Toggle navigation"
-          >
-            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-          
+          {onMenuClick && (
+            <button
+              onClick={onMenuClick}
+              className="lg:hidden p-2 -ml-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer"
+              aria-label="Open menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          )}
           <Link href="/" className="flex items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-neutral-700 rounded-md">
             <Image
-              src="/logo/dark.svg"
+              src="/abram-logo-lockup-cream.png"
               alt="ABRAM logo"
-              width={130}
-              height={14}
+              width={110}
+              height={22}
               priority
-              className="h-4.5 w-auto block select-none"
+              className="h-5.5 w-auto block select-none"
             />
             <span className="hidden sm:inline-block text-[10px] font-heading font-bold uppercase tracking-wider text-neutral-400 bg-neutral-900 border border-border px-1.5 py-0.5 rounded-[6px]">
               Docs
@@ -79,7 +78,7 @@ export default function Navbar({ sidebarOpen, setSidebarOpen, onSearchClick }: N
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-neutral-200 transition-all duration-200 shadow-md shadow-white/5 font-sans outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
-            Console
+            ABRAM
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>

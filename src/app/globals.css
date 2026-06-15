@@ -1,13 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-heading: "Archivo", sans-serif;
+  --font-heading: var(--font-sans);
   --font-sans: "GeneralSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   
-  --color-border: #262626;
-  --color-background-base: #050505;
-  --color-background-panel: #121212;
+  /* Vercel-like sharp dark theme color system */
+  --color-border: #1f1f1f;
+  --color-background-base: #000000;
+  --color-background-panel: #0a0a0a;
   
   --color-abram-success: #166e3f;
   --color-abram-info: #0284c7;
@@ -16,10 +16,10 @@
 }
 
 :root {
-  --background: #050505;
+  --background: #000000;
   --foreground: #ededed;
-  --border: 240 4% 16%; /* #262626 */
-  --radius: 1rem;
+  --border: 240 4% 12%; /* #1f1f1f */
+  --radius: 0.5rem; /* Vercel Geist design uses 8px (0.5rem) radius for a tighter look */
   
   --abram-success: #166e3f;
   --abram-info: #0284c7;
@@ -39,30 +39,44 @@ body {
   font-family: var(--font-heading);
 }
 
-/* Glassmorphism styling */
+/* Glassmorphism styling - Vercel style dark overlay */
 .glass-panel {
-  background-color: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(38, 38, 38, 0.4);
+  background: rgba(10, 10, 10, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.glass-panel-hover {
+  transition: all 0.2s ease;
 }
 
 .glass-panel-hover:hover {
-  background-color: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(20, 20, 20, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  transform: translate3d(0, -1px, 0) !important;
 }
 
 .glass-nav {
-  background-color: rgba(5, 5, 5, 0.8);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(38, 38, 38, 0.5);
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
-/* Custom scrollbars */
+/* Subtle dark-mode radial gradient to soft-glow the background */
+.premium-glow-bg {
+  background-image: 
+    radial-gradient(at 50% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.08) 0px, transparent 40%),
+    radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.08) 0px, transparent 40%);
+  background-attachment: fixed;
+}
+
+/* Minimalist scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -70,10 +84,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(38, 38, 38, 0.6);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 9999px;
+  transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Hide Netlify/Vercel draft review boxes */
+#netlify-drawer, .netlify-drawer, netlify-comment-driver, [data-netlify-deploy-id] {
+  display: none !important;
 }

@@ -2,137 +2,128 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { ChevronRight, ChevronDown, Compass, Users, User, ShieldAlert, Building2 } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import * as LucideIcons from "lucide-react";
+import pagesData from "../utils/navigation-data.json";
 
-export interface NavItem {
+interface NavItem {
+  slug: string[];
+  path: string;
   title: string;
-  href: string;
+  group: string;
+  groupIcon: string;
+  product: string;
 }
-
-export interface NavSection {
-  id: string;
-  title: string;
-  icon: React.ReactNode;
-  items: NavItem[];
-}
-
-export const navigationConfig: NavSection[] = [
-  {
-    id: "introduction",
-    title: "Introduction",
-    icon: <Compass className="h-4 w-4" />,
-    items: [
-      { title: "Welcome", href: "/docs/introduction" },
-      { title: "Order of Operations", href: "/docs/introduction/order-of-operations" },
-      { title: "AI Capabilities", href: "/docs/introduction/ai-capabilities" }
-    ]
-  },
-  {
-    id: "clients",
-    title: "Clients",
-    icon: <User className="h-4 w-4" />,
-    items: [
-      { title: "Client Overview", href: "/docs/clients/overview" },
-      { title: "Workspace Setup", href: "/docs/clients/workspaces" },
-      { title: "Managing Payments", href: "/docs/clients/payments" }
-    ]
-  },
-  {
-    id: "contractors",
-    title: "Contractors",
-    icon: <Users className="h-4 w-4" />,
-    items: [
-      { title: "Contractor Overview", href: "/docs/contractors/overview" },
-      { title: "Onboarding Flow", href: "/docs/contractors/onboarding" },
-      { title: "Stripe & Payouts", href: "/docs/contractors/payouts" }
-    ]
-  },
-  {
-    id: "orgs",
-    title: "Orgs & Studios",
-    icon: <Building2 className="h-4 w-4" />,
-    items: [
-      { title: "Studio Overview", href: "/docs/orgs/overview" },
-      { title: "Organization Setup", href: "/docs/orgs/setup" },
-      { title: "Team Management", href: "/docs/orgs/team" },
-      { title: "Intake & Scoping", href: "/docs/orgs/scoping" }
-    ]
-  }
-];
 
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
 }
 
+// Convert kebab-case to PascalCase
+const kebabToPascal = (str: string) => {
+  return str
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
+};
+
+// Render dynamic icon component
+const DynamicIcon = ({ name, className }: { name: string; className?: string }) => {
+  const pascalName = kebabToPascal(name);
+  const icons = LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>;
+  const IconComponent = icons[pascalName] || LucideIcons.HelpCircle;
+  return <IconComponent className={className} />;
+};
+
 export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
   const pathname = usePathname();
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    introduction: true,
-    clients: true,
-    contractors: true,
-    orgs: true,
-  });
 
-  // Auto-expand section containing current active path on mount
+  // Group items by "group", preserving the original ordering
+  const groupedSections = useMemo(() => {
+    const grouped: { groupName: string; groupIcon: string; items: NavItem[] }[] = [];
+    (pagesData as NavItem[]).forEach((item) => {
+      let section = grouped.find((g) => g.groupName === item.group);
+      if (!section) {
+        section = {
+          groupName: item.group,
+          groupIcon: item.groupIcon,
+          items: [],
+        };
+        grouped.push(section);
+      }
+      section.items.push(item);
+    });
+    return grouped;
+  }, []);
+
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+
+  // Auto-expand section containing current active path on mount and path changes
   useEffect(() => {
-    navigationConfig.forEach((section) => {
-      const hasActiveChild = section.items.some((item) => item.href === pathname);
+    groupedSections.forEach((section) => {
+      const hasActiveChild = section.items.some((item) => {
+        const itemHref = item.path === "" ? "/docs" : `/docs/${item.path}`;
+        return itemHref === pathname;
+      });
       if (hasActiveChild) {
-        setExpandedSections((prev) => ({ ...prev, [section.id]: true }));
+        setExpandedSections((prev) => ({ ...prev, [section.groupName]: true }));
       }
     });
-  }, [pathname]);
+  }, [pathname, groupedSections]);
 
-  const toggleSection = (id: string) => {
+  const toggleSection = (groupName: string) => {
     setExpandedSections((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [groupName]: !prev[groupName],
     }));
   };
 
-  const linkClass = (href: string) => {
+  const getLinkClass = (href: string) => {
     const isActive = pathname === href;
-    return `group flex items-center justify-between rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+    return `group flex items-center justify-between rounded-md px-3 py-1.5 text-xs transition-all duration-200 ${
       isActive
-        ? "bg-white/5 text-white border-l-2 border-white pl-2.5"
-        : "text-neutral-400 hover:bg-neutral-900/40 hover:text-neutral-200 pl-3"
+        ? "bg-zinc-900 text-white font-medium"
+        : "text-zinc-400 font-medium hover:text-zinc-100"
     }`;
   };
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-30 w-64 transform border-r border-border bg-neutral-950/80 backdrop-blur-2xl pt-20 transition-transform duration-300 lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-30 w-64 transform border-r border-zinc-900 bg-black pt-20 transition-transform duration-300 lg:translate-x-0 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)] lg:pt-0 lg:z-0 lg:bg-transparent lg:backdrop-blur-none lg:border-r-0 lg:overflow-y-auto ${
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       }`}
+      data-lenis-prevent
     >
-      <div className="flex h-full flex-col px-4 pb-6 overflow-y-auto">
+      <div className="flex h-full flex-col px-4 pb-6 overflow-y-auto" data-lenis-prevent>
         <nav className="flex-1 space-y-4 py-2">
-          {navigationConfig.map((section) => {
-            const isExpanded = expandedSections[section.id];
-            const hasActiveChild = section.items.some((item) => item.href === pathname);
+          {groupedSections.map((section) => {
+            const isExpanded = !!expandedSections[section.groupName];
+            const hasActiveChild = section.items.some((item) => {
+              const itemHref = item.path === "" ? "/docs" : `/docs/${item.path}`;
+              return itemHref === pathname;
+            });
 
             return (
-              <div key={section.id} className="space-y-1">
+              <div key={section.groupName} className="space-y-1">
                 {/* Collapsible Section Header */}
                 <button
-                  onClick={() => toggleSection(section.id)}
-                  className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs font-semibold uppercase tracking-wider transition-all duration-200 hover:bg-white/5 ${
+                  onClick={() => toggleSection(section.groupName)}
+                  className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs font-semibold uppercase tracking-wider transition-all duration-200 hover:bg-white/5 cursor-pointer ${
                     hasActiveChild ? "text-neutral-200" : "text-neutral-500 hover:text-neutral-300"
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     <span className={hasActiveChild ? "text-neutral-200" : "text-neutral-500"}>
-                      {section.icon}
+                      <DynamicIcon name={section.groupIcon} className="h-4 w-4" />
                     </span>
-                    <span>{section.title}</span>
+                    <span className="capitalize">{section.groupName}</span>
                   </div>
                   <span>
                     {isExpanded ? (
-                      <ChevronDown className="h-3.5 w-3.5 text-neutral-500" />
+                      <LucideIcons.ChevronDown className="h-3.5 w-3.5 text-neutral-500" />
                     ) : (
-                      <ChevronRight className="h-3.5 w-3.5 text-neutral-500" />
+                      <LucideIcons.ChevronRight className="h-3.5 w-3.5 text-neutral-500" />
                     )}
                   </span>
                 </button>
@@ -140,19 +131,22 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {/* Section Items */}
                 <div
                   className={`space-y-0.5 pl-6 overflow-hidden transition-all duration-300 ease-in-out ${
-                    isExpanded ? "max-h-64 opacity-100 mt-1" : "max-h-0 opacity-0"
+                    isExpanded ? "max-h-[500px] opacity-100 mt-1" : "max-h-0 opacity-0"
                   }`}
                 >
-                  {section.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setSidebarOpen(false)}
-                      className={linkClass(item.href)}
-                    >
-                      {item.title}
-                    </Link>
-                  ))}
+                  {section.items.map((item) => {
+                    const itemHref = item.path === "" ? "/docs" : `/docs/${item.path}`;
+                    return (
+                      <Link
+                        key={itemHref}
+                        href={itemHref}
+                        onClick={() => setSidebarOpen(false)}
+                        className={getLinkClass(itemHref)}
+                      >
+                        {item.title}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -160,12 +154,12 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
         </nav>
 
         {/* Sidebar Footer info */}
-        <div className="border-t border-border/60 pt-4 mt-auto">
-          <div className="rounded-[10px] bg-neutral-900/50 border border-border/40 p-3 flex items-start gap-2.5">
-            <ShieldAlert className="h-4 w-4 text-abram-info/80 shrink-0 mt-0.5" />
+        <div className="border-t border-zinc-900 pt-4 mt-auto">
+          <div className="rounded-lg bg-zinc-950 border border-zinc-900 p-3 flex items-start gap-2.5">
+            <LucideIcons.ShieldAlert className="h-4 w-4 text-abram-info/80 shrink-0 mt-0.5" />
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">System Status</p>
-              <p className="text-[11px] text-neutral-500 mt-0.5">All services operational</p>
+              <p className="text-[10px] font-semibold text-zinc-400">System Status</p>
+              <p className="text-[11px] text-zinc-500 mt-0.5 font-medium">All services operational</p>
             </div>
           </div>
         </div>

@@ -126,67 +126,90 @@ export function CodeBlock({ code, language }: { code: string; language: string }
   );
 }
 
+// Helper to recursively extract raw text from React children nodes
+const getTextBoxes = (node: React.ReactNode): string => {
+  if (!node) return "";
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+  if (Array.isArray(node)) {
+    return node.map(getTextBoxes).join("");
+  }
+  if (React.isValidElement(node)) {
+    const element = node as React.ReactElement<{ children?: React.ReactNode }>;
+    return getTextBoxes(element.props.children);
+  }
+  return "";
+};
+
+// Convert string to URL-friendly slug
+const slugify = (text: string) => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};
+
 // Heading Overrides (ABRAM Design Language)
 export const h1 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-  <h1 className="font-heading text-2xl font-bold uppercase tracking-wide mt-8 mb-4 text-zinc-900 dark:text-zinc-50" {...props}>
+  <h1 className="text-3xl font-bold tracking-tight mt-10 mb-4 text-zinc-900 dark:text-zinc-50" {...props}>
     {children}
   </h1>
 );
 
-export const h2 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-  <h2 className="font-heading text-xl font-bold uppercase tracking-wide mt-6 mb-3 text-zinc-900 dark:text-zinc-50" {...props}>
-    {children}
-  </h2>
-);
+export const h2 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
+  const text = getTextBoxes(children);
+  const id = slugify(text);
+  return (
+    <h2 id={id} className="text-2xl font-semibold tracking-tight mt-8 mb-3 text-zinc-900 dark:text-zinc-50 scroll-mt-24" {...props}>
+      {children}
+    </h2>
+  );
+};
 
-export const h3 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-  <h3 className="font-heading text-lg font-bold uppercase tracking-wide mt-5 mb-2 text-zinc-900 dark:text-zinc-100" {...props}>
-    {children}
-  </h3>
-);
+export const h3 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
+  const text = getTextBoxes(children);
+  const id = slugify(text);
+  return (
+    <h3 id={id} className="text-xl font-semibold tracking-tight mt-6 mb-2 text-zinc-900 dark:text-zinc-100 scroll-mt-24" {...props}>
+      {children}
+    </h3>
+  );
+};
 
 export const h4 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-  <h4 className="font-heading text-base font-bold uppercase tracking-wide mt-4 mb-2 text-zinc-900 dark:text-zinc-200" {...props}>
+  <h4 className="text-lg font-semibold tracking-tight mt-5 mb-2 text-zinc-900 dark:text-zinc-200" {...props}>
     {children}
   </h4>
 );
 
 // Standard HTML tag overrides
 export const p = ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-  <p className="my-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400" {...props}>
+  <p className="my-5 text-sm md:text-base leading-7 text-zinc-600 dark:text-zinc-400" {...props}>
     {children}
   </p>
 );
 
-export const a = ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-  if (href?.startsWith("/")) {
-    return (
-      <Link href={href} className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 underline underline-offset-4 font-medium transition" {...props}>
-        {children}
-      </Link>
-    );
-  }
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 underline underline-offset-4 font-medium transition" {...props}>
-      {children}
-    </a>
-  );
-};
+import MdxLink from "./MdxLink";
+
+export const a = MdxLink;
 
 export const ul = ({ children, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
-  <ul className="list-disc pl-6 my-4 text-zinc-700 dark:text-zinc-300 space-y-2" {...props}>
+  <ul className="list-disc pl-5 my-5 text-zinc-600 dark:text-zinc-400 space-y-2" {...props}>
     {children}
   </ul>
 );
 
 export const ol = ({ children, ...props }: React.HTMLAttributes<HTMLOListElement>) => (
-  <ol className="list-decimal pl-6 my-4 text-zinc-700 dark:text-zinc-300 space-y-2" {...props}>
+  <ol className="list-decimal pl-5 my-5 text-zinc-600 dark:text-zinc-400 space-y-2" {...props}>
     {children}
   </ol>
 );
 
 export const li = ({ children, ...props }: React.HTMLAttributes<HTMLLIElement>) => (
-  <li className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300" {...props}>
+  <li className="text-sm md:text-base leading-7 text-zinc-600 dark:text-zinc-400" {...props}>
     {children}
   </li>
 );
@@ -269,7 +292,7 @@ export const blockquote = ({ children }: React.HTMLAttributes<HTMLQuoteElement>)
       <div className={`my-6 flex gap-4 rounded-r-lg border-y border-r border-zinc-200/50 dark:border-zinc-800/50 p-4 ${config.border} ${config.bg} ${config.text}`}>
         {config.icon}
         <div className="flex-1 min-w-0">
-          <div className="font-heading text-xs font-bold uppercase tracking-wider mb-1 text-zinc-900 dark:text-zinc-50">
+          <div className="text-xs font-semibold uppercase tracking-wider mb-1 text-zinc-900 dark:text-zinc-50">
             {config.label}
           </div>
           <div className="text-sm leading-relaxed prose-sm dark:prose-invert">
@@ -281,7 +304,7 @@ export const blockquote = ({ children }: React.HTMLAttributes<HTMLQuoteElement>)
   }
 
   return (
-    <blockquote className="my-6 border-l-4 border-zinc-300 dark:border-zinc-700 pl-4 italic text-zinc-700 dark:text-zinc-300">
+    <blockquote className="my-6 border-l-2 border-zinc-300 dark:border-zinc-700 pl-4 italic text-zinc-600 dark:text-zinc-400">
       {children}
     </blockquote>
   );
@@ -347,12 +370,12 @@ export const pre = ({ children, ...props }: React.HTMLAttributes<HTMLPreElement>
 };
 
 export const code = ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
-  <code className="rounded bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:text-zinc-200" {...props}>
+  <code className="rounded bg-zinc-100 dark:bg-zinc-900 px-1.5 py-0.5 font-mono text-[0.875em] text-zinc-900 dark:text-zinc-100" {...props}>
     {children}
   </code>
 );
 
-// Custom layout components inside MDX (Columns, Card, Icon)
+// Custom layout components inside MDX (Columns, Card, CardGroup, Icon)
 export function Columns({ cols = 2, children }: { cols?: number; children: React.ReactNode }) {
   const gridCols = {
     1: "grid-cols-1",
@@ -368,63 +391,42 @@ export function Columns({ cols = 2, children }: { cols?: number; children: React
   );
 }
 
-export function Card({
-  title,
-  icon,
-  href,
-  children,
-  horizontal = false,
-}: {
-  title: string;
-  icon?: string;
-  href?: string;
-  children: React.ReactNode;
-  horizontal?: boolean;
-}) {
-  const IconComponent = getIconComponent(icon);
+export function CardGroup({ cols = 2, children }: { cols?: number; children: React.ReactNode }) {
+  const gridCols = {
+    1: "grid-cols-1",
+    2: "grid-cols-1 sm:grid-cols-2",
+    3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+    4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+  }[cols] || "grid-cols-1 sm:grid-cols-2";
 
-  const cardContent = (
-    <div className={`flex ${horizontal ? "flex-row items-center gap-4" : "flex-col gap-2"} p-5 h-full`}>
-      {IconComponent && (
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400">
-          {React.createElement(IconComponent, { className: "h-5 w-5" })}
-        </div>
-      )}
-      <div className="flex-1 min-w-0">
-        <h4 className="font-heading text-sm font-semibold uppercase tracking-wide text-zinc-900 dark:text-zinc-50">
-          {title}
-        </h4>
-        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-          {children}
-        </p>
-      </div>
+  return (
+    <div className={`grid ${gridCols} gap-4 my-6`}>
+      {children}
     </div>
   );
-
-  const className = "block rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 hover:border-emerald-500/50 hover:shadow-md dark:hover:border-emerald-500/30 transition-all duration-200 h-full overflow-hidden no-underline";
-
-  if (href) {
-    if (href.startsWith("/")) {
-      return (
-        <Link href={href} className={className}>
-          {cardContent}
-        </Link>
-      );
-    }
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
-        {cardContent}
-      </a>
-    );
-  }
-
-  return <div className={className}>{cardContent}</div>;
 }
+
+import MdxCard from "./MdxCard";
+
+export const Card = MdxCard;
+
+import ProgressFlow from "./diagrams/ProgressFlow";
+import StageFlowchart from "./diagrams/StageFlowchart";
+import InvoicingFlowchart from "./diagrams/InvoicingFlowchart";
+import SequenceDiagram from "./diagrams/SequenceDiagram";
+import ProductionBrainAccess from "./diagrams/ProductionBrainAccess";
+import ProjectDetailMock from "./diagrams/ProjectDetailMock";
+import WorkPackageLifecycle from "./diagrams/WorkPackageLifecycle";
+import WorkOrderFlow from "./diagrams/WorkOrderFlow";
 
 export function Icon({ icon, size = 16, className }: { icon: string; size?: number; className?: string }) {
   const IconComponent = getIconComponent(icon);
   if (!IconComponent) return null;
   return React.createElement(IconComponent, { size, className });
+}
+
+export function AgentOnly({ children }: { children: React.ReactNode }) {
+  return <div className="sr-only" data-agent-only="true">{children}</div>;
 }
 
 // Gather all component overrides in a single map
@@ -449,5 +451,15 @@ export const mdxComponents = {
   code,
   Columns,
   Card,
+  CardGroup,
   Icon,
+  AgentOnly,
+  ProgressFlow,
+  StageFlowchart,
+  InvoicingFlowchart,
+  SequenceDiagram,
+  ProductionBrainAccess,
+  ProjectDetailMock,
+  WorkPackageLifecycle,
+  WorkOrderFlow,
 };

@@ -1,0 +1,136 @@
+---
+title: 'Section 3.1: Master Project Detail Page Overview'
+sidebarTitle: Master Project Detail Page Overview
+description: >-
+  The Master Project Detail Page is the central command center for managing and
+  tracking your project. It consolidates timelines, tasks, team scheduling, ...
+keywords:
+  - ABRAM
+  - ABRAM Network
+  - milestone
+  - freelancer
+  - producer
+  - calendar
+  - ai
+  - brief
+  - work package
+  - invoice
+  - crew
+  - scheduling
+  - permissions
+  - billing
+  - ledger
+  - master
+  - project
+  - detail
+  - page
+  - overview
+---
+# Section 3.1: Master Project Detail Page Overview
+
+The **Master Project Detail Page** is the central command center for managing and tracking your project. It consolidates timelines, tasks, team scheduling, financial tracking, document indexing, and review integrations into a single unified workspace.
+
+---
+
+## 1. Top-Level Layout and Navigation
+
+The workspace is organized into a clean, modular layout designed for quick status checks and deep-dive management:
+
+<ProjectDetailMock />
+
+### A. Compact Project Header
+* Displays the project title, current status (e.g., *Planning*, *In Progress*, *Completed*), and a **calculated progress bar**.
+* Allows authorized producers or project managers to update the overall project status.
+
+### B. Project Info Strip
+* A metadata banner summarizing the creative industry, budget limits, target dates, and creative styles.
+* Project Managers can click the settings icon to update these parameters directly.
+
+### C. Customized Tab Navigation
+* You can configure which tabs are active and visible in your workspace.
+* Click the settings gear icon next to the tabs to check/uncheck views (e.g., hide the *Frame.io* tab if not producing video, or hide *Call Sheets* for a strategy campaign).
+* Your tab preferences are saved in your browser's local storage per project and user.
+
+---
+
+## 2. Walkthrough of Tabs & Sub-Views
+
+Depending on your organization's settings and permissions, the following tabs are available:
+
+### Overview Tab
+The project dashboard. It contains:
+* **Timeline Preview**: A compact Gantt timeline displaying work packages, milestones, and deliverables.
+* **Budget Metrics**: Quick-glance widgets summarizing budget spent vs. remaining.
+* **Team Capacity**: A card showing active bookings and resource workload.
+* **Upcoming Events**: Calendar schedule of upcoming shoots, scout trips, or reviews.
+* **Activity summary**: Latest changes and notes from the team.
+
+### Tasks Tab
+The task and scope manager. Features a centralized workspace to view, edit, and organize deliverables, milestones, and work orders. (See [Section 3.4](./3.4-task-lists-and-tracking.md) for details).
+
+### Scheduling Tab
+Manage target calendars and production calendar setups.
+
+### Call Sheets Tab
+Create and distribute official production Call Sheets to crew members, complete with shoot locations, weather, parking instructions, and department-specific schedules.
+
+### Timeline Tab
+An interactive, full-screen timeline workspace. Toggle between:
+* **Gantt Chart View**: Adjust durations, drag items, and assign dates.
+* **Team Workload View**: See freelancer bookings side-by-side to identify scheduling conflicts or resource overload.
+* **AI Optimize**: Project Managers can trigger the AI Scheduler to review dependencies and recalculate the schedule.
+
+### Run of Show Tab
+A minute-by-minute live guide for shoot days or live campaigns. Lists events, duration, talent, and technical notes in a structured spreadsheet format.
+
+### Team Tab
+The crew roster. Manage people allocations, view matched freelancers, invite external personnel, and monitor booking confirmations.
+
+### Time Tab
+The timesheet command center. Freelancers log hours against specific work packages, and producers review, approve, or reject logged hours.
+
+### Documents Tab
+A secure folder system. You can upload documents, track file versions, and search your assets using **AI Semantic Search**. Uploaded briefs are automatically indexed so the AI PM assistant can reference them during chat conversations.
+
+### Frame.io Tab
+Integrates with Frame.io for frame-accurate video review. Team members and producers can view video drafts, leave comments, and track revision cycles without leaving the platform.
+
+### Resources Tab
+Track and reserve physical organization assets, including camera kits, audio packages, lighting packages, and company vehicles assigned to work orders.
+
+### Activity Tab
+The audit feed. Displays a running feed of project changes, status updates, and a comment thread where team members can discuss scope or tag colleagues.
+
+### Financial Tab
+*Visible only to project owners, producers, and administrators.* Contains the project's financial overview, including expense logs, invoices, day rates, and freelancer billing ledgers.
+
+---
+
+## 3. Direct Link Sharing & Shortcuts
+
+The interface synchronizes its active states directly with the browser's URL address. This allows you to copy and share direct links to specific tabs or items:
+* **Active Tab**: Sharing a link ending in `?tab=tasks` opens the project page with the Tasks tab pre-selected.
+* **Direct Item View**: Sharing a link ending in `?workOrderId=your-id-here` automatically loads the project view and opens the configuration details for that specific Work Order.
+* **Validations**: If a shared link contains an expired or invalid ID, the page automatically updates the URL and reverts safely to the default Overview tab to prevent errors.
+
+---
+
+## 4. Step-by-Step UI Navigation
+
+Here are the exact clicks to navigate the project workspace and customize your tabs:
+
+1. **Accessing the Workspace**:
+   * Navigate to **Projects** from your sidebar.
+   * Click on the project name card (e.g., "My Summer Commercial") from the active grid. This opens the **Overview** tab by default.
+2. **Switching Tabs**:
+   * Click on any tab title in the horizontal tab bar (e.g., **Tasks**, **Team**, **Financials**) to switch views.
+   * Note that your URL updates to match, allowing you to copy the address bar link to share that exact view.
+3. **Customizing Visible Tabs**:
+   * Click the **Gear Icon** at the far right of the tab bar.
+   * In the popover menu, check or uncheck the boxes next to each tab name (e.g., uncheck **Frame.io** if you don't need video review; check **Call Sheets** to show call sheets).
+   * Click **Save Layout**. The tab list updates immediately, and your settings are saved in local storage.
+4. **Editing Project Details**:
+   * Locate the **Info Strip** banner beneath the header.
+   * Click the **Edit Settings** (pencil) icon on the right edge of the banner.
+   * A slide-out panel will appear. Edit the project name, description, start/end dates, or budget bounds, and click **Save Changes**.
+
