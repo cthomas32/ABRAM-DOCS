@@ -1,0 +1,102 @@
+---
+title: Quickstart for Organizations and Studios
+description: Set up your agency or studio workspace, manage team permissions, configure Enterprise SSO and SCIM, and build custom project intake pipelines on ABRAM.
+---
+
+## 🗺️ Organization Management Overview
+Production companies, creative agencies, and studios use ABRAM to manage multiple active projects, maintain a shared freelancer roster, track camera and studio inventory, and centralize financial billing across their team.
+
+```
+[Upgrade Workspace] ──> [Team & SCIM Sync] ──> [Operational Buffers] ──> [Intake Builders] ──> [Portfolio & billing]
+```
+
+---
+
+## 1. Upgrading to an Organization
+
+If you registered your workspace as **Independent** during your initial onboarding, you can upgrade to a collaborative studio company at any time:
+
+1. Click on **Settings** in the sidebar.
+2. Select the **Workspace** tab and choose **Upgrade to Company**.
+3. Complete the creation fields:
+   * **Organization Name**: Legal studio or agency entity name.
+   * **Organization Type**: Select Agency, Studio, Enterprise, or Production Company.
+   * **HQ Location & Timezone**: Set your operating city and timezone.
+   * **Website & Bio**: Share details about your creative focus.
+4. Click **Create Organization**. The interface will update, giving you access to the team, billing, and logistics dashboards.
+
+---
+
+## 2. Team Management & Access Control
+
+Managing team members is handled through the **Team** tab on your organization dashboard.
+
+### Workspace Roles
+ABRAM defines three main roles:
+* **Owner**: The primary creator. Complete control over settings, subscriptions, custom roles, permissions, and workspace deletion.
+* **Admin**: Administrative access. Can invite teammates, modify profiles, configure gear, and edit all projects. Cannot delete the organization.
+* **Member**: Standard staff. Access is controlled by custom *Granular Permissions*.
+
+### Granular Permissions
+Open the **Edit Team Member** modal to toggle specific access permissions:
+* **Team Management** (`can_manage_team`): Invite, edit, or remove teammates.
+* **Financial Access** (`can_view_financials`): View project budgets, freelancer contract rates, and invoices.
+* **Financial Management** (`can_manage_finances`): Create, edit, and capture project invoices.
+* **Org Profile Management** (`can_manage_org_profile`): Manage branding assets, banners, and logos.
+* **Resource Management** (`can_manage_resources`): Edit equipment catalogs, schedule logistics, and log kit details.
+* **Internal Project Requests** (`can_view_internal_requests`): Configure request intake forms and approve requests.
+* **Project Access Settings**:
+  * *Manage All Organization Projects*: User can view and edit all organization-wide projects.
+  * *Assigned Projects Only*: User is restricted strictly to projects they are added to.
+
+---
+
+## 3. Enterprise SSO & Directory Sync (SCIM)
+
+Enterprise studios can automate user provisioning and lock access security through SAML/OIDC and SCIM:
+
+1. Navigate to **Organization Settings** > **Enterprise Authentication**.
+2. Click **Generate Portal Link** for SSO or Directory Sync. (This opens a secure setup portal powered by WorkOS).
+3. Connect your Identity Provider (Okta, Microsoft Entra ID, Google Workspace, Azure AD, etc.).
+4. **SCIM Directory Sync Rules**:
+   * Once SCIM is enabled, all member accounts, active statuses, and roles are driven by your corporate directory.
+   * **Local Read-Only Lock**: The local ABRAM member directory becomes read-only. Modifying names, roles, or deleting members must be done inside your corporate identity provider. Changes sync to ABRAM within seconds.
+
+---
+
+## 4. Configuring Logistics & Operations
+
+Track equipment and minimize booking errors by configuring operational settings in the **Logistics** settings panel:
+
+* **Transit Buffer Days**: Specify buffer days (e.g., *1 or 2 days*) automatically added before and after bookings. This reserves the gear during transit, prep, and return inspect cycles.
+* **Transit Method**: Select default transport methods (Pickup, Shipping, Courier, or Dropoff).
+* **Enforce Return Inspections**: Toggle whether physical items must undergo QA checks before being marked as available for the next production.
+* **Needs Repair Lockout**: Damaged gear marked as "Needs Repair" is locked from calendar reservations.
+
+---
+
+## 5. Custom Request Intake Pipelines
+
+Build a client or department intake portal to collect briefs and project details.
+
+### Building the Form
+1. Go to settings and select **Intake Form Builder**.
+2. **Standard Fields**: Select which baseline fields (Budget, Dates, Project Description, File Upload) are shown and marked as required.
+3. **Custom Fields**: Click **Add Custom Field** to create specific text, number, paragraph, or dropdown questions.
+4. **Domain Gating**: Enter allowed domains (e.g., `agencypartner.com`) to restrict submissions and prevent spam.
+
+### Field Mappings
+Link custom answers to project requirements to let the AI engine map resources automatically:
+* **Required Skills**: Map dropdown answers to auto-populate roles (e.g., matching "Need visual effects" to a *VFX Compositor* role slot).
+* **Required Gear**: Map questions to add camera packages or kits to the project requirements.
+* **Software**: Map answers to assign software tools (e.g., *Premiere Pro* or *DaVinci Resolve*).
+
+### The Intake Inbox
+* All submitted forms land in your **Project Request Inbox**.
+* Review the uploaded brief, timeline details, and answers.
+* Click **Approve & Convert**:
+  1. Creates a project in **Planning** status.
+  2. Prompts you to select a Project Owner.
+  3. Moves brief attachments to the project documents folder, where they are indexed by the **Brief Analyzer**.
+  4. Mapped skills and equipment are auto-loaded to trigger the AI Matchmaking Engine.
+  5. The client requester is automatically notified via email.
