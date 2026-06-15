@@ -47,7 +47,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="flex-1 flex flex-col">
             
             {/* Animated Page Transitions */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={pathname}
                 initial={{ opacity: 0, y: 12 }}
