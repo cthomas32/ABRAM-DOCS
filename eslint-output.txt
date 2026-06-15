@@ -1,0 +1,74 @@
+
+/Users/connorthomas/Documents/Development Projects/GitHub/ABRAM-DOCS/src/components/MdxComponents.tsx
+   13:26  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+   13:62  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+  209:47  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+  220:45  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+  331:88  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+  389:12  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+/Users/connorthomas/Documents/Development Projects/GitHub/ABRAM-DOCS/src/components/MdxComponents.tsx:389:12
+  387 |       {IconComponent && (
+  388 |         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400">
+> 389 |           <IconComponent className="h-5 w-5" />
+      |            ^^^^^^^^^^^^^ This component is created during render
+  390 |         </div>
+  391 |       )}
+  392 |       <div className="flex-1 min-w-0">
+
+/Users/connorthomas/Documents/Development Projects/GitHub/ABRAM-DOCS/src/components/MdxComponents.tsx:383:25
+  381 |   horizontal?: boolean;
+  382 | }) {
+> 383 |   const IconComponent = getIconComponent(icon);
+      |                         ^^^^^^^^^^^^^^^^^^^^^^ The component is created during render here
+  384 |
+  385 |   const cardContent = (
+  386 |     <div className={`flex ${horizontal ? "flex-row items-center gap-4" : "flex-col gap-2"} p-5 h-full`}>  react-hooks/static-components
+  426:11  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+/Users/connorthomas/Documents/Development Projects/GitHub/ABRAM-DOCS/src/components/MdxComponents.tsx:426:11
+  424 |   const IconComponent = getIconComponent(icon);
+  425 |   if (!IconComponent) return null;
+> 426 |   return <IconComponent size={size} className={className} />;
+      |           ^^^^^^^^^^^^^ This component is created during render
+  427 | }
+  428 |
+  429 | // Gather all component overrides in a single map
+
+/Users/connorthomas/Documents/Development Projects/GitHub/ABRAM-DOCS/src/components/MdxComponents.tsx:424:25
+  422 |
+  423 | export function Icon({ icon, size = 16, className }: { icon: string; size?: number; className?: string }) {
+> 424 |   const IconComponent = getIconComponent(icon);
+      |                         ^^^^^^^^^^^^^^^^^^^^^^ The component is created during render here
+  425 |   if (!IconComponent) return null;
+  426 |   return <IconComponent size={size} className={className} />;
+  427 | }                                                           react-hooks/static-components
+
+/Users/connorthomas/Documents/Development Projects/GitHub/ABRAM-DOCS/src/components/SearchModal.tsx
+  86:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/connorthomas/Documents/Development Projects/GitHub/ABRAM-DOCS/src/components/SearchModal.tsx:86:5
+  84 |     if (indexLoaded) return;
+  85 |     
+> 86 |     setIsLoading(true);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  87 |     
+  88 |     fetch("/search-index.json")
+  89 |       .then((res) => res.json())  react-hooks/set-state-in-effect
+
+/Users/connorthomas/Documents/Development Projects/GitHub/ABRAM-DOCS/src/types/flexsearch.d.ts
+  13:36  warning  'T' is defined but never used      @typescript-eslint/no-unused-vars
+  40:28  warning  'Store' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 10 problems (8 errors, 2 warnings)
+

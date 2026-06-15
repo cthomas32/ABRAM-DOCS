@@ -1,0 +1,148 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Help Center",
+  "description": "Documentation and guides for this template—workspace setup, product how-tos, and support.",
+  "colors": {
+    "primary": "#166E3F",
+    "light": "#26BD6C",
+    "dark": "#166E3F"
+  },
+  "favicon": "/favicon.ico",
+  "icons": {
+    "library": "lucide"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
+  },
+  "contextual": {
+    "options": ["copy", "view", "assistant", "mcp", "add-mcp"]
+  },
+  "navigation": {
+    "directory": "card",
+    "products": [
+      {
+        "product": "Help Center",
+        "description": "Setup guides, product how-tos, automation tips, and policies.",
+        "icon": "life-buoy",
+        "groups": [
+          {
+            "group": "Introduction & Concepts",
+            "icon": "compass",
+            "expanded": true,
+            "pages": [
+              "user-guide/0.0-agent-and-human-navigation-guide",
+              "user-guide/0.1-glossary-and-acronyms",
+              "user-guide/0.2-order-of-operations",
+              "user-guide/0.3-ai-capabilities-and-copilot",
+              "user-guide/0.4-production-brain-and-workspace-memory"
+            ]
+          },
+          {
+            "group": "Setup & Team",
+            "icon": "users",
+            "pages": [
+              "user-guide/1.1-signing-in-and-onboarding",
+              "user-guide/1.2-setting-up-your-profile",
+              "user-guide/1.3-organization-setup-and-custom-forms",
+              "user-guide/1.4-team-management-and-permissions"
+            ]
+          },
+          {
+            "group": "Project Intake & Scoping",
+            "icon": "clipboard-list",
+            "pages": [
+              "user-guide/2.1-ai-brief-analyzer",
+              "user-guide/2.2-manual-project-creation",
+              "user-guide/2.3-custom-intake-forms"
+            ]
+          },
+          {
+            "group": "Projects & Resources",
+            "icon": "folder-kanban",
+            "pages": [
+              "user-guide/3.1-master-project-detail-overview",
+              "user-guide/3.2-work-packages-and-milestones",
+              "user-guide/3.3-work-orders-and-agreements",
+              "user-guide/3.4-task-lists-and-tracking",
+              "user-guide/3.5-equipment-and-resource-management"
+            ]
+          },
+          {
+            "group": "Crewing & Scheduling",
+            "icon": "calendar",
+            "pages": [
+              "user-guide/4.1-internal-talent-search",
+              "user-guide/4.2-ai-matchmaking-suggestions",
+              "user-guide/4.3-inviting-and-crew-rsvp",
+              "user-guide/4.4-managing-your-utilization-calendar",
+              "user-guide/4.5-syncing-external-calendars",
+              "user-guide/4.6-team-management-dashboard"
+            ]
+          },
+          {
+            "group": "Payments & Financials",
+            "icon": "credit-card",
+            "pages": [
+              "user-guide/5.1-freelancer-stripe-setup",
+              "user-guide/5.2-invoicing-and-payouts",
+              "user-guide/5.3-billing-ledger-and-ai-credits",
+              "user-guide/5.4-billing-and-payments"
+            ]
+          },
+          {
+            "group": "Integrations & Collaboration",
+            "icon": "plug",
+            "pages": [
+              "user-guide/6.1-slack-notifications",
+              "user-guide/6.2-frameio-workspaces",
+              "user-guide/6.3-project-collaboration-and-file-sharing"
+            ]
+          },
+          {
+            "group": "FAQs & Support",
+            "icon": "help-circle",
+            "pages": [
+              "user-guide/7.1-faqs-and-troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
+        "product": "Docs",
+        "description": "Mintlify product documentation.",
+        "icon": "book-open",
+        "href": "https://www.mintlify.com/docs"
+      },
+      {
+        "product": "Guides",
+        "description": "Best-practice guides for technical writing.",
+        "icon": "compass",
+        "href": "https://www.mintlify.com/guides/introduction"
+      },
+      {
+        "product": "Articles",
+        "description": "News, announcements, and engineering posts.",
+        "icon": "newspaper",
+        "href": "https://www.mintlify.com/blog"
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Get support",
+        "href": "/support/contact-support"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://dashboard.mintlify.com"
+    }
+  }
+}

@@ -1,0 +1,312 @@
+[
+  {
+    "slug": [
+      "user-guide",
+      "0.0-agent-and-human-navigation-guide"
+    ],
+    "path": "user-guide/0.0-agent-and-human-navigation-guide",
+    "title": "Agent And Human Navigation Guide",
+    "group": "Introduction & Concepts",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "0.1-glossary-and-acronyms"
+    ],
+    "path": "user-guide/0.1-glossary-and-acronyms",
+    "title": "Glossary And Acronyms",
+    "group": "Introduction & Concepts",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "0.2-order-of-operations"
+    ],
+    "path": "user-guide/0.2-order-of-operations",
+    "title": "Order Of Operations",
+    "group": "Introduction & Concepts",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "0.3-ai-capabilities-and-copilot"
+    ],
+    "path": "user-guide/0.3-ai-capabilities-and-copilot",
+    "title": "Ai Capabilities And Copilot",
+    "group": "Introduction & Concepts",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "0.4-production-brain-and-workspace-memory"
+    ],
+    "path": "user-guide/0.4-production-brain-and-workspace-memory",
+    "title": "Production Brain And Workspace Memory",
+    "group": "Introduction & Concepts",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "1.1-signing-in-and-onboarding"
+    ],
+    "path": "user-guide/1.1-signing-in-and-onboarding",
+    "title": "Signing In And Onboarding",
+    "group": "Setup & Team",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "1.2-setting-up-your-profile"
+    ],
+    "path": "user-guide/1.2-setting-up-your-profile",
+    "title": "Setting Up Your Profile",
+    "group": "Setup & Team",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "1.3-organization-setup-and-custom-forms"
+    ],
+    "path": "user-guide/1.3-organization-setup-and-custom-forms",
+    "title": "Organization Setup And Custom Forms",
+    "group": "Setup & Team",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "1.4-team-management-and-permissions"
+    ],
+    "path": "user-guide/1.4-team-management-and-permissions",
+    "title": "Team Management And Permissions",
+    "group": "Setup & Team",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "2.1-ai-brief-analyzer"
+    ],
+    "path": "user-guide/2.1-ai-brief-analyzer",
+    "title": "Ai Brief Analyzer",
+    "group": "Project Intake & Scoping",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "2.2-manual-project-creation"
+    ],
+    "path": "user-guide/2.2-manual-project-creation",
+    "title": "Manual Project Creation",
+    "group": "Project Intake & Scoping",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "2.3-custom-intake-forms"
+    ],
+    "path": "user-guide/2.3-custom-intake-forms",
+    "title": "Custom Intake Forms",
+    "group": "Project Intake & Scoping",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "3.1-master-project-detail-overview"
+    ],
+    "path": "user-guide/3.1-master-project-detail-overview",
+    "title": "Master Project Detail Overview",
+    "group": "Projects & Resources",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "3.2-work-packages-and-milestones"
+    ],
+    "path": "user-guide/3.2-work-packages-and-milestones",
+    "title": "Work Packages And Milestones",
+    "group": "Projects & Resources",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "3.3-work-orders-and-agreements"
+    ],
+    "path": "user-guide/3.3-work-orders-and-agreements",
+    "title": "Work Orders And Agreements",
+    "group": "Projects & Resources",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "3.4-task-lists-and-tracking"
+    ],
+    "path": "user-guide/3.4-task-lists-and-tracking",
+    "title": "Task Lists And Tracking",
+    "group": "Projects & Resources",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "3.5-equipment-and-resource-management"
+    ],
+    "path": "user-guide/3.5-equipment-and-resource-management",
+    "title": "Equipment And Resource Management",
+    "group": "Projects & Resources",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "4.1-internal-talent-search"
+    ],
+    "path": "user-guide/4.1-internal-talent-search",
+    "title": "Internal Talent Search",
+    "group": "Crewing & Scheduling",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "4.2-ai-matchmaking-suggestions"
+    ],
+    "path": "user-guide/4.2-ai-matchmaking-suggestions",
+    "title": "Ai Matchmaking Suggestions",
+    "group": "Crewing & Scheduling",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "4.3-inviting-and-crew-rsvp"
+    ],
+    "path": "user-guide/4.3-inviting-and-crew-rsvp",
+    "title": "Inviting And Crew Rsvp",
+    "group": "Crewing & Scheduling",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "4.4-managing-your-utilization-calendar"
+    ],
+    "path": "user-guide/4.4-managing-your-utilization-calendar",
+    "title": "Managing Your Utilization Calendar",
+    "group": "Crewing & Scheduling",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "4.5-syncing-external-calendars"
+    ],
+    "path": "user-guide/4.5-syncing-external-calendars",
+    "title": "Syncing External Calendars",
+    "group": "Crewing & Scheduling",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "4.6-team-management-dashboard"
+    ],
+    "path": "user-guide/4.6-team-management-dashboard",
+    "title": "Team Management Dashboard",
+    "group": "Crewing & Scheduling",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "5.1-freelancer-stripe-setup"
+    ],
+    "path": "user-guide/5.1-freelancer-stripe-setup",
+    "title": "Freelancer Stripe Setup",
+    "group": "Payments & Financials",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "5.2-invoicing-and-payouts"
+    ],
+    "path": "user-guide/5.2-invoicing-and-payouts",
+    "title": "Invoicing And Payouts",
+    "group": "Payments & Financials",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "5.3-billing-ledger-and-ai-credits"
+    ],
+    "path": "user-guide/5.3-billing-ledger-and-ai-credits",
+    "title": "Billing Ledger And Ai Credits",
+    "group": "Payments & Financials",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "5.4-billing-and-payments"
+    ],
+    "path": "user-guide/5.4-billing-and-payments",
+    "title": "Billing And Payments",
+    "group": "Payments & Financials",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "6.1-slack-notifications"
+    ],
+    "path": "user-guide/6.1-slack-notifications",
+    "title": "Slack Notifications",
+    "group": "Integrations & Collaboration",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "6.2-frameio-workspaces"
+    ],
+    "path": "user-guide/6.2-frameio-workspaces",
+    "title": "Frameio Workspaces",
+    "group": "Integrations & Collaboration",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "6.3-project-collaboration-and-file-sharing"
+    ],
+    "path": "user-guide/6.3-project-collaboration-and-file-sharing",
+    "title": "Project Collaboration And File Sharing",
+    "group": "Integrations & Collaboration",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "7.1-faqs-and-troubleshooting"
+    ],
+    "path": "user-guide/7.1-faqs-and-troubleshooting",
+    "title": "Faqs And Troubleshooting",
+    "group": "FAQs & Support",
+    "product": "Help Center"
+  }
+]
