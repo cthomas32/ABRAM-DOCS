@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   } as any,
   outputFileTracingIncludes: {
     "/docs": ["./index.mdx", "./docs.json"],
-    "/docs/**/*": ["./user-guide/**/*", "./content/**/*", "./docs.json"],
+    "/docs/[...slug]": ["./user-guide/**/*", "./content/**/*", "./docs.json"],
   },
 };
 

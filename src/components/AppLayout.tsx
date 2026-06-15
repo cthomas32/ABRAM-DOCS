@@ -87,7 +87,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     ABRAM
                   </a>
                   <a href="https://github.com/cthomas32/ABRAM-DOCS" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
-                    GitHub
+                    Repository
                   </a>
                 </div>
               </div>

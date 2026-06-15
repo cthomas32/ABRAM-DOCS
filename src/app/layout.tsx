@@ -4,6 +4,7 @@ import "./globals.css";
 import "lenis/dist/lenis.css";
 import AppLayout from "@/components/AppLayout";
 import LenisProvider from "@/components/LenisProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
         <LenisProvider>
           <AppLayout>{children}</AppLayout>
         </LenisProvider>
+        <Analytics />
       </body>
     </html>
   );

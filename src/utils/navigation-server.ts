@@ -4,9 +4,13 @@ import path from "path";
 export function ensureContentCopied() {
   const contentDir = path.join(process.cwd(), "content");
 
-  // Create content directory if it doesn't exist
-  if (!fs.existsSync(contentDir)) {
-    fs.mkdirSync(contentDir, { recursive: true });
+  try {
+    // Create content directory if it doesn't exist
+    if (!fs.existsSync(contentDir)) {
+      fs.mkdirSync(contentDir, { recursive: true });
+    }
+  } catch (error) {
+    console.warn("Failed to create content directory (normal in read-only serverless environments):", error);
   }
 }
 
