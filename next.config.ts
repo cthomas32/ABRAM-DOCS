@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     appIsrStatus: false,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any,
+  outputFileTracingIncludes: {
+    "/docs": ["index.mdx", "docs.json"],
+    "/docs/[...slug]": ["user-guide/**/*", "content/**/*", "docs.json"],
+  },
 };
 
 export default nextConfig;
