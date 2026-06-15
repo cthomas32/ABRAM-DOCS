@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Breadcrumbs from "./Breadcrumbs";
@@ -47,29 +46,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="flex-1 flex flex-col">
             
             {/* Animated Page Transitions */}
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={pathname}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                className={`flex-1 w-full mx-auto p-6 md:p-8 lg:p-12 ${
-                  isLandingPage ? "max-w-7xl" : isDocsPage ? "max-w-6xl" : "max-w-4xl"
-                }`}
-              >
-                {/* Breadcrumbs */}
-                {isDocsPage && <Breadcrumbs />}
+            <div
+              className={`flex-1 w-full mx-auto p-6 md:p-8 lg:p-12 ${
+                isLandingPage ? "max-w-7xl" : isDocsPage ? "max-w-6xl" : "max-w-4xl"
+              }`}
+            >
+              {/* Breadcrumbs */}
+              {isDocsPage && <Breadcrumbs />}
 
-                {/* Dynamic Page Content */}
-                <div className="flex-1">
-                  {children}
-                </div>
+              {/* Dynamic Page Content */}
+              <div className="flex-1">
+                {children}
+              </div>
 
-                {/* Prev / Next Navigation buttons */}
-                {isDocsPage && <PrevNextNav />}
-              </motion.div>
-            </AnimatePresence>
+              {/* Prev / Next Navigation buttons */}
+              {isDocsPage && <PrevNextNav />}
+            </div>
 
             {/* Layout Footer */}
             <footer className="w-full mt-auto bg-black/50 backdrop-blur-[20px] border-t border-white/8 py-6">
