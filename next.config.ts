@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any,
   outputFileTracingIncludes: {
-    "/docs": ["index.mdx", "docs.json"],
-    "/docs/[...slug]": ["user-guide/**/*", "content/**/*", "docs.json"],
+    "/docs": ["./index.mdx", "./docs.json"],
+    "/docs/**/*": ["./user-guide/**/*", "./content/**/*", "./docs.json"],
   },
 };
 

@@ -20,10 +20,15 @@ function getDocContent(slug: string[]) {
   ensureContentCopied();
 
   const slugStr = slug.join("/");
-  const contentDir = process.cwd();
 
-  // Statically scope the path based on the root directory of the slug
-  // to prevent Next.js from tracing the entire project directory.
+  // 1. Path traversal protection & validation against registered navigation paths
+  const allPages = getAllDocPages();
+  const navPage = allPages.find((p) => p.path === slugStr);
+  if (!navPage || slug.some((segment) => segment.includes("..") || segment.includes("/"))) {
+    return null;
+  }
+
+  const contentDir = process.cwd();
   const rootDir = slug[0];
   const remainingSlug = slug.slice(1).join("/");
 
@@ -43,13 +48,6 @@ function getDocContent(slug: string[]) {
       path.join(baseDir, remainingSlug, "page.mdx"),
       path.join(baseDir, `${remainingSlug}.md`),
       path.join(baseDir, remainingSlug, "page.md"),
-    ];
-  } else {
-    possiblePaths = [
-      path.join(/*turbopackIgnore: true*/ contentDir, `${slugStr}.mdx`),
-      path.join(/*turbopackIgnore: true*/ contentDir, slugStr, "page.mdx"),
-      path.join(/*turbopackIgnore: true*/ contentDir, `${slugStr}.md`),
-      path.join(/*turbopackIgnore: true*/ contentDir, slugStr, "page.md"),
     ];
   }
 
