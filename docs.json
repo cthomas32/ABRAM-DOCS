@@ -4,11 +4,14 @@
   "name": "Help Center",
   "description": "Documentation and guides for this template—workspace setup, product how-tos, and support.",
   "colors": {
-    "primary": "#166E3F",
-    "light": "#26BD6C",
-    "dark": "#166E3F"
+    "primary": "#971f1f",
+    "light": "#f4f4f4",
+    "dark": "#0e0e0e"
   },
-  "favicon": "/favicon.ico",
+  "favicon": {
+    "light": "/images/Favicon_03.png",
+    "dark": "/images/Favicon_02.png"
+  },
   "icons": {
     "library": "lucide"
   },
@@ -129,8 +132,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/images/ABRAM_Lockup_Black@300x.png",
+    "dark": "/images/ABRAM_Lockup_Cream@300x.png"
   },
   "navbar": {
     "links": [
@@ -144,5 +147,8 @@
       "label": "Dashboard",
       "href": "https://dashboard.mintlify.com"
     }
+  },
+  "fonts": {
+    "family": "Open Sans"
   }
 }

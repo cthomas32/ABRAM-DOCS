@@ -1,3 +1,8 @@
+---
+title: "ABRAM Network user guide directory"
+description: "Index of the ABRAM Network user guide—navigation, glossary, AI features, onboarding, projects, crewing, payments, integrations, and troubleshooting."
+---
+
 # ABRAM Network - User Guide Directory
 
 Welcome to the **ABRAM Network User Guide**. This documentation directory serves as the comprehensive manual for creative producers, agencies, production managers, and specialized freelancers using the ABRAM production management platform. 

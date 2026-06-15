@@ -1,7 +1,7 @@
 ---
 title: "Retry policies"
 sidebarTitle: "Retry policies"
-description: "Configure exponential backoff, max attempts, and dead-letter handling."
+description: "Configure exponential backoff, max retry attempts, jitter, and dead-letter handling so transient errors recover without overwhelming downstream systems."
 ---
 
 Retries turn transient failures into success stories—when configured carefully. Backoff spreads load; max attempts bound damage; dead-letter queues preserve poison messages for inspection instead of infinite loops.
