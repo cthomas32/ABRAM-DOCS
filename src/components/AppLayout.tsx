@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Breadcrumbs from "./Breadcrumbs";
@@ -78,9 +79,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <a href="https://app.abram.network" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
                     ABRAM
                   </a>
-                  <a href="https://github.com/cthomas32/ABRAM-DOCS" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
-                    Repository
-                  </a>
+                  <Link href="/privacy-policy" className="hover:text-neutral-300 transition-colors">
+                    Privacy Policy
+                  </Link>
+                  <Link href="/terms-of-use" className="hover:text-neutral-300 transition-colors">
+                    Terms of Use
+                  </Link>
                 </div>
               </div>
             </footer>

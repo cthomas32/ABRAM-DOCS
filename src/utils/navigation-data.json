@@ -109,6 +109,17 @@
   {
     "slug": [
       "user-guide",
+      "1.5-navigating-your-dashboard"
+    ],
+    "path": "user-guide/1.5-navigating-your-dashboard",
+    "title": "Navigating Your Dashboard",
+    "group": "Setup & Team",
+    "groupIcon": "users",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
       "2.1-ai-brief-analyzer"
     ],
     "path": "user-guide/2.1-ai-brief-analyzer",

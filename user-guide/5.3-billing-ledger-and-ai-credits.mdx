@@ -46,6 +46,8 @@ Credit consumption is calculated based on the complexity of the operation, lengt
 > [!NOTE]
 > **Smart Query Optimization** automatically reduces credit usage. If you repeat similar queries or ask follow-up questions within the same context (e.g. refining a project brief or candidate list), the platform reads from memory at a fraction of the standard credit cost, saving your organization credits.
 
+<AgentOnly>Prompt cache reads are billed at a highly discounted rate (~10% of standard), while cache writes are billed at ~125% of standard input rates.</AgentOnly>
+
 ---
 
 ## 3. The Three-Pool Credit Structure
@@ -73,9 +75,11 @@ Every organization's ledger is divided into three distinct credit pools. When cr
   }
 ]} />
 
-1. **Monthly Allowance**: Included in your subscription tier (e.g., Team, Studio). Drawn first. It reset every month; unused allowance does not roll over.
+1. **Monthly Allowance**: Included in your subscription tier (e.g., Team, Studio). Drawn first. It resets every month; unused allowance does not roll over.
 2. **Trial Credits**: Awarded during onboarding. Drawn second. Only valid if the trial is still active and has not expired.
 3. **Purchased Balance**: Top-up credits bought via Stripe. Drawn last. Purchased credits never expire.
+
+**Sign-Up Credit Bonus**: New personal accounts and organizations are automatically initialized with a one-time welcome bonus of 250 credits in their purchased balance pool.
 
 ---
 
@@ -84,6 +88,7 @@ Every organization's ledger is divided into three distinct credit pools. When cr
 * **Organization-Bound Billing**: All billing ledgers are bound to organizations. Solo users are billed through their personal organization workspace.
 * **Membership Routing**: If a user belongs to an active organization membership, the organization's ledger is billed.
 * **Onboarding Exception**: AI calls made during the onboarding wizard (e.g., parsing your initial resume when setting up your profile) are free and bypass the ledger.
+* **Dynamic Seat Scaling**: For organizations on the **Team** or **Studio** tiers, your monthly allowances (including AI credits and storage limits) scale dynamically based on the number of team seats purchased. For example, on the Team tier, each seat adds 500 monthly credits and 10 GB of storage to your shared organization pool.
 
 ---
 
@@ -107,6 +112,11 @@ Owners and Admins can purchase additional credits or upgrade plan tiers in **Set
 
 ### Buying Ad-Hoc Top-Ups
 If your balance runs low, you can click **Top-Up** to purchase credit packs. This opens Stripe Checkout to securely process the purchase, and updates your balance immediately.
+
+### Individual Subscription Tiers
+ABRAM offers individual subscription tiers for solo professionals who do not require multi-user team collaboration:
+* **Solo Lite ($19/mo)**: Unlocks 300 monthly credits, unlimited active projects (for clients), 30 applications/listings, and 3 GB workspace storage.
+* **Solo Pro ($34/mo)**: Unlocks 600 monthly credits, PDF call sheet exports, Google/Outlook calendar sync, AI brief parser, and 10 GB workspace storage.
 
 ### Upgrading a Personal Workspace
 If you are currently on the **Free** tier in a personal workspace and select a team subscription (e.g., **Team** or **Studio**):

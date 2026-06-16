@@ -44,7 +44,12 @@ When adding crew members to a Work Order, you can invite:
 
 ### Rate Integration
 Compensation is automatically calculated to keep projects within budget:
-1. **Day & Hourly Rates**: Personnel rates are fetched automatically using active **Freelancer Profiles**.
+1. **Hierarchical Rate Selection**: When you add crew members to a Work Order, the system automatically resolves their billing rates using a strict priority order:
+   * *Crew Roster custom rate* (highest priority, set when inviting the crew member to the project roster).
+   * *Organization membership custom rate* (set in the team member edit panel).
+   * *Platform profile rate* (defined on the freelancer's public profile page).
+   * *Platform default day rate* (the standard platform baseline).
+   * *Zero ($0.00) default* (if no rate is configured anywhere).
 2. **Resource Unit Rates**: Physical gear, camera kits, or vehicles include a standard daily rate or cost-per-day defined in the organization’s inventory manager.
 3. **Budget Impact**: As you add personnel and kits, the system displays the total projected cost of the Work Order based on hours or days booked, warning you if it exceeds the parent package's budget allocation.
 
@@ -89,7 +94,16 @@ The system automatically syncs the statuses of linked personnel and resource boo
 
 ---
 
-## 5. Agreement Workflow
+## 5. Timesheet Auto-Population
+
+To streamline payments, the platform automatically generates timesheet entries from your Work Orders:
+* **Automatic Entry Generation**: When a Work Order is active or wrapped, the system distributes the total hours evenly across the booking's calendar days and creates draft timecard entries.
+* **Manual Protection**: The system protects manual edits. If you manually enter or adjust hours on your time card, the auto-population will not overwrite your custom entries.
+* **Roster Sync**: If a crew member is removed from a Work Order, their auto-populated draft timecard entries for those dates are automatically cleaned up to prevent invoicing errors.
+
+---
+
+## 6. Agreement Workflow
 
 Managing work orders follows a structured invitation and confirmation cycle:
 

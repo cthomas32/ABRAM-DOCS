@@ -1,6 +1,29 @@
 "use client";
 
-import { ReactLenis } from "lenis/react";
+import { ReactLenis, useLenis } from "lenis/react";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+
+function LenisWatcher() {
+  const pathname = usePathname();
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (lenis) {
+      // Force scroll to top on route change immediately
+      lenis.scrollTo(0, { immediate: true });
+      
+      // Force resize calculation after a small timeout to let the DOM update
+      const timer = setTimeout(() => {
+        lenis.resize();
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [pathname, lenis]);
+
+  return null;
+}
 
 export default function LenisProvider({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +36,7 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
         wheelMultiplier: 1.0,
       }}
     >
+      <LenisWatcher />
       {children}
     </ReactLenis>
   );
