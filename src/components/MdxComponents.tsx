@@ -418,6 +418,7 @@ import ProductionBrainAccess from "./diagrams/ProductionBrainAccess";
 import ProjectDetailMock from "./diagrams/ProjectDetailMock";
 import WorkPackageLifecycle from "./diagrams/WorkPackageLifecycle";
 import WorkOrderFlow from "./diagrams/WorkOrderFlow";
+import ResourceManagementMock from "./diagrams/ResourceManagementMock";
 
 export function Icon({ icon, size = 16, className }: { icon: string; size?: number; className?: string }) {
   const IconComponent = getIconComponent(icon);
@@ -462,4 +463,5 @@ export const mdxComponents = {
   ProjectDetailMock,
   WorkPackageLifecycle,
   WorkOrderFlow,
+  ResourceManagementMock,
 };

@@ -37,7 +37,7 @@ Understand how to manage active projects, deliverables, checklists, and freelanc
 * **[3.2 Work Packages & Milestones](./3.2-work-packages-and-milestones.md)**: Creating work packages, setting scopes, and defining milestone-based payment schedules.
 * **[3.3 Work Orders & Agreements](./3.3-work-orders-and-agreements.md)**: Generating work orders for freelancers and equipment, configuring rates, and managing invitation holds.
 * **[3.4 Task Lists & Tracking](./3.4-task-lists-and-tracking.md)**: Creating checklists, assigning tasks, and tracking automated progress calculations.
-* **[3.5 Equipment & Resource Management](./3.5-equipment-and-resource-management.md)**: Inventory tracking, kit building, calendar scheduling, storage locations, and bulk importing.
+* **[3.5 Equipment & Resource Management](./3.5-equipment-and-resource-management.mdx)**: Inventory tracking, kit building, calendar scheduling, storage locations, and bulk importing.
 
 ---
 
