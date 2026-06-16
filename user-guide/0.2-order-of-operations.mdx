@@ -65,7 +65,7 @@ This guide maps out the complete, chronological, step-by-step order of operation
     title: "4. Payouts",
     nodes: [
       { id: "step8", title: "Timesheet Verification", description: "Approve hours logged", icon: "Clock", type: "warning" },
-      { id: "step9", title: "Invoicing and Stripe Connect", description: "Transfer funds to freelancer", icon: "CreditCard" },
+      { id: "step9", title: "Invoicing and Direct Payouts", description: "Transfer funds to freelancer", icon: "CreditCard" },
       { id: "step10", title: "Payout Completed", description: "Ledger reconciled", icon: "ShieldCheck", type: "success", badge: "DONE" }
     ]
   }
@@ -77,9 +77,9 @@ This guide maps out the complete, chronological, step-by-step order of operation
 
 Every project on ABRAM begins with intake, setting up the foundation for scheduling, budgeting, and crew allocations. Producers can initiate a project blueprint using one of two paths:
 
-* **Brief Intelligence (AI-driven Path)**: Producers can upload a creative brief document (PDF, Word, or text files up to 5 MB) or write a project description (minimum 100 characters). The system's intelligence engine automatically extracts the project title, description, work packages, roles, deliverables, dates, technical specs, and a estimated budget range.
-  * **Confidence Gate**: If the extraction confidence falls below **70%**, the system pauses at a **Clarifying Review Gate** to present 3–5 targeted questions. Answering these questions refines the scope before saving the project as a **Planning** draft.
-* **Manual Project Creation (Structured Path)**: Alternatively, producers can use a manual wizard to select pre-designed project archetypes (e.g., *Filmmaker*, *Marketing*, *Creative* templates) and allocate initial budget limits manually.
+* **Brief Intelligence (AI-driven Path)**: Producers can upload a creative brief document (PDF, Word, or text files up to 5 MB) or write a project description (minimum 100 characters). The system's intelligence engine automatically extracts the project title, description, work packages, roles, deliverables, dates, technical specs, and an estimated budget range.
+  * **Clarifying Questions**: If any details in your brief are missing or unclear (such as timelines or budgets), the system will pause and ask 3–5 quick clarifying questions. Answering these questions refines the scope before saving the project as a draft.
+* **Manual Project Creation (Structured Path)**: Alternatively, producers can use a manual wizard to select pre-designed project templates (e.g., Video, Marketing, or Design templates) and allocate initial budget limits manually.
 
 ---
 
@@ -155,12 +155,12 @@ For hourly and day-rate work, actual hours are tracked and verified before payou
 
 ---
 
-## 9. Invoicing, Stripe Checkout, Capture, and Freelancer Payout Routing
+## 9. Invoicing & Direct Freelancer Payouts
 
 The final phase of the order of operations routes payment from the producer to the freelancer.
 
 * **Invoice Generation**: Freelancers use the Invoice Builder to generate a professional PDF invoice. The builder pre-populates default lines with the approved timesheet hours, project contract rates, and any approved expenses.
 * **Processing Fee Preview**: The platform calculates a standard **5% Payment Processing Fee** on the subtotal.
-* **Purchase Order (PO) Approval**: The freelancer accepts the Purchase Order. This triggers the automated payment capture service.
-* **Stripe Capture**: The system captures the funds from the producer's pre-authorized hold (or requests authorization via a secure payment checkout link if no hold exists).
-* **Stripe Express Routing**: Clear funds are distributed using Stripe Connect. Freelancers who have completed their Stripe Express onboarding receive their cleared earnings directly routed to their verified bank account or debit card, completing the loop.
+* **Purchase Order (PO) Approval**: Once the freelancer approves the Purchase Order, the system initiates the payment process.
+* **Payment Fulfillment**: The platform processes the payment using the funds held in the pre-authorized deposit (or requests authorization via a secure payment checkout link if no hold exists).
+* **Direct Earnings Payout**: Earnings are securely distributed. Freelancers who have connected their payment profile during onboarding receive their cleared funds directly in their verified bank account or debit card, completing the loop.

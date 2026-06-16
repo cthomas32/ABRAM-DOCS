@@ -49,7 +49,7 @@ The workspace is organized into a clean, modular layout designed for quick statu
 ### C. Customized Tab Navigation
 * You can configure which tabs are active and visible in your workspace.
 * Click the settings gear icon next to the tabs to check/uncheck views (e.g., hide the *Frame.io* tab if not producing video, or hide *Call Sheets* for a strategy campaign).
-* Your tab preferences are saved in your browser's local storage per project and user.
+* Your tab preferences are saved automatically in your browser so they stay exactly how you left them on your next visit.
 
 ---
 
@@ -109,9 +109,9 @@ The audit feed. Displays a running feed of project changes, status updates, and 
 ## 3. Direct Link Sharing & Shortcuts
 
 The interface synchronizes its active states directly with the browser's URL address. This allows you to copy and share direct links to specific tabs or items:
-* **Active Tab**: Sharing a link ending in `?tab=tasks` opens the project page with the Tasks tab pre-selected.
-* **Direct Item View**: Sharing a link ending in `?workOrderId=your-id-here` automatically loads the project view and opens the configuration details for that specific Work Order.
-* **Validations**: If a shared link contains an expired or invalid ID, the page automatically updates the URL and reverts safely to the default Overview tab to prevent errors.
+* **Direct Tab Links**: The browser's address bar automatically updates as you click through different tabs (e.g., selecting the Tasks tab). You can copy and share these links with your team.
+* **Direct Item Links**: Opening a specific item (like a Work Order) updates the link, allowing you to share a direct shortcut to that specific details window.
+* **Automatic Redirection**: If someone opens a shared link for an item that has been deleted or is unavailable, the platform will automatically redirect them to the project's main Overview tab.
 
 ---
 
@@ -128,9 +128,8 @@ Here are the exact clicks to navigate the project workspace and customize your t
 3. **Customizing Visible Tabs**:
    * Click the **Gear Icon** at the far right of the tab bar.
    * In the popover menu, check or uncheck the boxes next to each tab name (e.g., uncheck **Frame.io** if you don't need video review; check **Call Sheets** to show call sheets).
-   * Click **Save Layout**. The tab list updates immediately, and your settings are saved in local storage.
+   * Click **Save Layout**. The tab list updates immediately, and your settings are saved automatically.
 4. **Editing Project Details**:
    * Locate the **Info Strip** banner beneath the header.
    * Click the **Edit Settings** (pencil) icon on the right edge of the banner.
    * A slide-out panel will appear. Edit the project name, description, start/end dates, or budget bounds, and click **Save Changes**.
-

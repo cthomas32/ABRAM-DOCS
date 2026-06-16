@@ -70,7 +70,7 @@ Producers can proactively initiate payments by creating a **Purchase Order (PO)*
 ### Step 2: Authorize Payment (Stripe Checkout)
 1. Click **Authorize Payment**.
 2. You will be redirected to a Stripe Checkout Session to provide card or bank details.
-3. Stripe places a **7-day hold** on your payment method using Stripe's `manual` capture method.
+3. The platform places a **7-day authorization hold** on your payment method.
 4. Once authorized, you are redirected back to ABRAM. The invoice status transitions to **Pending Freelancer Approval**.
 
 ---
@@ -86,12 +86,12 @@ When a producer authorizes a Purchase Order, the freelancer must accept it befor
 
 ### Step 2: Accept or Reject
 * **Accept Purchase Order**:
-  * Triggers the automated payment capture service.
-  * ABRAM securely processes the transaction to prevent double-charging.
-  * Stripe captures the hold, transferring funds to your account.
+  * Triggers the payment fulfillment.
+  * ABRAM securely processes the transaction to complete the payment.
+  * The authorized funds are captured and transferred to your account.
   * The invoice status transitions to **Paid**, and audit logs are recorded.
 * **Reject**:
-  * Stripe releases the card hold immediately.
+  * The authorization hold is released immediately.
   * The invoice status changes to **Cancelled/Rejected**.
 
 ---

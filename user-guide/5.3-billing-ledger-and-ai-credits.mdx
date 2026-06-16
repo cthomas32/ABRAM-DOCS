@@ -34,17 +34,17 @@ ABRAM meters and bills all user-initiated AI actions—such as parsing resumes, 
 
 Credit consumption is calculated based on the complexity of the operation, length of text processed, or flat service rates. This ensures that you only pay for the resources required to process your request.
 
-| Feature / Action | Service Engine | Billing Model | Typical Cost / Range |
-| :--- | :--- | :--- | :--- |
-| **Project Brief Analysis** | Advanced Analysis | Based on brief size & details | 5 - 25 credits per analysis |
-| **AI Team Matchmaking Suggestions** | Advanced Analysis | Based on scope size & candidate count | 5 - 20 credits per suggestion |
-| **Resume & Profile Importing** | Standard Estimation | Based on resume file size | 2 - 10 credits per import |
-| **Chatbot Co-pilot Interaction** | Standard / Advanced | Per query/response | 0.5 - 5 credits per message |
-| **Web Search Tool** | Integration Feature | Flat rate per search | 2 credits per search |
-| **Image Generation** | Creative Tool | Flat rate per generation | 10 credits per image |
+| Feature / Action | Billing Model | Typical Cost / Range |
+| :--- | :--- | :--- |
+| **Project Brief Analysis** | Based on brief size & details | 5 - 25 credits per analysis |
+| **AI Team Matchmaking Suggestions** | Based on scope size & candidate count | 5 - 20 credits per suggestion |
+| **Resume & Profile Importing** | Based on resume file size | 2 - 10 credits per import |
+| **Chatbot Co-pilot Interaction** | Per query/response | 0.5 - 5 credits per message |
+| **Web Search Tool** | Flat rate per search | 2 credits per search |
+| **Image Generation** | Flat rate per generation | 10 credits per image |
 
 > [!NOTE]
-> **Prompt Caching** automatically optimizes credit usage. If you repeat similar queries or ask follow-up questions within the same context (e.g. refining a project brief or candidates list), the system reads from the cache at a fraction of the standard credit cost, saving your organization credits.
+> **Smart Query Optimization** automatically reduces credit usage. If you repeat similar queries or ask follow-up questions within the same context (e.g. refining a project brief or candidate list), the platform reads from memory at a fraction of the standard credit cost, saving your organization credits.
 
 ---
 
@@ -89,9 +89,12 @@ Every organization's ledger is divided into three distinct credit pools. When cr
 
 ## 5. Credit Gating (Example: Project Brief Analysis)
 
-When a producer uploads a project brief for AI analysis, the platform enforces the following sequence:
+When a producer uploads a project brief for AI analysis, the platform follows this verification sequence:
 
-<SequenceDiagram />
+1. **Credit Check**: The platform verifies that your organization has enough credits (at least 5 credits) in its active pools.
+2. **Analysis Execution**: If credits are available, the analysis engine parses the brief to extract scope details and roles.
+3. **Ledger Update**: The actual credits consumed are deducted from your balance once the analysis is completed.
+4. **Insufficient Balance Alert**: If your balance is below the minimum required, the analysis is paused, and a checkout window appears to add top-up credits.
 
 ### Disconnect Safety Net
 If a network disconnect or timeout occurs during an analysis, the platform ensures your ledger is only billed for the work actually completed.
