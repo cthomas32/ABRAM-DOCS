@@ -89,6 +89,16 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
         {/* Right Section: External App Button & Mobile Menu */}
         <div className="flex items-center gap-1 sm:gap-4">
           <Link
+            href="/production-brain"
+            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
+              pathname === "/production-brain"
+                ? "bg-white/10 text-white border border-white/10"
+                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+            }`}
+          >
+            Brain
+          </Link>
+          <Link
             href="/docs"
             className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
               pathname.startsWith("/docs")
@@ -96,7 +106,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                 : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
             }`}
           >
-            Docs
+            Learn
           </Link>
           <Link
             href="/pricing"
@@ -108,20 +118,13 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           >
             Pricing
           </Link>
-          <button
-            onClick={onSearchClick}
-            className="h-11 w-11 flex items-center justify-center rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200"
-            aria-label="Search"
-          >
-            <Search className="h-4 w-4" />
-          </button>
           <a
             href="https://app.abram.network"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white hidden xs:inline-flex"
+            className="inline-flex items-center gap-1.5 rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
-            ABRAM
+            Get Started
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>

@@ -104,12 +104,13 @@ keywords:
   npm run build
   ```
 
-### 6. No Developer, Database, GitHub, or Supabase References
+### 6. No Developer, Database, GitHub, Supabase, or Real Brand References
 - **Target Audience**: These are human user-facing (consumer) help documents, not developer guides.
 - **No Technical Backend Jargon**: Never mention database table names, schema keys, Supabase RPCs/functions, or specific code component files/paths (such as `RosterTable`, `cascade_work_order_status`, `contractor_profiles.total_weekly_hours`, or GitHub links).
 - **Natural Language Representation**: Describe all fields, parameters, and tables in plain English (e.g., use `Serial Number` or `Daily Rate` instead of `serial_number` or `daily_rate`).
 - **No Supabase or GitHub Branding**: Never mention "Supabase" or "GitHub" in the documentation text. Rephrase these references using generic terms like "the platform" or "the system".
 - **Clean Formatting**: Format any UI status values or dropdown settings using capitalized words without code styling/backticks unless specifically representing literal code in an agent-only context (e.g. use `Reserved` or `In Use` instead of `reserved` or `in_use`).
+- **No Real Brand Names**: Never use real-world brand names (such as "Nike", "Adidas", "Apple", "Google", "Netflix", "Sony", "Dolby", "Spotify", "A24", "RED", etc.) in templates, mockups, documentation, or code examples. Always use fictitious, placeholder brand names (e.g., "Helix", "Nebula", "Sensa", "Onyx", "Aura", "Spire", "Vesper", "Apex", "Vortex", etc.).
 
 ---
 

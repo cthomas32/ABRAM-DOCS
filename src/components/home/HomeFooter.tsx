@@ -29,8 +29,11 @@ export default function HomeFooter() {
           <a href="#top" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Home
           </a>
+          <Link href="/production-brain" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Brain
+          </Link>
           <Link href="/docs" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-            Docs
+            Learn
           </Link>
           <Link href="/pricing" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Pricing
@@ -63,6 +66,13 @@ export default function HomeFooter() {
             ©2026 ABRAM Network
           </div>
         </div>
+      </div>
+
+      {/* Trademark Disclaimer */}
+      <div className="max-w-8xl mx-auto mt-12 pt-6 border-t border-white/[0.04]">
+        <p className="text-[10px] text-zinc-600 leading-relaxed font-light">
+          Disclaimer: All third-party trademarks, brand names, and logos mentioned in these documents, templates, and mockups (including Netflix, A24, Sony, RED, Dolby, Spotify, and Helix) are the property of their respective owners. Reference to these trademarks is for illustrative and demo purposes only, and does not imply any affiliation with, endorsement by, or sponsorship from the respective trademark holders.
+        </p>
       </div>
     </footer>
   );

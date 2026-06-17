@@ -25,7 +25,7 @@ export default function Breadcrumbs({ slug }: BreadcrumbsProps) {
       <nav className="flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-6" aria-label="Breadcrumb">
         <span className="flex items-center gap-1">
           <Home className="h-3.5 w-3.5" />
-          <span>Docs</span>
+          <span>Learn</span>
         </span>
         <ChevronRight className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
         <span className="text-zinc-900 dark:text-zinc-200 font-semibold">Introduction</span>
@@ -48,7 +48,7 @@ export default function Breadcrumbs({ slug }: BreadcrumbsProps) {
         className="flex items-center gap-1 hover:text-zinc-950 dark:hover:text-zinc-50 transition-colors"
       >
         <Home className="h-3.5 w-3.5" />
-        <span>Docs</span>
+        <span>Learn</span>
       </Link>
       <ChevronRight className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
       <span>{currentPage.group}</span>

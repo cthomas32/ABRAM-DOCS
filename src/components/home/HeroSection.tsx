@@ -39,10 +39,10 @@ export default function HeroSection() {
         <Image
           src="/abram-logo-lockup-cream.png"
           alt="ABRAM"
-          width={100}
-          height={20}
+          width={115}
+          height={23}
           priority
-          className="h-5 w-auto opacity-100"
+          className="h-[23px] w-auto opacity-100"
         />
       </div>
 

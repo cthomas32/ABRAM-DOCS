@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABRAM 3D Orb Workspace Preview</title>
+  
+  <!-- Font imports -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono&display=swap">
+  
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind config for ABRAM colors -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            zinc: {
+              950: '#09090b',
+              900: '#18181b',
+              800: '#27272a',
+              700: '#3f3f46',
+              600: '#52525b',
+              500: '#71717a',
+              400: '#a1a1aa',
+              300: '#d4d4d8',
+              200: '#e4e4e7',
+              100: '#f4f4f5',
+              50: '#fafafa',
+            },
+            abram: {
+              black: '#0A0A0A',
+              cream: '#FAFAF9',
+              accent: '#CE1C1C',
+              blue: '#3B82F6',
+              lightblue: '#8ECAFF',
+            }
+          },
+          fontFamily: {
+            sans: ['Geist', 'Inter', 'sans-serif'],
+            mono: ['Geist Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Glassmorphism styling overrides -->
+  <style>
+    .glass-panel {
+      background: rgba(10, 10, 10, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .glass-card {
+      background: rgba(18, 18, 18, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .text-glow-abram {
+      text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    }
+    .glow-container {
+      transition: box-shadow 0.5s ease;
+    }
+    /* Custom Scrollbar for code blocks */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.01);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body class="bg-[#0A0A0A] text-zinc-300 font-sans min-h-screen relative overflow-x-hidden selection:bg-white/10 selection:text-white">
+
+  <!-- Glowing background elements -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute -top-[40%] -left-[30%] w-[80%] h-[80%] rounded-full bg-blue-950/8 blur-[120px]"></div>
+    <div class="absolute -bottom-[40%] -right-[30%] w-[80%] h-[80%] rounded-full bg-white/[0.015] blur-[120px]"></div>
+  </div>
+
+  <!-- Header Nav -->
+  <header class="fixed top-0 z-40 w-full bg-black/50 backdrop-blur-[20px] border-b border-white/8">
+    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- ABRAM logo -->
+        <a href="#" class="text-white flex items-center gap-2 hover:opacity-95 transition-opacity">
+          <svg class="w-32 h-auto text-zinc-50" viewBox="0 0 181 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M76.8455 18H74.0662L76.0248 13.5793L72.1077 4.77515H74.9056L77.1764 10.2659C77.2605 10.4692 77.5487 10.4688 77.6322 10.2653L79.8859 4.77515H82.7025L76.8455 18Z" fill="currentColor"/>
+            <path d="M68.4037 14.1015V7.01346H66.5198V4.77512H68.4037V3.56269C68.4037 2.45596 68.7395 1.58549 69.411 0.951294C70.0825 0.317098 70.9343 0 71.9664 0C72.6006 0 73.1415 0.0683936 73.5892 0.205181V2.46217C73.2908 2.35026 72.9426 2.2943 72.5446 2.2943C71.9851 2.2943 71.5809 2.41865 71.3322 2.66735C71.0835 2.90362 70.9591 3.30777 70.9591 3.87979V4.77512H73.5892V7.01346H70.9591V14.1015H68.4037Z" fill="currentColor"/>
+            <path d="M64.2336 3.24559C63.7984 3.24559 63.4191 3.09015 63.0958 2.77927C62.7725 2.45596 62.6108 2.07046 62.6108 1.6228C62.6108 1.17513 62.7725 0.795854 63.0958 0.484974C63.4191 0.161658 63.7984 0 64.2336 0C64.6937 0 65.0792 0.161658 65.3901 0.484974C65.7134 0.795854 65.8751 1.17513 65.8751 1.6228C65.8751 2.07046 65.7134 2.45596 65.3901 2.77927C65.0792 3.09015 64.6937 3.24559 64.2336 3.24559ZM62.9652 14.1015V4.77512H65.5207V14.1015H62.9652Z" fill="currentColor"/>
+            <path d="M58.5156 14.1014V0.111816H61.0711V14.1014H58.5156Z" fill="currentColor"/>
+            <path d="M55.6288 14.2134C54.5842 14.2134 53.7262 13.9274 53.0547 13.3554C52.3956 12.771 52.0661 11.9316 52.0661 10.8373V7.01346H50.1821V4.77512H52.0661V2.18237H54.6215V4.77512H57.2515V7.01346H54.6215V10.3337C54.6215 10.9057 54.7459 11.316 54.9946 11.5647C55.2433 11.801 55.6474 11.9191 56.207 11.9191C56.6049 11.9191 56.9531 11.8632 57.2515 11.7513V14.0083C56.8039 14.1451 56.2629 14.2134 55.6288 14.2134Z" fill="currentColor"/>
+            <path d="M40.6177 14.1017V4.77525H43.1731V5.43633C43.1731 5.55783 43.3389 5.61183 43.4201 5.52139C43.989 4.88718 44.7958 4.57007 45.8405 4.57007C46.9596 4.57007 47.8363 4.94313 48.4705 5.68924C49.1171 6.42292 49.4405 7.4053 49.4405 8.63638V14.1017H46.885V9.0654C46.885 8.38146 46.742 7.85297 46.456 7.47991C46.17 7.09442 45.7659 6.90167 45.2436 6.90167C44.6218 6.90167 44.1182 7.12551 43.7327 7.57317C43.3596 8.02084 43.1731 8.67991 43.1731 9.55037V14.1017H40.6177Z" fill="currentColor"/>
+            <path d="M37.4363 3.24559C37.001 3.24559 36.6218 3.09015 36.2985 2.77927C35.9751 2.45596 35.8135 2.07046 35.8135 1.6228C35.8135 1.17513 35.9751 0.795854 36.2985 0.484974C36.6218 0.161658 37.001 0 37.4363 0C37.8964 0 38.2819 0.161658 38.5927 0.484974C38.9161 0.795854 39.0777 1.17513 39.0777 1.6228C39.0777 2.07046 38.9161 2.45596 38.5927 2.77927C38.2819 3.09015 37.8964 3.24559 37.4363 3.24559ZM36.1679 14.1015V4.77512H38.7233V14.1015H36.1679Z" fill="currentColor"/>
+            <path d="M31.8297 14.1017V9.12136C31.8297 7.64157 31.3447 6.90167 30.3747 6.90167C29.8151 6.90167 29.3675 7.11307 29.0317 7.53587C28.7084 7.95867 28.5343 8.58664 28.5094 9.4198V14.1017H25.954V9.12136C25.954 7.64157 25.469 6.90167 24.4991 6.90167C23.9271 6.90167 23.4732 7.12551 23.1374 7.57317C22.8017 8.02084 22.6338 8.67991 22.6338 9.55037V14.1017H20.0784V4.77525H22.6338V5.4434C22.6338 5.56427 22.7967 5.61771 22.8767 5.52708C23.4397 4.88907 24.1857 4.57007 25.1146 4.57007C26.341 4.57007 27.2657 5.07469 27.8887 6.08392C27.9408 6.16825 28.0683 6.16687 28.1202 6.08241C28.3891 5.64448 28.7613 5.29581 29.2369 5.03639C29.7841 4.72551 30.3374 4.57007 30.897 4.57007C32.0037 4.57007 32.8618 4.93691 33.4711 5.67059C34.0804 6.40426 34.3851 7.41152 34.3851 8.69234V14.1017H31.8297Z" fill="currentColor"/>
+            <path d="M16.305 6.13856V1.08616C16.305 0.543984 15.8652 0.111816 15.3311 0.111816H10.281C9.48777 0.111816 8.70238 0.268962 7.97197 0.567549C7.24155 0.873994 6.57397 1.31402 6.01634 1.87977L5.97707 1.91906C5.2388 2.66552 4.71259 3.59271 4.44556 4.61419C4.92465 4.48847 5.41942 4.42561 5.91422 4.41775C7.23368 4.40204 8.5296 4.82635 9.58203 5.61996C10.5324 6.32715 11.2549 7.30148 11.6476 8.42511C12.056 9.56446 12.1031 10.806 11.7968 11.9767C12.81 11.7096 13.7446 11.1831 14.4907 10.4445L14.53 10.4052C15.0876 9.84733 15.5353 9.17944 15.8416 8.44869C16.1479 7.71793 16.2971 6.93218 16.2971 6.13856H16.305Z" fill="#18E299"/>
+            <path d="M4.29481 6.05311C4.30264 4.50318 4.92076 3.01587 6.00834 1.9043L1.80665 6.1079C1.791 6.12356 1.77534 6.13139 1.7597 6.14704C0.734705 7.16468 0.116597 8.52675 0.0148805 9.96709C-0.0790116 11.3135 0.273076 12.6442 1.02421 13.7558C1.09586 13.8618 1.29026 13.8967 1.39981 13.795L3.97401 11.2274C4.77992 10.4211 5.0303 9.22343 4.64691 8.151C4.40436 7.48562 4.28699 6.77328 4.29481 6.05311Z" fill="#0C8C5E"/>
+            <path d="M14.5056 10.4058C13.6997 11.1964 12.6904 11.7443 11.5949 11.987C10.4917 12.2297 9.34938 12.1592 8.28526 11.7835C8.28526 11.7835 8.27742 11.7835 8.2696 11.7835C7.19766 11.3999 6.00056 11.6504 5.19465 12.4489L2.62041 15.0164C2.51087 15.126 2.52651 15.3061 2.65953 15.3922C3.77059 16.1358 5.10076 16.4959 6.44654 16.402C7.88622 16.3002 9.23982 15.6818 10.2648 14.6563L10.3039 14.6172L14.5056 10.4136V10.4058Z" fill="#0C8C5E"/>
+            <path d="M89.8987 8.40288V14.2324H87.9874V1.14151H89.8731V6.01225H89.9945C90.2247 5.48384 90.5762 5.0641 91.0492 4.75302C91.5222 4.44194 92.1401 4.2864 92.9029 4.2864C93.5762 4.2864 94.1643 4.42489 94.6671 4.70188C95.1742 4.97887 95.5663 5.39222 95.8433 5.94194C96.1245 6.48739 96.2651 7.16921 96.2651 7.98739V14.2324H94.3539V8.21751C94.3539 7.49734 94.1685 6.9391 93.7978 6.54279C93.4271 6.14222 92.9114 5.94194 92.2509 5.94194C91.7992 5.94194 91.3944 6.03782 91.0364 6.22958C90.6828 6.42134 90.4036 6.70259 90.1991 7.07333C89.9988 7.43981 89.8987 7.88299 89.8987 8.40288ZM102.687 14.4306C101.72 14.4306 100.887 14.2239 100.188 13.8105C99.4932 13.3929 98.9563 12.807 98.577 12.0527C98.202 11.2942 98.0145 10.4057 98.0145 9.38725C98.0145 8.38157 98.202 7.49521 98.577 6.72816C98.9563 5.96111 99.4847 5.36239 100.162 4.932C100.844 4.5016 101.641 4.2864 102.553 4.2864C103.107 4.2864 103.644 4.37802 104.164 4.56126C104.684 4.7445 105.15 5.03214 105.564 5.42418C105.977 5.81623 106.303 6.32546 106.542 6.95188C106.78 7.57404 106.899 8.33043 106.899 9.22106V9.89862H99.0948V8.4668H105.027C105.027 7.96396 104.924 7.51864 104.72 7.13086C104.515 6.73881 104.228 6.42986 103.857 6.20401C103.49 5.97816 103.06 5.86523 102.566 5.86523C102.029 5.86523 101.56 5.99734 101.159 6.26154C100.763 6.52148 100.456 6.86239 100.239 7.28427C100.026 7.70188 99.9193 8.15572 99.9193 8.64577V9.76438C99.9193 10.4206 100.034 10.9789 100.265 11.4391C100.499 11.8993 100.825 12.2509 101.242 12.4938C101.66 12.7324 102.148 12.8517 102.706 12.8517C103.068 12.8517 103.399 12.8006 103.697 12.6983C103.995 12.5918 104.253 12.4341 104.47 12.2253C104.688 12.0165 104.854 11.7587 104.969 11.4519L106.778 11.7779C106.633 12.3105 106.373 12.7772 105.998 13.1777C105.627 13.574 105.161 13.883 104.598 14.1046C104.04 14.3219 103.403 14.4306 102.687 14.4306ZM110.571 1.14151V14.2324H108.66V1.14151H110.571ZM112.782 17.9142V4.41424H114.649V6.00586H114.809C114.92 5.80131 115.079 5.56481 115.288 5.29634C115.497 5.02788 115.787 4.7935 116.157 4.59322C116.528 4.38867 117.018 4.2864 117.628 4.2864C118.42 4.2864 119.128 4.48668 119.75 4.88725C120.372 5.28782 120.86 5.86523 121.214 6.6195C121.572 7.37376 121.75 8.28143 121.75 9.34251C121.75 10.4036 121.574 11.3134 121.22 12.0719C120.866 12.8262 120.38 13.4078 119.763 13.8169C119.145 14.2218 118.439 14.4242 117.647 14.4242C117.05 14.4242 116.562 14.324 116.183 14.1238C115.808 13.9235 115.514 13.6891 115.301 13.4206C115.088 13.1522 114.924 12.9135 114.809 12.7047H114.694V17.9142H112.782ZM114.655 9.32333C114.655 10.0137 114.755 10.6188 114.956 11.1387C115.156 11.6586 115.446 12.0655 115.825 12.3596C116.204 12.6493 116.669 12.7942 117.219 12.7942C117.79 12.7942 118.267 12.6429 118.65 12.3404C119.034 12.0336 119.324 11.6181 119.52 11.0939C119.72 10.5698 119.82 9.97958 119.82 9.32333C119.82 8.6756 119.722 8.09393 119.526 7.5783C119.334 7.06268 119.045 6.65572 118.657 6.35742C118.273 6.05913 117.794 5.90998 117.219 5.90998C116.665 5.90998 116.196 6.05273 115.812 6.33825C115.433 6.62376 115.145 7.02219 114.949 7.53356C114.753 8.04492 114.655 8.64151 114.655 9.32333ZM132.071 14.4306C131.121 14.4306 130.303 14.2154 129.617 13.785C128.935 13.3503 128.411 12.7516 128.044 11.9888C127.678 11.226 127.494 10.3525 127.494 9.36807C127.494 8.37092 127.682 7.49094 128.057 6.72816C128.432 5.96111 128.96 5.36239 129.642 4.932C130.324 4.5016 131.127 4.2864 132.052 4.2864C132.798 4.2864 133.462 4.42489 134.046 4.70188C134.63 4.97461 135.101 5.35813 135.459 5.85245C135.821 6.34677 136.036 6.92418 136.105 7.58469H134.244C134.142 7.12447 133.908 6.72816 133.541 6.39577C133.179 6.06339 132.693 5.89719 132.084 5.89719C131.551 5.89719 131.085 6.03782 130.684 6.31907C130.288 6.59606 129.979 6.99236 129.757 7.50799C129.536 8.01935 129.425 8.62447 129.425 9.32333C129.425 10.0392 129.533 10.6571 129.751 11.177C129.968 11.6969 130.275 12.0996 130.671 12.3851C131.072 12.6706 131.543 12.8134 132.084 12.8134C132.446 12.8134 132.774 12.7473 133.068 12.6152C133.367 12.4789 133.616 12.285 133.816 12.0336C134.021 11.7821 134.163 11.4796 134.244 11.1259H136.105C136.036 11.7608 135.83 12.3276 135.484 12.8262C135.139 13.3248 134.677 13.7168 134.097 14.0023C133.522 14.2878 132.847 14.4306 132.071 14.4306ZM142.02 14.4306C141.053 14.4306 140.219 14.2239 139.521 13.8105C138.826 13.3929 138.289 12.807 137.91 12.0527C137.535 11.2942 137.347 10.4057 137.347 9.38725C137.347 8.38157 137.535 7.49521 137.91 6.72816C138.289 5.96111 138.817 5.36239 139.495 4.932C140.177 4.5016 140.974 4.2864 141.886 4.2864C142.44 4.2864 142.977 4.37802 143.496 4.56126C144.016 4.7445 144.483 5.03214 144.896 5.42418C145.31 5.81623 145.636 6.32546 145.874 6.95188C146.113 7.57404 146.232 8.33043 146.232 9.22106V9.89862H138.428V8.4668H144.359C144.359 7.96396 144.257 7.51864 144.053 7.13086C143.848 6.73881 143.56 6.42986 143.19 6.20401C142.823 5.97816 142.393 5.86523 141.898 5.86523C141.362 5.86523 140.893 5.99734 140.492 6.26154C140.096 6.52148 139.789 6.86239 139.572 7.28427C139.359 7.70188 139.252 8.15572 139.252 8.64577V9.76438C139.252 10.4206 139.367 10.9789 139.597 11.4391C139.832 11.8993 140.158 12.2509 140.575 12.4938C140.993 12.7324 141.481 12.8517 142.039 12.8517C142.401 12.8517 142.732 12.8006 143.03 12.6983C143.328 12.5918 143.586 12.4341 143.803 12.2253C144.021 12.0165 144.187 11.7587 144.302 11.4519L146.111 11.7779C145.966 12.3105 145.706 12.7772 145.331 13.1777C144.96 13.574 144.494 13.883 143.931 14.1046C143.373 14.3219 142.736 14.4306 142.02 14.4306ZM149.904 8.40288V14.2324H147.993V4.41424H149.827V6.01225H149.949C150.175 5.49236 150.528 5.07475 151.01 4.75941C151.496 4.44407 152.107 4.2864 152.844 4.2864C153.513 4.2864 154.099 4.42702 154.602 4.70827C155.105 4.98526 155.495 5.39861 155.772 5.94833C156.049 6.49805 156.187 7.17773 156.187 7.98739V14.2324H154.276V8.21751C154.276 7.50586 154.091 6.94975 153.72 6.54918C153.349 6.14435 152.84 5.94194 152.192 5.94194C151.749 5.94194 151.355 6.03782 151.01 6.22958C150.669 6.42134 150.398 6.70259 150.198 7.07333C150.002 7.43981 149.904 7.88299 149.904 8.40288ZM162.974 4.41424V5.94833H157.611V4.41424H162.974ZM159.049 2.06197H160.96V11.3496C160.96 11.7203 161.016 11.9995 161.126 12.187C161.237 12.3702 161.38 12.4959 161.555 12.5641C161.734 12.628 161.928 12.66 162.136 12.66C162.29 12.66 162.424 12.6493 162.539 12.628C162.654 12.6067 162.744 12.5897 162.808 12.5769L163.153 14.1557C163.042 14.1983 162.884 14.2409 162.68 14.2836C162.475 14.3304 162.219 14.356 161.913 14.3603C161.41 14.3688 160.941 14.2793 160.506 14.0918C160.072 13.9043 159.72 13.6145 159.452 13.2225C159.183 12.8304 159.049 12.3382 159.049 11.7459V2.06197ZM168.854 14.4306C167.887 14.4306 167.054 14.2239 166.355 13.8105C165.66 13.3929 165.123 12.807 164.744 12.0527C164.369 11.2942 164.181 10.4057 164.181 9.38725C164.181 8.38157 164.369 7.49521 164.744 6.72816C165.123 5.96111 165.652 5.36239 166.329 4.932C167.011 4.5016 167.808 4.2864 168.72 4.2864C169.274 4.2864 169.811 4.37802 170.331 4.56126C170.85 4.7445 171.317 5.03214 171.73 5.42418C172.144 5.81623 172.47 6.32546 172.708 6.95188C172.947 7.57404 173.066 8.33043 173.066 9.22106V9.89862H165.262V8.4668H171.193C171.193 7.96396 171.091 7.51864 170.887 7.13086C170.682 6.73881 170.394 6.42986 170.024 6.20401C169.657 5.97816 169.227 5.86523 168.733 5.86523C168.196 5.86523 167.727 5.99734 167.326 6.26154C166.93 6.52148 166.623 6.86239 166.406 7.28427C166.193 7.70188 166.086 8.15572 166.086 8.64577V9.76438C166.086 10.4206 166.201 10.9789 166.431 11.4391C166.666 11.8993 166.992 12.2509 167.409 12.4938C167.827 12.7324 168.315 12.8517 168.873 12.8517C169.235 12.8517 169.566 12.8006 169.864 12.6983C170.162 12.5918 170.42 12.4341 170.637 12.2253C170.855 12.0165 171.021 11.7587 171.136 11.4519L172.945 11.7779C172.8 12.3105 172.54 12.7772 172.165 13.1777C171.794 13.574 171.328 13.883 170.765 14.1046C170.207 14.3219 169.57 14.4306 168.854 14.4306ZM174.827 14.2324V4.41424H176.674V5.9739H176.776C176.955 5.44549 177.271 5.03001 177.722 4.72745C178.178 4.42063 178.694 4.26722 179.269 4.26722C179.389 4.26722 179.529 4.27148 179.691 4.28001C179.857 4.28853 179.987 4.29918 180.081 4.31197V6.14009C180.004 6.11879 179.868 6.09535 179.672 6.06978C179.476 6.03995 179.28 6.02504 179.084 6.02504C178.632 6.02504 178.23 6.12092 177.876 6.31268C177.526 6.50018 177.249 6.76225 177.045 7.0989C176.84 7.43129 176.738 7.81055 176.738 8.23668V14.2324H174.827Z" fill="currentColor"/>
+          </svg>
+        </a>
+        <div class="h-4 w-px bg-white/10 hidden sm:block"></div>
+        <span class="text-xs font-medium text-zinc-500 uppercase tracking-widest hidden sm:block">3D Orb Workspace</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/docs" class="px-4 py-1.5 rounded-full bg-white/[0.04] backdrop-blur-md border border-white/10 text-white text-xs font-medium hover:bg-white/[0.08] hover:border-white/15 transition-all duration-200 cursor-pointer select-none">
+          Back to Docs
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid container -->
+  <main class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 relative z-10">
+    <!-- Page Header -->
+    <div class="mb-10 text-center lg:text-left">
+      <h1 class="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">ABRAM 3D Orb Workspace Preview</h1>
+      <p class="mt-2 text-base text-zinc-400 max-w-2xl">
+        An interactive laboratory environment displaying procedural shaders, Euclidean dynamic vectors, and trigonometric wave rendering pipelines.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- Left Column: Preview Container -->
+      <div class="lg:col-span-8 flex flex-col gap-5">
+        
+        <!-- Main Glowing Glass Container -->
+        <div id="preview-container-wrapper" class="glass-panel rounded-2xl relative w-full h-[500px] md:h-[620px] overflow-hidden flex flex-col shadow-2xl transition-all duration-500 border border-white/5 glow-container">
+          
+          <!-- Top Toolbar inside Preview -->
+          <div class="flex items-center justify-between px-6 h-14 bg-black/20 border-b border-white/5 backdrop-blur-md z-10 shrink-0">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="active-render-badge" class="text-xs font-semibold tracking-wider text-zinc-400 uppercase">Perlin Noise Orb</span>
+            </div>
+            
+            <div class="flex items-center gap-2.5">
+              <!-- Play/Pause Button -->
+              <button id="btn-play-pause" class="h-8 px-3.5 rounded-full bg-white/[0.04] text-zinc-200 hover:bg-white/[0.08] hover:text-white border border-white/10 text-xs font-medium flex items-center gap-1.5 transition-all duration-200 select-none cursor-pointer">
+                <svg id="icon-play" class="w-3 h-3 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg id="icon-pause" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                <span id="text-play-pause">Pause</span>
+              </button>
+              
+              <!-- Reset Button -->
+              <button id="btn-reset" class="h-8 px-3.5 rounded-full bg-white/[0.04] text-zinc-200 hover:bg-white/[0.08] hover:text-white border border-white/10 text-xs font-medium flex items-center gap-1.5 transition-all duration-200 select-none cursor-pointer">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                <span>Reset</span>
+              </button>
+
+              <div class="w-px h-3.5 bg-white/10"></div>
+
+              <!-- Fullscreen Button -->
+              <button id="btn-fullscreen" class="h-8 w-8 rounded-full bg-white/[0.04] text-zinc-200 hover:bg-white/[0.08] hover:text-white border border-white/10 text-xs font-medium flex items-center justify-center transition-all duration-200 select-none cursor-pointer">
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75v4.5m0-4.5h-4.5m4.5 0L15 9m5.25 11.25v-4.5m0 4.5h-4.5m4.5 0L15 15" /></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Canvas Container -->
+          <div id="preview-container" class="flex-1 w-full relative overflow-hidden bg-black/40 cursor-grab active:cursor-grabbing">
+            <!-- Active canvas rendered here -->
+          </div>
+
+          <!-- Floating instructions overlay -->
+          <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none text-[10px] text-zinc-500 font-mono uppercase tracking-wider select-none z-10 bg-[#0A0A0A]/60 backdrop-blur-sm px-3.5 py-2 rounded-lg border border-white/5">
+            <span>Drag pointer to rotate</span>
+            <span id="canvas-resolution-badge">60 FPS // 100% SCALE</span>
+          </div>
+        </div>
+        
+        <!-- Sub-panel Explainer (Bottom of preview) -->
+        <div class="glass-panel rounded-2xl p-6 border border-white/5">
+          <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <div>
+              <h2 id="explainer-title" class="text-lg font-semibold tracking-tight text-white">Perlin Noise Orb</h2>
+              <p id="explainer-subtitle" class="text-xs text-zinc-500 uppercase tracking-widest mt-0.5">Procedural GPU Displacement</p>
+            </div>
+            <span id="explainer-badge" class="text-[10px] font-mono font-semibold bg-white/5 border border-white/10 text-zinc-300 px-2.5 py-1 rounded">WebGL Shaders</span>
+          </div>
+          <p id="explainer-desc" class="text-sm text-zinc-400 leading-7">
+            This engine runs entirely on the GPU via custom WebGL vertex and fragment shaders. A tessellated icosahedron geometry is deformed along its vertex normals using 3D Simplex noise generated in real-time. The fragment shader calculates a high-fidelity Fresnel glow coefficient to render depth, resulting in a bioluminescent-like liquid light sphere.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Column: Control Panel -->
+      <div class="lg:col-span-4 flex flex-col gap-6">
+        
+        <!-- Tab selector card -->
+        <div class="glass-panel rounded-2xl p-4 border border-white/5 flex flex-col gap-2.5">
+          <label class="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500 pl-1">Render Engine Selector</label>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button onclick="initView('perlin')" id="tab-perlin" class="px-3 py-2 text-xs font-semibold rounded-full select-none cursor-pointer text-center transition-all duration-200">
+              Perlin Noise
+            </button>
+            <button onclick="initView('neural')" id="tab-neural" class="px-3 py-2 text-xs font-semibold rounded-full select-none cursor-pointer text-center transition-all duration-200">
+              Neural Network
+            </button>
+            <button onclick="initView('kinetic')" id="tab-kinetic" class="px-3 py-2 text-xs font-semibold rounded-full select-none cursor-pointer text-center transition-all duration-200">
+              Kinetic Wave
+            </button>
+            <button onclick="initView('side-by-side')" id="tab-side-by-side" class="px-3 py-2 text-xs font-semibold rounded-full select-none cursor-pointer text-center transition-all duration-200">
+              Split View
+            </button>
+          </div>
+        </div>
+
+        <!-- Settings Controls card -->
+        <div class="glass-panel rounded-2xl p-6 border border-white/5 flex flex-col gap-6">
+          <h3 class="text-xs font-bold text-white uppercase tracking-widest border-b border-white/5 pb-2">Orchestration</h3>
+          
+          <!-- Speed Slider -->
+          <div class="flex flex-col gap-2.5">
+            <div class="flex items-center justify-between text-xs font-medium text-zinc-400">
+              <span>Speed Factor</span>
+              <span id="val-speed" class="font-mono text-white bg-white/5 px-2 py-0.5 rounded text-[10px]">1.0x</span>
+            </div>
+            <input type="range" id="slider-speed" min="0.1" max="3.0" step="0.1" value="1.0">
+            <p class="text-[10px] text-zinc-500">Controls rotation increments and time scalar in procedural calculations.</p>
+          </div>
+
+          <!-- Density Slider -->
+          <div class="flex flex-col gap-2.5">
+            <div class="flex items-center justify-between text-xs font-medium text-zinc-400">
+              <span>Particle Density</span>
+              <span id="val-density" class="font-mono text-white bg-white/5 px-2 py-0.5 rounded text-[10px]">1.0</span>
+            </div>
+            <input type="range" id="slider-density" min="0.1" max="2.0" step="0.1" value="1.0">
+            <p class="text-[10px] text-zinc-500">Maps to geometry subdivision, particle count, or wave concentric channels.</p>
+          </div>
+
+          <!-- Noise Intensity Slider -->
+          <div class="flex flex-col gap-2.5">
+            <div class="flex items-center justify-between text-xs font-medium text-zinc-400">
+              <span>Wave Displacement</span>
+              <span id="val-noise" class="font-mono text-white bg-white/5 px-2 py-0.5 rounded text-[10px]">1.0</span>
+            </div>
+            <input type="range" id="slider-noise" min="0.1" max="2.0" step="0.1" value="1.0">
+            <p class="text-[10px] text-zinc-500">Scales the amplitude of noise maps or boundary threshold distances.</p>
+          </div>
+
+          <!-- Color Palette Buttons -->
+          <div class="flex flex-col gap-3">
+            <label class="text-xs font-medium text-zinc-400">Color Spectrum</label>
+            <div class="flex flex-col gap-2">
+              <!-- Palette ABRAM -->
+              <button onclick="setPalette('abram')" id="palette-abram" class="flex items-center justify-between px-4 py-2.5 rounded-full border text-xs font-medium transition-all duration-200 select-none cursor-pointer">
+                <span class="flex items-center gap-2.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-[#FAFAF9] to-[#0B2545]"></span>
+                  ABRAM (Cream/Navy)
+                </span>
+                <span class="text-[9px] text-zinc-500 uppercase tracking-widest font-mono">Accent</span>
+              </button>
+              
+              <!-- Palette Ocean -->
+              <button onclick="setPalette('ocean')" id="palette-ocean" class="flex items-center justify-between px-4 py-2.5 rounded-full border text-xs font-medium transition-all duration-200 select-none cursor-pointer">
+                <span class="flex items-center gap-2.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600"></span>
+                  Ocean (Cyan/Blue)
+                </span>
+                <span class="text-[9px] text-zinc-500 uppercase tracking-widest font-mono">Calm</span>
+              </button>
+              
+              <!-- Palette Cyberpunk -->
+              <button onclick="setPalette('cyberpunk')" id="palette-cyberpunk" class="flex items-center justify-between px-4 py-2.5 rounded-full border text-xs font-medium transition-all duration-200 select-none cursor-pointer">
+                <span class="flex items-center gap-2.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-pink-500 to-cyan-500"></span>
+                  Cyberpunk (Pink/Cyan)
+                </span>
+                <span class="text-[9px] text-zinc-500 uppercase tracking-widest font-mono">Vibrant</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Math / Shader Code Fragment -->
+        <div class="glass-panel rounded-2xl p-5 border border-white/5 flex flex-col gap-3">
+          <label class="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500 pl-1">Algorithmic Pipeline Fragment</label>
+          <div class="bg-black/50 border border-white/5 rounded-xl p-4 overflow-x-auto">
+            <pre class="text-xs font-mono text-zinc-200 leading-relaxed select-all" id="code-fragment">
+// GLSL Vertex Shader Displacement
+float noise = snoise(position * uNoiseFreq + vec3(0, 0, uTime * uSpeed));
+vec3 displaced = position + normal * noise * uNoiseAmp;
+gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
+            </pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ==========================================
+    // JS SIMPLEX NOISE LIBRARY (CPU)
+    // ==========================================
+    class SimplexNoise {
+      constructor() {
+        this.grad3 = [
+          [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
+          [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],
+          [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]
+        ];
+        this.p = new Uint8Array(256);
+        for (let i=0; i<256; i++) {
+          this.p[i] = Math.floor(Math.random()*256);
+        }
+        this.perm = new Uint8Array(512);
+        this.permMod12 = new Uint8Array(512);
+        for (let i=0; i<512; i++) {
+          this.perm[i] = this.p[i & 255];
+          this.permMod12[i] = (this.perm[i] % 12);
+        }
+      }
+      dot(g, x, y, z) { return g[0]*x + g[1]*y + g[2]*z; }
+      noise3D(xin, yin, zin) {
+        let n0, n1, n2, n3;
+        const F3 = 1.0/3.0;
+        const G3 = 1.0/6.0;
+        let s = (xin+yin+zin)*F3;
+        let i = Math.floor(xin+s);
+        let j = Math.floor(yin+s);
+        let k = Math.floor(zin+s);
+        let t = (i+j+k)*G3;
+        let X0 = i-t;
+        let Y0 = j-t;
+        let Z0 = k-t;
+        let x0 = xin-X0;
+        let y0 = yin-Y0;
+        let z0 = zin-Z0;
+        let i1, j1, k1;
+        let i2, j2, k2;
+        if(x0>=y0) {
+          if(y0>=z0) { i1=1; j1=0; k1=0; i2=1; j2=1; k2=0; }
+          else if(x0>=z0) { i1=1; j1=0; k1=0; i2=1; j2=0; k2=1; }
+          else { i1=0; j1=0; k1=1; i2=1; j2=0; k2=1; }
+        } else {
+          if(y0<z0) { i1=0; j1=0; k1=1; i2=0; j2=1; k2=1; }
+          else if(x0<z0) { i1=0; j1=1; k1=0; i2=0; j2=1; k2=1; }
+          else { i1=0; j1=1; k1=0; i2=1; j2=1; k2=0; }
+        }
+        let x1 = x0 - i1 + G3;
+        let y1 = y0 - j1 + G3;
+        let z1 = z0 - k1 + G3;
+        let x2 = x0 - i2 + 2.0*G3;
+        let y2 = y0 - j2 + 2.0*G3;
+        let z2 = z0 - k2 + 2.0*G3;
+        let x3 = x0 - 1.0 + 3.0*G3;
+        let y3 = y0 - 1.0 + 3.0*G3;
+        let z3 = z0 - 1.0 + 3.0*G3;
+        let ii = i & 255;
+        let jj = j & 255;
+        let kk = k & 255;
+        let gi0 = this.permMod12[ii+this.perm[jj+this.perm[kk]]];
+        let gi1 = this.permMod12[ii+i1+this.perm[jj+j1+this.perm[kk+k1]]];
+        let gi2 = this.permMod12[ii+i2+this.perm[jj+j2+this.perm[kk+k2]]];
+        let gi3 = this.permMod12[ii+1+this.perm[jj+1+this.perm[kk+1]]];
+        let t0 = 0.6 - x0*x0 - y0*y0 - z0*z0;
+        if(t0<0) n0 = 0.0;
+        else { t0 *= t0; n0 = t0 * t0 * this.dot(this.grad3[gi0], x0, y0, z0); }
+        let t1 = 0.6 - x1*x1 - y1*y1 - z1*z1;
+        if(t1<0) n1 = 0.0;
+        else { t1 *= t1; n1 = t1 * t1 * this.dot(this.grad3[gi1], x1, y1, z1); }
+        let t2 = 0.6 - x2*x2 - y2*y2 - z2*z2;
+        if(t2<0) n2 = 0.0;
+        else { t2 *= t2; n2 = t2 * t2 * this.dot(this.grad3[gi2], x2, y2, z2); }
+        let t3 = 0.6 - x3*x3 - y3*y3 - z3*z3;
+        if(t3<0) n3 = 0.0;
+        else { t3 *= t3; n3 = t3 * t3 * this.dot(this.grad3[gi3], x3, y3, z3); }
+        return 32.0*(n0 + n1 + n2 + n3);
+      }
+    }
+
+    // ==========================================
+    // RENDER ENGINE CLASS 1: PERLIN NOISE ORB
+    // ==========================================
+    class PerlinNoiseOrb {
+      constructor(container, config = {}) {
+        this.container = container;
+        this.config = Object.assign({
+          speed: 1.0,
+          density: 1.0,
+          noiseIntensity: 1.0,
+          noiseFrequency: 1.0,
+          colorPalette: 'abram'
+        }, config);
+        
+        this.paused = false;
+        this.localTime = 0;
+        
+        // Mouse rotation parameters
+        this.rotationXTarget = 0;
+        this.rotationYTarget = 0;
+        this.isDragging = false;
+        this.previousMousePosition = { x: 0, y: 0 };
+        
+        this.init();
+      }
+      
+      init() {
+        this.scene = new THREE.Scene();
+        
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+        
+        this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        this.camera.position.z = 4.8;
+        
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer.setSize(width, height);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.container.appendChild(this.renderer.domElement);
+        
+        const detail = Math.floor(32 + this.config.density * 32);
+        this.geometry = new THREE.IcosahedronGeometry(1.6, detail);
+        
+        this.material = new THREE.ShaderMaterial({
+          uniforms: {
+            uTime: { value: 0 },
+            uSpeed: { value: this.config.speed },
+            uNoiseFreq: { value: this.config.noiseFrequency * 0.8 },
+            uNoiseAmp: { value: this.config.noiseIntensity * 0.35 },
+            uColor1: { value: new THREE.Color() },
+            uColor2: { value: new THREE.Color() }
+          },
+          vertexShader: `
+            uniform float uTime;
+            uniform float uSpeed;
+            uniform float uNoiseFreq;
+            uniform float uNoiseAmp;
+            
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying float vNoiseVal;
+            
+            vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+            vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+            
+            float snoise(vec3 v){
+              const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+              const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+            
+              vec3 i  = floor(v + dot(v, C.yyy) );
+              vec3 x0 =   v - i + dot(i, C.xxx) ;
+            
+              vec3 g = step(x0.yzx, x0.xyz);
+              vec3 l = 1.0 - g;
+              vec3 i1 = min( g.xyz, l.zxy );
+              vec3 i2 = max( g.xyz, l.zxy );
+            
+              vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+              vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+              vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
+            
+              i = mod(i, 289.0 );
+              vec4 p = permute( permute( permute(
+                         i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                       + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+                       + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+            
+              float n_ = 1.0/7.0;
+              vec3  ns = n_ * D.wyz - D.xzx;
+            
+              vec4 j = p - 49.0 * floor(p * ns.z *ns.z);
+            
+              vec4 x_ = floor(j * ns.z);
+              vec4 y_ = floor(j - 7.0 * x_ );
+            
+              vec4 x = x_ *ns.x + ns.yyyy;
+              vec4 y = y_ *ns.x + ns.yyyy;
+              vec4 h = 1.0 - abs(x) - abs(y);
+            
+              vec4 b0 = vec4( x.xy, y.xy );
+              vec4 b1 = vec4( x.zw, y.zw );
+            
+              vec4 s0 = floor(b0)*2.0 + 1.0;
+              vec4 s1 = floor(b1)*2.0 + 1.0;
+              vec4 sh = -step(h, vec4(0.0));
+            
+              vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+              vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+            
+              vec3 p0 = vec3(a0.xy,h.x);
+              vec3 p1 = vec3(a0.zw,h.y);
+              vec3 p2 = vec3(a1.xy,h.z);
+              vec3 p3 = vec3(a1.zw,h.w);
+            
+              vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+              p0 *= norm.x;
+              p1 *= norm.y;
+              p2 *= norm.z;
+              p3 *= norm.w;
+            
+              vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+              m = m * m;
+              return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                                            dot(p2,x2), dot(p3,x3) ) );
+            }
+            
+            void main() {
+              vNormal = normalize(normalMatrix * normal);
+              vPosition = position;
+              
+              float t = uTime * uSpeed * 0.4;
+              float noise = snoise(position * uNoiseFreq + vec3(0.0, 0.0, t));
+              vNoiseVal = noise;
+              
+              vec3 displaced = position + normal * noise * uNoiseAmp;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 uColor1;
+            uniform vec3 uColor2;
+            
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying float vNoiseVal;
+            
+            void main() {
+              vec3 normal = normalize(vNormal);
+              vec3 viewDir = vec3(0.0, 0.0, 1.0);
+              
+              float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 3.0);
+              
+              float mixFactor = vNoiseVal * 0.5 + 0.5;
+              vec3 baseColor = mix(uColor1, uColor2, mixFactor);
+              
+              float diff = max(dot(normal, vec3(1.0, 1.0, 1.0)), 0.0);
+              vec3 lightColor = vec3(1.0, 1.0, 1.0) * diff * 0.15;
+              
+              vec3 finalColor = baseColor + lightColor + fresnel * mix(uColor1, uColor2, 0.8);
+              
+              gl_FragColor = vec4(finalColor, 0.85);
+            }
+          `,
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide
+        });
+        
+        this.mesh = new THREE.Mesh(this.geometry, this.material);
+        this.scene.add(this.mesh);
+        
+        this.updateColors();
+        this.setupMouseInteraction();
+        
+        this.resizeObserver = new ResizeObserver(() => this.resize());
+        this.resizeObserver.observe(this.container);
+        
+        this.clock = new THREE.Clock();
+        this.animate();
+      }
+      
+      setupMouseInteraction() {
+        this.onPointerDown = (e) => {
+          this.isDragging = true;
+          this.previousMousePosition = { x: e.clientX, y: e.clientY };
+        };
+        
+        this.onPointerMove = (e) => {
+          if (!this.isDragging) return;
+          const deltaX = e.clientX - this.previousMousePosition.x;
+          const deltaY = e.clientY - this.previousMousePosition.y;
+          
+          this.rotationYTarget += deltaX * 0.006;
+          this.rotationXTarget += deltaY * 0.006;
+          
+          this.previousMousePosition = { x: e.clientX, y: e.clientY };
+        };
+        
+        this.onPointerUp = () => { this.isDragging = false; };
+        
+        this.container.addEventListener('pointerdown', this.onPointerDown);
+        window.addEventListener('pointermove', this.onPointerMove);
+        window.addEventListener('pointerup', this.onPointerUp);
+      }
+      
+      updateColors() {
+        let c1, c2;
+        if (this.config.colorPalette === 'abram') {
+          c1 = new THREE.Color('#FAFAF9');
+          c2 = new THREE.Color('#0B2545');
+        } else if (this.config.colorPalette === 'ocean') {
+          c1 = new THREE.Color('#06B6D4');
+          c2 = new THREE.Color('#2563EB');
+        } else if (this.config.colorPalette === 'cyberpunk') {
+          c1 = new THREE.Color('#EC4899');
+          c2 = new THREE.Color('#06B6D4');
+        } else {
+          c1 = new THREE.Color('#ffffff');
+          c2 = new THREE.Color('#3f3f46');
+        }
+        this.material.uniforms.uColor1.value.copy(c1);
+        this.material.uniforms.uColor2.value.copy(c2);
+      }
+      
+      updateConfig(newConfig) {
+        Object.assign(this.config, newConfig);
+        if (this.material) {
+          if (newConfig.speed !== undefined) this.material.uniforms.uSpeed.value = this.config.speed;
+          if (newConfig.noiseFrequency !== undefined) this.material.uniforms.uNoiseFreq.value = this.config.noiseFrequency * 0.8;
+          if (newConfig.noiseIntensity !== undefined) this.material.uniforms.uNoiseAmp.value = this.config.noiseIntensity * 0.35;
+          if (newConfig.colorPalette !== undefined) this.updateColors();
+          if (newConfig.density !== undefined) {
+            const detail = Math.floor(32 + this.config.density * 32);
+            this.mesh.geometry.dispose();
+            this.mesh.geometry = new THREE.IcosahedronGeometry(1.6, detail);
+          }
+        }
+      }
+      
+      animate() {
+        if (!this.renderer) return;
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+        
+        const delta = this.clock.getDelta();
+        if (!this.paused) {
+          this.localTime += delta;
+        }
+        this.material.uniforms.uTime.value = this.localTime;
+        
+        // Auto-rotation combined with user rotation target
+        const autoRotTime = this.localTime * 0.05;
+        this.mesh.rotation.y += (this.rotationYTarget + autoRotTime - this.mesh.rotation.y) * 0.1;
+        this.mesh.rotation.x += (this.rotationXTarget - this.mesh.rotation.x) * 0.1;
+        
+        this.renderer.render(this.scene, this.camera);
+      }
+      
+      resize() {
+        if (!this.container || !this.renderer) return;
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
+      }
+      
+      destroy() {
+        cancelAnimationFrame(this.animationFrameId);
+        
+        this.container.removeEventListener('pointerdown', this.onPointerDown);
+        window.removeEventListener('pointermove', this.onPointerMove);
+        window.removeEventListener('pointerup', this.onPointerUp);
+        
+        if (this.resizeObserver) {
+          this.resizeObserver.disconnect();
+        }
+        if (this.renderer) {
+          this.container.removeChild(this.renderer.domElement);
+          this.renderer.dispose();
+        }
+        if (this.geometry) this.geometry.dispose();
+        if (this.material) this.material.dispose();
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+      }
+    }
+
+    // ==========================================
+    // RENDER ENGINE CLASS 2: NEURAL NETWORK ORB
+    // ==========================================
+    class NeuralConnectiveOrb {
+      constructor(container, config = {}) {
+        this.container = container;
+        this.config = Object.assign({
+          speed: 1.0,
+          density: 1.0,
+          noiseIntensity: 1.0,
+          noiseFrequency: 1.0,
+          colorPalette: 'abram'
+        }, config);
+        
+        this.paused = false;
+        this.localTime = 0;
+        
+        this.rotationXTarget = 0;
+        this.rotationYTarget = 0;
+        this.isDragging = false;
+        this.previousMousePosition = { x: 0, y: 0 };
+        
+        this.init();
+      }
+      
+      init() {
+        this.scene = new THREE.Scene();
+        
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+        
+        this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        this.camera.position.z = 4.5;
+        
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer.setSize(width, height);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.container.appendChild(this.renderer.domElement);
+        
+        this.maxConnections = 800;
+        this.rebuildParticles();
+        this.setupMouseInteraction();
+        
+        this.resizeObserver = new ResizeObserver(() => this.resize());
+        this.resizeObserver.observe(this.container);
+        
+        this.clock = new THREE.Clock();
+        this.animate();
+      }
+      
+      setupMouseInteraction() {
+        this.onPointerDown = (e) => {
+          this.isDragging = true;
+          this.previousMousePosition = { x: e.clientX, y: e.clientY };
+        };
+        
+        this.onPointerMove = (e) => {
+          if (!this.isDragging) return;
+          const deltaX = e.clientX - this.previousMousePosition.x;
+          const deltaY = e.clientY - this.previousMousePosition.y;
+          
+          this.rotationYTarget += deltaX * 0.006;
+          this.rotationXTarget += deltaY * 0.006;
+          
+          this.previousMousePosition = { x: e.clientX, y: e.clientY };
+        };
+        
+        this.onPointerUp = () => { this.isDragging = false; };
+        
+        this.container.addEventListener('pointerdown', this.onPointerDown);
+        window.addEventListener('pointermove', this.onPointerMove);
+        window.addEventListener('pointerup', this.onPointerUp);
+      }
+      
+      rebuildParticles() {
+        if (this.pointsMesh) this.scene.remove(this.pointsMesh);
+        if (this.linesMesh) this.scene.remove(this.linesMesh);
+        if (this.pointsGeometry) this.pointsGeometry.dispose();
+        if (this.linesGeometry) this.linesGeometry.dispose();
+        if (this.pointsMaterial) this.pointsMaterial.dispose();
+        if (this.linesMaterial) this.linesMaterial.dispose();
+        
+        this.particleCount = Math.floor(45 + this.config.density * 105);
+        this.particles = [];
+        
+        const positions = new Float32Array(this.particleCount * 3);
+        const colors = new Float32Array(this.particleCount * 3);
+        
+        const palette = this.getColors();
+        
+        for (let i = 0; i < this.particleCount; i++) {
+          const u = Math.random();
+          const v = Math.random();
+          const theta = u * 2.0 * Math.PI;
+          const phi = Math.acos(2.0 * v - 1.0);
+          const r = Math.cbrt(Math.random()) * 1.5;
+          
+          const x = r * Math.sin(phi) * Math.cos(theta);
+          const y = r * Math.sin(phi) * Math.sin(theta);
+          const z = r * Math.cos(phi);
+          
+          positions[i * 3] = x;
+          positions[i * 3 + 1] = y;
+          positions[i * 3 + 2] = z;
+          
+          const speedScale = 0.004;
+          this.particles.push({
+            pos: new THREE.Vector3(x, y, z),
+            vel: new THREE.Vector3(
+              (Math.random() - 0.5) * speedScale,
+              (Math.random() - 0.5) * speedScale,
+              (Math.random() - 0.5) * speedScale
+            )
+          });
+          
+          const color = Math.random() > 0.4 ? palette.c1 : palette.c2;
+          colors[i * 3] = color.r;
+          colors[i * 3 + 1] = color.g;
+          colors[i * 3 + 2] = color.b;
+        }
+        
+        this.pointsGeometry = new THREE.BufferGeometry();
+        this.pointsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        this.pointsGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = 16;
+        canvas.height = 16;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+        grad.addColorStop(0, 'rgba(255,255,255,1)');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 16, 16);
+        const particleTexture = new THREE.CanvasTexture(canvas);
+        
+        this.pointsMaterial = new THREE.PointsMaterial({
+          size: 0.12 * (0.4 + this.config.noiseFrequency * 0.6),
+          map: particleTexture,
+          vertexColors: true,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          opacity: 0.9
+        });
+        
+        this.pointsMesh = new THREE.Points(this.pointsGeometry, this.pointsMaterial);
+        this.scene.add(this.pointsMesh);
+        
+        const linePositions = new Float32Array(this.maxConnections * 2 * 3);
+        const lineColors = new Float32Array(this.maxConnections * 2 * 3);
+        
+        this.linesGeometry = new THREE.BufferGeometry();
+        this.linesGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+        this.linesGeometry.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
+        
+        this.linesMaterial = new THREE.LineBasicMaterial({
+          vertexColors: true,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          opacity: 0.45
+        });
+        
+        this.linesMesh = new THREE.LineSegments(this.linesGeometry, this.linesMaterial);
+        this.scene.add(this.linesMesh);
+      }
+      
+      getColors() {
+        let c1, c2;
+        if (this.config.colorPalette === 'abram') {
+          c1 = new THREE.Color('#FAFAF9');
+          c2 = new THREE.Color('#0B2545');
+        } else if (this.config.colorPalette === 'ocean') {
+          c1 = new THREE.Color('#06B6D4');
+          c2 = new THREE.Color('#2563EB');
+        } else if (this.config.colorPalette === 'cyberpunk') {
+          c1 = new THREE.Color('#EC4899');
+          c2 = new THREE.Color('#06B6D4');
+        } else {
+          c1 = new THREE.Color('#ffffff');
+          c2 = new THREE.Color('#3f3f46');
+        }
+        return { c1, c2 };
+      }
+      
+      updateColors() {
+        if (!this.pointsGeometry) return;
+        const colorsAttr = this.pointsGeometry.getAttribute('color');
+        const palette = this.getColors();
+        
+        for (let i = 0; i < this.particleCount; i++) {
+          const color = Math.random() > 0.4 ? palette.c1 : palette.c2;
+          colorsAttr.setXYZ(i, color.r, color.g, color.b);
+        }
+        colorsAttr.needsUpdate = true;
+      }
+      
+      updateConfig(newConfig) {
+        const prevDensity = this.config.density;
+        Object.assign(this.config, newConfig);
+        
+        if (newConfig.density !== undefined && newConfig.density !== prevDensity) {
+          this.rebuildParticles();
+        } else {
+          if (newConfig.colorPalette !== undefined) {
+            this.updateColors();
+          }
+          if (newConfig.noiseFrequency !== undefined && this.pointsMaterial) {
+            this.pointsMaterial.size = 0.12 * (0.4 + this.config.noiseFrequency * 0.6);
+          }
+        }
+      }
+      
+      animate() {
+        if (!this.renderer) return;
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+        
+        const delta = this.clock.getDelta();
+        if (!this.paused) {
+          this.localTime += delta;
+        }
+        
+        const speedMultiplier = this.config.speed * 2.0;
+        
+        const posAttr = this.pointsGeometry.getAttribute('position');
+        const positions = posAttr.array;
+        
+        // Update physics
+        if (!this.paused) {
+          for (let i = 0; i < this.particleCount; i++) {
+            const p = this.particles[i];
+            
+            p.pos.x += p.vel.x * speedMultiplier;
+            p.pos.y += p.vel.y * speedMultiplier;
+            p.pos.z += p.vel.z * speedMultiplier;
+            
+            const dist = p.pos.length();
+            if (dist > 1.6) {
+              p.vel.reflect(p.pos.clone().normalize().negate());
+              p.pos.multiplyScalar(0.99); // boundary damping
+            }
+            
+            positions[i * 3] = p.pos.x;
+            positions[i * 3 + 1] = p.pos.y;
+            positions[i * 3 + 2] = p.pos.z;
+          }
+          posAttr.needsUpdate = true;
+        }
+        
+        // Dynamic connections
+        const linePosAttr = this.linesGeometry.getAttribute('position');
+        const linePositions = linePosAttr.array;
+        const lineColAttr = this.linesGeometry.getAttribute('color');
+        const lineColors = lineColAttr.array;
+        
+        let lineIdx = 0;
+        const palette = this.getColors();
+        const linkThreshold = 0.4 + this.config.noiseIntensity * 0.35;
+        
+        for (let i = 0; i < this.particleCount; i++) {
+          const p1 = this.particles[i];
+          for (let j = i + 1; j < this.particleCount; j++) {
+            const p2 = this.particles[j];
+            const dist = p1.pos.distanceTo(p2.pos);
+            
+            if (dist < linkThreshold && lineIdx < this.maxConnections) {
+              linePositions[lineIdx * 6] = p1.pos.x;
+              linePositions[lineIdx * 6 + 1] = p1.pos.y;
+              linePositions[lineIdx * 6 + 2] = p1.pos.z;
+              linePositions[lineIdx * 6 + 3] = p2.pos.x;
+              linePositions[lineIdx * 6 + 4] = p2.pos.y;
+              linePositions[lineIdx * 6 + 5] = p2.pos.z;
+              
+              const alpha = 1.0 - (dist / linkThreshold);
+              const c1 = palette.c1.clone().multiplyScalar(alpha);
+              const c2 = palette.c2.clone().multiplyScalar(alpha);
+              
+              lineColors[lineIdx * 6] = c1.r;
+              lineColors[lineIdx * 6 + 1] = c1.g;
+              lineColors[lineIdx * 6 + 2] = c1.b;
+              lineColors[lineIdx * 6 + 3] = c2.r;
+              lineColors[lineIdx * 6 + 4] = c2.g;
+              lineColors[lineIdx * 6 + 5] = c2.b;
+              
+              lineIdx++;
+            }
+          }
+        }
+        
+        this.linesGeometry.setDrawRange(0, lineIdx * 2);
+        linePosAttr.needsUpdate = true;
+        lineColAttr.needsUpdate = true;
+        
+        // Drag rotation lerping
+        const autoTime = this.localTime * 0.05;
+        this.pointsMesh.rotation.y += (this.rotationYTarget + autoTime - this.pointsMesh.rotation.y) * 0.1;
+        this.pointsMesh.rotation.x += (this.rotationXTarget - this.pointsMesh.rotation.x) * 0.1;
+        
+        this.linesMesh.rotation.copy(this.pointsMesh.rotation);
+        
+        this.renderer.render(this.scene, this.camera);
+      }
+      
+      resize() {
+        if (!this.container || !this.renderer) return;
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
+      }
+      
+      destroy() {
+        cancelAnimationFrame(this.animationFrameId);
+        
+        this.container.removeEventListener('pointerdown', this.onPointerDown);
+        window.removeEventListener('pointermove', this.onPointerMove);
+        window.removeEventListener('pointerup', this.onPointerUp);
+        
+        if (this.resizeObserver) {
+          this.resizeObserver.disconnect();
+        }
+        if (this.renderer) {
+          this.container.removeChild(this.renderer.domElement);
+          this.renderer.dispose();
+        }
+        if (this.pointsGeometry) this.pointsGeometry.dispose();
+        if (this.linesGeometry) this.linesGeometry.dispose();
+        if (this.pointsMaterial) this.pointsMaterial.dispose();
+        if (this.linesMaterial) this.linesMaterial.dispose();
+        
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+      }
+    }
+
+    // ==========================================
+    // RENDER ENGINE CLASS 3: KINETIC WAVE ORB
+    // ==========================================
+    class KineticWaveOrb {
+      constructor(container, config = {}) {
+        this.container = container;
+        this.config = Object.assign({
+          speed: 1.0,
+          density: 1.0,
+          noiseIntensity: 1.0,
+          noiseFrequency: 1.0,
+          colorPalette: 'abram'
+        }, config);
+        
+        this.paused = false;
+        this.time = 0;
+        
+        this.userYaw = 0;
+        this.userPitch = 0;
+        this.userYawTarget = 0;
+        this.userPitchTarget = 0;
+        this.isDragging = false;
+        this.previousMousePosition = { x: 0, y: 0 };
+        
+        this.init();
+      }
+      
+      init() {
+        this.canvas = document.createElement('canvas');
+        this.ctx = this.canvas.getContext('2d');
+        
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+        
+        this.canvas.width = width * window.devicePixelRatio;
+        this.canvas.height = height * window.devicePixelRatio;
+        this.canvas.style.width = '100%';
+        this.canvas.style.height = '100%';
+        
+        this.container.appendChild(this.canvas);
+        
+        this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        
+        this.setupMouseInteraction();
+        
+        this.resizeObserver = new ResizeObserver(() => this.resize());
+        this.resizeObserver.observe(this.container);
+        
+        this.animate();
+      }
+      
+      setupMouseInteraction() {
+        this.onPointerDown = (e) => {
+          this.isDragging = true;
+          this.previousMousePosition = { x: e.clientX, y: e.clientY };
+        };
+        
+        this.onPointerMove = (e) => {
+          if (!this.isDragging) return;
+          const deltaX = e.clientX - this.previousMousePosition.x;
+          const deltaY = e.clientY - this.previousMousePosition.y;
+          
+          this.userYawTarget += deltaX * 0.007;
+          this.userPitchTarget += deltaY * 0.007;
+          
+          this.previousMousePosition = { x: e.clientX, y: e.clientY };
+        };
+        
+        this.onPointerUp = () => { this.isDragging = false; };
+        
+        this.canvas.addEventListener('pointerdown', this.onPointerDown);
+        window.addEventListener('pointermove', this.onPointerMove);
+        window.addEventListener('pointerup', this.onPointerUp);
+      }
+      
+      updateConfig(newConfig) {
+        Object.assign(this.config, newConfig);
+      }
+      
+      getColors() {
+        if (this.config.colorPalette === 'abram') {
+          return ['#FAFAF9', '#0B2545'];
+        } else if (this.config.colorPalette === 'ocean') {
+          return ['#06B6D4', '#2563EB'];
+        } else if (this.config.colorPalette === 'cyberpunk') {
+          return ['#EC4899', '#06B6D4'];
+        } else {
+          return ['#ffffff', '#3f3f46'];
+        }
+      }
+      
+      rotateX(x, y, z, angle) {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        return [x, y * cos - z * sin, y * sin + z * cos];
+      }
+      
+      rotateY(x, y, z, angle) {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        return [x * cos + z * sin, y, -x * sin + z * cos];
+      }
+      
+      rotateZ(x, y, z, angle) {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        return [x * cos - y * sin, x * sin + y * cos, z];
+      }
+      
+      animate() {
+        if (!this.canvas) return;
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+        
+        const width = this.canvas.width / window.devicePixelRatio;
+        const height = this.canvas.height / window.devicePixelRatio;
+        
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, width, height);
+        
+        const cx = width / 2;
+        const cy = height / 2;
+        const baseRadius = Math.min(width, height) * 0.28;
+        
+        if (!this.paused) {
+          this.time += 0.008 * this.config.speed;
+        }
+        
+        this.userYaw += (this.userYawTarget - this.userYaw) * 0.1;
+        this.userPitch += (this.userPitchTarget - this.userPitch) * 0.1;
+        
+        const numRibbons = Math.floor(6 + this.config.density * 12);
+        const pointsPerRibbon = 120;
+        const colors = this.getColors();
+        const focalLength = baseRadius * 3;
+        
+        const allRibbonPaths = [];
+        
+        for (let r = 0; r < numRibbons; r++) {
+          const points = [];
+          const ribbonProgress = r / numRibbons;
+          
+          const pitchAngle = ribbonProgress * Math.PI + this.userPitch;
+          const yawAngle = this.time * 0.15 + ribbonProgress * Math.PI * 0.5 + this.userYaw;
+          const rollAngle = this.time * 0.08;
+          
+          const waveAmp = baseRadius * 0.12 * this.config.noiseIntensity;
+          const waveFreq = Math.floor(3 + this.config.noiseFrequency * 5);
+          
+          for (let p = 0; p <= pointsPerRibbon; p++) {
+            const theta = (p / pointsPerRibbon) * Math.PI * 2;
+            const wave = Math.sin(theta * waveFreq + this.time * 3.5 + ribbonProgress * Math.PI) * waveAmp;
+            const currentRadius = baseRadius + wave;
+            
+            let x = currentRadius * Math.cos(theta);
+            let y = currentRadius * Math.sin(theta);
+            let z = 0;
+            
+            [x, y, z] = this.rotateX(x, y, z, pitchAngle);
+            [x, y, z] = this.rotateY(x, y, z, yawAngle);
+            [x, y, z] = this.rotateZ(x, y, z, rollAngle);
+            
+            const scale = focalLength / (focalLength + z);
+            const px = cx + x * scale;
+            const py = cy + y * scale;
+            
+            points.push({ x: px, y: py, z: z });
+          }
+          
+          let avgZ = 0;
+          for (const pt of points) avgZ += pt.z;
+          avgZ /= points.length;
+          
+          allRibbonPaths.push({
+            points: points,
+            avgZ: avgZ,
+            colorIndex: r % 2,
+            opacity: 0.15 + (1 - (avgZ + baseRadius) / (2 * baseRadius)) * 0.65
+          });
+        }
+        
+        // Depth-sort descending (draw far to near)
+        allRibbonPaths.sort((a, b) => b.avgZ - a.avgZ);
+        
+        ctx.globalCompositeOperation = 'lighter';
+        
+        for (const ribbon of allRibbonPaths) {
+          ctx.beginPath();
+          ctx.strokeStyle = colors[ribbon.colorIndex];
+          ctx.lineWidth = Math.max(0.8, 2.0 * (1 - (ribbon.avgZ / (baseRadius * 2.2))));
+          ctx.globalAlpha = Math.max(0.04, Math.min(1.0, ribbon.opacity));
+          
+          ctx.moveTo(ribbon.points[0].x, ribbon.points[0].y);
+          for (let i = 1; i < ribbon.points.length; i++) {
+            ctx.lineTo(ribbon.points[i].x, ribbon.points[i].y);
+          }
+          ctx.stroke();
+          
+          // Glowing nodes along the path
+          if (this.config.density > 0.4) {
+            ctx.fillStyle = colors[1 - ribbon.colorIndex];
+            const step = Math.floor(12 - this.config.density * 5);
+            for (let i = 0; i < ribbon.points.length; i += step) {
+              const pt = ribbon.points[i];
+              const radius = Math.max(1.2, 3.2 * (1 - (pt.z / (baseRadius * 2.2))));
+              ctx.beginPath();
+              ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+              ctx.globalAlpha = Math.max(0.08, ribbon.opacity * 0.85);
+              ctx.fill();
+            }
+          }
+        }
+      }
+      
+      resize() {
+        if (!this.canvas || !this.container) return;
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+        
+        this.canvas.width = width * window.devicePixelRatio;
+        this.canvas.height = height * window.devicePixelRatio;
+        this.canvas.style.width = '100%';
+        this.canvas.style.height = '100%';
+        
+        this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      }
+      
+      destroy() {
+        cancelAnimationFrame(this.animationFrameId);
+        
+        this.canvas.removeEventListener('pointerdown', this.onPointerDown);
+        window.removeEventListener('pointermove', this.onPointerMove);
+        window.removeEventListener('pointerup', this.onPointerUp);
+        
+        if (this.resizeObserver) {
+          this.resizeObserver.disconnect();
+        }
+        if (this.canvas && this.container.contains(this.canvas)) {
+          this.container.removeChild(this.canvas);
+        }
+        this.canvas = null;
+        this.ctx = null;
+      }
+    }
+
+    // ==========================================
+    // ORCHESTRATION GLUE CODE
+    // ==========================================
+    let currentView = 'perlin';
+    let activeInstances = {};
+    let isPaused = false;
+    
+    const config = {
+      speed: 1.0,
+      density: 1.0,
+      noiseIntensity: 1.0,
+      noiseFrequency: 1.0,
+      colorPalette: 'abram'
+    };
+
+    const explainers = {
+      perlin: {
+        title: 'Perlin Noise Orb',
+        subtitle: 'Procedural GPU Displacement',
+        desc: 'This engine runs entirely on the GPU via custom WebGL vertex and fragment shaders. A tessellated icosahedron geometry is deformed along its vertex normals using 3D Simplex noise generated in real-time. The fragment shader calculates a high-fidelity Fresnel glow coefficient to render depth, resulting in a bioluminescent-like liquid light sphere.',
+        badge: 'WebGL Shaders',
+        math: `// GLSL Vertex Shader Displacement\nfloat noise = snoise(position * uNoiseFreq + vec3(0, 0, uTime * uSpeed));\nvec3 displaced = position + normal * noise * uNoiseAmp;\ngl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);`
+      },
+      neural: {
+        title: 'Neural Net Network',
+        subtitle: 'Dynamic Euclidean Connection',
+        desc: 'A particle cluster simulating synaptic structures. Individual nodes travel through a 3D spherical volume with random, self-correcting velocities. JavaScript calculates the Euclidean distance between every pair; when two nodes fall within the configured threshold, a line segment is rendered. Colors fade based on distance, and GPU buffer draw-ranges are updated dynamically.',
+        badge: 'WebGL Buffers',
+        math: `// Real-time Euclidean proximity link\nfloat dist = p1.pos.distanceTo(p2.pos);\nif (dist < linkThreshold) {\n  linePositions[lineIdx * 6] = p1.pos.x;\n  lineColors[lineIdx * 6] = color.r;\n  // Update dynamic buffer count\n}`
+      },
+      kinetic: {
+        title: 'Kinetic Wave Ribbon',
+        subtitle: 'Concentric Projected Oscillation',
+        desc: 'An elegant rendering of 3D sine-modulated wave rings projected onto a 2D HTML5 canvas. Each ribbon rotates independently on pitch, yaw, and roll axes. Vertices are calculated in 3D coordinate space, modulated by a time-varying oscillator, projected through perspective math, sorted by depth, and rendered with additive blending to simulate volumetric depth.',
+        badge: 'HTML5 Canvas 2D',
+        math: `// 3D coordinate generation & projection\nconst wave = Math.sin(theta * waveFreq + time) * waveAmp;\nconst r = baseRadius + wave;\nlet [x, y, z] = rotate3D(r * cos(theta), r * sin(theta), 0);\nconst scale = focalLength / (focalLength + z);\nconst px = cx + x * scale;\nconst py = cy + y * scale;`
+      },
+      'side-by-side': {
+        title: 'Side-by-Side Orchestrator',
+        subtitle: 'Concurrent Multithreaded Render Loops',
+        desc: 'A demonstration of all three rendering techniques executing simultaneously. The orchestrator spawns and syncs three separate render loops on the same screen. Sliders broadcast configuration changes to all active instances in real-time, showcasing performance differences between GPU-based shaders, CPU-based distance calculation, and 2D canvas path projections.',
+        badge: 'Multi-Context Sync',
+        math: `// Sync parameters across rendering contexts\nfunction updateConfig(newConfig) {\n  perlinOrb.updateConfig(newConfig);\n  neuralOrb.updateConfig(newConfig);\n  kineticOrb.updateConfig(newConfig);\n}`
+      }
+    };
+
+    function initView(viewName) {
+      destroyActiveInstances();
+      
+      const container = document.getElementById('preview-container');
+      container.innerHTML = '';
+      currentView = viewName;
+      
+      updateTabUI();
+      updateExplainerUI();
+      
+      if (viewName === 'side-by-side') {
+        container.className = "grid grid-cols-1 md:grid-cols-3 h-full divide-y md:divide-y-0 md:divide-x divide-white/5 bg-black/20";
+        document.getElementById('active-render-badge').textContent = 'Orchestrated Grid view';
+        
+        const cell1 = createGridCell('Perlin Noise (GPU)', 'cell-perlin');
+        const cell2 = createGridCell('Neural Net (WebGL)', 'cell-neural');
+        const cell3 = createGridCell('Kinetic Ribbon (Canvas)', 'cell-kinetic');
+        
+        container.appendChild(cell1);
+        container.appendChild(cell2);
+        container.appendChild(cell3);
+        
+        activeInstances.perlin = new PerlinNoiseOrb(cell1.querySelector('.viewport'), config);
+        activeInstances.neural = new NeuralConnectiveOrb(cell2.querySelector('.viewport'), config);
+        activeInstances.kinetic = new KineticWaveOrb(cell3.querySelector('.viewport'), config);
+      } else {
+        container.className = "relative w-full h-full";
+        
+        const viewport = document.createElement('div');
+        viewport.className = "viewport w-full h-full";
+        container.appendChild(viewport);
+        
+        if (viewName === 'perlin') {
+          document.getElementById('active-render-badge').textContent = 'Perlin Noise Orb (WebGL)';
+          activeInstances.main = new PerlinNoiseOrb(viewport, config);
+        } else if (viewName === 'neural') {
+          document.getElementById('active-render-badge').textContent = 'Neural Net Network (WebGL)';
+          activeInstances.main = new NeuralConnectiveOrb(viewport, config);
+        } else if (viewName === 'kinetic') {
+          document.getElementById('active-render-badge').textContent = 'Kinetic Wave Ribbon (Canvas)';
+          activeInstances.main = new KineticWaveOrb(viewport, config);
+        }
+      }
+      
+      // Apply correct pause states
+      for (const key in activeInstances) {
+        if (activeInstances[key]) activeInstances[key].paused = isPaused;
+      }
+      
+      updateGlowEffect();
+    }
+
+    function createGridCell(title, id) {
+      const cell = document.createElement('div');
+      cell.className = "relative flex flex-col h-full min-h-[160px] md:min-h-0";
+      cell.id = id;
+      
+      const label = document.createElement('div');
+      label.className = "absolute top-4 left-4 glass-panel px-2.5 py-1 rounded-full text-[9px] uppercase tracking-widest font-semibold text-zinc-400 z-10 border border-white/5 pointer-events-none select-none";
+      label.textContent = title;
+      cell.appendChild(label);
+      
+      const viewport = document.createElement('div');
+      viewport.className = "viewport flex-1 w-full h-full";
+      cell.appendChild(viewport);
+      
+      return cell;
+    }
+
+    function destroyActiveInstances() {
+      for (const key in activeInstances) {
+        if (activeInstances[key] && typeof activeInstances[key].destroy === 'function') {
+          activeInstances[key].destroy();
+        }
+      }
+      activeInstances = {};
+    }
+
+    function updateTabUI() {
+      const tabs = ['perlin', 'neural', 'kinetic', 'side-by-side'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (t === currentView) {
+          btn.className = "px-3 py-2 text-xs font-semibold rounded-full select-none cursor-pointer text-center bg-white text-black transition-all duration-200";
+        } else {
+          btn.className = "px-3 py-2 text-xs font-semibold rounded-full select-none cursor-pointer text-center bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200 transition-all duration-200";
+        }
+      });
+    }
+
+    function updateExplainerUI() {
+      const info = explainers[currentView];
+      document.getElementById('explainer-title').textContent = info.title;
+      document.getElementById('explainer-subtitle').textContent = info.subtitle;
+      document.getElementById('explainer-desc').textContent = info.desc;
+      document.getElementById('explainer-badge').textContent = info.badge;
+      document.getElementById('code-fragment').textContent = info.math;
+    }
+
+    function updateGlowEffect() {
+      const wrapper = document.getElementById('preview-container-wrapper');
+      if (config.colorPalette === 'abram') {
+        wrapper.style.boxShadow = '0 0 50px rgba(250, 250, 249, 0.08), 0 0 30px rgba(11, 37, 69, 0.04)';
+      } else if (config.colorPalette === 'ocean') {
+        wrapper.style.boxShadow = '0 0 50px rgba(6, 182, 212, 0.08)';
+      } else if (config.colorPalette === 'cyberpunk') {
+        wrapper.style.boxShadow = '0 0 50px rgba(236, 72, 153, 0.08), 0 0 30px rgba(6, 182, 212, 0.04)';
+      }
+    }
+
+    function setPalette(paletteName) {
+      config.colorPalette = paletteName;
+      
+      const palettes = ['abram', 'ocean', 'cyberpunk'];
+      palettes.forEach(p => {
+        const btn = document.getElementById(`palette-${p}`);
+        if (p === paletteName) {
+          btn.className = "flex items-center justify-between px-4 py-2.5 rounded-full bg-white/[0.08] border-white/20 text-white text-xs font-medium transition-all duration-200 select-none cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.02)]";
+        } else {
+          btn.className = "flex items-center justify-between px-4 py-2.5 rounded-full bg-transparent border-white/5 text-zinc-400 hover:border-white/10 hover:text-zinc-200 text-xs font-medium transition-all duration-200 select-none cursor-pointer";
+        }
+      });
+      
+      broadcastConfig({ colorPalette: paletteName });
+      updateGlowEffect();
+    }
+
+    function broadcastConfig(newConfig) {
+      for (const key in activeInstances) {
+        if (activeInstances[key]) {
+          activeInstances[key].updateConfig(newConfig);
+        }
+      }
+    }
+
+    // ==========================================
+    // UI LISTENERS
+    // ==========================================
+    document.getElementById('slider-speed').addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      document.getElementById('val-speed').textContent = `${val.toFixed(1)}x`;
+      config.speed = val;
+      broadcastConfig({ speed: val });
+    });
+
+    document.getElementById('slider-density').addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      document.getElementById('val-density').textContent = val.toFixed(1);
+      config.density = val;
+      broadcastConfig({ density: val });
+    });
+
+    document.getElementById('slider-noise').addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      document.getElementById('val-noise').textContent = val.toFixed(1);
+      config.noiseIntensity = val;
+      config.noiseFrequency = val; // Synchronize parameters
+      broadcastConfig({ noiseIntensity: val, noiseFrequency: val });
+    });
+
+    // Play/Pause Action
+    document.getElementById('btn-play-pause').addEventListener('click', () => {
+      isPaused = !isPaused;
+      
+      const iconPlay = document.getElementById('icon-play');
+      const iconPause = document.getElementById('icon-pause');
+      const textPlayPause = document.getElementById('text-play-pause');
+      
+      if (isPaused) {
+        iconPlay.classList.remove('hidden');
+        iconPause.classList.add('hidden');
+        textPlayPause.textContent = 'Play';
+      } else {
+        iconPlay.classList.add('hidden');
+        iconPause.classList.remove('hidden');
+        textPlayPause.textContent = 'Pause';
+      }
+      
+      for (const key in activeInstances) {
+        if (activeInstances[key]) activeInstances[key].paused = isPaused;
+      }
+    });
+
+    // Reset Defaults Action
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      config.speed = 1.0;
+      config.density = 1.0;
+      config.noiseIntensity = 1.0;
+      config.noiseFrequency = 1.0;
+      
+      document.getElementById('slider-speed').value = 1.0;
+      document.getElementById('val-speed').textContent = '1.0x';
+      
+      document.getElementById('slider-density').value = 1.0;
+      document.getElementById('val-density').textContent = '1.0';
+      
+      document.getElementById('slider-noise').value = 1.0;
+      document.getElementById('val-noise').textContent = '1.0';
+      
+      if (isPaused) {
+        document.getElementById('btn-play-pause').click();
+      }
+      
+      setPalette('abram');
+      broadcastConfig(config);
+    });
+
+    // Fullscreen Action
+    document.getElementById('btn-fullscreen').addEventListener('click', () => {
+      const container = document.getElementById('preview-container-wrapper');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    // Decoupled FPS counter
+    let lastTime = performance.now();
+    let frameCount = 0;
+    function startFpsCounter() {
+      function loop() {
+        frameCount++;
+        const now = performance.now();
+        if (now - lastTime >= 1000) {
+          const fps = Math.round((frameCount * 1000) / (now - lastTime));
+          document.getElementById('canvas-resolution-badge').textContent = `${fps} FPS // 100% SCALE`;
+          frameCount = 0;
+          lastTime = now;
+        }
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      setPalette('abram');
+      initView('perlin');
+      startFpsCounter();
+    });
+  </script>
+</body>
+</html>

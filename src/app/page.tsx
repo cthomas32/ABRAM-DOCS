@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import HeroSection from "@/components/home/HeroSection";
 import PillarsSection from "@/components/home/PillarsSection";
+import BridgeSection from "@/components/home/BridgeSection";
 import ArtifactsSection from "@/components/home/ArtifactsSection";
 import OutcomeSection from "@/components/home/OutcomeSection";
 import ResourcesCalendarSection from "@/components/home/ResourcesCalendarSection";
+import RosterROISection from "@/components/home/RosterROISection";
 import FinalCTASection from "@/components/home/FinalCTASection";
 
 export const metadata: Metadata = {
@@ -71,9 +73,11 @@ export default function LandingPage() {
       <main id="landing-page-root" className="bg-abram-black abram-glow-bg min-h-screen">
         <HeroSection />
         <PillarsSection />
+        <BridgeSection />
         <ArtifactsSection />
         {/* <OutcomeSection /> */}
         <ResourcesCalendarSection />
+        <RosterROISection />
         <FinalCTASection />
       </main>
     </>

@@ -19,7 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Marketing routes that need clean, un-padded full width presentation
-  const isMarketingPage = pathname === "/" || pathname === "/landing" || pathname === "/pricing";
+  const isMarketingPage = pathname === "/" || pathname === "/landing" || pathname === "/pricing" || pathname === "/production-brain";
   const isDocsPage = pathname.startsWith("/docs");
 
   // Keyboard shortcut listener for search modal

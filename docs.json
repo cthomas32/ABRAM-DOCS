@@ -124,7 +124,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "ABRAM",
+      "label": "Get Started",
       "href": "https://app.abram.network"
     }
   },

@@ -521,11 +521,10 @@ export default function PillarsSection() {
           className="text-center max-w-3xl mx-auto px-4 mb-20"
         >
           <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4 font-sans">
-            Built for Everyone in the
-            <span className="block mt-[5px]">Creative Economy</span>
+            Every production runs on people.
           </h2>
           <p className="text-base md:text-lg text-zinc-400 max-w-xl mx-auto leading-relaxed font-sans">
-            ABRAM works for you.
+            To the directors, producers, and creators who turn dreams into reality. This is built for you.
           </p>
         </motion.div>
 

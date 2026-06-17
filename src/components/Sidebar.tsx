@@ -151,7 +151,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, onSearchClick }: 
           <div className="mt-1.5 space-y-1">
             {[
               { label: "Home", href: "/" },
-              { label: "Docs", href: "/docs" },
+              { label: "Learn", href: "/docs" },
               { label: "Pricing", href: "/pricing" },
             ].map((link) => {
               const isActive = link.href === "/" 

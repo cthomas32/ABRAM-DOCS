@@ -51,7 +51,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
 
   const menuLinks = [
     { name: "Home", href: "/" },
-    { name: "Docs", href: "/docs" },
+    { name: "Learn", href: "/docs" },
     { name: "Pricing", href: "/pricing" },
   ];
 
