@@ -118,12 +118,8 @@ export default function HeroSection() {
             behavior: "smooth",
           });
         }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 group cursor-pointer focus:outline-none"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center group cursor-pointer focus:outline-none"
       >
-        <span className="text-[9px] tracking-[0.25em] text-zinc-500 group-hover:text-zinc-300 uppercase font-medium select-none transition-colors">
-          Explore
-        </span>
-        
         {/* Cream Track Line (1px thin) */}
         <div className="w-[1px] h-10 bg-[#FAFAF9]/15 relative rounded-full">
           {/* Light-Blue Glowing Laser Segment (super thin, non-clipping glow) */}
