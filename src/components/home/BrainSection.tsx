@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
-import { Brain, Search, Lock, Zap } from "lucide-react";
+import { useScroll, useTransform, motion, MotionValue, useInView } from "framer-motion";
+import { Brain, Search, Lock, Zap, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 interface Node {
   pctX: number;
@@ -46,6 +47,7 @@ interface NetworkCanvasProps {
 function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const mouseRef = useRef({ x: -1000, y: -1000 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -81,18 +83,25 @@ function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
 
     const draw = (width: number, height: number, time: number, currentActiveCount: number) => {
       ctx.clearRect(0, 0, width, height);
+      const mouse = mouseRef.current;
 
-      // Compute drifting coordinates
+      // Compute drifting coords & apply mouse hover physics
       const points = NODES.map((node, i) => {
+        // Slow organic drift physics
         const dx = Math.sin(time * 0.15 + i) * 4;
         const dy = Math.cos(time * 0.12 + i * 1.4) * 4;
         const x = (node.pctX / 100) * width + dx;
         const y = (node.pctY / 100) * height + dy;
-        const isActive = i < currentActiveCount;
-        return { x, y, name: node.name, isActive };
+
+        // Mouse distance calculations for magnetic interactive effect
+        const dist = Math.hypot(x - mouse.x, y - mouse.y);
+        const isHovered = dist < 80; // 80px interaction radius
+        const isActive = i < currentActiveCount || isHovered;
+
+        return { x, y, name: node.name, isActive, isHovered, dist };
       });
 
-      // Draw connections
+      // Draw dynamic interactive connection lines
       CONNECTIONS.forEach(([fromIdx, toIdx]) => {
         const p1 = points[fromIdx];
         const p2 = points[toIdx];
@@ -105,7 +114,7 @@ function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
 
-        let alpha = 0.02; // extremely faint for inactive
+        let alpha = 0.02; // ultra-faint fallback for structure
         if (bothActive) {
           alpha = 0.10 + Math.sin(time * 1.2 + fromIdx) * 0.04;
         } else if (eitherActive) {
@@ -116,7 +125,7 @@ function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
         ctx.lineWidth = bothActive ? 1.2 : 0.8;
         ctx.stroke();
 
-        // Animated signal dot traversing active connection line (sky blue)
+        // Traversing signal data packets (Light Blue #8ECAFF)
         if (bothActive) {
           const speed = 0.12;
           const progress = (time * speed + (fromIdx * 0.15)) % 1.0;
@@ -133,31 +142,49 @@ function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
         }
       });
 
-      // Draw nodes
+      // Draw cursor interactive magnetic connection lines
+      if (mouse.x > 0 && mouse.y > 0) {
+        points.forEach((p) => {
+          if (p.dist < 80) {
+            const cursorAlpha = (1 - p.dist / 80) * 0.08;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(142, 202, 255, ${cursorAlpha})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        });
+      }
+
+      // Draw synaptic nodes & text labels
       points.forEach((p, i) => {
         if (p.isActive) {
-          // Glow ring/halo (ABRAM Sky Blue Accent Glow)
+          // Glow halo
           ctx.beginPath();
-          ctx.arc(p.x, p.y, 6 + Math.sin(time * 1.5 + i) * 1.2, 0, Math.PI * 2);
-          ctx.strokeStyle = "rgba(142, 202, 255, 0.22)";
+          const haloRadius = (p.isHovered ? 8 : 6) + Math.sin(time * 1.5 + i) * 1.2;
+          ctx.arc(p.x, p.y, haloRadius, 0, Math.PI * 2);
+          
+          const glowAlpha = p.isHovered ? 0.32 : 0.22;
+          ctx.strokeStyle = `rgba(142, 202, 255, ${glowAlpha})`;
           ctx.lineWidth = 1;
           ctx.shadowColor = "rgba(142, 202, 255, 0.3)";
-          ctx.shadowBlur = 6;
+          ctx.shadowBlur = p.isHovered ? 8 : 6;
           ctx.stroke();
           ctx.shadowBlur = 0;
 
-          // Core dot (ABRAM Accent Sky Blue)
+          // Core node dot (ABRAM Light Blue)
           ctx.beginPath();
-          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.isHovered ? 3 : 2.5, 0, Math.PI * 2);
           ctx.fillStyle = "#8ECAFF";
           ctx.fill();
 
-          // Floating label in high-contrast cream text
+          // Floating monospace tag in High-Contrast Cream/White
           ctx.font = "400 9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-          ctx.fillStyle = "rgba(250, 250, 249, 0.95)";
+          ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
           ctx.fillText(p.name, p.x + 9, p.y + 3);
         } else {
-          // Inactive dot
+          // Dark inactive state
           ctx.beginPath();
           ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
           ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
@@ -178,23 +205,43 @@ function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
     return () => cancelAnimationFrame(animationId);
   }, [activeCountTransform]);
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    mouseRef.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  };
+
+  const handleMouseLeave = () => {
+    mouseRef.current = { x: -1000, y: -1000 };
+  };
+
   return (
-    <div ref={containerRef} className="relative w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden glass-panel bg-zinc-950/20 border border-white/[0.08]">
-      <canvas ref={canvasRef} className="block w-full h-full" />
+    <div 
+      ref={containerRef} 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full h-[280px] sm:h-[360px] lg:h-[480px]"
+    >
+      <canvas ref={canvasRef} className="block w-full h-full cursor-crosshair" />
     </div>
   );
 }
 
 export default function BrainSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  
-  // Track scroll position to sequentially light up nodes
+  const gridRef = useRef<HTMLDivElement>(null);
+  const isGridInView = useInView(gridRef, { once: true, amount: 0.2 });
+
+  // Scroll tracking to activate nodes sequentially
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "center center"],
   });
 
-  // Map scroll progress to active nodes index
   const activeCountTransform = useTransform(scrollYProgress, [0.1, 0.65], [0, NODES.length]);
 
   const features = [
@@ -221,39 +268,50 @@ export default function BrainSection() {
   ];
 
   return (
-    <section ref={sectionRef} className="relative py-24 md:py-32 border-t border-white/5 bg-abram-black overflow-hidden">
-      {/* Ambient Glows - System Core Indigo/Purple */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/[0.035] rounded-full filter blur-[130px] pointer-events-none" />
-      <div className="absolute top-1/3 left-1/3 w-[450px] h-[450px] bg-[#8ECAFF]/[0.02] rounded-full filter blur-[110px] pointer-events-none" />
+    <section 
+      ref={sectionRef} 
+      className="relative py-16 md:py-24 lg:py-32 border-t border-white/5 bg-[#0A0A0A] overflow-hidden"
+    >
+      {/* Ambient Glows (Strictly Light Blue and Purple core tints) */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[600px] lg:h-[600px] bg-purple-500/[0.03] rounded-full filter blur-[80px] lg:blur-[130px] pointer-events-none" 
+      />
+      <div 
+        className="absolute top-1/3 left-1/3 w-[250px] h-[250px] lg:w-[450px] lg:h-[450px] bg-[#8ECAFF]/[0.015] rounded-full filter blur-[90px] lg:blur-[110px] pointer-events-none" 
+      />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center mb-16">
+          
           {/* Copy Side */}
-          <div className="lg:col-span-5 space-y-8">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/3 text-[#f5f5f3] text-xs font-semibold tracking-wider uppercase">
-              System Core
+          <div className="lg:col-span-5 space-y-6">
+            
+            {/* Overline Badge in clean glass styling */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] text-zinc-400 text-[10px] font-semibold tracking-[0.2em] uppercase w-fit">
+              ABRAM CORE
             </div>
 
-            {/* Section Header (h2: text-base to text-lg, font-medium, leading-snug) */}
-            <h2
-              className="text-base md:text-lg font-medium text-white/90 tracking-wide leading-snug uppercase font-display"
-            >
-              THE PRODUCTION BRAIN
+            {/* Section Header (H2: uppercase display font on landing page) */}
+            <h2 className="text-2xl font-semibold tracking-tight text-zinc-50 uppercase font-display leading-tight">
+              The foundation of it all.
             </h2>
 
-            {/* Body Paragraph: text-sm font-normal text-white/80 */}
-            <p className="text-sm font-normal text-white/80 leading-relaxed max-w-xl">
-              A secure, private memory layer for your organization. ABRAM processes campaign data automatically to structure timelines, match rosters, and resolve scheduling conflicts, keeping your intellectual property completely isolated.
+            {/* Body Paragraph (leading-7 text-zinc-400) */}
+            <p className="text-sm md:text-base font-normal leading-7 text-zinc-400 max-w-xl">
+              A private workspace memory that unifies briefs, budgets, and crew availability. It learns from past projects to automate team matching and resource planning.
             </p>
 
-            {/* Micro-Metadata / Indicators */}
-            <div className="flex items-center gap-3 pt-2 text-xs font-medium tracking-wide text-white/30 uppercase">
-              <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#8ECAFF] shadow-[0_0_8px_#8ECAFF] " />
-                Engine Active
-              </span>
-              <span className="text-zinc-800">•</span>
-              <span>12 Specialized Triggers</span>
+
+
+            {/* Primary CTA (Using btn-glass variant with adequate hit target area) */}
+            <div className="pt-4">
+              <Link 
+                href="/production-brain"
+                className="btn-glass px-5 py-2.5 text-xs rounded-full inline-flex items-center gap-1.5 transition-all duration-200 min-h-[44px] group"
+              >
+                <span>Explore the Brain</span>
+                <ArrowRight className="h-3.5 w-3.5 text-zinc-400 transition-transform group-hover:translate-x-0.5" />
+              </Link>
             </div>
           </div>
 
@@ -263,29 +321,33 @@ export default function BrainSection() {
           </div>
         </div>
 
-        {/* Features Columns (No Cards) - aligned with Bento gap-4 specifications */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-16 mt-16 border-t border-white/5">
+        {/* Features Columns (Strictly conforms to Feature Card specs in DESIGN.md) */}
+        <div 
+          ref={gridRef}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-16 border-t border-white/5"
+        >
           {features.map((feature, idx) => {
             const Icon = feature.icon;
             return (
-              <div
+              <motion.div
                 key={idx}
-                className="flex flex-col space-y-4 p-4 rounded-xl border border-white/[0.04] bg-abram-black/20 hover:bg-abram-cream/[0.06] transition-all duration-200"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isGridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: idx * 0.08, ease: "easeOut" }}
+                className="flex flex-col space-y-4 p-6 rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md hover:border-white/12 hover:bg-zinc-900/30 transition-all duration-200 select-none group"
               >
-                <div className="text-zinc-500 hover:text-abram-accent transition-colors duration-200">
-                  <Icon className="h-6 w-6 stroke-[1.2]" />
+                <div className="text-zinc-400 group-hover:text-zinc-100 transition-colors duration-200">
+                  <Icon className="h-5 w-5 stroke-[1.4]" />
                 </div>
-                {/* Body Title: text-sm font-semibold */}
-                <h3
-                  className="text-sm font-semibold text-white tracking-tight font-display"
-                >
+                {/* Body Title: font-sans for card titles */}
+                <h3 className="text-sm font-semibold text-zinc-200 tracking-tight font-sans">
                   {feature.title}
                 </h3>
-                {/* Body Paragraph: text-sm font-normal text-white/80 */}
-                <p className="text-sm font-normal text-white/80 leading-relaxed">
+                {/* Body Paragraph: text-sm font-normal text-zinc-400 */}
+                <p className="text-sm font-normal leading-relaxed text-zinc-400">
                   {feature.description}
                 </p>
-              </div>
+              </motion.div>
             );
           })}
         </div>

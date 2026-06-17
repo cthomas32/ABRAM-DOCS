@@ -7,6 +7,8 @@ import OutcomeSection from "@/components/home/OutcomeSection";
 import ResourcesCalendarSection from "@/components/home/ResourcesCalendarSection";
 import RosterROISection from "@/components/home/RosterROISection";
 import FinalCTASection from "@/components/home/FinalCTASection";
+import BrainSection from "@/components/home/BrainSection";
+
 
 export const metadata: Metadata = {
   title: 'ABRAM Network — The AI Platform for Creative Intelligence',
@@ -78,6 +80,7 @@ export default function LandingPage() {
         {/* <OutcomeSection /> */}
         <ResourcesCalendarSection />
         <RosterROISection />
+        <BrainSection />
         <FinalCTASection />
       </main>
     </>

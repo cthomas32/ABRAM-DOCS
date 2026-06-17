@@ -73,7 +73,7 @@ export default function UnderTheHood() {
       <div className="w-full max-w-5xl mx-auto px-6 z-10">
         
         {/* Core Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:items-stretch items-start">
           
           {/* Left Block: Interactive Specs */}
           <div className="lg:col-span-5 flex flex-col gap-4 order-2 lg:order-1">
@@ -129,36 +129,48 @@ export default function UnderTheHood() {
                   </p>
 
                   {/* Expandable Specifications Details List */}
-                  <div className="mt-4 pt-4 border-t border-white/[0.04] space-y-2">
-                    {spec.details.map((detail, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
-                          isActive ? "bg-white/10" : "bg-white/[0.03]"
-                        }`}>
-                          <Check className={`w-2 h-2 ${isActive ? "text-zinc-200" : "text-zinc-500"}`} />
+                  <AnimatePresence initial={false}>
+                    {isActive && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="mt-4 pt-4 border-t border-white/[0.04] space-y-2">
+                          {spec.details.map((detail, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                              <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+                                isActive ? "bg-white/10" : "bg-white/[0.03]"
+                              }`}>
+                                <Check className={`w-2 h-2 ${isActive ? "text-zinc-200" : "text-zinc-500"}`} />
+                              </div>
+                              <span className={`text-[11px] transition-colors ${
+                                isActive ? "text-zinc-300" : "text-zinc-500 group-hover:text-zinc-400"
+                              }`}>
+                                {detail}
+                              </span>
+                            </div>
+                          ))}
                         </div>
-                        <span className={`text-[11px] transition-colors ${
-                          isActive ? "text-zinc-300" : "text-zinc-500 group-hover:text-zinc-400"
-                        }`}>
-                          {detail}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               );
             })}
           </div>
 
           {/* Right Block: Terminal Mockup */}
-          <div className="lg:col-span-7 order-1 lg:order-2">
-            <div className="relative w-full rounded-2xl border border-white/5 bg-zinc-950/40 p-2 md:p-3 tech-grid-overlay">
+          <div className="lg:col-span-7 order-1 lg:order-2 lg:h-full flex flex-col">
+            <div className="relative w-full lg:h-full rounded-2xl border border-white/5 bg-zinc-950/40 p-2 md:p-3 tech-grid-overlay flex flex-col">
               
               {/* Decorative side accent flare */}
               <div className="absolute top-0 right-1/4 w-32 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               
               {/* Terminal Window */}
-              <div className="w-full rounded-xl border border-white/8 bg-zinc-950 shadow-2xl overflow-hidden flex flex-col font-mono text-xs">
+              <div className="w-full lg:h-full rounded-xl border border-white/8 bg-zinc-950 shadow-2xl overflow-hidden flex flex-col font-mono text-xs">
                 
                 {/* Terminal Header */}
                 <div className="flex items-center justify-between px-4 py-3 bg-zinc-900/60 border-b border-white/5 select-none">
@@ -202,7 +214,7 @@ export default function UnderTheHood() {
                 </div>
 
                 {/* Terminal Content Screen */}
-                <div className="p-4 md:p-6 min-h-[360px] max-h-[380px] overflow-y-auto text-zinc-300 leading-normal select-text scrollbar-thin">
+                <div className="p-4 md:p-6 min-h-[360px] max-h-[380px] lg:min-h-0 lg:max-h-none lg:flex-1 overflow-y-auto text-zinc-300 leading-normal select-text scrollbar-thin">
                   <AnimatePresence mode="wait">
                     {activeSection === "vector-search" && (
                       <motion.div
