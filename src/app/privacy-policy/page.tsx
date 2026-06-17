@@ -32,8 +32,8 @@ export default function PrivacyPolicyPage() {
   const { content } = matter(fileContent);
 
   return (
-    <div className="py-8 max-w-3xl mx-auto selection:bg-neutral-800 selection:text-white">
-      <article className="prose prose-zinc dark:prose-invert max-w-none">
+    <div className="py-8 max-w-3xl mx-auto selection:bg-zinc-800 selection:text-white">
+      <article className="max-w-none">
         <MDXRemote source={content} components={mdxComponents} />
       </article>
     </div>

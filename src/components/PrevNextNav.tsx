@@ -38,7 +38,7 @@ export default function PrevNextNav({ slug }: PrevNextNavProps) {
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Previous</span>
           </div>
-          <span className="font-heading text-sm font-bold uppercase tracking-wide text-zinc-900 dark:text-zinc-50">
+          <span className="font-sans text-sm font-bold uppercase tracking-wide text-zinc-900 dark:text-zinc-50">
             {prev.title}
           </span>
         </Link>
@@ -55,7 +55,7 @@ export default function PrevNextNav({ slug }: PrevNextNavProps) {
             <span>Next</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </div>
-          <span className="font-heading text-sm font-bold uppercase tracking-wide text-zinc-900 dark:text-zinc-50">
+          <span className="font-sans text-sm font-bold uppercase tracking-wide text-zinc-900 dark:text-zinc-50">
             {next.title}
           </span>
         </Link>

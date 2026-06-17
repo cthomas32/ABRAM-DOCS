@@ -33,7 +33,9 @@ function getDocContent(slug: string[]) {
   const remainingSlug = slug.slice(1).join("/");
 
   let possiblePaths: string[] = [];
-  if (rootDir === "user-guide") {
+  if (slugStr === "overview") {
+    possiblePaths = [path.join(contentDir, "index.mdx")];
+  } else if (rootDir === "user-guide") {
     const baseDir = path.join(contentDir, "user-guide");
     possiblePaths = [
       path.join(baseDir, `${remainingSlug}.mdx`),
@@ -246,8 +248,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${title} | ABRAM Docs`,
       description,
     },
+    robots: {
+      index: robots.includes('index'),
+      follow: robots.includes('follow'),
+    },
     other: {
-      "robots": robots,
       "content-language": "en",
       "aeo-entity-type": "Documentation",
       ...customMetaTags,
@@ -369,8 +374,7 @@ export default async function DocPage({ params }: PageProps) {
   const authorName = doc.data.author || "ABRAM Network";
   const publisherName = doc.data.publisher || "ABRAM Network";
 
-  const jsonLd = {
-    "@context": "https://schema.org",
+  const articleSchema = {
     "@type": doc.data.schemaType || "TechArticle",
     "headline": title,
     "description": description,
@@ -385,15 +389,49 @@ export default async function DocPage({ params }: PageProps) {
       "name": publisherName,
       "logo": {
         "@type": "ImageObject",
-        "url": "https://docs.abram.network/logo.png",
+        "url": "https://docs.abram.network/logo/dark.svg",
       },
     },
     "author": {
       "@type": doc.data.authorType || "Organization",
       "name": authorName,
     },
-    ...(isoDate ? { "dateModified": isoDate } : {}),
+    ...(isoDate ? { "datePublished": isoDate, "dateModified": isoDate } : {}),
     ...(doc.data.schema && typeof doc.data.schema === "object" ? doc.data.schema : {}),
+  };
+
+  const breadcrumbSchema = {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://docs.abram.network",
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Documentation",
+        "item": "https://docs.abram.network/docs",
+      },
+      ...(navPage?.group ? [{
+        "@type": "ListItem",
+        "position": 3,
+        "name": navPage.group,
+      }] : []),
+      {
+        "@type": "ListItem",
+        "position": navPage?.group ? 4 : 3,
+        "name": title,
+        "item": canonicalUrl,
+      },
+    ],
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [articleSchema, breadcrumbSchema],
   };
 
   const hasInlineH1 = doc.content.trim().startsWith("# ");
@@ -402,16 +440,16 @@ export default async function DocPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
       <div className="flex gap-10 xl:gap-14 items-start justify-center w-full">
         <div className="flex-1 min-w-0 max-w-3xl">
-          <article className="prose prose-zinc dark:prose-invert max-w-none">
+          <article className="max-w-none">
             {!isCustomMode && (
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
                 <div className="space-y-1">
                   {!hasInlineH1 && (
-                    <h1 className="font-heading text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 !mb-0">
+                    <h1 className="font-sans text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 !mb-0">
                       {title}
                     </h1>
                   )}

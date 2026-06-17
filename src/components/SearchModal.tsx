@@ -244,11 +244,11 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         >
           {/* Header Input */}
           <div className="relative border-b border-border/60">
-            <Search className="absolute left-4 top-4.5 h-5 w-5 text-neutral-500" />
+            <Search className="absolute left-4 top-4.5 h-5 w-5 text-zinc-500" />
             <input
               ref={inputRef}
               type="text"
-              className="w-full bg-transparent py-4 pl-12 pr-12 text-sm text-neutral-200 placeholder-neutral-500 outline-none"
+              className="w-full bg-transparent py-4 pl-12 pr-12 text-sm text-zinc-200 placeholder-zinc-500 outline-none"
               placeholder="Search documentation (use arrow keys to navigate)..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -256,13 +256,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             {query && (
               <button 
                 onClick={() => setQuery("")}
-                className="absolute right-4 top-4 p-0.5 rounded-md text-neutral-500 hover:text-neutral-300 hover:bg-white/5 transition-all cursor-pointer"
+                className="absolute right-4 top-4 p-0.5 rounded-md text-zinc-500 hover:text-zinc-300 hover:bg-white/5 transition-all cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
             {!query && (
-              <span className="absolute right-4 top-4.5 rounded border border-border bg-neutral-900 px-1.5 py-0.5 font-sans text-[9px] text-neutral-500">
+              <span className="absolute right-4 top-4.5 rounded border border-border bg-zinc-900 px-1.5 py-0.5 font-sans text-[9px] text-zinc-500">
                 ESC
               </span>
             )}
@@ -275,13 +275,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             data-lenis-prevent
           >
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-12 gap-3 text-neutral-400">
-                <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
+              <div className="flex flex-col items-center justify-center py-12 gap-3 text-zinc-400">
+                <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
                 <span className="text-xs">Initializing search index...</span>
               </div>
             ) : query.trim() === "" ? (
               <div className="py-6 px-4 text-center">
-                <div className="text-xs text-neutral-500 uppercase font-heading font-semibold tracking-wider mb-4 text-left px-2">
+                <div className="text-xs text-zinc-500 uppercase font-sans font-semibold tracking-wider mb-4 text-left px-2">
                   Popular Searches
                 </div>
                 <div className="flex flex-wrap gap-2 px-2">
@@ -289,24 +289,24 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     <button
                       key={term}
                       onClick={() => setQuery(term)}
-                      className="rounded-lg bg-neutral-900/60 hover:bg-neutral-800/80 border border-border px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-all cursor-pointer font-sans"
+                      className="rounded-lg bg-zinc-900/60 hover:bg-zinc-800/80 border border-border px-3 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer font-sans"
                     >
                       {term}
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-neutral-600 text-left mt-6 px-2">
+                <p className="text-xs text-zinc-600 text-left mt-6 px-2">
                   Type a query to search both titles and body text of the documentation.
                 </p>
               </div>
             ) : results.length === 0 ? (
-              <div className="py-12 text-center text-neutral-500">
+              <div className="py-12 text-center text-zinc-500">
                 <p className="text-sm">No results found for &ldquo;{query}&rdquo;</p>
-                <p className="text-xs text-neutral-600 mt-2">Try adjusting your keywords or search terms.</p>
+                <p className="text-xs text-zinc-600 mt-2">Try adjusting your keywords or search terms.</p>
               </div>
             ) : (
               <div className="space-y-1">
-                <div className="text-[10px] text-neutral-500 uppercase font-heading font-bold tracking-wider px-3 py-1">
+                <div className="text-[10px] text-zinc-500 uppercase font-sans font-bold tracking-wider px-3 py-1">
                   Search Results ({results.length})
                 </div>
                 {results.map((record, index) => {
@@ -323,35 +323,35 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       }`}
                     >
                       <FileText className={`h-4.5 w-4.5 shrink-0 mt-0.5 transition-colors ${
-                        isSelected ? "text-neutral-200" : "text-neutral-500"
+                        isSelected ? "text-zinc-200" : "text-zinc-500"
                       }`} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <span className={`text-[10px] font-semibold uppercase tracking-wider transition-colors ${
-                            isSelected ? "text-neutral-300" : "text-neutral-500"
+                            isSelected ? "text-zinc-300" : "text-zinc-500"
                           }`}>
                             {record.slug.split("/")[0] || "General"}
                           </span>
                           {isSelected && (
-                            <span className="flex items-center gap-1 text-[10px] text-neutral-500 font-sans">
+                            <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-sans">
                               Select <CornerDownLeft className="h-3 w-3" />
                             </span>
                           )}
                         </div>
                         <h4 className={`text-sm font-semibold transition-colors mt-0.5 ${
-                          isSelected ? "text-white" : "text-neutral-300"
+                          isSelected ? "text-white" : "text-zinc-300"
                         }`}>
                           <HighlightedText text={record.title} highlight={query} />
                         </h4>
                         {record.description && (
                           <p className={`text-xs transition-colors mt-0.5 line-clamp-1 ${
-                            isSelected ? "text-neutral-300" : "text-neutral-400"
+                            isSelected ? "text-zinc-300" : "text-zinc-400"
                           }`}>
                             <HighlightedText text={record.description} highlight={query} />
                           </p>
                         )}
                         <p className={`text-xs transition-colors mt-1 line-clamp-2 leading-relaxed ${
-                          isSelected ? "text-neutral-400" : "text-neutral-500"
+                          isSelected ? "text-zinc-400" : "text-zinc-500"
                         }`}>
                           <HighlightedText 
                             text={getSnippet(record.content, query)} 
@@ -367,19 +367,19 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           </div>
           
           {/* Footer controls */}
-          <div className="flex items-center justify-between border-t border-border/40 px-4 py-2.5 bg-neutral-950/20 text-[10px] text-neutral-500 font-sans">
+          <div className="flex items-center justify-between border-t border-border/40 px-4 py-2.5 bg-zinc-950/20 text-[10px] text-zinc-500 font-sans">
             <div className="flex gap-4">
               <span>
-                <kbd className="bg-neutral-900 border border-border px-1 py-0.5 rounded mr-1">↑↓</kbd>
+                <kbd className="bg-zinc-900 border border-border px-1 py-0.5 rounded mr-1">↑↓</kbd>
                 Navigate
               </span>
               <span>
-                <kbd className="bg-neutral-900 border border-border px-1 py-0.5 rounded mr-1">Enter</kbd>
+                <kbd className="bg-zinc-900 border border-border px-1 py-0.5 rounded mr-1">Enter</kbd>
                 Open
               </span>
             </div>
             <span>
-              <kbd className="bg-neutral-900 border border-border px-1 py-0.5 rounded mr-1">ESC</kbd>
+              <kbd className="bg-zinc-900 border border-border px-1 py-0.5 rounded mr-1">ESC</kbd>
               Close
             </span>
           </div>

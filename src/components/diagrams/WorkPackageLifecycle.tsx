@@ -45,7 +45,7 @@ export default function WorkPackageLifecycle() {
     { 
       id: "completed", 
       label: "Completed", 
-      description: "Deliverables are signed off, assets verified on Frame.io, and payment milestones locked.",
+      description: "Deliverables are signed off, assets verified in the review system, and payment milestones locked.",
       icon: "Lock",
       type: "success"
     }

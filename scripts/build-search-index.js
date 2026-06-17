@@ -117,9 +117,9 @@ function generateNavigationIndex(contentDir, projectDir) {
       const fileContent = fs.readFileSync(indexPath, 'utf-8');
       const { data } = matter(fileContent);
       pages.unshift({
-        slug: [],
-        path: '',
-        title: data.sidebarTitle || data.title || 'Introduction',
+        slug: ['overview'],
+        path: 'overview',
+        title: data.sidebarTitle || data.title || 'Overview',
         group: 'Introduction',
         groupIcon: 'book-open',
         product: docsJson.name || 'Help Center'
@@ -147,7 +147,7 @@ function main() {
   
   navPages.forEach((page) => {
     let filePath = '';
-    if (page.path === '') {
+    if (page.path === 'overview') {
       filePath = path.join(projectDir, 'index.mdx');
     } else {
       const mdxPath = path.join(projectDir, `${page.path}.mdx`);

@@ -187,7 +187,7 @@ export const h4 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingEleme
 
 // Standard HTML tag overrides
 export const p = ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-  <p className="my-5 text-sm md:text-base leading-7 text-zinc-600 dark:text-zinc-400" {...props}>
+  <p className="my-5 text-base leading-7 text-zinc-600 dark:text-zinc-400" {...props}>
     {children}
   </p>
 );
@@ -209,7 +209,7 @@ export const ol = ({ children, ...props }: React.HTMLAttributes<HTMLOListElement
 );
 
 export const li = ({ children, ...props }: React.HTMLAttributes<HTMLLIElement>) => (
-  <li className="text-sm md:text-base leading-7 text-zinc-600 dark:text-zinc-400" {...props}>
+  <li className="text-base leading-7 text-zinc-600 dark:text-zinc-400" {...props}>
     {children}
   </li>
 );
@@ -410,6 +410,8 @@ import MdxCard from "./MdxCard";
 
 export const Card = MdxCard;
 
+import { WorkflowCard, WorkflowCardGroup } from "./WorkflowCard";
+
 import ProgressFlow from "./diagrams/ProgressFlow";
 import StageFlowchart from "./diagrams/StageFlowchart";
 import InvoicingFlowchart from "./diagrams/InvoicingFlowchart";
@@ -453,6 +455,10 @@ export const mdxComponents = {
   Columns,
   Card,
   CardGroup,
+  WorkflowCard,
+  WorkflowCardGroup,
+  StepCard: WorkflowCard,
+  StepCardGroup: WorkflowCardGroup,
   Icon,
   AgentOnly,
   ProgressFlow,

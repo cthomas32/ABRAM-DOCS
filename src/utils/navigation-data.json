@@ -1,7 +1,9 @@
 [
   {
-    "slug": [],
-    "path": "",
+    "slug": [
+      "overview"
+    ],
+    "path": "overview",
     "title": "Overview",
     "group": "Introduction",
     "groupIcon": "book-open",

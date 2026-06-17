@@ -5,7 +5,8 @@
 - The main pages are dynamically loaded from MDX/MD files in the root folder (`user-guide/*.md` and `index.mdx`) and rendered via `next-mdx-remote`.
 
 ## Key File Locations & Structure
-- **Global Styles & Custom Class Definitions**: [src/app/globals.css](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/app/globals.css) (uses Tailwind v4 `@theme` and custom classes like `.glass-panel`).
+- **Design System Reference**: [DESIGN.md](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/DESIGN.md) — **READ THIS FIRST**. Master reference for all typography, colors, buttons, spacing. All agents must follow this.
+- **Global Styles & Custom Class Definitions**: [src/app/globals.css](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/app/globals.css) (uses Tailwind v4 `@theme`, button classes `.btn-primary`/`.btn-glass`/`.btn-ghost`/`.btn-danger`, and glass panels).
 - **Main Layout Container**: [src/components/AppLayout.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/components/AppLayout.tsx) (defines the general page frame, sidebar layout, and footer).
 - **Header Navigation Bar**: [src/components/Navbar.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/components/Navbar.tsx) (renders the fixed top logo, search bar, and external app links).
 - **Documentation Page Router**: [src/app/docs/[...slug]/page.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/app/docs/%5B...slug%5D/page.tsx) (server-side markdown parsing and rendering).
@@ -23,12 +24,12 @@
   ```
 - **How to adjust header blur**: Modify the arbitrary class `backdrop-blur-[20px]` in [src/components/Navbar.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/components/Navbar.tsx#L14).
 
-### 2. Footer Glassmorphic Blur
-- The footer matches the header's glass layout directly in `AppLayout.tsx` on the `<footer>` element:
-  ```tsx
-  <footer className="w-full mt-auto bg-black/50 backdrop-blur-[20px] border-t border-white/8 py-6">
-  ```
-- **How to adjust footer blur**: Modify `backdrop-blur-[20px]` in [src/components/AppLayout.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/components/AppLayout.tsx#L75).
+### 2. Standardized Footer Layout
+- Every page in the application uses the standardized footer defined in `src/components/home/HomeFooter.tsx`.
+- The footer is rendered globally inside `src/components/AppLayout.tsx` for both marketing/landing pages and standard documentation page layouts.
+- **Rule**: Never import or render `HomeFooter` or any custom footer locally within individual pages. All pages must inherit the standardized footer automatically via the `AppLayout` wrapper.
+- **Style adjustment**: To modify the footer's styling (e.g. background, borders, paddings, link paths), edit [src/components/home/HomeFooter.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/components/home/HomeFooter.tsx).
+
 
 ### 3. Modals and General Glass Panels
 - Other glass-styled elements (like the search dialog container) use the `.glass-panel` class:
@@ -110,3 +111,41 @@ keywords:
 - **No Supabase or GitHub Branding**: Never mention "Supabase" or "GitHub" in the documentation text. Rephrase these references using generic terms like "the platform" or "the system".
 - **Clean Formatting**: Format any UI status values or dropdown settings using capitalized words without code styling/backticks unless specifically representing literal code in an agent-only context (e.g. use `Reserved` or `In Use` instead of `reserved` or `in_use`).
 
+---
+
+## 🎨 Design System Enforcement
+
+All UI work must follow the specifications in [DESIGN.md](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/DESIGN.md). Key rules:
+
+### Fonts
+- **Primary font**: Geist Sans (loaded via `next/font/google`, mapped to `font-sans`)
+- **Display font**: Archivo (`font-display`) — use ONLY for sparse uppercase section headers on the landing page
+- **Mono font**: Geist Mono (`font-mono`) — code blocks only
+- **NEVER** use inline `style={{ fontFamily: '...' }}`. Use Tailwind classes: `font-sans`, `font-display`, `font-mono`.
+
+### Colors
+- **Use `zinc-*` ONLY** for all text/bg/border colors. Never use `neutral-*`.
+- **Text color tiers**: `text-white` (primary), `text-zinc-300` (secondary), `text-zinc-400` (tertiary/body), `text-zinc-500` (muted/captions), `text-zinc-600` (ghost)
+
+### Buttons
+- Use semantic CSS classes defined in `globals.css`: `.btn-primary`, `.btn-glass`, `.btn-ghost`, `.btn-danger`
+- All buttons are minimal, compact, glass-styled. No oversized buttons.
+- Default shape: `rounded-full` (pill)
+
+### Typography Scale
+- See the full type scale table in DESIGN.md. Use standard Tailwind sizes (`text-xs` through `text-6xl`).
+- Only allowed arbitrary sizes: `text-[10px]` (overline) and `text-[9px]` (micro).
+
+### 📱 Mobile Responsiveness
+All components and pages **must** be fully usable and visually correct on mobile devices. These rules are non-negotiable:
+
+- **Minimum viewport**: Every page must render correctly at **320px** width (iPhone SE). No horizontal overflow allowed.
+- **Responsive breakpoints**: Use Tailwind responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`) for layout changes. **Never** hardcode fixed pixel widths (e.g., `w-[850px]`) without a mobile-friendly fallback (e.g., `w-[400px] md:w-[850px]`).
+- **Grid stacking**: Multi-column grids must collapse to single-column on mobile. Pattern: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`.
+- **Touch targets**: All interactive elements (buttons, links, toggles) must be at least **44×44px** tap area on mobile.
+- **No text overflow**: Never use `whitespace-nowrap` on user-facing text that could exceed the viewport width. Use `break-words` or responsive text sizing instead.
+- **Data tables & calendars**: Horizontal overflow (`overflow-x-auto`) is acceptable for complex data grids, but must include a visual scroll hint (e.g., "Swipe to view →") visible only on mobile (`md:hidden`).
+- **Sidebars, modals & drawers**: On mobile, these must include: (1) a backdrop overlay (`bg-black/60`) that dismisses on tap, (2) a visible close button, and (3) body scroll lock (`document.body.style.overflow = 'hidden'`).
+- **Decorative elements**: Large decorative blurs, glows, and background shapes must scale down on mobile to prevent layout issues (e.g., `w-[400px] md:w-[800px]`).
+- **Sticky/scroll-driven sections**: Reduce scroll heights on mobile (e.g., `h-[200vh] md:h-[400vh]`). Ensure stacked content fits within viewport-height sticky containers.
+- **Test breakpoints**: Verify all new UI at **375px** (iPhone SE), **390px** (iPhone 14), **768px** (iPad), and **1024px** (laptop) before merging.

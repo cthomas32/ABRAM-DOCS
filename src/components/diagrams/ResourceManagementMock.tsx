@@ -224,7 +224,7 @@ const INITIAL_BOOKINGS: Booking[] = [
     id: "booking-2",
     resourceId: "asset-5",
     resourceName: "RED V-Raptor 8K",
-    projectName: "Nike Brand Spotlight",
+    projectName: "Apparel Brand Spotlight",
     workOrder: "B-Camera Package",
     operator: "Sarah Jenkins",
     startDayIdx: 0,
@@ -246,7 +246,7 @@ const INITIAL_BOOKINGS: Booking[] = [
     id: "booking-4",
     resourceId: "asset-10",
     resourceName: "Sound Devices 833",
-    projectName: "Nike Brand Spotlight",
+    projectName: "Apparel Brand Spotlight",
     workOrder: "Audio Field Kit",
     operator: "Sarah Jenkins",
     startDayIdx: 3,
@@ -268,7 +268,7 @@ const INITIAL_BOOKINGS: Booking[] = [
     id: "booking-6",
     resourceId: "crew-2",
     resourceName: "Sarah Jenkins",
-    projectName: "Nike Brand Spotlight",
+    projectName: "Apparel Brand Spotlight",
     workOrder: "Lead Editor",
     operator: "Sarah Jenkins",
     startDayIdx: 0,
@@ -1191,7 +1191,7 @@ export default function ResourceManagementMock() {
                       required
                       value={newBookingData.projectName}
                       onChange={(e) => setNewBookingData({ ...newBookingData, projectName: e.target.value })}
-                      placeholder="e.g. Nike Brand Spotlight"
+                      placeholder="e.g. Apparel Brand Spotlight"
                       className="w-full bg-[#141414] border border-[#27272a] rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-gray-600 outline-none focus:border-white/20 transition-colors"
                     />
                   </div>

@@ -117,7 +117,7 @@ export default function InvoicingFlowchart() {
           <FlowConnector />
           <FlowNode 
             title="3. Sent / Awaiting Payment" 
-            description="Stripe updates billing; producer receives secure checkout invoice link." 
+            description="The payment system updates billing; producer receives secure checkout invoice link." 
             icon="Mail" 
             type="warning"
             badge="AWAITING ACTION"
@@ -141,14 +141,14 @@ export default function InvoicingFlowchart() {
         <div className="w-full flex flex-col">
           <FlowNode 
             title="1. Create PO & Authorize Card" 
-            description="Configure items and authorize payment method on Stripe." 
+            description="Configure items and authorize payment method." 
             icon="CreditCard" 
             type="purple"
           />
           <FlowConnector />
           <FlowNode 
             title="2. Authorized Hold" 
-            description="Stripe locks the invoice total on card for a maximum of 7 days." 
+            description="The system locks the invoice total on card for a maximum of 7 days." 
             icon="Lock" 
             type="warning"
           />
@@ -183,7 +183,7 @@ export default function InvoicingFlowchart() {
             <div className="flex flex-col items-center">
               <FlowNode 
                 title="Paid & Captured" 
-                description="Stripe captures hold; routes funds." 
+                description="The system captures hold; routes funds." 
                 icon="ShieldCheck" 
                 type="success"
               />
