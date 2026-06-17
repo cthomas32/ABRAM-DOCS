@@ -16,7 +16,7 @@ import {
 
 export default function ProblemSection() {
   return (
-    <section className="relative w-full max-w-7xl mx-auto px-6 py-20 md:py-32 bg-abram-black text-white">
+    <section className="relative w-full max-w-7xl mx-auto px-6 py-20 md:py-32 bg-transparent text-white">
       {/* Background Ambient Glows */}
       <div className="absolute top-1/4 left-0 w-80 h-80 bg-amber-500/[0.02] rounded-full filter blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/3 right-10 w-96 h-96 bg-[#8ECAFF]/[0.02] rounded-full filter blur-[120px] pointer-events-none" />

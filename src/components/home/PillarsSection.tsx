@@ -492,7 +492,7 @@ export default function PillarsSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full py-24 md:py-36 bg-abram-black overflow-hidden selection:bg-zinc-800 selection:text-white"
+      className="relative w-full py-24 md:py-36 bg-transparent overflow-hidden selection:bg-zinc-800 selection:text-white"
     >
       {/* Background glow structures with parallax scroll-drift - Seamless Navy Glow */}
       <motion.div

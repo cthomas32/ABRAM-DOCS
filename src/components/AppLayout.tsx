@@ -10,6 +10,7 @@ import PrevNextNav from "./PrevNextNav";
 import SearchModal from "./SearchModal";
 import HomeFooter from "./home/HomeFooter";
 import MobileMenu from "./MobileMenu";
+import BackgroundGlow from "./BackgroundGlow";
 
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -37,10 +38,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // 1. Marketing Layout Rendering
   if (isMarketingPage) {
+    const isBrainPage = cleanPathname === "/production-brain";
     return (
-      <div className="min-h-screen bg-abram-black text-foreground flex flex-col font-sans selection:bg-zinc-800 selection:text-white abram-glow-bg">
+      <BackgroundGlow 
+        variant="premium" 
+        techGrid={isBrainPage} 
+        grain={isBrainPage} 
+        className="selection:bg-zinc-800 selection:text-white"
+      >
         <Navbar 
           onSearchClick={() => setSearchOpen(true)} 
           mobileMenuOpen={mobileMenuOpen}
@@ -52,13 +58,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <HomeFooter />
         <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
-      </div>
+      </BackgroundGlow>
     );
   }
 
   // 2. Documentation / Standard App Layout Rendering
   return (
-    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-zinc-800 selection:text-white premium-glow-bg">
+    <BackgroundGlow variant="premium" className="selection:bg-zinc-800 selection:text-white">
       <Navbar 
         onSearchClick={() => setSearchOpen(true)} 
         onMenuClick={isDocsPage && cleanPathname !== "/docs" ? () => setSidebarOpen(true) : undefined}
@@ -93,6 +99,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
-    </div>
+    </BackgroundGlow>
   );
 }

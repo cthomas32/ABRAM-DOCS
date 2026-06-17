@@ -33,7 +33,7 @@ const ctaVariants: Variants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center py-24 px-4 sm:px-6 lg:px-8 bg-[#0A0A0A] select-none overflow-hidden">
+    <section className="relative min-h-screen flex flex-col justify-center py-24 px-4 sm:px-6 lg:px-8 bg-transparent select-none overflow-hidden">
       {/* Top Center Logo (Visible on Hero before Scroll) */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none select-none">
         <Image
@@ -49,7 +49,7 @@ export default function HeroSection() {
       {/* Background Graphic System */}
       <div className="absolute inset-0 w-full h-full pointer-events-none select-none z-0">
         {/* Sky Sunset/Dusk Gradient Behind */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#181320] via-[#0E0C12] to-[#0A0A0A]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#181320] via-[#0E0C12] to-black" />
         
         {/* Mountains Backdrop */}
         <div className="absolute inset-0 w-full h-full opacity-80 blur-[2.5px] scale-105">
@@ -64,11 +64,11 @@ export default function HeroSection() {
         </div>
 
         {/* Smooth gradient overlays to blend edges and maintain typography contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-[#0A0A0A]/10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/30 via-transparent to-[#0A0A0A]/90" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/90" />
         
         {/* Subtle radial vignette centering readability on the text */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_15%,#0A0A0A_95%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_15%,#000000_95%)]" />
 
         {/* Film Grain Texture */}
         <div className="grain-overlay" />

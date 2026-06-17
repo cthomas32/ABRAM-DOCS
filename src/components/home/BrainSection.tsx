@@ -270,7 +270,7 @@ export default function BrainSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative py-16 md:py-24 lg:py-32 border-t border-white/5 bg-[#0A0A0A] overflow-hidden"
+      className="relative py-16 md:py-24 lg:py-32 border-t border-white/5 bg-transparent overflow-hidden"
     >
       {/* Ambient Glows (Strictly Light Blue and Purple core tints) */}
       <div 

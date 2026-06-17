@@ -73,7 +73,7 @@ export default function SocialProofBar() {
   return (
     <section 
       id="social-proof" 
-      className="relative w-full border-y border-white/[0.08] bg-abram-black py-10 px-4 sm:px-6 lg:px-8 select-none overflow-hidden"
+      className="relative w-full border-y border-white/[0.08] bg-transparent py-10 px-4 sm:px-6 lg:px-8 select-none overflow-hidden"
     >
       <div className="max-w-7xl mx-auto relative z-10">
         

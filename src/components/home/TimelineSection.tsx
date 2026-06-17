@@ -195,7 +195,7 @@ export default function TimelineSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative w-full py-24 md:py-32 border-t border-white/[0.08] bg-abram-black overflow-hidden selection:bg-zinc-800 selection:text-white"
+      className="relative w-full py-24 md:py-32 border-t border-white/[0.08] bg-transparent overflow-hidden selection:bg-zinc-800 selection:text-white"
       style={{ perspective: 1000 }}
     >
       {/* Background radial soft-glows */}

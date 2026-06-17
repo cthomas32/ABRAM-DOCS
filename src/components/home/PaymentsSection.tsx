@@ -148,7 +148,7 @@ export default function PaymentsSection() {
   };
 
   return (
-    <section className="relative w-full py-24 md:py-32 border-t border-white/[0.08] bg-abram-black overflow-hidden selection:bg-zinc-800 selection:text-white">
+    <section className="relative w-full py-24 md:py-32 border-t border-white/[0.08] bg-transparent overflow-hidden selection:bg-zinc-800 selection:text-white">
       {/* Ambient Glows */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/[0.025] rounded-full filter blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#8ECAFF]/[0.03] rounded-full filter blur-[120px] pointer-events-none" />

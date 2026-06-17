@@ -107,7 +107,7 @@ export default function ChatbotSection() {
   const data = PHASE_DATA[activePhase];
 
   return (
-    <section id="showcase-section" className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 bg-abram-black text-white">
+    <section id="showcase-section" className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 bg-transparent text-white">
       {/* Background ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-red-500/[0.015] rounded-full blur-[100px] pointer-events-none" />
 

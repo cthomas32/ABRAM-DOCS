@@ -59,13 +59,7 @@ export default function ProductionBrainPage() {
           }).replace(/</g, '\\u003c'),
         }}
       />
-      <main className="bg-[#0A0A0A] abram-glow-bg min-h-screen text-zinc-100 overflow-x-hidden pt-16 select-none relative z-10 isolate">
-        
-        {/* Tech grid overlay */}
-        <div className="absolute inset-0 tech-grid-overlay opacity-[0.15] pointer-events-none z-0" />
-
-        {/* Subtle svg film grain overlay from styling rules */}
-        <div className="grain-overlay pointer-events-none fixed inset-0 z-50 opacity-[0.02]" />
+      <main className="text-zinc-100 overflow-x-hidden pt-16 select-none relative z-10 isolate">
 
         {/* Section 1: Hero */}
         <div className="relative">

@@ -251,7 +251,7 @@ export default function RosterROISection() {
   const areaD = `${pathD} L ${points[points.length - 1].x} 80 L ${points[0].x} 80 Z`;
 
   return (
-    <section className="relative w-full border-t border-white/[0.08] bg-zinc-950 py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center">
+    <section className="relative w-full border-t border-white/[0.08] bg-transparent py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center">
       {/* Floating Ambient Glow Background */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] md:w-[600px] md:h-[600px] bg-blue-950/15 blur-[120px] rounded-full pointer-events-none z-0" />
 

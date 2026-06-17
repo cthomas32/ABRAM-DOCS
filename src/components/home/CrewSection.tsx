@@ -82,7 +82,7 @@ export default function CrewSection() {
   } as const;
 
   return (
-    <section ref={containerRef} className="relative w-full py-24 md:py-32 border-t border-white/[0.08] bg-abram-black overflow-hidden selection:bg-zinc-800 selection:text-white">
+    <section ref={containerRef} className="relative w-full py-24 md:py-32 border-t border-white/[0.08] bg-transparent overflow-hidden selection:bg-zinc-800 selection:text-white">
       {/* Ambient Glows - Sky Blue and Fuchsia/Purple */}
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#8ECAFF]/[0.035] rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-fuchsia-500/[0.018] rounded-full blur-[100px] pointer-events-none" />

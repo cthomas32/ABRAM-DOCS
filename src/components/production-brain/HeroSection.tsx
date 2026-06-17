@@ -36,7 +36,7 @@ const itemVariants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full py-20 md:py-28 lg:py-36 overflow-hidden bg-[#0A0A0A] font-sans">
+    <section className="relative w-full py-20 md:py-28 lg:py-36 overflow-hidden bg-transparent font-sans">
       {/* Ambient Cream & Navy Background Glows */}
       <div className="absolute inset-0 pointer-events-none select-none z-0">
         <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] rounded-full bg-[#FAFAF9]/[0.015] blur-[120px] -translate-x-1/2 -translate-y-1/2" />

@@ -96,7 +96,7 @@ export default function BriefSection() {
   }, [state]);
 
   return (
-    <section ref={sectionRef} className="relative w-full max-w-7xl mx-auto px-6 py-20 md:py-32 bg-[#0A0A0A] text-white">
+    <section ref={sectionRef} className="relative w-full max-w-7xl mx-auto px-6 py-20 md:py-32 bg-transparent text-white">
       {/* Ambient Glows - Subtle Purple and Sky Blue for AI brief processing */}
       <div className="absolute top-1/3 left-1/4 w-[450px] h-[450px] bg-purple-500/[0.03] rounded-full filter blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/3 right-1/4 w-[450px] h-[450px] bg-[#8ECAFF]/[0.02] rounded-full filter blur-[120px] pointer-events-none" />

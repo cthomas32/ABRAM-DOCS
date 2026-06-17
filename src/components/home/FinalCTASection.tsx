@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function FinalCTASection() {
   return (
-    <section className="relative w-full py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center bg-abram-black">
+    <section className="relative w-full py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center bg-transparent">
       {/* Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] md:w-[900px] md:h-[400px] bg-gradient-to-r from-[#8ECAFF]/8 via-[#3B82F6]/5 to-transparent rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[40%] w-[500px] h-[300px] bg-gradient-to-b from-purple-500/4 to-transparent rounded-full blur-[100px] pointer-events-none" />

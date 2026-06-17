@@ -77,7 +77,7 @@ const statsData: StatItem[] = [
 
 export default function StatsSection() {
   return (
-    <section className="relative w-full border-t border-white/[0.08] bg-abram-black py-24 sm:py-32 px-4 sm:px-6 lg:px-8 select-none overflow-hidden">
+    <section className="relative w-full border-t border-white/[0.08] bg-transparent py-24 sm:py-32 px-4 sm:px-6 lg:px-8 select-none overflow-hidden">
       {/* Ambient Glows - Subtle purple stats glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-purple-500/[0.02] rounded-full filter blur-[120px] pointer-events-none" />
 

@@ -67,7 +67,7 @@ export default function OutcomeSection() {
   const opacity = useTransform(scrollYProgress, [0, 0.35], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="relative w-full py-32 md:py-48 bg-[#0A0A0A] overflow-hidden flex flex-col items-center justify-center">
+    <section ref={sectionRef} className="relative w-full py-32 md:py-48 bg-transparent overflow-hidden flex flex-col items-center justify-center">
       
       {/* Background Ambient Blur */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[#8ECAFF]/[0.03] rounded-full blur-[120px] pointer-events-none" />

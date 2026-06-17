@@ -59,7 +59,7 @@ export default function ArtifactsSection() {
   const visibleFeature = artifactsDemoData[visibleFeatureIndex];
 
   return (
-    <section ref={containerRef} className="relative w-full h-[200vh] md:h-[400vh] bg-abram-black">
+    <section ref={containerRef} className="relative w-full h-[200vh] md:h-[400vh] bg-transparent">
       <div className="sticky top-0 min-h-screen w-full flex items-center overflow-hidden">
         <div className="max-w-[1600px] mx-auto w-full px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center h-full py-24">
           

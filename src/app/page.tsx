@@ -72,7 +72,7 @@ export default function LandingPage() {
           }).replace(/</g, '\\u003c'),
         }}
       />
-      <main id="landing-page-root" className="bg-abram-black abram-glow-bg min-h-screen">
+      <main id="landing-page-root">
         <HeroSection />
         <PillarsSection />
         <BridgeSection />

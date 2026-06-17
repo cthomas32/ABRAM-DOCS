@@ -55,7 +55,7 @@ export default function SchedulingSection() {
   const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
   return (
-    <section className="relative w-full py-24 md:py-32 border-t border-white/[0.08] bg-abram-black overflow-hidden selection:bg-zinc-800 selection:text-white">
+    <section className="relative w-full py-24 md:py-32 border-t border-white/[0.08] bg-transparent overflow-hidden selection:bg-zinc-800 selection:text-white">
       {/* Ambient Glows - Violet/Blue schedule grid */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8ECAFF]/[0.035] rounded-full filter blur-[130px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/3 w-[500px] h-[500px] bg-purple-500/[0.025] rounded-full filter blur-[110px] pointer-events-none" />

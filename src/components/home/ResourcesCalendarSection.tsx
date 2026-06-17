@@ -28,7 +28,7 @@ export default function ResourcesCalendarSection() {
   ];
 
   return (
-    <section ref={sectionRef} className="relative w-full py-24 md:py-32 bg-[#0A0A0A] overflow-hidden flex flex-col items-center justify-center border-t border-white/[0.05]">
+    <section ref={sectionRef} className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden flex flex-col items-center justify-center border-t border-white/[0.05]">
       
       {/* Background Ambient Blur */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] md:w-[800px] md:h-[500px] bg-blue-950/25 rounded-full blur-[120px] pointer-events-none" />
