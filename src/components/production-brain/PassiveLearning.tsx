@@ -117,7 +117,7 @@ export default function PassiveLearning() {
   return (
     <div
       ref={sectionRef}
-      className="relative w-full bg-transparent overflow-hidden flex flex-col items-center justify-center font-sans"
+      className="relative w-full bg-transparent flex flex-col items-center justify-center font-sans"
     >
       {/* Background Ambient Blurs — Prevent layout shifting on small screens */}
       <div className="absolute top-1/3 right-1/4 w-[250px] md:w-[700px] h-[250px] md:h-[450px] bg-zinc-900/[0.04] rounded-full blur-[80px] md:blur-[120px] pointer-events-none" />

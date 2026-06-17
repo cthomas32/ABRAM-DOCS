@@ -10,11 +10,12 @@ export default function BridgeSection() {
   return (
     <section
       ref={ref}
-      className="relative w-full min-h-[40vh] md:min-h-[50vh] flex items-center justify-center bg-abram-black overflow-hidden py-24 px-6"
+      className="relative w-full min-h-[40vh] md:min-h-[50vh] flex items-center justify-center overflow-hidden py-24 px-6"
     >
-      {/* Subtle radial glow behind the text, white/[0.015], blur-[100px] */}
+      {/* Subtle radial glow behind the text, mathematically eased */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-white/[0.015] rounded-full blur-[100px] pointer-events-none z-0"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] rounded-full blur-[60px] pointer-events-none z-0"
+        style={{ backgroundImage: 'radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.012) 30%, rgba(255, 255, 255, 0.004) 60%, transparent 100%)' }}
         aria-hidden="true"
       />
 

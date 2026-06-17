@@ -64,7 +64,7 @@ export default function UnderTheHood() {
   return (
     <div
       ref={sectionRef}
-      className="relative w-full bg-transparent overflow-hidden flex flex-col items-center justify-center font-sans"
+      className="relative w-full bg-transparent flex flex-col items-center justify-center font-sans"
     >
       {/* Background Ambient Blurs */}
       <div className="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[280px] md:w-[600px] h-[280px] md:h-[400px] bg-[#8ECAFF]/[0.015] rounded-full blur-[80px] md:blur-[120px] pointer-events-none" />

@@ -18,9 +18,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Normalize pathname to strip trailing slashes for matching
+  const cleanPathname = pathname ? pathname.replace(/\/$/, "") || "/" : "/";
+
   // Marketing routes that need clean, un-padded full width presentation
-  const isMarketingPage = pathname === "/" || pathname === "/landing" || pathname === "/pricing" || pathname === "/production-brain";
-  const isDocsPage = pathname.startsWith("/docs");
+  const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain";
+  const isDocsPage = cleanPathname.startsWith("/docs");
 
   // Keyboard shortcut listener for search modal
   useEffect(() => {
@@ -47,7 +50,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
         <HomeFooter />
-        <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={pathname} />
+        <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
     );
@@ -58,29 +61,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-zinc-800 selection:text-white premium-glow-bg">
       <Navbar 
         onSearchClick={() => setSearchOpen(true)} 
-        onMenuClick={isDocsPage && pathname !== "/docs" ? () => setSidebarOpen(true) : undefined}
+        onMenuClick={isDocsPage && cleanPathname !== "/docs" ? () => setSidebarOpen(true) : undefined}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       />
 
       <div className="mx-auto flex w-full max-w-[90rem] flex-1 pt-16 justify-center px-4 sm:px-6 lg:px-8 gap-8 lg:gap-12">
-        {isDocsPage && pathname !== "/docs" && (
+        {isDocsPage && cleanPathname !== "/docs" && (
           <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onSearchClick={() => setSearchOpen(true)} />
         )}
         <main className="flex-1 flex flex-col min-w-0 w-full">
           <div className="flex-1 flex flex-col">
             <div
               className={`flex-1 w-full mx-auto p-6 md:p-8 lg:p-12 ${
-                pathname === "/docs" ? "max-w-7xl" : isDocsPage ? "max-w-6xl" : "max-w-4xl"
+                cleanPathname === "/docs" ? "max-w-7xl" : isDocsPage ? "max-w-6xl" : "max-w-4xl"
               }`}
             >
-              {isDocsPage && pathname !== "/docs" && <Breadcrumbs />}
+              {isDocsPage && cleanPathname !== "/docs" && <Breadcrumbs />}
 
               <div className="flex-1">
                 {children}
               </div>
 
-              {isDocsPage && pathname !== "/docs" && <PrevNextNav />}
+              {isDocsPage && cleanPathname !== "/docs" && <PrevNextNav />}
             </div>
 
             <HomeFooter />
@@ -88,7 +91,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
 
-      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={pathname} />
+      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );

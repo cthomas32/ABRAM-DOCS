@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import NeuralNetworkOrb from "./NeuralNetworkOrb";
 
 // Standard cinematic easing from DESIGN.md / motion.ts
@@ -90,13 +90,13 @@ export default function HeroSection() {
               >
                 Get Started
               </a>
-              <Link
-                href="/docs/user-guide/0.4-production-brain-and-workspace-memory"
-                className="btn-glass group"
+              <a
+                href="#sandbox-section"
+                className="btn-glass group cursor-pointer"
               >
-                Read the Guide
-                <ArrowRight className="ml-1 h-3.5 w-3.5 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" />
-              </Link>
+                Learn More
+                <ArrowDown className="ml-1 h-3.5 w-3.5 opacity-70 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all duration-200" />
+              </a>
             </motion.div>
           </motion.div>
 

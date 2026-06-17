@@ -59,7 +59,7 @@ export default function ProductionBrainPage() {
           }).replace(/</g, '\\u003c'),
         }}
       />
-      <main className="bg-[#0A0A0A] min-h-screen text-zinc-100 overflow-x-hidden pt-16 select-none relative z-10 isolate">
+      <main className="bg-[#0A0A0A] abram-glow-bg min-h-screen text-zinc-100 overflow-x-hidden pt-16 select-none relative z-10 isolate">
         
         {/* Tech grid overlay */}
         <div className="absolute inset-0 tech-grid-overlay opacity-[0.15] pointer-events-none z-0" />
@@ -70,7 +70,10 @@ export default function ProductionBrainPage() {
         {/* Section 1: Hero */}
         <div className="relative">
           {/* Indigo-950/20 glow behind Hero */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-950/20 rounded-full blur-[140px] pointer-events-none animate-breathe z-0" />
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[60px] pointer-events-none animate-breathe z-0"
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(30, 27, 75, 0.25) 0%, rgba(30, 27, 75, 0.2025) 10%, rgba(30, 27, 75, 0.16) 20%, rgba(30, 27, 75, 0.1225) 30%, rgba(30, 27, 75, 0.09) 40%, rgba(30, 27, 75, 0.0625) 50%, rgba(30, 27, 75, 0.04) 60%, rgba(30, 27, 75, 0.0225) 70%, rgba(30, 27, 75, 0.01) 80%, rgba(30, 27, 75, 0.0025) 90%, rgba(30, 27, 75, 0) 100%)' }}
+          />
           <div className="relative z-10">
             <HeroSection />
           </div>
@@ -82,7 +85,10 @@ export default function ProductionBrainPage() {
         {/* Section 2: Interactive Sandbox */}
         <div className="relative py-24 md:py-36">
           {/* Blue-950/15 glow behind Sandbox */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-blue-950/15 rounded-full blur-[140px] pointer-events-none animate-breathe z-0" />
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full blur-[60px] pointer-events-none animate-breathe z-0"
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(23, 37, 84, 0.2) 0%, rgba(23, 37, 84, 0.162) 10%, rgba(23, 37, 84, 0.128) 20%, rgba(23, 37, 84, 0.098) 30%, rgba(23, 37, 84, 0.072) 40%, rgba(23, 37, 84, 0.05) 50%, rgba(23, 37, 84, 0.032) 60%, rgba(23, 37, 84, 0.018) 70%, rgba(23, 37, 84, 0.008) 80%, rgba(23, 37, 84, 0.002) 90%, rgba(23, 37, 84, 0) 100%)' }}
+          />
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
               <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block mb-3">CO-PILOT INTERFACE</span>
@@ -98,7 +104,10 @@ export default function ProductionBrainPage() {
         {/* Section 3: Dual Memory Spheres */}
         <div className="relative py-24 md:py-36">
           {/* Indigo-950/15 glow behind Memory Spheres */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-950/15 rounded-full blur-[140px] pointer-events-none animate-breathe z-0" />
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[60px] pointer-events-none animate-breathe z-0"
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(30, 27, 75, 0.2) 0%, rgba(30, 27, 75, 0.162) 10%, rgba(30, 27, 75, 0.128) 20%, rgba(30, 27, 75, 0.098) 30%, rgba(30, 27, 75, 0.072) 40%, rgba(30, 27, 75, 0.05) 50%, rgba(30, 27, 75, 0.032) 60%, rgba(30, 27, 75, 0.018) 70%, rgba(30, 27, 75, 0.008) 80%, rgba(30, 27, 75, 0.002) 90%, rgba(30, 27, 75, 0) 100%)' }}
+          />
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
               <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block mb-3">MEMORY ARCHITECTURE</span>
@@ -114,7 +123,10 @@ export default function ProductionBrainPage() {
         {/* Section 4: Passive Learning */}
         <div className="relative py-24 md:py-36">
           {/* Violet-950/10 glow behind Passive Learning */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-violet-950/10 rounded-full blur-[140px] pointer-events-none animate-breathe z-0" />
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[60px] pointer-events-none animate-breathe z-0"
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(46, 16, 101, 0.14) 0%, rgba(46, 16, 101, 0.1134) 10%, rgba(46, 16, 101, 0.0896) 20%, rgba(46, 16, 101, 0.0686) 30%, rgba(46, 16, 101, 0.0504) 40%, rgba(46, 16, 101, 0.035) 50%, rgba(46, 16, 101, 0.0224) 60%, rgba(46, 16, 101, 0.0126) 70%, rgba(46, 16, 101, 0.0056) 80%, rgba(46, 16, 101, 0.0014) 90%, rgba(46, 16, 101, 0) 100%)' }}
+          />
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
               <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block mb-3">ZERO INPUT</span>
@@ -130,7 +142,10 @@ export default function ProductionBrainPage() {
         {/* Section 5: Matchmaking Engine */}
         <div className="relative py-24 md:py-36">
           {/* Red-950/10 glow behind Matchmaking engine */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-red-950/10 rounded-full blur-[140px] pointer-events-none animate-breathe z-0" />
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full blur-[60px] pointer-events-none animate-breathe z-0"
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(69, 10, 10, 0.14) 0%, rgba(69, 10, 10, 0.1134) 10%, rgba(69, 10, 10, 0.0896) 20%, rgba(69, 10, 10, 0.0686) 30%, rgba(69, 10, 10, 0.0504) 40%, rgba(69, 10, 10, 0.035) 50%, rgba(69, 10, 10, 0.0224) 60%, rgba(69, 10, 10, 0.0126) 70%, rgba(69, 10, 10, 0.0056) 80%, rgba(69, 10, 10, 0.0014) 90%, rgba(69, 10, 10, 0) 100%)' }}
+          />
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
               <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block mb-3">MATCHMAKING SCORING</span>
@@ -146,7 +161,10 @@ export default function ProductionBrainPage() {
         {/* Section 6: Under the Hood */}
         <div className="relative py-24 md:py-36">
           {/* Slate-900/15 glow behind Under the Hood */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-slate-900/15 rounded-full blur-[140px] pointer-events-none animate-breathe z-0" />
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[60px] pointer-events-none animate-breathe z-0"
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.162) 10%, rgba(15, 23, 42, 0.128) 20%, rgba(15, 23, 42, 0.098) 30%, rgba(15, 23, 42, 0.072) 40%, rgba(15, 23, 42, 0.05) 50%, rgba(15, 23, 42, 0.032) 60%, rgba(15, 23, 42, 0.018) 70%, rgba(15, 23, 42, 0.008) 80%, rgba(15, 23, 42, 0.002) 90%, rgba(15, 23, 42, 0) 100%)' }}
+          />
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
               <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block mb-3">SYSTEM ARCHITECTURE</span>

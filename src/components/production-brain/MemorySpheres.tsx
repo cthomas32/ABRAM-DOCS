@@ -12,7 +12,7 @@ export default function MemorySpheres() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-transparent overflow-hidden flex flex-col items-center justify-center font-sans"
+      className="relative w-full bg-transparent flex flex-col items-center justify-center font-sans"
     >
       {/* Background Ambient Blurs — Scaled down for mobile to prevent layout shifting */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[500px] bg-[#8ECAFF]/[0.02] rounded-full blur-[80px] md:blur-[120px] pointer-events-none" />

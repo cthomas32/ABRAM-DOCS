@@ -43,6 +43,10 @@
   ```
 - **How to adjust panel blur**: Update `.glass-panel` class in [src/app/globals.css](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/app/globals.css#L43-L49).
 
+### 4. Ambient Blurs & Avoid container clipping
+- **Rule**: Never use the `overflow-hidden` class on the root element of components/sections that contain absolute-positioned ambient blurs or glows if those components are wrapped inside centered, restricted-width containers (such as `max-w-7xl` or `max-w-4xl`).
+- **Why**: Doing so clips the glow at the container's margins on large screens, creating a visible hard line (which looks like an unwanted box boundary overlaying the background). Rely on the layout's root wrapper (e.g. `<main className="overflow-x-hidden">`) to capture any viewport-level horizontal bleed instead.
+
 ---
 
 ## Commands & Development Workflow
