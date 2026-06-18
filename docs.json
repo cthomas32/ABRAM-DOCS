@@ -97,7 +97,8 @@
             "pages": [
               "user-guide/6.1-slack-notifications",
               "user-guide/6.2-frameio-workspaces",
-              "user-guide/6.3-project-collaboration-and-file-sharing"
+              "user-guide/6.3-project-collaboration-and-file-sharing",
+              "user-guide/6.4-resend-email-integration"
             ]
           },
           {

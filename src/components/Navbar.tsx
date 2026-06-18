@@ -109,6 +109,16 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             Learn
           </Link>
           <Link
+            href="/blog"
+            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
+              pathname.startsWith("/blog")
+                ? "bg-white/10 text-white border border-white/10"
+                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+            }`}
+          >
+            Blog
+          </Link>
+          <Link
             href="/pricing"
             className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
               pathname === "/pricing"

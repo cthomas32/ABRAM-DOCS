@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function HomeFooter() {
   return (
     <footer className="w-full bg-[#0A0A0A] border-t border-white/[0.08] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-sm text-zinc-400">
+      <div className="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-sm text-zinc-400">
         {/* Column 1: Logo and description */}
         <div className="space-y-4">
           <Link href="/" className="inline-block">
@@ -22,18 +22,14 @@ export default function HomeFooter() {
           </p>
         </div>
 
-        {/* Column 2: Navigation Links */}
+        {/* Column 2: Platform */}
         <div className="flex flex-col space-y-3">
-          {/* Form Label style: text-xs font-medium tracking-wider */}
-          <h4 className="text-xs font-medium tracking-wide text-white">Navigation</h4>
-          <a href="#top" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <h4 className="text-xs font-medium tracking-wide text-white">Platform</h4>
+          <Link href="/" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Home
-          </a>
+          </Link>
           <Link href="/production-brain" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Brain
-          </Link>
-          <Link href="/docs" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-            Learn
           </Link>
           <Link href="/pricing" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Pricing
@@ -48,8 +44,22 @@ export default function HomeFooter() {
           </a>
         </div>
 
-        {/* Column 3: Legal & Copyright */}
-        <div className="flex flex-col space-y-3 justify-between">
+        {/* Column 3: Resources */}
+        <div className="flex flex-col space-y-3">
+          <h4 className="text-xs font-medium tracking-wide text-white">Resources</h4>
+          <Link href="/docs" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Learn
+          </Link>
+          <Link href="/blog" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Blog
+          </Link>
+          <Link href="/changelog" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Changelog
+          </Link>
+        </div>
+
+        {/* Column 4: Legal & Copyright */}
+        <div className="flex flex-col space-y-3 justify-between min-h-[120px] md:min-h-0">
           <div className="space-y-3">
             <h4 className="text-xs font-medium tracking-wide text-white">Legal</h4>
             <div className="flex flex-col space-y-2">

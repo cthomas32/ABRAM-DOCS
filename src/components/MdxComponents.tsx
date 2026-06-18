@@ -406,10 +406,29 @@ export function CardGroup({ cols = 2, children }: { cols?: number; children: Rea
   );
 }
 
+export const img = ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  <span className="block my-8 space-y-2 text-center">
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      className="mx-auto max-w-full h-auto rounded-xl border border-white/5 bg-zinc-950/20"
+      {...props}
+    />
+    {alt && (
+      <span className="block text-xs text-zinc-500 font-sans font-medium">
+        {alt}
+      </span>
+    )}
+  </span>
+);
+
 import MdxCard from "./MdxCard";
 
 export const Card = MdxCard;
 
+import { Cover } from "./mdx/Cover";
 import { WorkflowCard, WorkflowCardGroup } from "./WorkflowCard";
 
 import ProgressFlow from "./diagrams/ProgressFlow";
@@ -434,6 +453,7 @@ export function AgentOnly({ children }: { children: React.ReactNode }) {
 
 // Gather all component overrides in a single map
 export const mdxComponents = {
+  Cover,
   h1,
   h2,
   h3,
@@ -452,6 +472,7 @@ export const mdxComponents = {
   td,
   pre,
   code,
+  img,
   Columns,
   Card,
   CardGroup,

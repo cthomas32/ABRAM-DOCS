@@ -1,0 +1,1337 @@
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/7.1-faqs-and-troubleshooting',
+        'ABRAM FAQs and Troubleshooting Guide',
+        'FAQs & Troubleshooting Guide',
+        'Answers to common ABRAM Network questions plus step-by-step troubleshooting for sign-in, intake, scheduling, Stripe payouts, and integration issues.',
+        '{"ABRAM","ABRAM Network","stripe","milestone","freelancer","producer","calendar","ai","brief","work package","payout","invoice","crew","permissions","billing","talent search","rsvp","faqs","troubleshooting"}'::text[],
+        '---
+title: ''ABRAM FAQs and Troubleshooting Guide''
+sidebarTitle: FAQs & Troubleshooting Guide
+description: ''Answers to common ABRAM Network questions plus step-by-step troubleshooting for sign-in, intake, scheduling, Stripe payouts, and integration issues.''
+keywords:
+  - ABRAM
+  - ABRAM Network
+  - stripe
+  - milestone
+  - freelancer
+  - producer
+  - calendar
+  - ai
+  - brief
+  - work package
+  - payout
+  - invoice
+  - crew
+  - permissions
+  - billing
+  - talent search
+  - rsvp
+  - faqs
+  - troubleshooting
+---
+# Section 7.1: FAQs & Troubleshooting Guide
+
+This guide compiles answers to the most common questions and provides step-by-step troubleshooting procedures for the ABRAM platform.
+
+---
+
+## 1. Calendar Sync & Availability Issues
+
+### Q: Why are my external calendar events not showing up on my ABRAM Utilization Calendar?
+**A**: Calendar sync is driven by real-time connection sync. If sync stops or fails to initialize:
+1. Navigate to **Settings** > **App Connectors** > **Calendar Sync**.
+2. Check the connection status of your Google Calendar or Microsoft Outlook account.
+3. If it displays "Connected" but is not updating, click **Re-Sync Now** to refresh the subscription.
+4. If it displays "Disconnected" or "Error", click **Reconnect** to re-authorize the connection.
+
+### Q: Does blocking out a day on my Google Calendar automatically make me unavailable on ABRAM?
+**A**: Yes. Any event marked as **"Busy"** on your primary synced external calendar is imported automatically. Events marked as **"Free"** or **"Tentative"** are ignored to prevent accidental blockouts.
+
+### Q: How do I resolve a capacity conflict alert?
+**A**: If a producer attempts to book you for a work package that overlaps with an existing confirmed booking or external blockout, the system highlights the dates in red. You can:
+* Decline the invitation or RSVP as **Tentative** and leave a message.
+* Adjust your availability in the **Utilization** tab by clicking the conflict date and selecting **Resolve Conflict** (this will release tentative holds).
+
+---
+
+## 2. Stripe Connect & Payment Issues
+
+### Q: Why is my Stripe Connect account status showing as "Setup Required" or "In Review"?
+**A**: Stripe requires identity and banking verification before activating your account.
+* **Setup Required**: You have not finished filling out the details. Navigate to **Financials** > **Payout Account** and click **Complete Stripe Setup** to finish the form.
+* **In Review**: Stripe is verifying your uploaded documents (identity or business registry). This usually takes 2–24 hours. Payouts are temporarily held until verification is successful.
+* **Onboarding Delay Safety Net**: If you have not completed Stripe setup, clients can still pay your invoices. The platform temporarily holds the payment securely on the platform account. Once you complete your Stripe setup, the platform automatically releases and transfers the held funds to your connected bank account.
+
+### Q: How does the invoice "Authorization Hold" work for producers?
+**A**: When a producer approves a Purchase Order (PO) or milestone invoice, ABRAM places a **7-day authorization hold** on the producer''s credit card via Stripe Checkout.
+* The funds are not captured immediately.
+* Once the freelancer completes the work package deliverables and the producer clicks **Approve & Capture**, the funds are captured and routed.
+* If the project is cancelled or rejected, the hold is released immediately, and the producer is not charged.
+
+### Q: Why did my invoice approval fail?
+**A**: If you receive an error when attempting to approve or submit an invoice:
+1. Ensure the linked project and work package are active (status is not Completed or Cancelled).
+2. Verify that your Stripe Express account status is **Active**.
+3. Check if the producer has a valid payment method on file or has completed the checkout session.
+
+---
+
+## 3. AI Brief Analyzer & Credit Errors
+
+### Q: Why does the AI Brief Analyzer ask for more information or clarification?
+**A**: The AI analyzer requires sufficient detail to outline a project. If your description is too short or your uploaded brief document lacks key details (such as scope, timeline, or roles), the analyzer will ask for clarification.
+* **Fix**: Provide more details about your project, or answer the clarifying questions generated by the AI assistant to help build an accurate project scope.
+
+### Q: Why did I get an "Insufficient AI Credits" error?
+**A**: Running brief analysis, semantic talent search, or automatic crew suggestions consumes organization credits.
+* **Fix**: Ask your Organization Owner or Admin to navigate to **Admin** > **Billing** (or **Settings** > **Billing**) and click **Purchase Credits** to top up the balance.
+
+---
+
+## 4. Organization & Member Settings
+
+### Q: How do I invite a teammate who is already registered on another organization?
+**A**: Teammates can belong to multiple organizations. When you dispatch an invite to their email, the system detects their profile and sends a platform invitation. Once they accept, they can switch organizations using the dropdown menu in the sidebar.
+
+### Q: Why can''t a member access the Frame.io review workspace?
+**A**: Access to integrations depends on user roles and workspace permissions.
+1. The Organization Admin must ensure the user has the **Member** or **Admin** role in the workspace.
+2. The user must link their Frame.io account under their personal **App Connectors** settings page.
+
+### Q: Why did the Onboarding Wizard loading screen disappear and start a fresh profile?
+**A**: To prevent users from getting stuck, the onboarding wizard has a **10-second timeout safeguard** on invitation lookups. If the lookup takes longer than 10 seconds, it falls back to a fresh setup so you are not blocked. You can still link your organization or project invitations manually from your settings once your workspace is open.
+
+### Q: What should I do if a linked Frame.io folder is deleted or the connection is broken?
+**A**: If a project folder is deleted on Frame.io or the connection becomes invalid, workspace administrators can resolve it on the **Frame.io** tab of the project details:
+* **Clear Link Reference**: Removes the link in ABRAM without affecting files on Frame.io, allowing you to link a different folder.
+* **Re-Provision Project**: Programmatically creates a fresh project folder on Frame.io matching the project name and restores active synchronization.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/ABRAM_Privacy_Policy',
+        'Privacy Policy',
+        '',
+        'Privacy Policy for the ABRAM creative intelligence platform.',
+        '{}'::text[],
+        '---
+title: Privacy Policy
+description: Privacy Policy for the ABRAM creative intelligence platform.
+---
+
+# Privacy Policy
+
+**Effective Date:** June 15, 2026 | **Last Updated:** June 8, 2026
+Thomas Abram, Inc. | [privacy@abram.network](mailto:privacy@abram.network)
+
+---
+
+## 1. Overview
+
+Thomas Abram, Inc. ("ABRAM," "we," "us," or "our") operates the ABRAM creative intelligence platform. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our Platform.
+
+We comply with applicable privacy laws, including the GDPR (EU/EEA), UK GDPR, CCPA (California), and applicable US state privacy laws.
+
+---
+
+## 2. Information We Collect
+
+### 2.1 Information You Provide
+
+- **Account information:** Name, email address, role (Client/Contractor), profile photo.
+- **Professional profile:** Skills, experience, portfolio links, availability, hourly rates, location.
+- **Resume & documents:** Uploaded resume files (parsed by AI), certifications, portfolio materials.
+- **Project information:** Project briefs, deliverables, work orders, call sheets, run-of-shows.
+- **Financial information:** Bank account details (via Stripe), billing information, invoices, transaction records.
+- **Communications:** Messages, invitations, and notifications sent through the Platform.
+
+### 2.2 Information Collected Automatically
+
+- **Usage data:** Pages visited, features used, time spent, click patterns.
+- **Device & technical data:** IP address, browser type, operating system, device identifiers.
+- **Calendar data:** Events and availability from connected calendars (Google/Microsoft).
+- **Log data:** Error logs and API call logs processed via Sentry for error monitoring.
+
+### 2.3 Log Data and Diagnostics (Crash Reports)
+
+When you encounter an error or crash while using the Platform, we automatically collect diagnostic information ("Crash Reports"). This includes your web browser type, operating system, preferred language, screen dimensions, the exact page URL you were visiting, the error message, and a technical stack trace. If you are logged into your account, this diagnostic data may be associated with your User ID to help our team debug and resolve the issue.
+
+Crash Report data may also include React component tree information captured at the time of the error, which could in limited circumstances contain data you had entered immediately before the crash. We process this data solely to identify, diagnose, and resolve technical issues. This data is processed under Legitimate Interest (GDPR Article 6(1)(f)) as described in Section 3.
+
+### 2.4 Information From Third Parties
+
+- **WorkOS:** Authentication identity, organization membership, SSO session data.
+- **Stripe:** Payment confirmation, payout status, account verification status.
+- **Frame.io:** Project and media asset metadata when Frame.io is connected.
+- **Slack:** Workspace identity when Slack notifications are enabled.
+
+---
+
+## 3. How We Use Your Information
+
+We use your information for the following purposes. Where ABRAM relies on legitimate interest as a legal basis, we have conducted and documented a Legitimate Interest Assessment (LIA) confirming our interests are not overridden by your rights. You may request a copy by contacting privacy@abram.network.
+
+| Purpose | Legal Basis (GDPR) |
+|---|---|
+| Operate and provide the Platform | Contractual necessity |
+| Process payments and payouts | Contractual necessity |
+| Send transactional emails and notifications | Contractual necessity |
+| AI-powered matching and recommendations | Contractual necessity / Legitimate interest |
+| Train and improve AI models | Separate opt-in consent (NOT bundled with Terms) |
+| Calendar sync and scheduling features | Consent (at integration connection) |
+| Third-party integrations (Frame.io, Slack) | Consent (at integration connection) |
+| Monitor for fraud and security threats | Legitimate interest (LIA on file) |
+| Diagnostics, crash reports, error monitoring | Legitimate interest — Art. 6(1)(f) GDPR (LIA on file) |
+| Analytics and Platform improvement | Legitimate interest (LIA on file) |
+| Comply with legal obligations | Legal obligation |
+
+---
+
+## 4. AI & Automated Processing
+
+**ABRAM uses artificial intelligence and automated processing as core functions of the Platform.**
+
+### 4.1 What We Process With AI
+
+Your data may be processed by AI systems to: parse your resume to extract skills and attributes; analyze project briefs; match you to projects or contractors; generate call sheets, run-of-shows, and project summaries; power the ABRAM AI Assistant; and index documents into your organization''s knowledge base.
+
+### 4.2 Company Brain (Private Organizational Knowledge)
+
+Your organization''s Company Brain is a private, organization-specific knowledge base. Data uploaded to the Company Brain:
+
+- is not shared with other users or organizations;
+- is never used to train ABRAM''s shared AI models regardless of your AI training consent setting; and
+- is stored and processed solely to power AI features within your organization''s account.
+
+### 4.3 Automated Decision-Making & Your Rights (GDPR Article 22)
+
+While ABRAM''s matching and recommendation features involve automated processing, final hiring and engagement decisions are made by human users. If you believe an automated process has significantly and adversely affected you, you may contact legal@abram.network to request human review of the relevant automated output. We will respond to human review requests within 30 days.
+
+---
+
+## 5. Third-Party Integrations & Data Sharing
+
+### 5.1 Service Providers and Sub-processors
+
+We share your data with the following categories of third parties. ABRAM has executed Data Processing Agreements (DPAs) with each of the below service providers in accordance with GDPR Article 28.
+
+| Provider | What We Share | Why |
+|---|---|---|
+| Stripe | Payment info, transaction data, payout details | Payment processing & payouts |
+| WorkOS | User identity, organization data | Authentication & SSO |
+| Sentry (Functional Software, Inc.) | Error logs, stack traces, browser/device info, User ID (where logged in) | Error monitoring and crash diagnostics |
+| Frame.io | Project IDs, media file references | Video review collaboration |
+| Slack | Name, notification content | In-app Slack messaging |
+| Google/Microsoft | Calendar events, availability | Calendar sync |
+| Resend | Email address, email content | Transactional email delivery |
+| Anthropic, PBC | User inputs and context passed through AI features | AI inference for Platform features |
+
+Sentry''s privacy policy is available at sentry.io/privacy. Anthropic''s privacy policy is available at anthropic.com/privacy. Stripe''s privacy policy is available at stripe.com/privacy.
+
+### 5.2 Between Users
+
+Certain profile information (name, skills, availability, profile photo, professional experience) is visible to other users for the purpose of crew matching and collaboration.
+
+### 5.3 Legal Compliance
+
+We may disclose your information if required by law, court order, or to protect the rights and safety of ABRAM, our users, or the public.
+
+### 5.4 Business Transfers
+
+If ABRAM is acquired by or merged with another company, your data may be transferred as part of that transaction. We will notify you prior to its completion.
+
+---
+
+## 6. Cookies & Tracking
+
+We use a Consent Management Platform (CMP) to manage cookie preferences. Cookies are categorized as:
+
+- **Strictly Necessary Cookies:** Required for the Platform to function (authentication, session management, security). Cannot be disabled without preventing core functionality.
+- **Analytics & Performance Cookies:** Used to understand Platform usage. Require opt-in consent.
+- **Third-Party / Integration Cookies:** Set by integrated tools such as Sentry. Require opt-in consent.
+
+We do not use advertising cookies or behavioral tracking cookies for marketing purposes.
+
+Upon your first visit, a cookie consent banner will be displayed. You may Accept All, Reject All, or manage preferences by category. Accept and Reject options are presented with equal visual prominence. No optional categories are pre-selected. You may update your preferences at any time through the Cookie Settings link in the Platform footer.
+
+---
+
+## 7. Data Retention
+
+| Data Type | Retention Period |
+|---|---|
+| Personal profile data | Until account deletion, then deleted within 30 days |
+| Resume files and uploaded documents | Until deleted by user or upon account deletion |
+| Project data | Retained while active; deleted upon account deletion |
+| Financial & transaction records | 7 years (anonymized) for legal and tax compliance |
+| AI chat session data | 90 days, then deleted |
+| Crash reports / diagnostic logs | 30 days |
+| Log and error data | 30 days |
+| AI training consent records | Account lifetime + 3 years (regulatory compliance evidence) |
+| Cookie consent records | 3 years (regulatory compliance evidence) |
+| Calendar sync data | Deleted upon integration disconnect or account deletion |
+
+You may request account deletion through your account settings or by contacting legal@abram.network. Personal data will be deleted within 30 days of the request. You may request an export of your personal data at any time through your account settings.
+
+---
+
+## 8. Your Rights
+
+### 8.1 For All Users
+
+- **Access:** Request a copy of the personal data we hold about you.
+- **Correction:** Request correction of inaccurate or incomplete data.
+- **Deletion:** Request deletion of your personal data (subject to legal retention requirements).
+- **Data Export / Portability:** Download your data in a portable, machine-readable format.
+- **Withdraw AI Training Consent:** Withdraw at any time through account settings. Withdrawal is prospective only.
+
+### 8.2 Additional Rights for EU/EEA Users (GDPR)
+
+- **Object to Processing:** Object to processing based on legitimate interests.
+- **Restrict Processing:** Request restriction of processing while a dispute is resolved.
+- **Automated Decision Rights:** Request human review of automated processing that significantly affects you (Section 4.3).
+- **Lodge a Complaint:** With your national Data Protection Authority — see edpb.europa.eu.
+
+### 8.3 Additional Rights for UK Users
+
+The same rights as EU/EEA users above apply under the UK GDPR. You may lodge a complaint with the Information Commissioner''s Office (ICO) at ico.org.uk.
+
+### 8.4 Additional Rights for California Residents (CCPA)
+
+- **Know:** The categories and specific pieces of personal information collected about you.
+- **Delete:** Personal information we hold about you.
+- **Opt-Out:** Of the sale or sharing of personal information (ABRAM does not sell personal data).
+- **Non-Discrimination:** You will not be discriminated against for exercising your CCPA rights.
+
+To exercise any of these rights, contact legal@abram.network. We will respond within 30 days (CCPA) / 1 month (GDPR).
+
+---
+
+## 9. Data Security
+
+We implement the following security measures:
+
+- Encryption of data in transit (TLS 1.2+) and at rest.
+- Row-level security (RLS) on all database records via Supabase.
+- Access control and permission management via WorkOS.
+- Error monitoring and alerting via Sentry.
+- Regular security reviews of third-party integrations.
+- Least-privilege access controls for ABRAM personnel.
+
+No method of transmission over the internet is 100% secure. While we use commercially reasonable security measures, we cannot guarantee absolute security.
+
+---
+
+## 10. International Data Transfers
+
+ABRAM is based in the United States. If you are accessing the Platform from the EEA or UK, your personal data may be transferred to and processed in the United States.
+
+We rely on the following safeguards:
+
+- **Standard Contractual Clauses (SCCs):** We use the 2021 EU SCCs for transfers of personal data from the EEA to the United States.
+- **Transfer Impact Assessments (TIAs):** Completed for each international transfer and maintained on file.
+- **UK IDTA:** For transfers from the United Kingdom, we rely on the UK International Data Transfer Agreement or the UK addendum to the EU SCCs.
+
+You may request information about our international transfer safeguards by contacting privacy@abram.network.
+
+---
+
+## 11. Data Breach Notification
+
+In the event of a personal data breach, ABRAM will notify the relevant supervisory authority within 72 hours where required by GDPR Article 33 or applicable US state law, and will notify affected individuals without undue delay where the breach is likely to result in high risk to their rights and freedoms. All breaches are documented in ABRAM''s internal breach register.
+
+Report a potential breach: security@abram.network
+
+---
+
+## 12. Children''s Privacy
+
+The Platform is not intended for individuals under the age of 18. We do not knowingly collect personal data from minors. Contact legal@abram.network if you believe we have collected data from a minor.
+
+---
+
+## 13. Changes to This Policy
+
+We will notify you of material changes via email and/or in-app notification at least 30 days before changes take effect. Where changes require new consent, we will obtain that consent separately. Continued use of the Platform after the effective date constitutes acceptance of the revised Policy.
+
+---
+
+## 14. Contact & Data Controller
+
+**Data Controller: Thomas Abram, Inc.**
+
+| Contact | Email |
+|---|---|
+| Legal & Terms | legal@abram.network |
+| Privacy Inquiries | privacy@abram.network |
+| Security / Breach Reports | security@abram.network |
+
+**Address:** Washington, DC
+
+**EU Data Protection Representative (GDPR Article 27):** Thomas Abram, Inc. is in the process of appointing an EU representative. In the interim, contact privacy@abram.network.
+
+For GDPR-related complaints, EU/EEA users may contact their national Data Protection Authority (edpb.europa.eu). UK users may contact the ICO at ico.org.uk.
+
+---
+
+© 2026 Thomas Abram, Inc. All rights reserved.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/ABRAM_Terms_of_Use',
+        'Terms of Use',
+        '',
+        'Terms of Use for the ABRAM creative intelligence platform.',
+        '{}'::text[],
+        '---
+title: Terms of Use
+description: Terms of Use for the ABRAM creative intelligence platform.
+---
+
+# Terms of Use
+
+**Effective Date:** June 15, 2026 | **Last Updated:** June 8, 2026
+Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
+
+---
+
+## 1. Acceptance of Terms
+
+By accessing or using the ABRAM Network platform (the "Platform," available at app.abram.network and abram.network), you agree to be bound by these Terms of Use ("Terms"). If you do not agree, you must not access or use the Platform.
+
+If you are accessing the Platform on behalf of an organization (a "Company Account"), you represent that you have authority to bind that organization, and these Terms apply to both you individually and the organization.
+
+These Terms constitute a legally binding agreement between you and Thomas Abram, Inc. ("ABRAM," "we," "us," or "our").
+
+---
+
+## 2. What Is ABRAM
+
+ABRAM is a creative intelligence platform that provides production management, AI-assisted crew assembly, project management tools, scheduling, financial workflows, and talent discovery for the creative and film production industries. ABRAM operates as a platform intermediary — we connect clients and contractors and provide the tools to manage those relationships, but we are not a party to any agreement made between users.
+
+---
+
+## 3. User Roles & Eligibility
+
+### 3.1 Account Types
+
+The Platform supports two primary user roles:
+
+- **Clients:** Organizations or individuals who post production projects, discover and invite contractors, manage crew, and issue payments through the Platform.
+- **Contractors:** Creative professionals or production companies who offer services, receive project invitations, complete work, and receive payouts through the Platform.
+
+You may only register for the role that accurately describes your intended use. Misrepresenting your role is grounds for account termination.
+
+### 3.2 Eligibility
+
+You must be at least 18 years old and legally able to enter into contracts in your jurisdiction to use the Platform.
+
+### 3.3 Organization Accounts
+
+Clients and contractors may operate within a Company Account. The account administrator ("Admin") who creates or controls a Company Account:
+
+- Accepts these Terms on behalf of the organization;
+- Is responsible for the conduct of all members added to that account;
+- May grant or restrict member permissions in accordance with Platform features.
+
+Each individual member of a Company Account must also individually accept these Terms upon account creation. Both the Admin and each member are individually bound by these Terms.
+
+---
+
+## 4. Platform Role — ABRAM as a Marketplace Intermediary
+
+> **IMPORTANT: ABRAM is not a party to any payment, contract, work agreement, or service engagement between Clients and Contractors.**
+
+### 4.1 No Payment Liability
+
+ABRAM provides payment infrastructure (including Stripe-powered invoicing and payouts) as a convenience to facilitate transactions between Clients and Contractors. ABRAM is not responsible for:
+
+- A Client''s failure to pay a Contractor;
+- A Contractor''s failure to deliver services;
+- Disputes over the quality, scope, or completion of work;
+- Chargeback or fraud losses arising from transactions between users.
+
+### 4.2 No Employment Relationship
+
+Nothing in these Terms creates an employment, agency, partnership, or joint venture relationship between ABRAM and any user. Contractors are independent professionals, not employees of ABRAM.
+
+### 4.3 No Endorsement
+
+ABRAM does not vet, verify, guarantee, or endorse the work quality, credentials, or legal compliance of any Contractor or Client listed on the Platform. AI-generated matches and recommendations are tools to assist decision-making — final hiring and engagement decisions are the responsibility of the parties involved.
+
+---
+
+## 5. Role-Specific Obligations
+
+### 5.1 Client Obligations
+
+As a Client, you agree to:
+
+- Provide accurate and complete project briefs and requirements;
+- Honor payment obligations for completed work orders and invoices issued through the Platform;
+- Not engage Contractors discovered through ABRAM outside the Platform for the purpose of circumventing fees or agreements;
+- Comply with all applicable employment, labor, and tax laws when engaging Contractors;
+- Ensure your organization''s use of the Platform complies with these Terms.
+
+### 5.2 Contractor Obligations
+
+As a Contractor, you agree to:
+
+- Maintain accurate and truthful profile information, including skills, availability, and experience;
+- Honor accepted work orders and project invitations in good faith;
+- Connect a valid Stripe account to receive payouts through the Platform;
+- Comply with all applicable tax, labor, and licensing laws, including obligations arising from union or guild memberships (see Section 15);
+- Not misrepresent your qualifications, availability, or the services you can provide.
+
+---
+
+## 6. AI Features & Automated Processing
+
+### 6.1 How AI Is Used
+
+ABRAM uses AI and machine learning to:
+
+- Parse and analyze uploaded resumes and professional profiles;
+- Extract skills and attributes from project briefs;
+- Match Contractors to projects based on availability, skills, location, and other criteria;
+- Generate call sheets, run-of-shows, and production documents;
+- Suggest crew compositions and team structures;
+- Power the ABRAM AI Assistant chatbot;
+- Search and rank talent via smart search;
+- Analyze project timelines, hours, and resource allocation;
+- Other AI-powered features and services as ABRAM evolves the Platform.
+
+### 6.2 AI Training Consent — Separate Opt-In
+
+**AI training use of your data requires your separate, explicit, optional consent. Accepting these Terms does not constitute consent to AI training use of your data, and your access to and use of the Platform is not conditioned on providing such consent.**
+
+ABRAM may request your consent to use your data (including profile information, project interactions, and platform usage patterns) to train and improve ABRAM''s AI models and algorithms. You may provide, manage, or withdraw this consent at any time through your account settings under Privacy & Consent.
+
+Withdrawal of consent applies prospectively. Data already incorporated into trained model weights cannot be retroactively removed from those models, but no new training use of your data will occur following withdrawal of consent.
+
+**Company Brain Exception:** Data stored in your organization''s Company Brain (private organizational knowledge base) is never used to train ABRAM''s shared AI models, regardless of your AI training consent setting.
+
+### 6.3 No Guarantee of AI Accuracy
+
+AI-generated results — including contractor matches, project estimates, document drafts, and recommendations — are provided as suggestions only. ABRAM makes no guarantee as to the accuracy, completeness, or suitability of any AI output. Users are responsible for reviewing and verifying all AI-generated content before relying on it.
+
+---
+
+## 7. Content Ownership & Licenses
+
+### 7.1 Your Content
+
+You retain full ownership of all content you upload to the Platform ("User Content"), including resumes, portfolio materials, project files, documents, media, and any other materials. ABRAM claims no ownership rights in your User Content.
+
+### 7.2 License to ABRAM
+
+By uploading User Content, you grant ABRAM a limited, worldwide, non-exclusive, royalty-free license to use, store, process, reproduce, and display your User Content solely for the purpose of operating and providing the Platform and facilitating connections between Clients and Contractors.
+
+This license does not include the right to use your User Content — including images, video, audio, or creative work — to train any AI model. AI training use is governed exclusively by your separate, optional consent under Section 6.2.
+
+This license terminates upon deletion of your account. Anonymized, non-attributable aggregated data may be retained for legal compliance and platform improvement purposes, but will not contain or be traceable to your User Content.
+
+### 7.3 ABRAM''s Use of AI
+
+ABRAM is an AI-assisted platform, not an AI system. ABRAM does not operate its own AI models. AI-powered features are powered by third-party AI providers (including Anthropic, PBC) acting as underlying technology. Your User Content may be passed to these providers as necessary to deliver Platform features, subject to their data handling terms. ABRAM does not use your User Content to train or fine-tune any AI model, including third-party models, without your separate explicit consent under Section 6.2.
+
+### 7.4 Your Responsibility for Content
+
+You are solely responsible for the User Content you upload. You represent and warrant that you own or have all necessary rights to upload the content and that your content does not infringe any third-party intellectual property, privacy, or publicity rights, and does not violate any applicable law.
+
+### 7.5 Copyright Infringement — DMCA Notice & Takedown
+
+ABRAM respects intellectual property rights and complies with the Digital Millennium Copyright Act (DMCA). If you believe content on the Platform infringes your copyright, please submit a written notice to legal@abram.network including:
+
+- Identification of the copyrighted work;
+- Identification of the infringing material and its location;
+- Your contact information;
+- A statement of good faith belief; and
+- A statement under penalty of perjury that the information is accurate.
+
+ABRAM will respond to valid notices by removing or disabling access to the identified content. Repeat infringers may have their accounts terminated.
+
+### 7.6 ABRAM Platform IP
+
+All Platform code, design, interfaces, trademarks, logos, proprietary workflows, and technology developed by Thomas Abram, Inc. remain the exclusive property of Thomas Abram, Inc. Third-party AI models and technology integrated into the Platform (such as Anthropic''s Claude) remain the property of their respective owners.
+
+---
+
+## 8. Payments, Billing & Subscriptions
+
+### 8.1 Subscription Plans
+
+Access to certain Platform features requires a paid subscription. Subscription fees are billed in advance on a monthly or annual basis.
+
+**Cancellation:** You may cancel your subscription at any time through your account settings. Cancellation takes effect at the end of the current billing period. No refunds are issued for partial billing periods.
+
+**Upgrades:** Upgrades take effect immediately and are billed pro-rated for the remainder of the current billing period.
+
+### 8.2 Payment Processing
+
+All subscription payments are processed via Stripe. By providing payment information, you authorize ABRAM to charge your payment method on a recurring basis. ABRAM does not store raw payment card information.
+
+### 8.3 Contractor Payouts
+
+Contractors must connect a valid Stripe Connect account to receive payouts through the Platform. ABRAM is not responsible for delays caused by Stripe''s processing timelines, bank holds, or incorrect banking information provided by users.
+
+### 8.4 Taxes
+
+You are responsible for all applicable taxes arising from your use of the Platform and any transactions you enter into through it. ABRAM may collect and remit certain taxes where required by law.
+
+---
+
+## 9. Organization & Team Management
+
+Clients and Contractors may create or join organizational accounts enabling multi-user collaboration with granular permission controls. Admins are responsible for:
+
+- Ensuring all members comply with these Terms;
+- Managing member roles and access permissions appropriately; and
+- Ensuring invitations are sent only to authorized individuals.
+
+Admins may remove members from their organization at any time.
+
+---
+
+## 10. Third-Party Integrations
+
+The Platform integrates with third-party services. When you connect a third-party account, you authorize ABRAM to exchange data with that service as necessary to provide the integration. Integrations include:
+
+- **Stripe** (payments)
+- **WorkOS** (authentication/SSO)
+- **Frame.io** (video review)
+- **Slack** (notifications)
+- **Google/Microsoft Calendar** (scheduling)
+- **Resend** (transactional email)
+
+Use of these services is subject to their respective Terms and Privacy Policies. ABRAM has executed Data Processing Agreements with each of these service providers where required by applicable law.
+
+---
+
+## 11. Prohibited Conduct
+
+You agree not to:
+
+- Circumvent or misuse the Platform''s matching or discovery tools;
+- Upload false, misleading, or fraudulent profile or project information;
+- Engage in harassment, discrimination, or abusive conduct toward other users;
+- Attempt to access another user''s account without authorization;
+- Reverse engineer, scrape, or extract data from the Platform;
+- Upload malware, viruses, or malicious code;
+- Use the Platform for any unlawful purpose;
+- Violate any applicable intellectual property rights.
+
+---
+
+## 12. Platform Availability, Maintenance & Diagnostics
+
+### 12.1 Availability
+
+ABRAM strives to maintain Platform availability but does not guarantee uninterrupted access. The Platform may be unavailable due to scheduled maintenance, emergency repairs, or circumstances beyond our control.
+
+### 12.2 Automatic Diagnostics and Crash Reports
+
+To maintain platform integrity, security, and stability, the Platform automatically monitors performance and records system errors and crashes. By using the Platform, you acknowledge and agree that we may collect and analyze diagnostic reports — which may include browser and system specifications and associated account identifiers — to resolve bugs and optimize the service.
+
+Diagnostic data is processed in accordance with our Privacy Policy. This collection is carried out under our legitimate interest in ensuring the safe, secure, and reliable operation of the Platform.
+
+---
+
+## 13. Termination
+
+ABRAM may suspend or terminate your account at any time for violation of these Terms. You may delete your account through account settings. Upon termination:
+
+- Your access to the Platform ceases immediately;
+- Personal data is deleted in accordance with our Privacy Policy retention timelines; and
+- Anonymized financial and transaction records are retained for legal compliance purposes.
+
+---
+
+## 14. Disclaimers & Limitation of Liability
+
+**THE PLATFORM IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND.** To the maximum extent permitted by applicable law, ABRAM disclaims all warranties, express or implied, including warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+**ABRAM IS NOT LIABLE FOR:**
+
+- Any payments, disputes, or financial losses arising between Clients and Contractors;
+- Loss of data, revenue, or business opportunities;
+- Errors or inaccuracies in AI-generated outputs;
+- Service interruptions or downtime;
+- Actions of third-party integration providers.
+
+**ABRAM''s total liability** to you for any claim shall not exceed the greater of (a) the total subscription fees you paid to ABRAM in the twelve (12) months immediately preceding the claim, or (b) USD $500.
+
+Nothing in this Section limits ABRAM''s liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by ABRAM''s negligence; or (iii) any liability that cannot be excluded or limited by applicable law, including statutory obligations under GDPR, CCPA, or equivalent privacy regulations.
+
+---
+
+## 15. Industry-Specific Notices
+
+### 15.1 Union & Guild Compliance
+
+The Platform is used by professionals covered by union or guild agreements (e.g., SAG-AFTRA, IATSE, DGA, WGA, Teamsters). It is your sole responsibility to ensure that engagements made through the Platform comply with applicable union, guild, or collective bargaining agreements. ABRAM does not manage, verify, or guarantee union compliance for any project or engagement.
+
+### 15.2 Production Permits & Insurance
+
+Clients are responsible for obtaining all required production permits, location agreements, and insurance for any project. ABRAM does not provide, arrange, or verify insurance coverage.
+
+### 15.3 Contractor Classification
+
+Clients are solely responsible for correctly classifying workers under applicable federal, state, and local law, including California AB5, New York''s Freelance Isn''t Free Act, and equivalent statutes. ABRAM''s Platform tools do not constitute a determination of employment status. Clients in California and other jurisdictions with stringent classification requirements are strongly encouraged to obtain qualified legal counsel.
+
+---
+
+## 16. Data Breach Notification
+
+In the event of a personal data breach, ABRAM will notify relevant supervisory authorities within 72 hours of becoming aware of the breach where required by applicable law (including GDPR Article 33). Where a breach is likely to result in high risk to affected individuals, ABRAM will also notify affected users without undue delay. All breaches are documented in an internal breach register.
+
+Report suspected breaches to security@abram.network.
+
+---
+
+## 17. B2B Data Processing Agreements
+
+If you use ABRAM on behalf of a business and upload personal data of third parties (including employees, crew members, or contractors), ABRAM acts as a data processor and you act as the data controller. Business users may request ABRAM''s standard Data Processing Agreement by contacting legal@abram.network. EU and EEA business users are required to execute a DPA before uploading personal data of third parties.
+
+---
+
+## 18. Governing Law & Dispute Resolution
+
+These Terms are governed by the laws of the District of Columbia, USA, without regard to conflict of law principles. Any disputes shall be resolved by binding arbitration administered by the American Arbitration Association (AAA) under its Commercial Arbitration Rules, with arbitration conducted in Washington, D.C.
+
+Either party may seek injunctive or equitable relief in any court of competent jurisdiction to prevent irreparable harm pending arbitration. Nothing in this Section prevents EU/EEA or UK users from bringing claims before their local courts or supervisory authorities as permitted by applicable law.
+
+---
+
+## 19. Changes to These Terms
+
+ABRAM may update these Terms from time to time. We will notify you of material changes via email or in-app notification at least 30 days before the changes take effect. Continued use of the Platform after changes take effect constitutes acceptance of the revised Terms.
+
+---
+
+## 20. Contact
+
+**Thomas Abram, Inc.**
+
+Email: legal@abram.network  
+Address: Washington, DC  
+Website: abram.network
+
+---
+
+© 2026 Thomas Abram, Inc. All rights reserved.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/README',
+        '',
+        '',
+        '',
+        '{}'::text[],
+        '# ABRAM Network - User Guide Directory
+
+Welcome to the **ABRAM Network User Guide**. This documentation directory serves as the comprehensive manual for creative producers, agencies, production managers, and specialized freelancers using the ABRAM production management platform. 
+
+This guide is structured around active workflows in the **Management Phase** of the platform, focusing on AI project intake, resource scheduling, team allocation, invoicing, and collaboration.
+
+---
+
+## 🗺️ Documentation Directory
+
+* **[0.0 User & AI Assistant Navigation Guide](./0.0-agent-and-human-navigation-guide.md)**: Introduction to reading these guides as a human user or parsing them as an AI agent/chatbot.
+* **[0.1 Glossary & Acronym Reference](./0.1-glossary-and-acronyms.md)**: Quick definitions of industry terms, payment jargon, and technical integration acronyms.
+* **[0.2 Order of Operations Guide](./0.2-order-of-operations.md)**: Chronological step-by-step workflow tracing a project from intake to final freelancer payouts.
+* **[0.3 AI Capabilities & Platform Co-pilot](./0.3-ai-capabilities-and-copilot.md)**: Details of ABRAM''s AI features, including Brief Intelligence, Crew suggestions, the AI Resume Importer, and the Chatbot Co-pilot.
+* **[0.4 Production Brain & Workspace Memory](./0.4-production-brain-and-workspace-memory.md)**: Overview of the organization''s central knowledge engine, dynamic memory benefits, search queries, and permission security rules.
+
+### 🚪 [Section 1: Getting Started, Organizations & Team Setup](./1.1-signing-in-and-onboarding.md)
+Learn how to create your account, configure organization settings, and manage your team roster.
+* **[1.1 Signing In and Onboarding](./1.1-signing-in-and-onboarding.md)**: Authenticating, completing the onboarding wizard, and selecting workspace roles.
+* **[1.2 Setting Up Your Profile](./1.2-setting-up-your-profile.md)**: Completing bio details, skill lists, rates, and setting profile visibility.
+* **[1.3 Organization Setup & Custom Forms](./1.3-organization-setup-and-custom-forms.md)**: Upgrading to an organization, managing workspace settings, and building custom producer intake forms.
+* **[1.4 Team Management & Permissions](./1.4-team-management-and-permissions.md)**: Managing team roles (Owner, Admin, Member), setting team capacity, and configuring permissions.
+
+---
+
+### 📝 [Section 2: Project Intake & Scoping](./2.1-ai-brief-analyzer.md)
+Discover how to initiate and configure projects using AI brief analysis or manual builders.
+* **[2.1 AI Brief Analyzer (Brief Intelligence)](./2.1-ai-brief-analyzer.md)**: Initializing projects from text/documents, managing the AI confidence gate, and reviewing extracted parameters.
+* **[2.2 Manual Project Creation](./2.2-manual-project-creation.md)**: Using the manual setup wizard, selecting project archetypes, and managing budget splits.
+* **[2.3 Custom Intake Forms](./2.3-custom-intake-forms.md)**: Designing request forms, configuring public request links, and managing producer submission pipelines.
+
+---
+
+### 🎛️ [Section 3: Master Project Detail, Work Packages & Work Orders](./3.1-master-project-detail-overview.md)
+Understand how to manage active projects, deliverables, checklists, and freelancer agreements.
+* **[3.1 Master Project Detail Overview](./3.1-master-project-detail-overview.md)**: Navigating the central command center, the Compact Header, and URL parameter synchronization.
+* **[3.2 Work Packages & Milestones](./3.2-work-packages-and-milestones.md)**: Creating work packages, setting scopes, and defining milestone-based payment schedules.
+* **[3.3 Work Orders & Agreements](./3.3-work-orders-and-agreements.md)**: Generating work orders for freelancers and equipment, configuring rates, and managing invitation holds.
+* **[3.4 Task Lists & Tracking](./3.4-task-lists-and-tracking.md)**: Creating checklists, assigning tasks, and tracking automated progress calculations.
+* **[3.5 Equipment & Resource Management](./3.5-equipment-and-resource-management.mdx)**: Inventory tracking, kit building, calendar scheduling, storage locations, and bulk importing.
+
+---
+
+### 📅 [Section 4: Crewing, Matchmaking & Utilization Scheduling](./4.1-internal-talent-search.md)
+Learn how to find talent, receive AI recommendations, and schedule freelancer calendars.
+* **[4.1 Internal Talent Search](./4.1-internal-talent-search.md)**: Searching and filtering the internal team roster by skill, availability, and rating.
+* **[4.2 AI Matchmaking Suggestions](./4.2-ai-matchmaking-suggestions.md)**: Utilizing AI suggestions to find freelancers based on role suitability and budget.
+* **[4.3 Inviting & Crew RSVP](./4.3-inviting-and-crew-rsvp.md)**: Managing direct project invites, sending chatbot invitations, and tracking freelancer RSVPs.
+* **[4.4 Managing Your Utilization Calendar](./4.4-managing-your-utilization-calendar.md)**: Freelancer utilization views, managing blockouts, and setting scheduling holds.
+* **[4.5 Syncing External Calendars](./4.5-syncing-external-calendars.md)**: Integrating Google Calendar and Microsoft Outlook for real-time availability updates.
+* **[4.6 Team Management Dashboard](./4.6-team-management-dashboard.md)**: Workspace utilization overview, scheduling calendar, capacity planning tool, conflict detection panel, team templates, and hours verification roster.
+
+---
+
+### 💳 [Section 5: Payments, Billing & Financials](./5.1-freelancer-stripe-setup.md)
+Manage your payment methods, producer checkout sessions, billing, and AI credits.
+* **[5.1 Freelancer Stripe Express Setup](./5.1-freelancer-stripe-setup.md)**: Step-by-step Stripe Express onboarding, bank setup, and verification troubleshooting.
+* **[5.2 Invoicing & Payouts](./5.2-invoicing-and-payouts.md)**: Building PDF invoices, submitting invoices for approval, and tracking Stripe checkout payout flows.
+* **[5.3 Billing Ledger & AI Credits](./5.3-billing-ledger-and-ai-credits.md)**: Monitoring the organization''s credit balance, consuming credits for AI tasks, and ledger transactions.
+* **[5.4 Billing & Payments](./5.4-billing-and-payments.md)**: Configuring payment cards, ACH transfers, and managing automated re-authorizations for Stripe holds.
+
+---
+
+### 🔌 [Section 6: Integrations & Collaboration](./6.1-slack-notifications.md)
+Link Slack, Sentry, and Frame.io workspaces to automate creative review and notifications.
+* **[6.1 Slack Notifications](./6.1-slack-notifications.md)**: Connecting Slack channels and customizing real-time project notifications.
+* **[6.2 Frame.io Workspaces](./6.2-frameio-workspaces.md)**: Connecting Frame.io accounts, auto-provisioning workspaces, and review links.
+* **[6.3 Project Collaboration & File Sharing](./6.3-project-collaboration-and-file-sharing.md)**: Native file sharing, version control, and nested feedback comments.
+
+---
+
+### ❓ [Section 7: FAQs & Troubleshooting](./7.1-faqs-and-troubleshooting.md)
+Find answers to common questions and troubleshoot calendar, Stripe, or AI credit issues.
+* **[7.1 FAQs & Troubleshooting](./7.1-faqs-and-troubleshooting.md)**: Step-by-step troubleshooting for calendar sync webhooks, Stripe onboarding status, invoice capture holds, and AI brief analyzer errors.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'content/clients/quickstart',
+        'Quickstart for Producers and Clients',
+        '',
+        'Producer guide to setting up your client profile, scoping projects with the AI brief analyzer, hiring crew, and approving deliverables on ABRAM Network.',
+        '{}'::text[],
+        '---
+title: ''Quickstart for Producers and Clients''
+description: ''Producer guide to setting up your client profile, scoping projects with the AI brief analyzer, hiring crew, and approving deliverables on ABRAM Network.''
+---
+
+## 🗺️ Client Journey Overview
+As a Producer, agency manager, or studio coordinator, your journey on ABRAM starts with setting up your company workspace and scoping your first creative production. 
+
+```
+[Sign In & Wizard] ──> [Configure Profile] ──> [Intake & AI Brief Analyzer] ──> [Hiring & Crew RSVPs] ──> [Review & Approval]
+```
+
+---
+
+## 1. Setting Up Your Account
+
+### Sign In
+1. Visit the platform login page.
+2. Enter your email:
+   * **Standard Users**: Choose **Sign In with Magic Link** or use **Social Sign-In** (Google or Microsoft).
+   * **Enterprise Users**: Choose **Sign In with Enterprise SSO** and enter your corporate domain.
+3. If using magic links, click the login link in your inbox.
+
+### The Onboarding Wizard
+Upon your first login, the multi-step Onboarding Wizard will guide you:
+1. **Workspace Setup**: Choose **Organization** if representing a studio/agency, or **Independent** if you are a solo producer. Check the **Terms of Use** checkbox.
+2. **Primary Role**: Choose **Producer** (for hiring and managing crew).
+3. **Details & Attachments**: Enter your company name, location (autocomplete will set your timezone), team size, and creative focus (e.g., *Commercials*, *Podcasts*, *Social Media Content*).
+4. **Review & Launch**: Verify your information and click **Launch Workspace**.
+
+---
+
+## 2. Setting Up Your Producer Profile
+
+Your profile acts as your business card to freelancers. Make sure it is fully configured to attract top talent:
+
+1. Click **Profile** in the sidebar and select **Profile Settings** (top-right).
+2. **Avatar & Banner**: Upload your logo and high-res banner.
+3. **Preferred Project Types**: Select tags describing your production focus.
+4. **Typical Budget Range**: Declare your average budget range to align expectations with contractors.
+5. **Contact Settings**: Configure visibility limits (Public, Connections Only, Org Only, or Private) for your email, phone, and website.
+6. Click **Save Changes**.
+
+---
+
+## 3. Posting and Scoping Projects
+
+Producers can initiate projects through two methods: AI-driven Brief Analyzer or Manual Creation templates.
+
+### Method A: Brief Intelligence (AI-driven)
+This is the fastest path to turn a creative brief into a structured project budget and scheduling plan:
+1. In the sidebar, go to **Projects** and click **Create Project**.
+2. Select **Brief Intelligence**.
+3. Upload your creative brief document (PDF/Word up to 5MB) or enter a text description (minimum 100 characters).
+4. The engine parses the text and automatically extracts:
+   * Project metadata (Title, description, dates, location).
+   * Work packages and scheduling phases (e.g., Pre-Production, Shoot, Post).
+   * Required role slots (e.g., Director of Photography, Colorist).
+   * Deliverables (checklists, formats, revision rounds).
+   * Equipment specifications.
+   * Estimated budget range.
+
+#### The Confidence Gate
+* **Confidence >= 70%**: The project goes to **Planning** status, and the matchmaking dashboard is shown.
+* **Confidence < 70%**: The system pauses at a **Clarifying Review Gate**. Answer 3–5 targeted questions generated by the AI to clarify timelines, deliverables, or role requirements, then click **Update Analysis**.
+
+### Method B: Manual Project Creation
+1. Click **Create Project** and select **Manual Builder**.
+2. Select a pre-designed project archetype (e.g., *Filmmaker*, *Marketing*, or *Creative* template).
+3. Set the start/end dates, location, and the total overall budget.
+4. Define your budget splits manually across work packages.
+
+---
+
+## 4. Hiring and Reviewing Candidates
+
+Once your project is created and role slots are defined, you can recruit your crew:
+
+### Step 1: Open Matchmaking Suggestions
+1. Select the project and click the **Find Matches** button in the upper right.
+2. The AI Matchmaking Engine ranks internal roster and external marketplace candidates using a **Match Score (0-100)**.
+3. Review candidate details, including **Match Reasonings** (e.g., *"Strong software skills, available during date range"*) and **Concerns** (e.g., *"Hourly rate exceeds target budget by 10%"*).
+
+### Step 2: Send Invitations
+* **Direct Roster Invites**: Select candidates from the matchmaking grid and click **Invite Selected**.
+* **AI Co-pilot Invites**: Type into the sidebar Chatbot: *"Invite a food photographer to my winter shoot."*
+  * The Co-pilot creates an **Action Plan** detailing the role, email, proposed rate, and weekly hours hold.
+  * Click the green **Approve** button on the Action Plan card. The system will send the email invitation.
+  * *Note: You can send up to 10 external invitations per day.*
+
+### Step 3: Monitor RSVPs
+Track invitation status under the **Crew Assembly** section of your project dashboard:
+* 🟢 **Accepted**: The contractor is confirmed. A calendar capacity hold is automatically registered on their utilization schedule, and Stripe places a 7-day pre-authorization hold on your funding source.
+* 🟡 **Pending / Hold**: The invite is active, awaiting candidate action.
+* 🔴 **Declined**: The invite is rejected. Click **Find Replacement** to run a quick roster scan and invite an alternative candidate.
+
+---
+
+## 5. Timesheet and Deliverable Approvals
+
+During and after the production:
+
+### Check Off Deliverables
+1. Go to the project’s **Deliverables** tab.
+2. Browse uploaded files (up to 100MB) or open connected **Frame.io** workspaces to review drafts.
+3. Leave feedback comments or click **Mark Approved** to lock the deliverable.
+
+### Verify Logged Hours
+1. Open the project dashboard and go to the **Timesheets** tab (or check the Team Management dashboard).
+2. Review the hours logged by freelancers against their work packages.
+3. Click **Approve Logged Hours**. These approved records are stored on the billing ledger, updating the amount ready to be billed in the freelancer''s invoice.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'content/contractors/quickstart',
+        'Quickstart for Freelancers and Contractors',
+        '',
+        'Freelancer guide to building your ABRAM profile, importing your resume, connecting Stripe payouts, syncing your calendar, and accepting work invites.',
+        '{}'::text[],
+        '---
+title: ''Quickstart for Freelancers and Contractors''
+description: ''Freelancer guide to building your ABRAM profile, importing your resume, connecting Stripe payouts, syncing your calendar, and accepting work invites.''
+---
+
+## 🗺️ Freelancer Journey Overview
+As a creative contractor, specialized operator, or designer on the ABRAM Network, your primary focus is keeping your profile updated, syncing your calendar availability, accepting work invites, and submitting invoices for payouts.
+
+```
+[Sign In] ──> [Import Resume & Skills] ──> [Stripe Connect Express] ──> [Calendar Sync] ──> [RSVP & Get Paid]
+```
+
+---
+
+## 1. Setting Up Your Account
+
+### Sign In
+1. Navigate to the login screen.
+2. Enter your email:
+   * **Standard Freelancer**: Click **Sign In with Magic Link** or connect via **Social Sign-In** (Google or Microsoft).
+   * **Studio/Agency Freelancer**: If joining a studio roster with corporate SSO, choose **Sign In with Enterprise SSO**.
+3. Retrieve the Magic Link from your inbox and authenticate.
+
+### Onboarding Wizard
+1. **Workspace Setup**: Choose **Independent** if operating as a solo professional, or **Organization** if you run a studio/agency. Check the **Terms of Use** checkbox.
+2. **Primary Role**: Choose **Freelancer / Crew** (for tracking availability and getting hired).
+3. **Details & Attachments**: Type in your name and location.
+   * **AI Resume Importer**: Drag and drop your resume (PDF/DOCX up to 10MB) onto the upload box. The system parses your history, skills, and bio. Review the staging screen, adjust details, and approve the pre-populated values. *(Note: Resume parsing is free during onboarding).*
+4. Click **Launch Workspace**.
+
+---
+
+## 2. Managing Skills & Credentials
+
+Producers search the network using specialized skills and rankings. Keeping your Skills Dashboard current maximizes matchmaking matches:
+
+1. Navigate to **Skills** (or `/freelancer/skills`) in the sidebar.
+2. **Skills Tab**: Click **Add Skill** to add technical or creative capabilities (e.g., *Premiere Pro*, *Steadicam Operation*). Set your proficiency level from **Novice** to **Master**.
+3. **Specializations Tab**: Declare high-level areas of focus (e.g., *Documentary Sound Mixing*).
+4. **Proof Points & Rank**: Track your milestone completion points. As you complete projects on ABRAM, you accumulate proof points and progress through ranks:
+   * **Silver** $\rightarrow$ **Gold** $\rightarrow$ **Platinum** (Grants the verified **PRO** badge).
+5. **On-Site Preferences**: Set your Travel Radius (in miles) and Work Mode (Remote, Hybrid, or On-Site).
+
+---
+
+## 3. Configuring Stripe Express Payouts
+
+To receive payments directly to your bank account or debit card, you must connect to Stripe Connect Express.
+
+1. Go to **Financials** in the sidebar.
+2. Look for the **Payout Setup** card and click **Get Started**.
+3. You will be redirected securely to the Stripe-hosted onboarding portal.
+4. **Onboard Form**:
+   * **Solo Freelancers**: Select **Individual / Sole Proprietor** and enter your DOB, SSN/Tax ID, and phone number.
+   * **Studios/Agencies**: Select **Company** and provide your legal business name, EIN, and address.
+5. **Payout Destination**: Input your routing and bank account details or link a debit card.
+6. Verify details and redirect back to ABRAM.
+
+### Stripe Verification Statuses
+* 🟢 **Active**: Fully verified. You are ready to receive automatic payouts.
+* 🟡 **In Review**: Stripe is checking your identity documents. This takes 24–48 hours.
+* 🟣 **Setup Required**: Verification is incomplete or failed. Click **Complete Setup** to upload required documents (e.g. government ID).
+
+---
+
+## 4. Calendar Sync & Utilization
+
+ABRAM avoids booking overlaps by calculating your real-time capacity:
+
+### Syncing External Calendars
+1. Go to **Settings** > **App Connectors** > **Calendar Sync**.
+2. Click **Connect** on the Google Calendar or Microsoft Outlook cards.
+3. Grant permissions to sync your schedule.
+4. *Important*: Only events marked as **"Busy"** on your external calendar are imported as blockouts. Events marked as **"Free"** or **"Tentative"** are ignored.
+
+### Capacity Holds
+* Once you accept a project invitation, a **Project Work Capacity Hold** is created as an all-day banner at the top of your calendar.
+* This holds your hours (e.g., *10 planned hours per week*) without blocking specific times of day, giving you the flexibility to manage your daily schedule.
+
+---
+
+## 5. RSVP and Work Orders
+
+When producers find you for a role slot, you receive an invitation.
+
+### Public RSVP Screen
+You will receive an email containing a link to a secure, public page. **No login is required** to RSVP:
+* Review project dates, location, proposed rate, and deliverables guidelines.
+* Click **Accept**, **Decline**, or **Tentative** (and type in a message for the producer).
+
+### Accepting the Work Order
+* Accepting the invitation converts the reservation into a **Work Order**.
+* The status shifts to **Scheduled**, locking the equipment and crew roles.
+* Confirming the work order triggers a 7-day pre-authorization hold on the producer''s payment method, guaranteeing your project funds are secured before you begin work.
+
+---
+
+## 6. Submitting Timesheets & Invoices
+
+### Log Your Hours
+1. Go to your dashboard and select the **Timesheet** tab.
+2. Log actual hours worked against your active deliverables.
+3. Submit the logs for approval. Once the project manager approves your hours, they are logged into the billing ledger.
+
+### Build Your Invoice
+1. Go to **Financials** > **Invoices** and click **Create Invoice**.
+2. **Autofill**: Select the active project. The builder automatically imports your approved timesheet hours, contract rates, and unbilled expenses.
+3. **Review Fees**: Review the line items. ABRAM displays the subtotal, the flat **5% payment processing fee**, and the total payout.
+4. Click **Send Invoice** or approve the **Purchase Order** sent by the producer.
+5. Once the payment is authorized and captured via Stripe, the invoice is marked **Paid**.
+
+### Request Payout
+1. In the **Payouts** tab, review your **Available Balance**.
+2. Click **Request Payout** (minimum $10.00). Stripe Express will transfer the funds directly to your bank account or debit card.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'content/credits-pricing',
+        'AI Credits and Subscription Pricing Tiers',
+        '',
+        'How ABRAM meters AI credits across monthly allowance, trial, and purchased pools, with caching savings, subscription tiers, and plan upgrade paths.',
+        '{}'::text[],
+        '---
+title: ''AI Credits and Subscription Pricing Tiers''
+description: ''How ABRAM meters AI credits across monthly allowance, trial, and purchased pools, with caching savings, subscription tiers, and plan upgrade paths.''
+---
+
+## 🗺️ The Three-Pool Credit Structure
+
+ABRAM meters and bills all user-initiated AI actions—such as parsing resumes, extracting project skills, matching candidates, or analyzing project briefs. Every organization''s ledger is divided into three distinct credit pools. When credits are deducted, they are drawn in a strict priority order:
+
+```
+  [1] Monthly Allowance  ──►  [2] Trial Credits  ──►  [3] Purchased Balance
+  (Resets monthly)           (Valid until expiry)     (Never expires)
+```
+
+1. **Monthly Allowance**: Included in your subscription tier (e.g., Team, Studio). Drawn first. Resets every month; unused allowance does not roll over.
+2. **Trial Credits**: Awarded during onboarding. Drawn second. Only valid if the trial is still active and has not expired.
+3. **Purchased Balance**: Top-up credits bought via Stripe. Drawn last. Purchased credits never expire.
+
+---
+
+## 1. Typical Costs
+
+* **Flat Fees & Ranges**: Credit deduction is calculated based on the complexity of the operation or flat service rates:
+
+| Feature / Action | Billing Model | Typical Cost / Range |
+| :--- | :--- | :--- |
+| **Project Brief Analysis** | Based on brief size & details | 5 - 25 credits per analysis |
+| **AI Team Matchmaking Suggestions** | Based on scope size & candidate count | 5 - 20 credits per suggestion |
+| **Resume & Profile Importing** | Based on resume file size | 2 - 10 credits per import |
+| **Chatbot Co-pilot Interaction** | Per query/response | 0.5 - 5 credits per message |
+| **Web Search Tool** | Flat rate per search | 2 credits per search |
+| **Image Generation** | Flat rate per generation | 10 credits per image |
+
+---
+
+## 2. Caching & Cost-Saving Optimizations
+
+To protect your budget from duplicate charges, ABRAM includes automated memory safeguards:
+
+* **Smart Query Optimization**: If you ask follow-up questions within the same context (e.g. refining a project brief or candidate list), the platform reads from memory at a fraction of the standard credit cost.
+* **Saved Role Estimates**: Once the AI estimates hours for a work package, the results are saved to the project''s deliverables. Rerunning matches reads from this saved memory, costing **0 credits**.
+* **Match Reasoning Cache**: The detailed match reasonings and concerns are cached for your session. Opening a candidate''s profile preview does not trigger a new AI billing charge.
+* **Disconnect Protection**: If a network disconnect or timeout occurs during an analysis, the platform ensures your ledger is only billed for the portion of the task successfully processed up to the point of interruption.
+
+---
+
+## 3. Subscription Pricing Plans
+
+ABRAM offers plans tailored to solo creators, production teams, and studios:
+
+| Plan | Price | Seats | Active Projects | Included Credits | Storage | Key Features |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Free** | $0/mo | 1 seat | 1 | 0 | 500 MB | Core scoping, basic templates |
+| **Solo Lite** | $19/mo | 1 seat | Unlimited | 300 / mo | 3 GB | AI matchmaking suggestions |
+| **Solo Pro** | $34/mo | 1 seat | Unlimited | 600 / mo | 10 GB | Brief parser, calendar sync, PDF exports |
+| **Team** | $39/seat/mo | 2 - 5 seats | Unlimited | 500 / seat / mo | 10 GB / seat | Custom request forms, team collaboration |
+| **Studio** | $49/seat/mo | 6 - 20 seats | Unlimited | 1,000 / seat / mo | 15 GB / seat | Barcode scanning, custom intake workflows |
+| **Enterprise** | Custom | Custom | Unlimited | Custom | Unlimited | Corporate directory sync, SSO, dedicated support |
+
+*Note: Team and Studio plans require a minimum of 2 and 6 seats respectively.*
+
+---
+
+## 4. Credit Top-Up Packs
+
+If your organization runs out of its monthly credit allowance, you can buy top-up packs. Top-up credits never expire and are only used after your monthly allowance is depleted:
+
+| Pack Name | Included Credits | Price |
+| :--- | :--- | :--- |
+| **Basic Pack** | 150 credits | $10 |
+| **Pro Pack** | 500 credits | $25 |
+| **Maximum Pack** | 1200 credits | $50 |
+
+---
+
+## 5. Organization-Bound Billing & Roster Rules
+
+* **Roster Gating**: All billing ledgers are bound to organizations. Solo users are billed through their personal organization workspace.
+* **Onboarding Exemption**: AI calls made during the onboarding wizard (e.g., parsing your initial resume when setting up your profile) are completely free.
+
+---
+
+## 6. Upgrading Plans & Workspace Promotion
+
+Owners and Admins can purchase additional credits or upgrade plan tiers in **Settings** > **Billing**:
+
+### Buying Ad-Hoc Top-Ups
+If your balance runs low, you can click **Top-Up** to purchase credit packs. This opens Stripe Checkout to securely process the purchase, updating your balance immediately.
+
+### Upgrading a Personal Workspace
+If you are currently on the **Free** tier in a personal workspace and select a team subscription:
+1. **Workspace Promotion Flow**: The platform launches a coordinated flow prompting you for your Company Name and Team Size.
+2. The platform automatically promotes your personal workspace to a full **Organization**.
+3. You are redirected to Stripe Checkout to set up the subscription.
+4. Once completed, your organization''s Monthly Allowance is active, and team seat limits are updated.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'content/orgs/quickstart',
+        'Quickstart for Organizations and Studios',
+        '',
+        'Set up your agency or studio workspace on ABRAM, manage team permissions, configure Enterprise SSO and SCIM, and build custom project intake pipelines.',
+        '{}'::text[],
+        '---
+title: ''Quickstart for Organizations and Studios''
+description: ''Set up your agency or studio workspace on ABRAM, manage team permissions, configure Enterprise SSO and SCIM, and build custom project intake pipelines.''
+---
+
+## 🗺️ Organization Management Overview
+Production companies, creative agencies, and studios use ABRAM to manage multiple active projects, maintain a shared freelancer roster, track camera and studio inventory, and centralize financial billing across their team.
+
+```
+[Upgrade Workspace] ──> [Team & SCIM Sync] ──> [Operational Buffers] ──> [Intake Builders] ──> [Portfolio & billing]
+```
+
+---
+
+## 1. Upgrading to an Organization
+
+If you registered your workspace as **Independent** during your initial onboarding, you can upgrade to a collaborative studio company at any time:
+
+1. Click on **Settings** in the sidebar.
+2. Select the **Workspace** tab and choose **Upgrade to Company**.
+3. Complete the creation fields:
+   * **Organization Name**: Legal studio or agency entity name.
+   * **Organization Type**: Select Agency, Studio, Enterprise, or Production Company.
+   * **HQ Location & Timezone**: Set your operating city and timezone.
+   * **Website & Bio**: Share details about your creative focus.
+4. Click **Create Organization**. The interface will update, giving you access to the team, billing, and logistics dashboards.
+
+---
+
+## 2. Team Management & Access Control
+
+Managing team members is handled through the **Team** tab on your organization dashboard.
+
+### Workspace Roles
+ABRAM defines three main roles:
+* **Owner**: The primary creator. Complete control over settings, subscriptions, custom roles, permissions, and workspace deletion.
+* **Admin**: Administrative access. Can invite teammates, modify profiles, configure gear, and edit all projects. Cannot delete the organization.
+* **Member**: Standard staff. Access is controlled by custom *Granular Permissions*.
+
+### Granular Permissions
+Open the **Edit Team Member** modal to toggle specific access permissions:
+* **Team Management**: Invite, edit, or remove teammates.
+* **Financial Access**: View project budgets, freelancer contract rates, and invoices.
+* **Financial Management**: Create, edit, and capture project invoices.
+* **Org Profile Management**: Manage branding assets, banners, and logos.
+* **Resource Management**: Edit equipment catalogs, schedule logistics, and log kit details.
+* **Internal Project Requests**: Configure request intake forms and approve requests.
+* **Project Access Settings**:
+  * *Manage All Organization Projects*: User can view and edit all organization-wide projects.
+  * *Assigned Projects Only*: User is restricted strictly to projects they are added to.
+
+---
+
+## 3. Enterprise SSO & Directory Sync (SCIM)
+
+Enterprise studios can automate user provisioning and lock access security through SAML/OIDC and SCIM:
+
+1. Navigate to **Organization Settings** > **Enterprise Authentication**.
+2. Click **Generate Portal Link** for SSO or Directory Sync. (This opens a secure setup portal powered by WorkOS).
+3. Connect your Identity Provider (Okta, Microsoft Entra ID, Google Workspace, Azure AD, etc.).
+4. **SCIM Directory Sync Rules**:
+   * Once SCIM is enabled, all member accounts, active statuses, and roles are driven by your corporate directory.
+   * **Local Read-Only Lock**: The local ABRAM member directory becomes read-only. Modifying names, roles, or deleting members must be done inside your corporate identity provider. Changes sync to ABRAM within seconds.
+
+---
+
+## 4. Configuring Logistics & Operations
+
+Track equipment and minimize booking errors by configuring operational settings in the **Logistics** settings panel:
+
+* **Transit Buffer Days**: Specify buffer days (e.g., *1 or 2 days*) automatically added before and after bookings. This reserves the gear during transit, prep, and return inspect cycles.
+* **Transit Method**: Select default transport methods (Pickup, Shipping, Courier, or Dropoff).
+* **Enforce Return Inspections**: Toggle whether physical items must undergo QA checks before being marked as available for the next production.
+* **Needs Repair Lockout**: Damaged gear marked as "Needs Repair" is locked from calendar reservations.
+
+---
+
+## 5. Custom Request Intake Pipelines
+
+Build a client or department intake portal to collect briefs and project details.
+
+### Building the Form
+1. Go to settings and select **Intake Form Builder**.
+2. **Standard Fields**: Select which baseline fields (Budget, Dates, Project Description, File Upload) are shown and marked as required.
+3. **Custom Fields**: Click **Add Custom Field** to create specific text, number, paragraph, or dropdown questions.
+4. **Domain Gating**: Enter allowed domains (e.g., `agencypartner.com`) to restrict submissions and prevent spam.
+
+### Field Mappings
+Link custom answers to project requirements to let the AI engine map resources automatically:
+* **Required Skills**: Map dropdown answers to auto-populate roles (e.g., matching "Need visual effects" to a *VFX Compositor* role slot).
+* **Required Gear**: Map questions to add camera packages or kits to the project requirements.
+* **Software**: Map answers to assign software tools (e.g., *Premiere Pro* or *DaVinci Resolve*).
+
+### The Intake Inbox
+* All submitted forms land in your **Project Request Inbox**.
+* Review the uploaded brief, timeline details, and answers.
+* Click **Approve & Convert**:
+  1. Creates a project in **Planning** status.
+  2. Prompts you to select a Project Owner.
+  3. Moves brief attachments to the project documents folder, where they are indexed by the **Brief Analyzer**.
+  4. Mapped skills and equipment are auto-loaded to trigger the AI Matchmaking Engine.
+  5. The client requester is automatically notified via email.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    

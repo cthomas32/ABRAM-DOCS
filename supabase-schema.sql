@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS public.blog_posts (
     content TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
     author TEXT NOT NULL DEFAULT 'ABRAM Team',
+    author_avatar TEXT,
     published_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT timezone('utc'::text, now()),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT timezone('utc'::text, now())
@@ -79,6 +80,7 @@ CREATE TABLE IF NOT EXISTS public.release_notes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     version TEXT NOT NULL,
     title TEXT NOT NULL,
+    slug TEXT UNIQUE,
     content TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
     published_at TIMESTAMP WITH TIME ZONE,
@@ -199,3 +201,68 @@ ON public.release_notes
 FOR DELETE 
 TO authenticated 
 USING (true);
+
+
+-- =====================================================================
+-- 5. HELP DOCUMENTS TABLE DEFINITION & POLICIES
+-- =====================================================================
+
+-- HELP DOCUMENTS TABLE
+CREATE TABLE IF NOT EXISTS public.help_docs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    slug TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    sidebar_title TEXT,
+    description TEXT,
+    content TEXT NOT NULL,
+    keywords TEXT[] DEFAULT '{}'::text[],
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- TIMESTAMP TRIGGER
+DROP TRIGGER IF EXISTS trigger_update_help_docs_updated_at ON public.help_docs;
+CREATE TRIGGER trigger_update_help_docs_updated_at
+    BEFORE UPDATE ON public.help_docs
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Enable Row-Level Security
+ALTER TABLE public.help_docs ENABLE ROW LEVEL SECURITY;
+
+-- Clean up existing policies on help_docs to allow clean re-runs
+DROP POLICY IF EXISTS "Allow public read of help docs" ON public.help_docs;
+DROP POLICY IF EXISTS "Allow authenticated read of all help docs" ON public.help_docs;
+DROP POLICY IF EXISTS "Allow authenticated insert of help docs" ON public.help_docs;
+DROP POLICY IF EXISTS "Allow authenticated update of help docs" ON public.help_docs;
+DROP POLICY IF EXISTS "Allow authenticated delete of help docs" ON public.help_docs;
+
+-- Policies for help_docs:
+-- 1. SELECT (Public): Anyone can view help docs.
+CREATE POLICY "Allow public read of help docs" 
+ON public.help_docs 
+FOR SELECT 
+USING (true);
+
+-- 2. INSERT (Authenticated): Logged-in users/agents can insert new docs.
+CREATE POLICY "Allow authenticated insert of help docs" 
+ON public.help_docs 
+FOR INSERT 
+TO authenticated 
+WITH CHECK (true);
+
+-- 3. UPDATE (Authenticated): Logged-in users/agents can edit docs.
+CREATE POLICY "Allow authenticated update of help docs" 
+ON public.help_docs 
+FOR UPDATE 
+TO authenticated 
+USING (true)
+WITH CHECK (true);
+
+-- 4. DELETE (Authenticated): Logged-in users/agents can remove docs.
+CREATE POLICY "Allow authenticated delete of help docs" 
+ON public.help_docs 
+FOR DELETE 
+TO authenticated 
+USING (true);
+

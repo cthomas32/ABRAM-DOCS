@@ -2,28 +2,24 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
+const { createClient } = require('@supabase/supabase-js');
 
-// Helper to recursively get files
-function getFiles(dir, ext) {
-  let results = [];
-  if (!fs.existsSync(dir)) return results;
-  
-  const list = fs.readdirSync(dir);
-  list.forEach((file) => {
-    const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
-    if (stat && stat.isDirectory()) {
-      results = results.concat(getFiles(filePath, ext));
-    } else {
-      if (ext.some(e => filePath.endsWith(e))) {
-        results.push(filePath);
-      }
-    }
-  });
-  return results;
+// Helper to parse .env.local manually
+function loadEnvLocal(projectDir) {
+  const envPath = path.join(projectDir, '.env.local');
+  if (fs.existsSync(envPath)) {
+    const content = fs.readFileSync(envPath, 'utf-8');
+    content.split('\n').forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const index = trimmed.indexOf('=');
+      if (index === -1) return;
+      const key = trimmed.substring(0, index).trim();
+      const val = trimmed.substring(index + 1).trim().replace(/^['"]|['"]$/g, '');
+      process.env[key] = val;
+    });
+  }
 }
-
-
 
 function stripMdx(content) {
   let clean = content.replace(/<AgentOnly(?:\s+[^>]*?)?>[\s\S]*?<\/AgentOnly>/gi, '');
@@ -44,16 +40,7 @@ function stripMdx(content) {
   return clean;
 }
 
-function generateNavigationIndex(contentDir, projectDir) {
-  const docsJsonPath = path.join(projectDir, 'docs.json');
-  
-  let docsJson = null;
-  
-  // Read docs.json
-  if (fs.existsSync(docsJsonPath)) {
-    docsJson = JSON.parse(fs.readFileSync(docsJsonPath, 'utf-8'));
-  }
-  
+function generateNavigationIndex(docsJson, docMap) {
   if (!docsJson || !docsJson.navigation || !docsJson.navigation.products) {
     return [];
   }
@@ -69,26 +56,18 @@ function generateNavigationIndex(contentDir, projectDir) {
       if (!groupObj.pages) return;
       
       groupObj.pages.forEach((pagePath) => {
-        const mdxPath = path.join(contentDir, `${pagePath}.mdx`);
-        const mdPath = path.join(contentDir, `${pagePath}.md`);
         let title = '';
+        const doc = docMap[pagePath];
         
-        let resolvedPath = '';
-        if (fs.existsSync(mdxPath)) {
-          resolvedPath = mdxPath;
-        } else if (fs.existsSync(mdPath)) {
-          resolvedPath = mdPath;
-        }
-        
-        if (resolvedPath) {
+        let metadata = {};
+        if (doc && doc.content) {
           try {
-            const fileContent = fs.readFileSync(resolvedPath, 'utf-8');
-            const { data } = matter(fileContent);
-            title = data.sidebarTitle || data.title || '';
-          } catch (e) {
-            console.error(`Error parsing frontmatter for ${pagePath}:`, e);
-          }
+            const { data } = matter(doc.content);
+            metadata = data;
+          } catch (e) {}
         }
+        
+        title = metadata.sidebarTitle || metadata.title || (doc ? doc.sidebar_title || doc.title : '') || '';
         
         if (!title) {
           const filename = path.basename(pagePath);
@@ -110,64 +89,119 @@ function generateNavigationIndex(contentDir, projectDir) {
     });
   });
   
-  // Include index.mdx from the root of content/ as slug []
-  const indexPath = path.join(contentDir, 'index.mdx');
-  if (fs.existsSync(indexPath)) {
+  // Include overview index page from Supabase slug "overview"
+  const overviewDoc = docMap['overview'];
+  let overviewTitle = 'Overview';
+  if (overviewDoc && overviewDoc.content) {
     try {
-      const fileContent = fs.readFileSync(indexPath, 'utf-8');
-      const { data } = matter(fileContent);
-      pages.unshift({
-        slug: ['overview'],
-        path: 'overview',
-        title: data.sidebarTitle || data.title || 'Overview',
-        group: 'Introduction',
-        groupIcon: 'book-open',
-        product: docsJson.name || 'Help Center'
-      });
-    } catch (e) {
-      console.error('Error parsing index.mdx:', e);
-    }
+      const { data } = matter(overviewDoc.content);
+      overviewTitle = data.sidebarTitle || data.title || overviewDoc.sidebar_title || overviewDoc.title || 'Overview';
+    } catch (e) {}
   }
+  
+  pages.unshift({
+    slug: ['overview'],
+    path: 'overview',
+    title: overviewTitle,
+    group: 'Introduction',
+    groupIcon: 'book-open',
+    product: docsJson.name || 'Help Center'
+  });
   
   return pages;
 }
 
-function main() {
+async function main() {
   console.log('Starting search index generation...');
   
   const projectDir = path.resolve(__dirname, '..');
   const publicDir = path.join(projectDir, 'public');
   const utilsDir = path.join(projectDir, 'src/utils');
+  const docsJsonPath = path.join(projectDir, 'docs.json');
   
-  // Generate navigation data first from the project root
+  // Load environment variables from .env.local
+  loadEnvLocal(projectDir);
+  
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Error: Supabase environment variables not found in .env.local');
+    process.exit(1);
+  }
+  
+  const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+  
+  console.log('Fetching articles from Supabase...');
+  const { data: dbDocs, error } = await supabase
+    .from('help_docs')
+    .select('slug, title, sidebar_title, description, keywords, content');
+    
+  if (error) {
+    console.error('Error fetching articles from Supabase:', error);
+    process.exit(1);
+  }
+  
+  console.log(`Fetched ${dbDocs.length} articles from Supabase.`);
+  
+  const docMap = {};
+  dbDocs.forEach((doc) => {
+    docMap[doc.slug] = doc;
+  });
+  
+  let docsJson = null;
+  if (fs.existsSync(docsJsonPath)) {
+    docsJson = JSON.parse(fs.readFileSync(docsJsonPath, 'utf-8'));
+  }
+  
   console.log('Generating navigation data...');
-  const navPages = generateNavigationIndex(projectDir, projectDir);
+  const navPages = generateNavigationIndex(docsJson, docMap);
   
   const indexRecords = [];
   
   navPages.forEach((page) => {
-    let filePath = '';
-    if (page.path === 'overview') {
-      filePath = path.join(projectDir, 'index.mdx');
-    } else {
-      const mdxPath = path.join(projectDir, `${page.path}.mdx`);
-      const mdPath = path.join(projectDir, `${page.path}.md`);
-      if (fs.existsSync(mdxPath)) {
-        filePath = mdxPath;
-      } else if (fs.existsSync(mdPath)) {
-        filePath = mdPath;
-      }
-    }
+    const doc = docMap[page.path];
     
-    if (filePath && fs.existsSync(filePath)) {
+    if (doc) {
       try {
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const { data, content } = matter(fileContent);
+        let metadata = {};
+        let rawContent = doc.content || '';
         
+        if (doc.content) {
+          try {
+            const { data, content } = matter(doc.content);
+            metadata = data;
+            rawContent = content;
+          } catch (err) {
+            metadata = {
+              title: doc.title,
+              description: doc.description
+            };
+          }
+        }
+        
+        // 1. Content Status Validation (Skip drafts)
+        if (metadata.status === 'draft') {
+          console.log(`Skipping draft file from search index: ${page.path}`);
+          return;
+        }
+
+        // 2. Publish Date Validation (Skip future publications)
+        if (metadata.publishDate) {
+          const publishTime = new Date(metadata.publishDate).getTime();
+          const currentTime = new Date().getTime();
+          if (publishTime > currentTime) {
+            console.log(`Skipping scheduled file (publish date in future): ${page.path}`);
+            return;
+          }
+        }
+
         const slug = page.path === '' ? 'index' : page.path;
-        const title = data.title || page.title;
-        const description = data.description || '';
-        const cleanContent = stripMdx(content);
+        const title = metadata.title || doc.title || page.title;
+        const description = metadata.description || doc.description || '';
+        const cleanContent = stripMdx(rawContent);
         
         indexRecords.push({
           slug,
@@ -176,10 +210,10 @@ function main() {
           content: cleanContent
         });
       } catch (err) {
-        console.error(`Error parsing ${filePath}:`, err);
+        console.error(`Error parsing document ${page.path}:`, err);
       }
     } else {
-      console.warn(`Warning: File for page ${page.path || 'index'} not found!`);
+      console.warn(`Warning: Document for page ${page.path} not found in database!`);
     }
   });
   

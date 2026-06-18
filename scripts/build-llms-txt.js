@@ -2,6 +2,24 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
+const { createClient } = require('@supabase/supabase-js');
+
+// Helper to parse .env.local manually
+function loadEnvLocal(projectDir) {
+  const envPath = path.join(projectDir, '.env.local');
+  if (fs.existsSync(envPath)) {
+    const content = fs.readFileSync(envPath, 'utf-8');
+    content.split('\n').forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const index = trimmed.indexOf('=');
+      if (index === -1) return;
+      const key = trimmed.substring(0, index).trim();
+      const val = trimmed.substring(index + 1).trim().replace(/^['"]|['"]$/g, '');
+      process.env[key] = val;
+    });
+  }
+}
 
 /**
  * Strip MDX component syntax but KEEP inner content (including AgentOnly).
@@ -48,7 +66,7 @@ function stripMdxForLlm(content) {
   return clean;
 }
 
-function main() {
+async function main() {
   console.log('Building llms-full.txt...');
 
   const projectDir = path.resolve(__dirname, '..');
@@ -68,6 +86,38 @@ function main() {
     process.exit(1);
   }
 
+  // Load environment variables
+  loadEnvLocal(projectDir);
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Error: Supabase environment variables not found in .env.local');
+    process.exit(1);
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+
+  console.log('Fetching articles from Supabase for LLM text file...');
+  const { data: dbDocs, error } = await supabase
+    .from('help_docs')
+    .select('slug, title, sidebar_title, description, content');
+
+  if (error) {
+    console.error('Error fetching articles from Supabase:', error);
+    process.exit(1);
+  }
+
+  console.log(`Fetched ${dbDocs.length} articles from Supabase.`);
+
+  const docMap = {};
+  dbDocs.forEach((doc) => {
+    docMap[doc.slug] = doc;
+  });
+
   const sections = [];
   let totalArticles = 0;
 
@@ -82,34 +132,38 @@ function main() {
       if (!groupObj.pages) return;
 
       groupObj.pages.forEach((pagePath) => {
-        // Resolve file path (.md or .mdx)
-        const mdxPath = path.join(projectDir, `${pagePath}.mdx`);
-        const mdPath = path.join(projectDir, `${pagePath}.md`);
+        const doc = docMap[pagePath];
 
-        let resolvedPath = '';
-        if (fs.existsSync(mdxPath)) {
-          resolvedPath = mdxPath;
-        } else if (fs.existsSync(mdPath)) {
-          resolvedPath = mdPath;
-        }
-
-        if (!resolvedPath) {
-          console.warn(`Warning: File not found for ${pagePath}`);
+        if (!doc) {
+          console.warn(`Warning: Document not found in DB for page ${pagePath}`);
           return;
         }
 
         try {
-          const fileContent = fs.readFileSync(resolvedPath, 'utf-8');
-          const { data, content } = matter(fileContent);
+          let metadata = {};
+          let rawContent = doc.content || '';
 
-          const title = data.title || data.sidebarTitle || path.basename(pagePath);
-          const description = data.description || '';
-          const cleanContent = stripMdxForLlm(content);
+          if (doc.content) {
+            try {
+              const { data, content } = matter(doc.content);
+              metadata = data;
+              rawContent = content;
+            } catch (err) {
+              metadata = {
+                title: doc.title,
+                description: doc.description
+              };
+            }
+          }
+
+          const title = metadata.title || doc.title || doc.sidebar_title || path.basename(pagePath);
+          const description = metadata.description || doc.description || '';
+          const cleanContent = stripMdxForLlm(rawContent);
 
           articles.push({ title, description, content: cleanContent, pagePath });
           totalArticles++;
         } catch (err) {
-          console.error(`Error processing ${resolvedPath}:`, err.message);
+          console.error(`Error processing ${pagePath}:`, err.message);
         }
       });
 

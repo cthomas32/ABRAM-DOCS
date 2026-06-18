@@ -72,39 +72,66 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   // 2. Documentation / Standard App Layout Rendering
+  const showSidebar = isDocsPage && cleanPathname !== "/docs";
+
+  if (showSidebar) {
+    return (
+      <BackgroundGlow variant="premium" className="selection:bg-zinc-800 selection:text-white">
+        <Navbar 
+          onSearchClick={() => setSearchOpen(true)} 
+          onMenuClick={() => setSidebarOpen(true)}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
+
+        <div className="mx-auto flex w-full max-w-[90rem] flex-1 pt-16 justify-center px-4 sm:px-6 lg:px-8 gap-8 lg:gap-12">
+          <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onSearchClick={() => setSearchOpen(true)} />
+          <main className="flex-1 flex flex-col min-w-0 w-full">
+            <div className="flex-1 flex flex-col">
+              <div className="flex-1 w-full mx-auto p-6 md:p-8 lg:p-12 max-w-6xl">
+                <Breadcrumbs />
+
+                <div className="flex-1">
+                  {children}
+                </div>
+
+                <PrevNextNav />
+              </div>
+
+              <HomeFooter />
+            </div>
+          </main>
+        </div>
+
+        <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
+        <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      </BackgroundGlow>
+    );
+  }
+
+  // 3. Non-docs/non-sidebar layout (for blog, changelog, privacy policy, terms of use, docs main page, etc.)
+  const contentMaxWidth = cleanPathname === "/docs" ? "max-w-7xl" : "max-w-4xl";
+
   return (
     <BackgroundGlow variant="premium" className="selection:bg-zinc-800 selection:text-white">
       <Navbar 
         onSearchClick={() => setSearchOpen(true)} 
-        onMenuClick={isDocsPage && cleanPathname !== "/docs" ? () => setSidebarOpen(true) : undefined}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       />
 
-      <div className="mx-auto flex w-full max-w-[90rem] flex-1 pt-16 justify-center px-4 sm:px-6 lg:px-8 gap-8 lg:gap-12">
-        {isDocsPage && cleanPathname !== "/docs" && (
-          <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onSearchClick={() => setSearchOpen(true)} />
-        )}
-        <main className="flex-1 flex flex-col min-w-0 w-full">
-          <div className="flex-1 flex flex-col">
-            <div
-              className={`flex-1 w-full mx-auto p-6 md:p-8 lg:p-12 ${
-                cleanPathname === "/docs" ? "max-w-7xl" : isDocsPage ? "max-w-6xl" : "max-w-4xl"
-              }`}
-            >
-              {isDocsPage && cleanPathname !== "/docs" && <Breadcrumbs />}
-
-              <div className="flex-1">
-                {children}
-              </div>
-
-              {isDocsPage && cleanPathname !== "/docs" && <PrevNextNav />}
+      <main className="flex-1 w-full flex flex-col pt-16">
+        <div className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8">
+          <div
+            className={`flex-1 w-full mx-auto p-6 md:p-8 lg:p-12 ${contentMaxWidth}`}
+          >
+            <div className="flex-1">
+              {children}
             </div>
-
-            <HomeFooter />
           </div>
-        </main>
-      </div>
+        </div>
+        <HomeFooter />
+      </main>
 
       <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />

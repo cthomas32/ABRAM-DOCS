@@ -53,6 +53,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
     { name: "Home", href: "/" },
     { name: "Brain", href: "/production-brain" },
     { name: "Learn", href: "/docs" },
+    { name: "Blog", href: "/blog" },
     { name: "Pricing", href: "/pricing" },
   ];
 

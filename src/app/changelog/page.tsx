@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { supabase } from "@/utils/supabase/static";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { mdxComponents } from "@/components/MdxComponents";
+import Link from "next/link";
 
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
@@ -90,12 +91,23 @@ export default async function ChangelogPage() {
                     </time>
                   </div>
 
-                  <h2 className="text-xl font-semibold text-zinc-50 mb-4 font-sans">
-                    {release.title}
+                  <h2 className="text-xl font-semibold text-zinc-50 mb-4 font-sans hover:text-white transition-colors duration-150">
+                    <Link href={`/changelog/${release.slug || release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}`}>
+                      {release.title}
+                    </Link>
                   </h2>
 
-                  <div className="prose prose-zinc dark:prose-invert max-w-none text-zinc-300 font-sans select-text">
+                  <div className="prose prose-zinc dark:prose-invert max-w-none text-zinc-300 font-sans select-text line-clamp-3 release-notes-content">
                     <MDXRemote source={release.content} components={mdxComponents} />
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-white/5 flex justify-end">
+                    <Link
+                      href={`/changelog/${release.slug || release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}`}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors group"
+                    >
+                      Read release details <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>
+                    </Link>
                   </div>
                 </div>
               </div>

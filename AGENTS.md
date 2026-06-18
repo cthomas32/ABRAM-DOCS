@@ -3,6 +3,7 @@
 ## About this project
 - This documentation site has been rebuilt from Mintlify into a **Next.js App Router** application (Next.js 16/Turbopack) utilizing **Tailwind CSS v4** and **Framer Motion**.
 - The main pages are dynamically loaded from MDX/MD files in the root folder (`user-guide/*.md` and `index.mdx`) and rendered via `next-mdx-remote`.
+- **Supabase Database Rule**: The ONLY Supabase database project allowed for ABRAM-DOCS is `fovvtmwmrivuwnqemcil.supabase.co`. Under NO circumstances should any other Supabase database project URL or credentials be used, configured, or targeted.
 
 ## Key File Locations & Structure
 - **Design System Reference**: [DESIGN.md](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/DESIGN.md) — **READ THIS FIRST**. Master reference for all typography, colors, buttons, spacing. All agents must follow this.

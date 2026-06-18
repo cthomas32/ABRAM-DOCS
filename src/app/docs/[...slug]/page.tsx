@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -9,6 +7,7 @@ import { ensureContentCopied } from "../../../utils/navigation-server";
 import TableOfContents from "../../../components/TableOfContents";
 import CopyPageDropdown from "../../../components/CopyPageDropdown";
 import type { Metadata } from "next";
+import { supabase } from "@/utils/supabase/static";
 
 interface PageProps {
   params: Promise<{
@@ -16,7 +15,7 @@ interface PageProps {
   }>;
 }
 
-function getDocContent(slug: string[]) {
+async function getDocContent(slug: string[]) {
   ensureContentCopied();
 
   const slugStr = slug.join("/");
@@ -28,54 +27,53 @@ function getDocContent(slug: string[]) {
     return null;
   }
 
-  const contentDir = process.cwd();
-  const rootDir = slug[0];
-  const remainingSlug = slug.slice(1).join("/");
+  try {
+    const { data: doc, error } = await supabase
+      .from("help_docs")
+      .select("*")
+      .eq("slug", slugStr)
+      .maybeSingle();
 
-  let possiblePaths: string[] = [];
-  if (slugStr === "overview") {
-    possiblePaths = [path.join(contentDir, "index.mdx")];
-  } else if (rootDir === "user-guide") {
-    const baseDir = path.join(contentDir, "user-guide");
-    possiblePaths = [
-      path.join(baseDir, `${remainingSlug}.mdx`),
-      path.join(baseDir, remainingSlug, "page.mdx"),
-      path.join(baseDir, `${remainingSlug}.md`),
-      path.join(baseDir, remainingSlug, "page.md"),
-    ];
-  } else if (rootDir === "content") {
-    const baseDir = path.join(contentDir, "content");
-    possiblePaths = [
-      path.join(baseDir, `${remainingSlug}.mdx`),
-      path.join(baseDir, remainingSlug, "page.mdx"),
-      path.join(baseDir, `${remainingSlug}.md`),
-      path.join(baseDir, remainingSlug, "page.md"),
-    ];
-  }
+    if (error || !doc) {
+      console.warn(`Doc not found in Supabase for slug: ${slugStr}`, error);
+      return null;
+    }
 
-  for (const p of possiblePaths) {
-    if (fs.existsSync(p)) {
+    let frontmatterData: any = {};
+    let parsedContent = doc.content || "";
+
+    if (doc.content) {
       try {
-        const fileContent = fs.readFileSync(p, "utf8");
-        const { data, content } = matter(fileContent);
-
-        // Fetch and format last modified time dynamically on the server
-        const stats = fs.statSync(p);
-        const lastUpdated = stats.mtime.toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        });
-
-        return { data, content, lastUpdated };
-      } catch (err) {
-        console.error(`Error reading doc file at ${p}:`, err);
-        return null;
+        const { data, content } = matter(doc.content);
+        frontmatterData = data;
+        parsedContent = content;
+      } catch (e) {
+        // Fallback to columns
       }
     }
-  }
 
-  return null;
+    const mergedData = {
+      title: frontmatterData.title || doc.title || "",
+      sidebarTitle: frontmatterData.sidebarTitle || doc.sidebar_title || "",
+      description: frontmatterData.description || doc.description || "",
+      keywords: frontmatterData.keywords || doc.keywords || [],
+      status: frontmatterData.status || "published",
+      publishDate: frontmatterData.publishDate || "",
+      ...frontmatterData
+    };
+
+    const updatedTime = doc.updated_at ? new Date(doc.updated_at) : new Date();
+    const lastUpdated = updatedTime.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+
+    return { data: mergedData, content: parsedContent, lastUpdated };
+  } catch (err) {
+    console.error(`Error reading doc from Supabase for slug ${slugStr}:`, err);
+    return null;
+  }
 }
 
 export async function generateStaticParams() {
@@ -90,7 +88,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const doc = getDocContent(slug);
+  const doc = await getDocContent(slug);
 
   if (!doc) {
     return {
@@ -122,7 +120,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       .trim();
 
     if (cleanContent) {
-      const paragraphs = cleanContent.split("\n").map((p) => p.trim()).filter(Boolean);
+      const paragraphs = cleanContent.split("\n").map((p: string) => p.trim()).filter(Boolean);
       if (paragraphs.length > 0) {
         description = paragraphs[0];
         if (description.length > 160) {
@@ -262,7 +260,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function DocPage({ params }: PageProps) {
   const { slug } = await params;
-  const doc = getDocContent(slug);
+  const doc = await getDocContent(slug);
 
   if (!doc) {
     notFound();
@@ -294,7 +292,7 @@ export default async function DocPage({ params }: PageProps) {
       .trim();
 
     if (cleanContent) {
-      const paragraphs = cleanContent.split("\n").map((p) => p.trim()).filter(Boolean);
+      const paragraphs = cleanContent.split("\n").map((p: string) => p.trim()).filter(Boolean);
       if (paragraphs.length > 0) {
         description = paragraphs[0];
         if (description.length > 160) {
@@ -444,7 +442,7 @@ export default async function DocPage({ params }: PageProps) {
       />
       <div className="flex gap-10 xl:gap-14 items-start justify-center w-full">
         <div className="flex-1 min-w-0 max-w-3xl">
-          <article className="max-w-none">
+          <article className="max-w-none release-notes-content">
             {!isCustomMode && (
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
                 <div className="space-y-1">
