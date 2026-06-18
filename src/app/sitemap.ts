@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getAllDocPages } from '@/utils/navigation';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://docs.abram.network';
+  const baseUrl = 'https://abram.network';
   const pages = getAllDocPages();
 
   const docPages: MetadataRoute.Sitemap = pages

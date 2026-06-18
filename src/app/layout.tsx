@@ -24,7 +24,7 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://docs.abram.network'),
+  metadataBase: new URL('https://abram.network'),
   title: {
     default: 'ABRAM Docs — AI-Powered Creative Production Platform',
     template: '%s | ABRAM Docs',
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://docs.abram.network',
+    canonical: 'https://abram.network',
   },
 };
 
@@ -95,7 +95,7 @@ export default function RootLayout({
                   url: 'https://abram.network',
                   logo: {
                     '@type': 'ImageObject',
-                    url: 'https://docs.abram.network/logo/dark.svg',
+                    url: 'https://abram.network/logo/dark.svg',
                   },
                   description: 'ABRAM is the AI-powered platform for creative production management — project intake, crew scheduling, talent matchmaking, and automated invoicing for brands and freelancers.',
                 },
@@ -116,16 +116,16 @@ export default function RootLayout({
                 },
                 {
                   '@type': 'WebSite',
-                  '@id': 'https://docs.abram.network/#website',
+                  '@id': 'https://abram.network/#website',
                   name: 'ABRAM Docs',
-                  url: 'https://docs.abram.network',
+                  url: 'https://abram.network',
                   description: 'Official documentation and help center for ABRAM Network.',
                   publisher: { '@id': 'https://abram.network/#organization' },
                   potentialAction: {
                     '@type': 'SearchAction',
                     target: {
                       '@type': 'EntryPoint',
-                      urlTemplate: 'https://docs.abram.network/docs?q={search_term_string}',
+                      urlTemplate: 'https://abram.network/docs?q={search_term_string}',
                     },
                     'query-input': 'required name=search_term_string',
                   },

@@ -19,12 +19,12 @@ export const metadata: Metadata = {
     'automated invoicing', 'creative agency', 'production workflow', 'AI brief analyzer',
   ],
   alternates: {
-    canonical: 'https://docs.abram.network',
+    canonical: 'https://abram.network',
   },
   openGraph: {
     title: 'ABRAM Network — The AI Platform for Creative Intelligence',
     description: 'ABRAM is where brands scale production and creators build careers they own. AI-powered project intake, crew scheduling, talent matchmaking, and automated invoicing.',
-    url: 'https://docs.abram.network',
+    url: 'https://abram.network',
     type: 'website',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM — The AI Platform for Creative Intelligence' }],
   },

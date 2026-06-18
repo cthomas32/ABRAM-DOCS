@@ -10,13 +10,13 @@ export const metadata: Metadata = {
     'AI production tools', 'SaaS pricing', 'free tier',
   ],
   alternates: {
-    canonical: 'https://docs.abram.network/pricing',
+    canonical: 'https://abram.network/pricing',
   },
   openGraph: {
     title: 'ABRAM Pricing — Plans for Every Creative Team',
     description: 'Start free with AI-powered production management. Plans for freelancers, teams, and agencies.',
     type: 'website',
-    url: 'https://docs.abram.network/pricing',
+    url: 'https://abram.network/pricing',
   },
   twitter: {
     card: 'summary_large_image',
@@ -36,8 +36,8 @@ export default function PricingPage() {
             '@type': 'WebPage',
             name: 'ABRAM Pricing',
             description: 'Pricing plans for the ABRAM creative production platform.',
-            url: 'https://docs.abram.network/pricing',
-            isPartOf: { '@id': 'https://docs.abram.network/#website' },
+            url: 'https://abram.network/pricing',
+            isPartOf: { '@id': 'https://abram.network/#website' },
             publisher: { '@id': 'https://abram.network/#organization' },
             mainEntity: {
               '@type': 'SoftwareApplication',

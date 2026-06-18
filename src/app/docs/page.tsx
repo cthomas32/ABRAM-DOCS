@@ -10,13 +10,13 @@ export const metadata: Metadata = {
     'project management', 'freelancer tools', 'production management',
   ],
   alternates: {
-    canonical: 'https://docs.abram.network/docs',
+    canonical: 'https://abram.network/docs',
   },
   openGraph: {
     title: 'ABRAM Documentation Hub',
     description: 'Browse the complete ABRAM documentation — setup guides, AI features, crew management, invoicing, integrations, and troubleshooting.',
     type: 'website',
-    url: 'https://docs.abram.network/docs',
+    url: 'https://abram.network/docs',
   },
   twitter: {
     card: 'summary_large_image',
@@ -36,8 +36,8 @@ export default function DocsPage() {
             '@type': 'CollectionPage',
             name: 'ABRAM Documentation',
             description: 'Complete documentation and help center for the ABRAM creative production platform.',
-            url: 'https://docs.abram.network/docs',
-            isPartOf: { '@id': 'https://docs.abram.network/#website' },
+            url: 'https://abram.network/docs',
+            isPartOf: { '@id': 'https://abram.network/#website' },
             publisher: { '@id': 'https://abram.network/#organization' },
           }).replace(/</g, '\\u003c'),
         }}

@@ -22,6 +22,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // Normalize pathname to strip trailing slashes for matching
   const cleanPathname = pathname ? pathname.replace(/\/$/, "") || "/" : "/";
 
+  const isAdminPage = cleanPathname.startsWith("/admin");
   // Marketing routes that need clean, un-padded full width presentation
   const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain";
   const isDocsPage = cleanPathname.startsWith("/docs");
@@ -37,6 +38,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  if (isAdminPage) {
+    return (
+      <div className="selection:bg-zinc-800 selection:text-white bg-[#0A0A0A]">
+        {children}
+      </div>
+    );
+  }
 
   if (isMarketingPage) {
     const isBrainPage = cleanPathname === "/production-brain";

@@ -15,13 +15,13 @@ export const metadata: Metadata = {
     'creative agency AI co-pilot', 'brief analyzer scoping',
   ],
   alternates: {
-    canonical: 'https://docs.abram.network/production-brain',
+    canonical: 'https://abram.network/production-brain',
   },
   openGraph: {
     title: 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
     description: 'A private, secure workspace intelligence engine that learns crew preferences, rates, and briefs over years, not seconds.',
     type: 'website',
-    url: 'https://docs.abram.network/production-brain',
+    url: 'https://abram.network/production-brain',
   },
   twitter: {
     card: 'summary_large_image',
@@ -41,8 +41,8 @@ export default function ProductionBrainPage() {
             '@type': 'WebPage',
             name: 'ABRAM Production Brain',
             description: 'Workspace memory and AI capabilities in the ABRAM creative production platform.',
-            url: 'https://docs.abram.network/production-brain',
-            isPartOf: { '@id': 'https://docs.abram.network/#website' },
+            url: 'https://abram.network/production-brain',
+            isPartOf: { '@id': 'https://abram.network/#website' },
             publisher: { '@id': 'https://abram.network/#organization' },
             mainEntity: {
               '@type': 'SoftwareApplication',

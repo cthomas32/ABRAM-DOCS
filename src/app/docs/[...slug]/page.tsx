@@ -185,7 +185,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const finalKeywords = Array.from(baseKeywords);
 
   // 4. Construct URL and extra variables
-  const canonicalUrl = `https://docs.abram.network/docs/${slugStr}`;
+  const canonicalUrl = `https://abram.network/docs/${slugStr}`;
   const category = doc.data.category || navPage?.group || "Documentation";
   const authorName = doc.data.author || "ABRAM Network";
   const publisherName = doc.data.publisher || "ABRAM Network";
@@ -370,7 +370,7 @@ export default async function DocPage({ params }: PageProps) {
   }
 
   // 5. Generate JSON-LD Schema
-  const canonicalUrl = `https://docs.abram.network/docs/${slugStr}`;
+  const canonicalUrl = `https://abram.network/docs/${slugStr}`;
   const authorName = doc.data.author || "ABRAM Network";
   const publisherName = doc.data.publisher || "ABRAM Network";
 
@@ -389,7 +389,7 @@ export default async function DocPage({ params }: PageProps) {
       "name": publisherName,
       "logo": {
         "@type": "ImageObject",
-        "url": "https://docs.abram.network/logo/dark.svg",
+        "url": "https://abram.network/logo/dark.svg",
       },
     },
     "author": {
@@ -407,13 +407,13 @@ export default async function DocPage({ params }: PageProps) {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://docs.abram.network",
+        "item": "https://abram.network",
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Documentation",
-        "item": "https://docs.abram.network/docs",
+        "item": "https://abram.network/docs",
       },
       ...(navPage?.group ? [{
         "@type": "ListItem",

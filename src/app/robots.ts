@@ -29,6 +29,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://docs.abram.network/sitemap.xml',
+    sitemap: 'https://abram.network/sitemap.xml',
   };
 }
