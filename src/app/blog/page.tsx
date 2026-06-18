@@ -30,7 +30,7 @@ export default async function BlogListingPage() {
   try {
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("id, slug, title, summary, author, published_at, created_at, content")
+      .select("id, slug, title, summary, author, author_avatar, published_at, created_at, content")
       .eq("status", "published")
       .order("published_at", { ascending: false });
 

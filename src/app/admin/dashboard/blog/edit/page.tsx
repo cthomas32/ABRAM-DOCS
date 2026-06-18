@@ -123,6 +123,8 @@ function BlogEditorContent() {
   const [author, setAuthor] = useState<string>("");
   const [publishedAt, setPublishedAt] = useState<string>("");
   const [authorAvatar, setAuthorAvatar] = useState<string>("");
+  const [loadedAuthor, setLoadedAuthor] = useState<string>("");
+  const [existingAuthors, setExistingAuthors] = useState<{ name: string; avatar: string }[]>([]);
   const [existingAvatars, setExistingAvatars] = useState<{ name: string; url: string }[]>([]);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -133,7 +135,35 @@ function BlogEditorContent() {
 
   const supabase = createClient();
 
+  const fetchExistingAuthors = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("author, author_avatar")
+        .not("author", "is", null)
+        .not("author", "eq", "");
+
+      if (error) throw error;
+      if (data) {
+        const uniqueMap: Record<string, string> = {};
+        data.forEach(item => {
+          if (item.author) {
+            uniqueMap[item.author] = item.author_avatar || "";
+          }
+        });
+        const authorList = Object.keys(uniqueMap).map(name => ({
+          name,
+          avatar: uniqueMap[name]
+        }));
+        setExistingAuthors(authorList);
+      }
+    } catch (err) {
+      console.error("Error fetching existing authors:", err);
+    }
+  };
+
   useEffect(() => {
+    fetchExistingAuthors();
     if (idParam) {
       loadBlogPost(idParam);
     } else {
@@ -143,11 +173,38 @@ function BlogEditorContent() {
       setContent("# Untitled Blog Post\n\nStart writing your article here...");
       setStatus("draft");
       setAuthor("ABRAM Team");
+      setLoadedAuthor("ABRAM Team");
       setAuthorAvatar("");
       setPublishedAt("");
       setLoading(false);
     }
   }, [idParam]);
+
+  // Automatically lookup and sync author avatar when author name changes
+  useEffect(() => {
+    if (!author) return;
+    if (author === loadedAuthor && authorAvatar) return;
+
+    const timer = setTimeout(async () => {
+      try {
+        const { data, error } = await supabase
+          .from("blog_posts")
+          .select("author_avatar")
+          .eq("author", author)
+          .not("author_avatar", "is", null)
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (data && data.length > 0 && data[0].author_avatar) {
+          setAuthorAvatar(data[0].author_avatar);
+        }
+      } catch (err) {
+        console.error("Error fetching author avatar:", err);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [author, loadedAuthor]);
 
   const showToast = (message: string, type: "success" | "error" | "info") => {
     const id = Math.random().toString(36).substring(2, 9);
@@ -240,6 +297,7 @@ function BlogEditorContent() {
         setContent(data.content || "");
         setStatus(data.status || "draft");
         setAuthor(data.author || "ABRAM Team");
+        setLoadedAuthor(data.author || "ABRAM Team");
         setAuthorAvatar(data.author_avatar || "");
         if (data.published_at) {
           setPublishedAt(new Date(data.published_at).toISOString().split("T")[0]);
@@ -375,6 +433,16 @@ function BlogEditorContent() {
           .eq("id", idParam);
 
         if (error) throw error;
+
+        // Sync author_avatar across all posts for this author
+        if (author) {
+          await supabase
+            .from("blog_posts")
+            .update({ author_avatar: authorAvatar || null })
+            .eq("author", author);
+        }
+
+        fetchExistingAuthors();
         showToast("Blog post saved successfully!", "success");
       } else {
         const { data, error } = await supabase
@@ -384,6 +452,16 @@ function BlogEditorContent() {
           .single();
 
         if (error) throw error;
+
+        // Sync author_avatar across all posts for this author
+        if (author) {
+          await supabase
+            .from("blog_posts")
+            .update({ author_avatar: authorAvatar || null })
+            .eq("author", author);
+        }
+
+        fetchExistingAuthors();
         showToast("Blog post created successfully!", "success");
         router.replace(`/admin/dashboard/blog/edit?id=${data.id}`);
       }
@@ -553,6 +631,27 @@ function BlogEditorContent() {
                       placeholder="e.g. John Doe"
                       className="w-full bg-[#121212] border border-white/8 rounded-lg px-3 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white/20 font-sans"
                     />
+                    {existingAuthors.length > 0 && (
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        <span className="text-[9px] text-zinc-500 self-center mr-1">Quick Select:</span>
+                        {existingAuthors.map((item) => (
+                          <button
+                            key={item.name}
+                            type="button"
+                            onClick={() => {
+                              setAuthor(item.name);
+                              setAuthorAvatar(item.avatar);
+                            }}
+                            className="px-2 py-0.5 rounded bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:border-white/15 text-[9px] text-zinc-300 font-sans transition-all cursor-pointer flex items-center gap-1"
+                          >
+                            {item.avatar && (
+                              <img src={item.avatar} alt="" className="w-3 h-3 rounded-full object-cover shrink-0" />
+                            )}
+                            <span>{item.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div>

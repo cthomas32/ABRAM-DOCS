@@ -107,7 +107,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   try {
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("id, slug, title, summary, author, published_at, created_at")
+      .select("id, slug, title, summary, author, author_avatar, published_at, created_at")
       .eq("status", "published")
       .neq("slug", slug)
       .order("published_at", { ascending: false })

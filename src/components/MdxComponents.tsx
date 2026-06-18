@@ -429,6 +429,7 @@ import MdxCard from "./MdxCard";
 export const Card = MdxCard;
 
 import { Cover } from "./mdx/Cover";
+import { AuthorCard } from "./mdx/AuthorCard";
 import { WorkflowCard, WorkflowCardGroup } from "./WorkflowCard";
 
 import ProgressFlow from "./diagrams/ProgressFlow";
@@ -454,6 +455,7 @@ export function AgentOnly({ children }: { children: React.ReactNode }) {
 // Gather all component overrides in a single map
 export const mdxComponents = {
   Cover,
+  AuthorCard,
   h1,
   h2,
   h3,
