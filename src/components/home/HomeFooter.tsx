@@ -69,6 +69,9 @@ export default function HomeFooter() {
               <Link href="/terms-of-use" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
                 Terms of Use
               </Link>
+              <Link href="/acceptable-use-policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+                Acceptable Use Policy
+              </Link>
             </div>
           </div>
           {/* Subtext / Helper: text-[10px] */}

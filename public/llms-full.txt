@@ -110,7 +110,7 @@ When executing automated operations, AI co-pilots must adhere to these structura
 
 #### C. Team Optimization & What-If Simulations
  Scoping Requirements: Analyzing project needs and suggesting the best crew members requires a positive AI Credit balance on your organization's ledger.
- Capacity Simulations: Chatbots can run what-if capacity simulations to forecast overbookings and calculate projected utilization before booking.
+ Capacity Simulations: Chatbots can run simulation requests via the simulatecapacityimpact RPC to forecast overbookings and calculate projected utilization before booking.
 
 ---
 
@@ -395,8 +395,17 @@ AI features are metered and charged to the organization's billing ledger using a
   2. Trial Credits (issued during sign-up, expires after trial period).
   3. Purchased Balance (additional credits bought via Stripe, never expires).
 
-### How Credit Costs Work
-Credit deduction is calculated based on the complexity of the operation or flat service rates. Larger or more complex tasks, like analyzing a long brief or matching a big candidate pool, use more credits than quick actions like a single chatbot message. For current costs by feature, check Settings -> Billing -> Usage Rates.
+### Typical Credit Costs
+Credit deduction is calculated based on the complexity of the operation and amount of data processed:
+
+| Feature / Action | Billing Model | Typical Cost / Range |
+| :--- | :--- | :--- |
+| Project Brief Analysis | Based on brief size & details | 5 - 25 credits per analysis |
+| AI Team Matchmaking Suggestions | Based on scope size & candidate count | 5 - 20 credits per suggestion |
+| Resume & Profile Importing | Based on resume file size | 2 - 10 credits per import |
+| Chatbot Co-pilot Interaction | Per query/response | 0.5 - 5 credits per message |
+| Web Search Tool | Based on query & results size | 1 - 5 credits per search |
+| Image Generation | Based on resolution & quality | 5 - 15 credits per image |
 
 ### Smart Query Optimization
 To minimize costs for repetitive tasks, ABRAM optimizes credit usage:
@@ -418,7 +427,7 @@ Rather than acting as a static database of rows and columns, the Production Brai
 
 ---
 
-## 1. Why the Production Brain Matters
+## 1. Why the Production Brain is Awesome
 
 Standard project management tools treat every new project as a blank slate. The Production Brain changes this by giving your workspace a persistent memory:
 
@@ -662,7 +671,7 @@ You can modify your profile details at any time:
 
 ## 5. Skills Dashboard & Credentials
 
-For freelancers, the Skills Dashboard (found under Skills in the freelancer sidebar) is the management center for your professional capabilities, credentials, and achievements.
+For freelancers, the Skills Dashboard (found under Skills in the freelancer sidebar, or at /freelancer/skills) is the management center for your professional capabilities, credentials, and achievements.
 
 The dashboard is divided into four tabs:
 
@@ -1002,7 +1011,7 @@ All AI features on the ABRAM platform are metered and charged in a clear, budget
 
 ### Budget-Saving Features
 To prevent accidental double-billing, the platform integrates smart features:
- Saved Project Estimates: Once the AI estimates your hours or deliverables, they are saved directly to your project. Reviewing or reloading these details never costs you credits.
+ Saved Project Estimates: Once the AI estimates your hours or deliverables, they are saved directly to your project. Reviewing or reloading these details costs $0 in credits.
  Smart Text Memory: If you make small adjustments to a large brief, the AI only analyzes the changes rather than re-reading the entire document, saving you credits on successive refinements.
 
 ---
@@ -1077,9 +1086,9 @@ Provide the foundational scope details of your project:
 ### Step 3: Alignment (Financial & Timeline)
 Configure the structural and billing alignment:
  Estimated Budget: The total allocated budget for this project.
- Rough Order of Magnitude (ROM) Bounds: (Optional) Define the minimum and maximum target bounds for project costs and select the scoping confidence level (Low, Medium, High). 
+ Rough Order of Magnitude (ROM) Bounds: (Optional) Define the minimum and maximum target bounds for project costs (budgetrommin and budgetrommax) and select the scoping confidence level (Low, Medium, High). 
   > [!NOTE]
-  > Manual adjustments to ROM bounds made via the UI (under the Financials tab card or the project settings dialog) bypass the AI scenario approval gate and are applied to your project immediately, so changes take effect right away.
+  > Manual adjustments to ROM bounds made via the UI (under the Financials tab card or the project settings dialog) bypass the AI scenario approval gate and are saved instantly to production tables to enable rapid revisions.
  Start & End Dates: Select the calendar dates using the Date Pickers.
  Retainer Project Toggle: Check this box if the project follows a recurring monthly billing model (retainer) rather than a fixed-fee model.
 
@@ -1652,8 +1661,8 @@ The Calendar tab provides a visual timeline of all asset bookings across your pr
 ABRAM implements strict checks to ensure logistics run smoothly:
  Double-Booking Alerts (Hard Constraint): If a manager attempts to reserve or check out an asset that is already allocated on another project exceeding the owned quantity, the system blocks the save operation and throws a friendly alert: Insufficient resource availability for "[Resource Name]" during requested dates.
  Soft Capacity Conflicts: For scheduling flexibility, overallocated resources generate soft capacity conflict records (Resource Overallocated) that appear on the project dashboard and calendar timeline.
- Transit Buffer Days: Configure buffer days in Organization Settings (e.g., 1 buffer day before and after a booking). The platform automatically blocks those extra days in availability checks, reserving equipment for shipping, prep, and returns.
- Needs Repair Lockout: Items flagged as Blocked or Maintenance are automatically locked out of new project schedules until an inventory manager clears them.
+ Transit Buffer Days (Planned Feature): The Transit Buffer Days option can be configured in Organization Settings (e.g., 1 buffer day). Active blocking of prep/shipping days in availability checks is in development.
+ Needs Repair Lockout (Planned Feature): Damaged or needs maintenance items display their status as Blocked or Maintenance in the dashboard. Direct scheduling lockouts preventing conflicting allocations are in development.
 
 ---
 
@@ -1789,10 +1798,10 @@ Upon invitation acceptance:
 
 ## 2. Crew Suitability Evaluation (0–100%)
 
-Candidates are evaluated across four major factors to generate a suitability percentage:
+Candidates are ranked using a comprehensive matchmaking algorithm that calculates a suitability percentage based on four major factors:
 
 ### 1. Technical Skill & Expertise Fit
- Skill Matching: The AI compares the required project skills against the skills listed on the candidate's profile, recognizing common synonyms (for example, "Premiere Pro" and "Adobe Premiere" are treated as the same skill).
+ Skill Matching: The AI compares the required project skills against the skills listed on the candidate's profile. It uses synonym mapping (for example, if a project requires "Premiere Pro" and the freelancer listed "Adobe Premiere", the AI automatically recognizes this match).
  Software Proficiency: Checks familiarity with required production software tools.
  Role Alignment: Confirms whether the freelancer's primary declared roles match the slot.
  Equipment Matching: Checks if the freelancer owns or operates specific technical equipment required for the shoot.
@@ -1800,15 +1809,16 @@ Candidates are evaluated across four major factors to generate a suitability per
  Expertise Level: Considers the freelancer's average expertise level in their verified skills.
 
 ### 2. Location & Work Mode Fit
- On-Site Roles: For physical, on-location roles (like Gaffer or Cinematographer), the system factors in travel feasibility and logistics.
- Remote-Friendly Roles: For digital or post-production roles (like Editor or Designer), the system instead looks at timezone overlap to support smooth collaboration.
+ On-Site Roles: For physical, on-location roles (like Gaffer or Cinematographer), the algorithm checks travel feasibility. It prioritizes local crew to minimize travel overhead, mileage costs, and accommodation logistics.
+ Remote-Friendly Roles: For digital or post-production roles (like Editor or Designer), physical location is ignored. The engine instead evaluates timezone overlap to ensure smooth communication during collaborative windows.
 
 ### 3. Real-Time Availability & Capacity
- Schedule Analysis: Rather than relying on a static availability flag on a profile, the system checks the candidate's actual booked schedule for the project's exact date window.
- Remaining Hours: The system compares current project commitments against the freelancer's weekly capacity to help surface candidates with enough open time for the role.
+ Schedule Analysis: Rather than relying on a static availability flag on a profile, the algorithm queries all active bookings in the candidate's schedule for the project's exact date window.
+ Remaining Hours: The system subtracts current project commitments from the freelancer's maximum weekly capacity. Freelancers with sufficient unbooked time to cover the role's weekly requirements are ranked higher, while overbookings lower suitability.
 
 ### 4. Budget Alignment
- Rate Check: Compares the freelancer's declared hourly or daily rate against the target budget allocated for that specific role slot, helping you spot strong budget fits at a glance.
+ Rate Check: Compares the freelancer's declared hourly or daily rate against the target budget allocated for that specific role slot.
+ Budget Fit: Freelancers whose rates fall within or below the budget range are prioritized, while rates exceeding the target budget will lower the candidate's suitability ranking.
 
 ---
 
@@ -1836,6 +1846,7 @@ Running the AI matchmaking engine to analyze suitability, calculate scores, and 
  Free Operations: Browsing the freelancer list, searching your internal registry manually, or viewing freelancer profiles does not consume credits.
  Credit-Gated Operations: Running the AI matchmaking suggestions (which calculates suitability scores and generates match reasoning or concerns) always consumes credits. This applies even if you manually entered the role hours or used the even split fallback instead of AI hours estimation.
  AI Processing: The system uses specialized analysis engines to evaluate candidates, identify compatibility concerns, and write detailed suitability rationales. Credit consumption is based on the volume of data analyzed per query.
+ Onboarding Free-Tier: If you are a new organization founder completing your first-time onboarding setup, credit consumption is waived for your initial matchmaking trials.
 
 ### Caching Safeguards
 To protect your workspace budget from redundant credit charges:
@@ -2509,14 +2520,23 @@ ABRAM meters and bills all user-initiated AI actions—such as parsing resumes, 
 
 ---
 
-## 2. How Credit Costs Work
+## 2. Typical Credit Costs & Caching
 
-Credit consumption is calculated based on the complexity of the operation, length of text processed, or flat service rates. More involved actions, like analyzing a long project brief or matching a large candidate pool, use more credits than a quick action like a single chatbot reply. This ensures that you only pay for the resources required to process your request.
+Credit consumption is calculated based on the complexity of the operation and length of text or data processed. This ensures that you only pay for the resources required to process your request.
 
-For current credit costs by feature, check Settings -> Billing -> Usage Rates, where rates are kept up to date.
+| Feature / Action | Billing Model | Typical Cost / Range |
+| :--- | :--- | :--- |
+| Project Brief Analysis | Based on brief size & details | 5 - 25 credits per analysis |
+| AI Team Matchmaking Suggestions | Based on scope size & candidate count | 5 - 20 credits per suggestion |
+| Resume & Profile Importing | Based on resume file size | 2 - 10 credits per import |
+| Chatbot Co-pilot Interaction | Per query/response | 0.5 - 5 credits per message |
+| Web Search Tool | Based on query & results size | 1 - 5 credits per search |
+| Image Generation | Based on resolution & quality | 5 - 15 credits per image |
 
 > [!NOTE]
 > Smart Query Optimization automatically reduces credit usage. If you repeat similar queries or ask follow-up questions within the same context (e.g. refining a project brief or candidate list), the platform reads from memory at a fraction of the standard credit cost, saving your organization credits.
+
+Prompt cache reads are billed at a highly discounted rate (~10% of standard), while cache writes are billed at ~125% of standard input rates.
 
 ---
 
@@ -2528,7 +2548,7 @@ Every organization's ledger is divided into three distinct credit pools. When cr
 2. Trial Credits: Awarded during onboarding. Drawn second. Only valid if the trial is still active and has not expired.
 3. Purchased Balance: Top-up credits bought via Stripe. Drawn last. Purchased credits never expire.
 
-Sign-Up Credit Bonus: New personal accounts and organizations are automatically initialized with a one-time welcome bonus of credits in their purchased balance pool.
+Sign-Up Credit Bonus: New personal accounts and organizations are automatically initialized with a one-time welcome bonus of 250 credits in their purchased balance pool.
 
 ---
 
@@ -2537,7 +2557,7 @@ Sign-Up Credit Bonus: New personal accounts and organizations are automatically 
  Organization-Bound Billing: All billing ledgers are bound to organizations. Solo users are billed through their personal organization workspace.
  Membership Routing: If a user belongs to an active organization membership, the organization's ledger is billed.
  Onboarding Exception: AI calls made during the onboarding wizard (e.g., parsing your initial resume when setting up your profile) are free and bypass the ledger.
- Dynamic Seat Scaling: For organizations on the Team or Studio tiers, your monthly allowances (including AI credits and storage limits) scale dynamically based on the number of team seats purchased. Each additional seat adds to your shared organization pool.
+ Dynamic Seat Scaling: For organizations on the Team or Studio tiers, your monthly allowances (including AI credits and storage limits) scale dynamically based on the number of team seats purchased. For example, on the Team tier, each seat adds 500 monthly credits and 10 GB of storage to your shared organization pool.
 
 ---
 
@@ -2545,7 +2565,7 @@ Sign-Up Credit Bonus: New personal accounts and organizations are automatically 
 
 When a producer uploads a project brief for AI analysis, the platform follows this verification sequence:
 
-1. Credit Check: The platform verifies that your organization has enough credits in its active pools.
+1. Credit Check: The platform verifies that your organization has enough credits (at least 5 credits) in its active pools.
 2. Analysis Execution: If credits are available, the analysis engine parses the brief to extract scope details and roles.
 3. Ledger Update: The actual credits consumed are deducted from your balance once the analysis is completed.
 4. Insufficient Balance Alert: If your balance is below the minimum required, the analysis is paused, and a checkout window appears to add top-up credits.
@@ -2564,10 +2584,8 @@ If your balance runs low, you can click Top-Up to purchase credit packs. This op
 
 ### Individual Subscription Tiers
 ABRAM offers individual subscription tiers for solo professionals who do not require multi-user team collaboration:
- Solo Lite: Unlocks a monthly AI credit allowance, unlimited active projects (for clients), a set number of applications/listings, and workspace storage.
- Solo Pro: Unlocks a larger monthly AI credit allowance, PDF call sheet exports, Google/Outlook calendar sync, AI brief parser, and more workspace storage.
-
-For current pricing and exact allowances, visit Settings -> Billing -> Plans.
+ Solo Lite ($19/mo): Unlocks 300 monthly credits, unlimited active projects (for clients), 30 applications/listings, and 3 GB workspace storage.
+ Solo Pro ($34/mo): Unlocks 600 monthly credits, PDF call sheet exports, Google/Outlook calendar sync, AI brief parser, and 10 GB workspace storage.
 
 ### Upgrading a Personal Workspace
 If you are currently on the Free tier in a personal workspace and select a team subscription (e.g., Team or Studio):
@@ -2888,20 +2906,25 @@ Publishing release notes automatically triggers a formatted changelog broadcast 
 
 ---
 
-## 🤖 Agent Operations & Technical Notes
+## 🤖 Agent Operations, Technical Architecture, and API Keys
 
-This section provides supplementary operational details for AI agents and automated systems referencing this integration.
+This section provides technical specs, database mapping, and integration details for LLM web-crawlers and agents.
 
-### Credential Handling
-The email delivery service requires a securely configured API Key. This credential is stored server-side only and is never exposed to client-side code or public bundles.
+### API Key Security Configuration
+The service requires the RESENDAPIKEY configuration. To safeguard this key:
+- It is stored server-side only in .env.local as RESENDAPIKEY and is never exposed to client-side bundles (no NEXTPUBLIC prefix).
+- A safe client retrieval function getResendClient in resend.ts (file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/utils/resend.ts) ensures that missing credentials do not crash page rendering or static builds.
 
-### Data Tracking
-The system maintains internal records for Subscriber Profiles (including status values such as Subscribed, Unsubscribed, and Bounced), Campaign Records (tracking status values such as Draft, Sending, Sent, and Failed), and Campaign Event Logs (tracking delivery events such as Delivered, Bounced, Opened, and Clicked).
+### Database Tables Schema
+The system maps tracking logs and subscriber profiles using the following relational tables in the platform:
+- public.subscribers: Stores subscriber profiles, status values (subscribed, unsubscribed, bounced), and references the ID from the email service.
+- public.campaigns: Logs campaign status (draft, sending, sent, failed) and stores campaign statistics.
+- public.campaignlogs: Logs transactional events (email.delivered, email.bounced, email.opened, email.clicked) returned via webhook callbacks.
 
-### Webhook Handling
-Incoming delivery events from the email service are processed automatically:
-- Bounce/Complaint: Updates the contact's status to Bounced to help preserve sending domain reputation.
-- Success/Delivery: Tracks deliveries and opens to measure campaign performance.
+### Resend Webhook Callbacks
+Webhook notifications are routed to /api/webhooks/resend. This endpoint parses events:
+- Bounce/Complaint: Catches email.bounced and updates the contact's database status to bounced to preserve domain reputation.
+- Success/Delivery**: Tracks deliveries and opens to measure campaign performance.
 
 ---
 
