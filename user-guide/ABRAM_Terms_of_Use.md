@@ -5,7 +5,7 @@ description: Terms of Use for the ABRAM creative intelligence platform.
 
 # Terms of Use
 
-**Effective Date:** June 15, 2026 | **Last Updated:** June 8, 2026
+**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
 Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
 
 ---
@@ -126,9 +126,30 @@ Withdrawal of consent applies prospectively. Data already incorporated into trai
 
 **Company Brain Exception:** Data stored in your organization's Company Brain (private organizational knowledge base) is never used to train ABRAM's shared AI models, regardless of your AI training consent setting.
 
-### 6.3 No Guarantee of AI Accuracy
+### 6.3 AI Features: Disclaimer, Limitations, and Human Verification
 
-AI-generated results — including contractor matches, project estimates, document drafts, and recommendations — are provided as suggestions only. ABRAM makes no guarantee as to the accuracy, completeness, or suitability of any AI output. Users are responsible for reviewing and verifying all AI-generated content before relying on it.
+(a) **Use of Advanced AI Technologies.** The Platform utilizes advanced artificial intelligence, machine learning, natural language processing, and third-party large language models (collectively, "AI Features") to assist you in production management, crew assembly, scoping, scheduling, and document generation. These features include, without limitation:
+    (i) **Brief Intelligence:** Automated intake analysis extracting work packages, roles, deliverables, and estimated budgets;
+    (ii) **Crew Matchmaking:** Recommendations matching contractors to project role slots based on skills, location, availability, and rates;
+    (iii) **Document Generation:** Automated drafting of call sheets, run-of-shows, project summaries, and related materials; and
+    (iv) **ABRAM AI Assistant:** A conversational chatbot co-pilot assisting in platform operations and database/web searches.
+
+(b) **"As-Is" Nature of AI Outputs.** All AI-generated recommendations, matches, text, budgets, scopes, and responses (collectively, "AI Outputs") are provided to you on an **"AS-IS"** and **"AS-AVAILABLE"** basis. AI Features are experimental and probabilistic. You acknowledge and agree that AI Outputs:
+    (i) May contain errors, inaccuracies, omissions, or obsolete information;
+    (ii) May exhibit bias or produce inconsistent results; and
+    (iii) May generate "hallucinations" (information that appears plausible or factually correct but is entirely fictitious, incorrect, or fabricated by the AI model).
+
+(c) **Mandatory Human Review and Verification.** 
+    (i) **Human-in-the-Loop Requirement:** You are solely responsible for, and must independently review, verify, and cross-check the accuracy, completeness, legality, and suitability of all AI Outputs before taking any action or relying on them in any way.
+    (ii) **High-Risk Decisions:** You must not rely on AI Outputs for critical decisions without thorough human verification. This includes, but is not limited to:
+        * **Financial & Budgetary Decisions:** Finalizing budgets, daily rates, payment milestones, and Stripe billing/payout allocations;
+        * **Hiring & Crew Assembly:** Formally engaging contractors, signing work orders, or finalizing independent contractor classifications; and
+        * **Scheduling & Logistics:** Confirming shoot dates, booking equipment, or coordinating logistics.
+    (iii) **Platform Actions:** Any actions initiated through AI Features (e.g., dispatching external invitations via the chatbot, allocating credits, or provisioning folders) are executed only upon your explicit approval and are your sole legal responsibility.
+
+### 6.4 Continuous Improvement and Evolution
+
+You acknowledge that ABRAM is continuously developing, optimizing, and updating the Platform. AI models, algorithms, performance standards, capabilities, and parameters will evolve over time. ABRAM reserves the right to modify, replace, suspend, or update any AI Features, models, or third-party providers at any time, without prior notice, which may result in changes to the format, quality, or nature of AI Outputs.
 
 ---
 
@@ -249,6 +270,18 @@ ABRAM strives to maintain Platform availability but does not guarantee uninterru
 To maintain platform integrity, security, and stability, the Platform automatically monitors performance and records system errors and crashes. By using the Platform, you acknowledge and agree that we may collect and analyze diagnostic reports — which may include browser and system specifications and associated account identifiers — to resolve bugs and optimize the service.
 
 Diagnostic data is processed in accordance with our Privacy Policy. This collection is carried out under our legitimate interest in ensuring the safe, secure, and reliable operation of the Platform.
+
+### 12.3 Feature Availability and Beta Status
+
+Certain features, services, tools, or integrations described on the Platform, in the documentation, or in our marketing materials may be under active development, offered in a "Beta" or "Preview" capacity, or designated as "Coming Soon" (collectively, "Beta Features"). You acknowledge and agree that:
+
+- **No Warranty of Functionality:** Beta Features are provided on an "as-is" and "as-available" basis. We do not warrant that Beta Features will be fully functional, error-free, meet your requirements, or operate without interruption.
+- **Right to Modify or Discontinue:** We reserve the right, in our sole discretion, to modify, suspend, restrict access to, or permanently discontinue any Beta Features (or the Platform as a whole), or any portion thereof, at any time, for any reason, and without notice or liability to you.
+- **No Guarantee of Release:** The designation of a feature as "Coming Soon" or in "Beta" does not constitute a commitment, representation, or warranty that such feature will ever be finalized, released, or made generally available.
+
+### 12.4 Illustrative Mockups and Visual Representations
+
+Any visual representations, user interface mockups, videos, screen recordings, animations, or descriptive content of features and workflows shown on the marketing site (including abram.network) or within our documentation are for illustrative and demo purposes only. These representations are meant to demonstrate the general conceptual capabilities of the Platform and do not constitute a binding representation, agreement, or warranty of current availability, future availability, or exact design of such features.
 
 ---
 

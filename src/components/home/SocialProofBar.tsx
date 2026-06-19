@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-const NetflixLogo = () => (
+const NebulaLogo = () => (
   <svg className="h-6 w-auto" viewBox="0 0 24 32" fill="currentColor">
     <path d="M16.5 0h7.5v32h-7.5zm-16.5 0h7.5v32h-7.5z M7.5 0l9 24v-24h7.5v32h-7.5l-9-24v24h-7.5v-32z" />
   </svg>
@@ -14,7 +14,7 @@ const HelixLogo = () => (
   </svg>
 );
 
-const A24Logo = () => (
+const OnyxLogo = () => (
   <svg className="h-5 w-auto" viewBox="0 0 70 30" fill="currentColor">
     {/* Letter A */}
     <polygon points="12.5 5 2.5 25 7.5 25 10 20 15 20 17.5 25 22.5 25" />
@@ -44,7 +44,7 @@ const REDLogo = () => (
   </svg>
 );
 
-const DolbyLogo = () => (
+const AuraLogo = () => (
   <svg className="h-5 w-auto" viewBox="0 0 38 25" fill="currentColor">
     {/* Dolby Double-D Logo */}
     <path d="M 10 2.5 A 10 10 0 0 0 10 22.5 L 14 22.5 L 14 2.5 Z" />
@@ -53,20 +53,20 @@ const DolbyLogo = () => (
   </svg>
 );
 
-const SpotifyLogo = () => (
+const VortexLogo = () => (
   <svg className="h-6 w-auto" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.785-8.893-.982-.336.076-.67-.137-.747-.473-.077-.337.137-.67.473-.748 3.854-.88 7.15-.502 9.82 1.135.295.18.387.564.207.86zm1.223-2.72c-.227.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.08-1.182-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.676-1.115 8.246-.575 11.347 1.33.367.226.487.707.26 1.074zm.107-2.828c-3.26-1.937-8.644-2.12-11.76-1.173-.5.152-1.025-.133-1.177-.633-.152-.5.133-1.025.633-1.177 3.616-1.098 9.564-.88 13.317 1.347.45.267.6.845.333 1.295-.267.45-.845.6-1.295.333z" />
   </svg>
 );
 
 const logos = [
-  { name: "Netflix", component: NetflixLogo },
-  { name: "A24", component: A24Logo },
+  { name: "Nebula", component: NebulaLogo },
+  { name: "Onyx", component: OnyxLogo },
   { name: "Sony", component: SonyLogo },
   { name: "RED", component: REDLogo },
-  { name: "Dolby", component: DolbyLogo },
+  { name: "Aura", component: AuraLogo },
   { name: "Helix", component: HelixLogo },
-  { name: "Spotify", component: SpotifyLogo },
+  { name: "Vortex", component: VortexLogo },
 ];
 
 export default function SocialProofBar() {

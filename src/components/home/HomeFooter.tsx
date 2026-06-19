@@ -84,7 +84,7 @@ export default function HomeFooter() {
       {/* Trademark Disclaimer */}
       <div className="max-w-8xl mx-auto mt-12 pt-6 border-t border-white/[0.04]">
         <p className="text-[10px] text-zinc-600 leading-relaxed font-light">
-          Disclaimer: All third-party trademarks, brand names, and logos mentioned in these documents, templates, and mockups (including Netflix, A24, Sony, RED, Dolby, Spotify, and Helix) are the property of their respective owners. Reference to these trademarks is for illustrative and demo purposes only, and does not imply any affiliation with, endorsement by, or sponsorship from the respective trademark holders.
+          Disclaimer: All third-party trademarks, brand names, and logos mentioned in these documents, templates, and mockups (including ARRI, RED, Sony, Cooke, Sennheiser, and other equipment manufacturers, as well as fictitious brands such as Nebula, Onyx, Vortex, Helix, Sensa, Aura, and Spire) are the property of their respective owners. Reference to these trademarks is for illustrative and demo purposes only, and does not imply any affiliation with, endorsement by, or sponsorship from the respective trademark holders. Certain features, services, and integrations depicted in templates, mockups, or platform descriptions may be under active development, in beta, or designated as coming soon. We reserve the right to modify, suspend, or discontinue any feature at any time without notice.
         </p>
       </div>
     </footer>

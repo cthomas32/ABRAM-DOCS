@@ -309,7 +309,7 @@ export default function PassiveLearning() {
                     Intake Briefs
                   </h3>
                   <p className="text-[7px] sm:text-[9px] md:text-[10px] text-zinc-400 leading-normal mt-0.5 truncate">
-                    Adidas AW26 Campaign
+                    Apex AW26 Campaign
                   </p>
                 </motion.div>
               </motion.div>

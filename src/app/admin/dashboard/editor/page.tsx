@@ -27,7 +27,7 @@ import {
 } from "../../editor-actions";
 
 // Brand substitutions for AEO
-const BANNED_BRANDS = ["Nike", "Adidas", "Apple", "Google", "Netflix", "Sony", "Dolby", "Spotify", "A24", "RED"];
+const BANNED_BRANDS = ["Nike", "Adidas", "Apple", "Google", "Netflix", "Dolby", "Spotify", "A24"];
 const PLATFORM_BRANDING = ["Supabase", "GitHub", "PostgreSQL", "Postgres"];
 const TECHNICAL_JARGON = [
   "RosterTable", "cascade_work_order_status", "contractor_profiles", "total_weekly_hours",

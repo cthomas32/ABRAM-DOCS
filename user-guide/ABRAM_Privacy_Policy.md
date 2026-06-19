@@ -5,7 +5,7 @@ description: Privacy Policy for the ABRAM creative intelligence platform.
 
 # Privacy Policy
 
-**Effective Date:** June 15, 2026 | **Last Updated:** June 8, 2026
+**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
 Thomas Abram, Inc. | [privacy@abram.network](mailto:privacy@abram.network)
 
 ---
@@ -109,6 +109,8 @@ We share your data with the following categories of third parties. ABRAM has exe
 | Google/Microsoft | Calendar events, availability | Calendar sync |
 | Resend | Email address, email content | Transactional email delivery |
 | Anthropic, PBC | User inputs and context passed through AI features | AI inference for Platform features |
+
+Data shared with Anthropic, PBC is processed securely via their developer API. In accordance with Anthropic's commercial terms, data sent via the API is not used to train or improve their models, is stored securely, and is deleted in accordance with their data retention policies.
 
 Sentry's privacy policy is available at sentry.io/privacy. Anthropic's privacy policy is available at anthropic.com/privacy. Stripe's privacy policy is available at stripe.com/privacy.
 
