@@ -44,7 +44,7 @@ Welcome to the Help Center. Here you will find resources and documentation to he
     Find answers to frequently asked questions and learn how to get help when you need it.
   </Card>
   <Card title="Legal & Policies" icon="shield" href="/privacy-policy">
-    Read the platform Privacy Policy and Terms of Use agreements.
+    Read the platform Privacy Policy, Terms of Use, and Acceptable Use Policy agreements.
   </Card>
 </CardGroup>
 
@@ -55,7 +55,7 @@ To get the most out of this Help Center, we recommend starting with the followin
 1. **Onboarding**: Review [Signing In and Onboarding](/user-guide/1.1-signing-in-and-onboarding) to configure your initial access.
 2. **Setup**: Follow [Setting Up Your Profile](/user-guide/1.2-setting-up-your-profile) to customize your user settings.
 3. **Core Concepts**: Read [Order of Operations](/user-guide/0.2-order-of-operations) to understand the project lifecycle.
-4. **Legal & Policies**: Read our [Privacy Policy](/privacy-policy) and [Terms of Use](/terms-of-use).
+4. **Legal & Policies**: Read our [Privacy Policy](/privacy-policy), [Terms of Use](/terms-of-use), and [Acceptable Use Policy](/acceptable-use-policy).
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,
@@ -520,6 +520,10 @@ keywords:
 ---
 # Section 0.3: AI Capabilities & Platform Co-pilot
 
+> [!IMPORTANT]
+> **AI Assistant & Automation Notice**
+> AI features on ABRAM (including matchmaking, resume imports, chatbot co-pilot actions, and brief analysis) are tools to help streamline your workflows. AI outputs are generated probabilistically and are not a substitute for human judgement. Users are solely responsible for reviewing and approving all budgets, contracts, and invites.
+
 The ABRAM Network incorporates an integrated suite of artificial intelligence systems designed to streamline project intake, optimize crew composition, accelerate freelancer onboarding, and provide a conversational interface for managing production tasks. 
 
 These AI-driven tools leverage advanced language models, real-time availability mapping, and automated safety controls to ensure efficient resource allocation while protecting user privacy and preventing system abuse.
@@ -632,8 +636,8 @@ AI features are metered and charged to the organization''s billing ledger using 
   2. **Trial Credits** (issued during sign-up, expires after trial period).
   3. **Purchased Balance** (additional credits bought via Stripe, never expires).
 
-### Typical Credit Costs & Flat Fees
-Credit deduction is calculated based on the complexity of the operation or flat service rates:
+### Typical Credit Costs
+Credit deduction is calculated based on the complexity of the operation and amount of data processed:
 
 | Feature / Action | Billing Model | Typical Cost / Range |
 | :--- | :--- | :--- |
@@ -641,8 +645,8 @@ Credit deduction is calculated based on the complexity of the operation or flat 
 | **AI Team Matchmaking Suggestions** | Based on scope size & candidate count | 5 - 20 credits per suggestion |
 | **Resume & Profile Importing** | Based on resume file size | 2 - 10 credits per import |
 | **Chatbot Co-pilot Interaction** | Per query/response | 0.5 - 5 credits per message |
-| **Web Search Tool** | Flat rate per search | 2 credits per search |
-| **Image Generation** | Flat rate per generation | 10 credits per image |
+| **Web Search Tool** | Based on query & results size | 1 - 5 credits per search |
+| **Image Generation** | Based on resolution & quality | 5 - 15 credits per image |
 
 ### Smart Query Optimization
 To minimize costs for repetitive tasks, ABRAM optimizes credit usage:

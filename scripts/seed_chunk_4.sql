@@ -119,6 +119,129 @@ This guide compiles answers to the most common questions and provides step-by-st
       
 INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
+        'user-guide/ABRAM_Acceptable_Use_Policy',
+        'Acceptable Use Policy',
+        '',
+        'Acceptable Use Policy for the ABRAM creative intelligence platform.',
+        '{}'::text[],
+        '---
+title: Acceptable Use Policy
+description: Acceptable Use Policy for the ABRAM creative intelligence platform.
+---
+
+# Acceptable Use Policy
+
+**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
+Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
+
+---
+
+## 1. Purpose and Relationship to the Terms of Use
+
+This Acceptable Use Policy ("AUP" or "Policy") sets out specific rules for how you may and may not use the ABRAM Network platform (the "Platform"). It is incorporated by reference into the ABRAM Terms of Use and forms part of the agreement between you and Thomas Abram, Inc. ("ABRAM," "we," "us," or "our").
+
+We publish this Policy separately from the Terms of Use so that we can update specific security and safety rules, including new AI abuse patterns, as they emerge, without requiring a full renegotiation of our Terms of Use or any signed agreement. Material changes affecting your rights will be communicated in accordance with Section 19 of the Terms of Use.
+
+If anything in this Policy conflicts with the Terms of Use, the Terms of Use control.
+
+---
+
+## 2. Who This Policy Applies To
+
+This Policy applies to all users of the Platform, including Clients, Contractors, organization Admins and members, and anyone accessing the Platform''s APIs, integrations, or AI features, whether through a paid subscription or a free account.
+
+---
+
+## 3. Platform and Marketplace Integrity
+
+### 3.1 No Unauthorized Data Harvesting
+
+You may not scrape, crawl, harvest, or extract data from the Platform using automated tools, bots, or scripts. This includes, without limitation, contractor portfolios, rate sheets, availability calendars, roster contact details, and any other profile information, whether your account ordinarily has access to that data or not.
+
+### 3.2 No Circumventing Platform Fees
+
+You may not use information or contacts obtained through the Platform to engage a Contractor or Client outside the Platform for the purpose of avoiding ABRAM''s processing fees or the obligations set out in the Terms of Use. This applies regardless of whether the relationship was originally formed through the Platform''s matching tools, internal talent search, or any invitation flow.
+
+### 3.3 No Misrepresentation
+
+You may not create accounts under false identities, misrepresent your skills, availability, day rates, or organizational affiliation, or impersonate another person or company on the Platform.
+
+---
+
+## 4. AI Feature Usage Restrictions
+
+ABRAM''s AI features, including the Brief Analyzer, the AI Assistant, and crew matchmaking, include built-in safety and accuracy controls. You may not attempt to undermine those controls. Specifically, you may not:
+
+- Submit prompts, files, or inputs designed to manipulate an AI feature into ignoring its safety instructions, confidence gates, or approval requirements (commonly referred to as prompt injection);
+- Attempt to extract, reconstruct, or reverse engineer the underlying AI models, system instructions, or training data used by the Platform''s AI features;
+- Use bots, scripts, or other automated means to query AI features at a volume or pattern inconsistent with ordinary human use; or
+- Attempt to bypass, manipulate, or falsify the metering of AI Credits or any other billing ledger control.
+
+---
+
+## 5. Communication and Anti-Spam Rules
+
+### 5.1 Invitation Limits
+
+To protect Contractors from unwanted solicitation, accounts may not send more than 10 external freelancer invitations per day. ABRAM may adjust this limit at its discretion and may apply lower limits to accounts showing patterns of abuse.
+
+### 5.2 No Unsolicited Bulk Messaging
+
+You may not use Platform messaging, project invitations, or any other communication channel to send unsolicited bulk messages, advertising, or solicitations unrelated to a genuine project inquiry.
+
+### 5.3 No Off-Platform Solicitation to Avoid Fees
+
+You may not use Platform messaging to direct another user to communicate, contract, or transact outside the Platform for the purpose of avoiding fees described in the Terms of Use.
+
+---
+
+## 6. Security Research and Responsible Disclosure
+
+If you believe you have found a security vulnerability in the Platform, please report it to [security@abram.network](mailto:security@abram.network) before taking any further action. Good-faith security research conducted under a written authorization from ABRAM is not a violation of this Policy. Unauthorized penetration testing, vulnerability scanning, or attempts to access non-public systems or other users'' data are violations of this Policy regardless of intent.
+
+---
+
+## 7. Enforcement
+
+Violations of this Policy may result in warnings, feature restrictions, suspension, or termination of your account, at ABRAM''s discretion and in accordance with the Terms of Use. ABRAM may also remove content, revoke API or integration access, or take other action reasonably necessary to protect the Platform and its users. Significant violations, including fraud, data theft, or attempts to bypass billing controls, may be reported to law enforcement.
+
+---
+
+## 8. Reporting Violations
+
+If you become aware of a violation of this Policy, including suspected scraping, AI abuse, or fee circumvention, please report it to [legal@abram.network](mailto:legal@abram.network).
+
+---
+
+## 9. Changes to This Policy
+
+ABRAM may update this Policy to address new abuse patterns, security risks, or platform features. We will post the updated Policy with a new "Last Updated" date. Material changes affecting your rights will be communicated in accordance with Section 19 of the Terms of Use.
+
+---
+
+## 10. Contact
+
+**Thomas Abram, Inc.**
+
+Email: [legal@abram.network](mailto:legal@abram.network)
+Address: Washington, DC
+
+---
+
+© 2026 Thomas Abram, Inc. All rights reserved.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
         'user-guide/ABRAM_Privacy_Policy',
         'Privacy Policy',
         '',
@@ -131,7 +254,7 @@ description: Privacy Policy for the ABRAM creative intelligence platform.
 
 # Privacy Policy
 
-**Effective Date:** June 15, 2026 | **Last Updated:** June 8, 2026
+**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
 Thomas Abram, Inc. | [privacy@abram.network](mailto:privacy@abram.network)
 
 ---
@@ -235,6 +358,8 @@ We share your data with the following categories of third parties. ABRAM has exe
 | Google/Microsoft | Calendar events, availability | Calendar sync |
 | Resend | Email address, email content | Transactional email delivery |
 | Anthropic, PBC | User inputs and context passed through AI features | AI inference for Platform features |
+
+Data shared with Anthropic, PBC is processed securely via their developer API. In accordance with Anthropic''s commercial terms, data sent via the API is not used to train or improve their models, is stored securely, and is deleted in accordance with their data retention policies.
 
 Sentry''s privacy policy is available at sentry.io/privacy. Anthropic''s privacy policy is available at anthropic.com/privacy. Stripe''s privacy policy is available at stripe.com/privacy.
 
@@ -410,7 +535,7 @@ description: Terms of Use for the ABRAM creative intelligence platform.
 
 # Terms of Use
 
-**Effective Date:** June 15, 2026 | **Last Updated:** June 8, 2026
+**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
 Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
 
 ---
@@ -531,9 +656,30 @@ Withdrawal of consent applies prospectively. Data already incorporated into trai
 
 **Company Brain Exception:** Data stored in your organization''s Company Brain (private organizational knowledge base) is never used to train ABRAM''s shared AI models, regardless of your AI training consent setting.
 
-### 6.3 No Guarantee of AI Accuracy
+### 6.3 AI Features: Disclaimer, Limitations, and Human Verification
 
-AI-generated results — including contractor matches, project estimates, document drafts, and recommendations — are provided as suggestions only. ABRAM makes no guarantee as to the accuracy, completeness, or suitability of any AI output. Users are responsible for reviewing and verifying all AI-generated content before relying on it.
+(a) **Use of Advanced AI Technologies.** The Platform utilizes advanced artificial intelligence, machine learning, natural language processing, and third-party large language models (collectively, "AI Features") to assist you in production management, crew assembly, scoping, scheduling, and document generation. These features include, without limitation:
+    (i) **Brief Intelligence:** Automated intake analysis extracting work packages, roles, deliverables, and estimated budgets;
+    (ii) **Crew Matchmaking:** Recommendations matching contractors to project role slots based on skills, location, availability, and rates;
+    (iii) **Document Generation:** Automated drafting of call sheets, run-of-shows, project summaries, and related materials; and
+    (iv) **ABRAM AI Assistant:** A conversational chatbot co-pilot assisting in platform operations and database/web searches.
+
+(b) **"As-Is" Nature of AI Outputs.** All AI-generated recommendations, matches, text, budgets, scopes, and responses (collectively, "AI Outputs") are provided to you on an **"AS-IS"** and **"AS-AVAILABLE"** basis. AI Features are experimental and probabilistic. You acknowledge and agree that AI Outputs:
+    (i) May contain errors, inaccuracies, omissions, or obsolete information;
+    (ii) May exhibit bias or produce inconsistent results; and
+    (iii) May generate "hallucinations" (information that appears plausible or factually correct but is entirely fictitious, incorrect, or fabricated by the AI model).
+
+(c) **Mandatory Human Review and Verification.** 
+    (i) **Human-in-the-Loop Requirement:** You are solely responsible for, and must independently review, verify, and cross-check the accuracy, completeness, legality, and suitability of all AI Outputs before taking any action or relying on them in any way.
+    (ii) **High-Risk Decisions:** You must not rely on AI Outputs for critical decisions without thorough human verification. This includes, but is not limited to:
+        * **Financial & Budgetary Decisions:** Finalizing budgets, daily rates, payment milestones, and Stripe billing/payout allocations;
+        * **Hiring & Crew Assembly:** Formally engaging contractors, signing work orders, or finalizing independent contractor classifications; and
+        * **Scheduling & Logistics:** Confirming shoot dates, booking equipment, or coordinating logistics.
+    (iii) **Platform Actions:** Any actions initiated through AI Features (e.g., dispatching external invitations via the chatbot, allocating credits, or provisioning folders) are executed only upon your explicit approval and are your sole legal responsibility.
+
+### 6.4 Continuous Improvement and Evolution
+
+You acknowledge that ABRAM is continuously developing, optimizing, and updating the Platform. AI models, algorithms, performance standards, capabilities, and parameters will evolve over time. ABRAM reserves the right to modify, replace, suspend, or update any AI Features, models, or third-party providers at any time, without prior notice, which may result in changes to the format, quality, or nature of AI Outputs.
 
 ---
 
@@ -654,6 +800,18 @@ ABRAM strives to maintain Platform availability but does not guarantee uninterru
 To maintain platform integrity, security, and stability, the Platform automatically monitors performance and records system errors and crashes. By using the Platform, you acknowledge and agree that we may collect and analyze diagnostic reports — which may include browser and system specifications and associated account identifiers — to resolve bugs and optimize the service.
 
 Diagnostic data is processed in accordance with our Privacy Policy. This collection is carried out under our legitimate interest in ensuring the safe, secure, and reliable operation of the Platform.
+
+### 12.3 Feature Availability and Beta Status
+
+Certain features, services, tools, or integrations described on the Platform, in the documentation, or in our marketing materials may be under active development, offered in a "Beta" or "Preview" capacity, or designated as "Coming Soon" (collectively, "Beta Features"). You acknowledge and agree that:
+
+- **No Warranty of Functionality:** Beta Features are provided on an "as-is" and "as-available" basis. We do not warrant that Beta Features will be fully functional, error-free, meet your requirements, or operate without interruption.
+- **Right to Modify or Discontinue:** We reserve the right, in our sole discretion, to modify, suspend, restrict access to, or permanently discontinue any Beta Features (or the Platform as a whole), or any portion thereof, at any time, for any reason, and without notice or liability to you.
+- **No Guarantee of Release:** The designation of a feature as "Coming Soon" or in "Beta" does not constitute a commitment, representation, or warranty that such feature will ever be finalized, released, or made generally available.
+
+### 12.4 Illustrative Mockups and Visual Representations
+
+Any visual representations, user interface mockups, videos, screen recordings, animations, or descriptive content of features and workflows shown on the marketing site (including abram.network) or within our documentation are for illustrative and demo purposes only. These representations are meant to demonstrate the general conceptual capabilities of the Platform and do not constitute a binding representation, agreement, or warranty of current availability, future availability, or exact design of such features.
 
 ---
 
@@ -1133,7 +1291,7 @@ ABRAM meters and bills all user-initiated AI actions—such as parsing resumes, 
 
 ## 1. Typical Costs
 
-* **Flat Fees & Ranges**: Credit deduction is calculated based on the complexity of the operation or flat service rates:
+* **Credit Cost Ranges**: Credit deduction is calculated based on the complexity of the operation and amount of data processed:
 
 | Feature / Action | Billing Model | Typical Cost / Range |
 | :--- | :--- | :--- |
@@ -1141,8 +1299,8 @@ ABRAM meters and bills all user-initiated AI actions—such as parsing resumes, 
 | **AI Team Matchmaking Suggestions** | Based on scope size & candidate count | 5 - 20 credits per suggestion |
 | **Resume & Profile Importing** | Based on resume file size | 2 - 10 credits per import |
 | **Chatbot Co-pilot Interaction** | Per query/response | 0.5 - 5 credits per message |
-| **Web Search Tool** | Flat rate per search | 2 credits per search |
-| **Image Generation** | Flat rate per generation | 10 credits per image |
+| **Web Search Tool** | Based on query & results size | 1 - 5 credits per search |
+| **Image Generation** | Based on resolution & quality | 5 - 15 credits per image |
 
 ---
 
@@ -1166,9 +1324,9 @@ ABRAM offers plans tailored to solo creators, production teams, and studios:
 | **Free** | $0/mo | 1 seat | 1 | 0 | 500 MB | Core scoping, basic templates |
 | **Solo Lite** | $19/mo | 1 seat | Unlimited | 300 / mo | 3 GB | AI matchmaking suggestions |
 | **Solo Pro** | $34/mo | 1 seat | Unlimited | 600 / mo | 10 GB | Brief parser, calendar sync, PDF exports |
-| **Team** | $39/seat/mo | 2 - 5 seats | Unlimited | 500 / seat / mo | 10 GB / seat | Custom request forms, team collaboration |
-| **Studio** | $49/seat/mo | 6 - 20 seats | Unlimited | 1,000 / seat / mo | 15 GB / seat | Barcode scanning, custom intake workflows |
-| **Enterprise** | Custom | Custom | Unlimited | Custom | Unlimited | Corporate directory sync, SSO, dedicated support |
+| **Team** | $39/seat/mo | 2 - 5 seats | Unlimited | 500 / seat / mo | 10 GB | Custom request forms, team collaboration |
+| **Studio** | $49/seat/mo | 6 - 20 seats | Unlimited | 1,000 / seat / mo | 15 GB | Barcode scanning, custom intake workflows |
+| **Enterprise** | Custom | Custom | Unlimited | Custom | Custom | Corporate directory sync, SSO, dedicated support |
 
 *Note: Team and Studio plans require a minimum of 2 and 6 seats respectively.*
 

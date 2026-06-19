@@ -736,7 +736,7 @@ ABRAM meters and bills all user-initiated AI actions—such as parsing resumes, 
 
 ## 2. Typical Credit Costs & Caching
 
-Credit consumption is calculated based on the complexity of the operation, length of text processed, or flat service rates. This ensures that you only pay for the resources required to process your request.
+Credit consumption is calculated based on the complexity of the operation and length of text or data processed. This ensures that you only pay for the resources required to process your request.
 
 | Feature / Action | Billing Model | Typical Cost / Range |
 | :--- | :--- | :--- |
@@ -744,8 +744,8 @@ Credit consumption is calculated based on the complexity of the operation, lengt
 | **AI Team Matchmaking Suggestions** | Based on scope size & candidate count | 5 - 20 credits per suggestion |
 | **Resume & Profile Importing** | Based on resume file size | 2 - 10 credits per import |
 | **Chatbot Co-pilot Interaction** | Per query/response | 0.5 - 5 credits per message |
-| **Web Search Tool** | Flat rate per search | 2 credits per search |
-| **Image Generation** | Flat rate per generation | 10 credits per image |
+| **Web Search Tool** | Based on query & results size | 1 - 5 credits per search |
+| **Image Generation** | Based on resolution & quality | 5 - 15 credits per image |
 
 > [!NOTE]
 > **Smart Query Optimization** automatically reduces credit usage. If you repeat similar queries or ask follow-up questions within the same context (e.g. refining a project brief or candidate list), the platform reads from memory at a fraction of the standard credit cost, saving your organization credits.
@@ -792,7 +792,7 @@ Every organization''s ledger is divided into three distinct credit pools. When c
 * **Organization-Bound Billing**: All billing ledgers are bound to organizations. Solo users are billed through their personal organization workspace.
 * **Membership Routing**: If a user belongs to an active organization membership, the organization''s ledger is billed.
 * **Onboarding Exception**: AI calls made during the onboarding wizard (e.g., parsing your initial resume when setting up your profile) are free and bypass the ledger.
-* **Dynamic Seat Scaling**: For organizations on the **Team** or **Studio** tiers, your monthly allowances (including AI credits and storage limits) scale dynamically based on the number of team seats purchased. For example, on the Team tier, each seat adds 500 monthly credits and 10 GB of storage to your shared organization pool.
+* **Dynamic Seat Scaling**: For organizations on the **Team** or **Studio** tiers, your monthly AI credit allowances scale dynamically based on the number of team seats purchased (for example, on the Team tier, each seat adds 500 monthly credits). Workspace storage limits are fixed workspace pools (10 GB for Team, 15 GB for Studio) and do not scale with additional seats.
 
 ---
 

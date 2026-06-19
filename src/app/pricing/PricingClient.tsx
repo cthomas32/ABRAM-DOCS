@@ -55,6 +55,7 @@ const FEATURES_SCHEMA: Category[] = [
     category: "Workspace & Logistics",
     features: [
       { id: "ai_credits", name: "Monthly AI Credits" },
+      { id: "workspace_storage", name: "Workspace Storage" },
       { id: "active_projects", name: "Active Projects" },
       { id: "locations", name: "Workspace Locations" },
       { id: "interactive_scheduler", name: "Drag-and-Drop Resource Scheduler" },
@@ -123,6 +124,7 @@ const PLANS: Plan[] = [
     ai_credits: { monthly_quota: 0, is_per_seat: false },
     audience: "Independent freelancers, creative contractors, and crew members.",
     features: {
+      workspace_storage: "500 MB",
       active_projects: "Up to 1",
       locations: "Unlimited",
       interactive_scheduler: true,
@@ -168,6 +170,7 @@ const PLANS: Plan[] = [
     ai_credits: { monthly_quota: 300, is_per_seat: false },
     audience: "Independent creative producers and solo operators.",
     features: {
+      workspace_storage: "3 GB",
       active_projects: "Unlimited",
       locations: "Unlimited",
       interactive_scheduler: true,
@@ -213,6 +216,7 @@ const PLANS: Plan[] = [
     ai_credits: { monthly_quota: 600, is_per_seat: false },
     audience: "High-volume independent producers and power users.",
     features: {
+      workspace_storage: "10 GB",
       active_projects: "Unlimited",
       locations: "Unlimited",
       interactive_scheduler: true,
@@ -258,6 +262,7 @@ const PLANS: Plan[] = [
     ai_credits: { monthly_quota: 500, is_per_seat: true },
     audience: "Boutique creative agencies, design shops, and small production teams.",
     features: {
+      workspace_storage: "10 GB",
       active_projects: "Unlimited",
       locations: "Unlimited",
       interactive_scheduler: true,
@@ -303,6 +308,7 @@ const PLANS: Plan[] = [
     ai_credits: { monthly_quota: 1000, is_per_seat: true },
     audience: "Commercial production companies, post houses, and agencies.",
     features: {
+      workspace_storage: "15 GB",
       active_projects: "Unlimited",
       locations: "Unlimited",
       interactive_scheduler: true,
@@ -348,6 +354,7 @@ const PLANS: Plan[] = [
     ai_credits: { monthly_quota: -1, is_per_seat: false, custom: true },
     audience: "Enterprise agencies, media networks, and large studio facilities.",
     features: {
+      workspace_storage: "Custom",
       active_projects: "Unlimited",
       locations: "Unlimited",
       interactive_scheduler: true,
@@ -388,6 +395,7 @@ const PLANS: Plan[] = [
 const FEATURE_DESCRIPTIONS: Record<string, string> = {
   // Workspace & Logistics
   active_projects: "The number of projects that can be concurrently managed, scheduled, and active in your workspace.",
+  workspace_storage: "Total cloud storage capacity allowed for project assets, files, and workspace media.",
   locations: "Distinct geographic hubs or physical equipment lockup locations supported within a single workspace.",
   interactive_scheduler: "Visual timeline for assigning crew shifts and booking physical production gear in real-time.",
   barcode_scanning: "Camera-based barcode scanning to process physical equipment check-ins, check-outs, and inventory tracking.",
@@ -792,6 +800,10 @@ export default function PricingClient() {
                           <>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
                               <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
+                              <span>500 MB workspace storage</span>
+                            </li>
+                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
+                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
                               <span>1 active project</span>
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
@@ -815,6 +827,10 @@ export default function PricingClient() {
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
                               <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
+                              <span>3 GB workspace storage</span>
+                            </li>
+                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
+                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
                               <span>Unlimited projects</span>
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
@@ -831,6 +847,10 @@ export default function PricingClient() {
                           <>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400 font-semibold text-zinc-300">
                               <span>Includes Solo Lite, plus:</span>
+                            </li>
+                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
+                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
+                              <span>10 GB workspace storage</span>
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
                               <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
@@ -853,6 +873,10 @@ export default function PricingClient() {
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
                               <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
+                              <span>10 GB pooled storage</span>
+                            </li>
+                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
+                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
                               <span>Multi-seat admin</span>
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
@@ -872,6 +896,10 @@ export default function PricingClient() {
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
                               <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
+                              <span>15 GB pooled storage</span>
+                            </li>
+                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
+                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
                               <span>Up to 20 seats limit</span>
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
@@ -888,6 +916,10 @@ export default function PricingClient() {
                           <>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400 font-semibold text-zinc-300">
                               <span>Full operational power:</span>
+                            </li>
+                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
+                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
+                              <span>Custom storage limits</span>
                             </li>
                             <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
                               <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
