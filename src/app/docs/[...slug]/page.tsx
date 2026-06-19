@@ -9,6 +9,8 @@ import CopyPageDropdown from "../../../components/CopyPageDropdown";
 import type { Metadata } from "next";
 import { supabase } from "@/utils/supabase/static";
 
+export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
+
 interface PageProps {
   params: Promise<{
     slug: string[];
