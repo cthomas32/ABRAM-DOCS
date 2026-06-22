@@ -5,6 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { mdxComponents } from "@/components/MdxComponents";
 import Link from "next/link";
 import { cache } from "react";
+import TelemetryTracker from "@/components/TelemetryTracker";
 
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
@@ -181,6 +182,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto px-0 select-text">
+      <TelemetryTracker id={post.id} type="blog_post" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}

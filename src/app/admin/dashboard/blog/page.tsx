@@ -182,227 +182,229 @@ export default function BlogManagerPage() {
   });
 
   return (
-    <div className="space-y-6">
-      {/* Title Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold tracking-tight text-white font-sans flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-zinc-400" />
-            Blog Posts
-          </h1>
-          <p className="text-xs text-zinc-500 mt-1">
-            Manage your announcement articles, custom workflows, and marketing content inside Supabase.
-          </p>
+    <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+      <div className="space-y-6">
+        {/* Title Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-bold tracking-tight text-white font-sans flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-zinc-400" />
+              Blog Posts
+            </h1>
+            <p className="text-xs text-zinc-500 mt-1">
+              Manage your announcement articles, custom workflows, and marketing content inside Supabase.
+            </p>
+          </div>
+          <button
+            onClick={handleCreatePost}
+            className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Post</span>
+          </button>
         </div>
-        <button
-          onClick={handleCreatePost}
-          className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          <span>New Post</span>
-        </button>
-      </div>
 
-      {/* Filter / Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
-        <div className="relative w-full sm:max-w-xs">
-          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by title or slug..."
-            className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-9 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-white/10 transition-all duration-200"
-          />
+        {/* Filter / Search Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
+          <div className="relative w-full sm:max-w-xs">
+            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by title or slug..."
+              className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-9 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-white/10 transition-all duration-200"
+            />
+          </div>
+          <div className="flex gap-2">
+            {([
+              { id: "all", label: "All Status" },
+              { id: "draft", label: "Drafts" },
+              { id: "published", label: "Published" },
+            ] as const).map((opt) => (
+              <button
+                key={opt.id}
+                onClick={() => setStatusFilter(opt.id)}
+                className={`px-3.5 py-1 rounded-full text-[10px] font-semibold transition-all cursor-pointer ${
+                  statusFilter === opt.id
+                    ? "bg-white/10 text-white border border-white/10"
+                    : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="flex gap-2">
-          {([
-            { id: "all", label: "All Status" },
-            { id: "draft", label: "Drafts" },
-            { id: "published", label: "Published" },
-          ] as const).map((opt) => (
-            <button
-              key={opt.id}
-              onClick={() => setStatusFilter(opt.id)}
-              className={`px-3.5 py-1 rounded-full text-[10px] font-semibold transition-all cursor-pointer ${
-                statusFilter === opt.id
-                  ? "bg-white/10 text-white border border-white/10"
-                  : "text-zinc-500 hover:text-zinc-300 border border-transparent"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
-      {/* Blog List Grid */}
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-500">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span className="text-xs">Loading database records...</span>
-        </div>
-      ) : filteredPosts.length === 0 ? (
-        <div className="text-center py-16 text-zinc-500 text-xs border border-dashed border-white/5 rounded-2xl">
-          No blog posts found matching the filters.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filteredPosts.map((post) => (
-            <div 
-              key={post.id}
-              className="glass-panel p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-250 flex flex-col justify-between hover:bg-white/[0.01]"
-            >
-              <div className="space-y-3">
-                <div className="flex justify-between items-center gap-2">
-                  <span className={`text-[9px] px-2 py-0.5 rounded border font-semibold ${
-                    post.status === "published" 
-                      ? "bg-green-500/10 border-green-500/20 text-green-400" 
-                      : "bg-zinc-800/20 border-zinc-700/30 text-zinc-400"
-                  }`}>
-                    {post.status}
-                  </span>
-                  <div className="flex items-center gap-1 text-[10px] text-zinc-500">
-                    <Eye className="w-3.5 h-3.5 text-zinc-600" />
-                    <span>{post.views || 0} views</span>
+        {/* Blog List Grid */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-500">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="text-xs">Loading database records...</span>
+          </div>
+        ) : filteredPosts.length === 0 ? (
+          <div className="text-center py-16 text-zinc-500 text-xs border border-dashed border-white/5 rounded-2xl">
+            No blog posts found matching the filters.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filteredPosts.map((post) => (
+              <div 
+                key={post.id}
+                className="glass-panel p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-250 flex flex-col justify-between hover:bg-white/[0.01]"
+              >
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center gap-2">
+                    <span className={`text-[9px] px-2 py-0.5 rounded border font-semibold ${
+                      post.status === "published" 
+                        ? "bg-green-500/10 border-green-500/20 text-green-400" 
+                        : "bg-zinc-800/20 border-zinc-700/30 text-zinc-400"
+                    }`}>
+                      {post.status}
+                    </span>
+                    <div className="flex items-center gap-1 text-[10px] text-zinc-500">
+                      <Eye className="w-3.5 h-3.5 text-zinc-600" />
+                      <span>{post.views || 0} views</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-xs text-white leading-snug line-clamp-2">
+                      {post.title}
+                    </h3>
+                    {post.summary && (
+                      <p className="text-[11px] text-zinc-400 mt-2 line-clamp-2 break-words leading-relaxed">
+                        {post.summary}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 text-[9px] text-zinc-500 pt-1">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-zinc-600" />
+                      {new Date(post.created_at).toLocaleDateString()}
+                    </span>
+                    <span className="flex items-center gap-1.5 truncate max-w-[130px]">
+                      {post.author_avatar ? (
+                        <img
+                          src={post.author_avatar}
+                          alt={post.author}
+                          className="w-3.5 h-3.5 rounded-full object-cover border border-white/10 shrink-0"
+                        />
+                      ) : (
+                        <User className="w-3 h-3 text-zinc-600 shrink-0" />
+                      )}
+                      <span className="truncate">{post.author}</span>
+                    </span>
                   </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-xs text-white leading-snug line-clamp-2">
-                    {post.title}
-                  </h3>
-                  {post.summary && (
-                    <p className="text-[11px] text-zinc-400 mt-2 line-clamp-2 break-words leading-relaxed">
-                      {post.summary}
-                    </p>
-                  )}
-                </div>
-                <div className="flex items-center gap-3 text-[9px] text-zinc-500 pt-1">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-zinc-600" />
-                    {new Date(post.created_at).toLocaleDateString()}
-                  </span>
-                  <span className="flex items-center gap-1.5 truncate max-w-[130px]">
-                    {post.author_avatar ? (
-                      <img
-                        src={post.author_avatar}
-                        alt={post.author}
-                        className="w-3.5 h-3.5 rounded-full object-cover border border-white/10 shrink-0"
-                      />
-                    ) : (
-                      <User className="w-3 h-3 text-zinc-600 shrink-0" />
-                    )}
-                    <span className="truncate">{post.author}</span>
-                  </span>
-                </div>
-              </div>
 
-              <div className="pt-4 mt-4 border-t border-white/5 flex gap-2">
-                <Link
-                  href={`/admin/dashboard/blog/edit?id=${post.id}`}
-                  className="btn-glass flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>Edit Draft</span>
-                </Link>
-                {post.status === "draft" ? (
-                  <button
-                    onClick={() => handlePublish(post.id)}
-                    disabled={publishingId === post.id}
-                    className="btn-primary flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
-                  >
-                    {publishingId === post.id ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                    <span>Publish</span>
-                  </button>
-                ) : (
+                <div className="pt-4 mt-4 border-t border-white/5 flex gap-2">
                   <Link
-                    href={`/blog/${post.slug}`}
-                    target="_blank"
-                    className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
-                    title="View Live Blog Post"
+                    href={`/admin/dashboard/blog/edit?id=${post.id}`}
+                    className="btn-glass flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Edit Draft</span>
                   </Link>
-                )}
-                <button
-                  onClick={() => setConfirmDelete({ isOpen: true, id: post.id })}
-                  className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/20 cursor-pointer"
-                  title="Delete post"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                  {post.status === "draft" ? (
+                    <button
+                      onClick={() => handlePublish(post.id)}
+                      disabled={publishingId === post.id}
+                      className="btn-primary flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      {publishingId === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                      <span>Publish</span>
+                    </button>
+                  ) : (
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      target="_blank"
+                      className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
+                      title="View Live Blog Post"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => setConfirmDelete({ isOpen: true, id: post.id })}
+                    className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/20 cursor-pointer"
+                    title="Delete post"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      <AnimatePresence>
-        {confirmDelete && confirmDelete.isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setConfirmDelete(null)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-sm p-6 rounded-2xl border border-white/5 glass-panel flex flex-col items-center text-center relative z-10"
-            >
-              <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4">
-                <Trash2 className="w-6 h-6 animate-pulse" />
-              </div>
-              <h3 className="text-sm font-bold text-white tracking-tight mb-2">Delete Blog Post?</h3>
-              <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
-                This action cannot be undone. The post will be permanently deleted from the database.
-              </p>
-              <div className="flex gap-3 w-full">
-                <button
-                  onClick={() => setConfirmDelete(null)}
-                  className="btn-glass flex-1 h-10 text-xs font-semibold rounded-full cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={executeDelete}
-                  className="btn-danger flex-1 h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Delete</span>
-                </button>
-              </div>
-            </motion.div>
+            ))}
           </div>
         )}
-      </AnimatePresence>
 
-      {/* Toast Notification */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-[calc(100%-3rem)] pointer-events-none">
+        {/* Delete Confirmation Modal */}
         <AnimatePresence>
-          {toasts.map((t) => (
-            <motion.div
-              key={t.id}
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              className="pointer-events-auto w-full p-4 rounded-xl border glass-panel flex items-start gap-3 shadow-2xl"
-            >
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                t.type === "success" ? "bg-green-500/10 text-green-400 border border-green-500/10" : "bg-red-500/10 text-red-400 border border-red-500/10"
-              }`}>
-                <CheckCircle className="w-3 h-3" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-white break-words">{t.message}</p>
-              </div>
-            </motion.div>
-          ))}
+          {confirmDelete && confirmDelete.isOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setConfirmDelete(null)}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="w-full max-w-sm p-6 rounded-2xl border border-white/5 glass-panel flex flex-col items-center text-center relative z-10"
+              >
+                <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4">
+                  <Trash2 className="w-6 h-6 animate-pulse" />
+                </div>
+                <h3 className="text-sm font-bold text-white tracking-tight mb-2">Delete Blog Post?</h3>
+                <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
+                  This action cannot be undone. The post will be permanently deleted from the database.
+                </p>
+                <div className="flex gap-3 w-full">
+                  <button
+                    onClick={() => setConfirmDelete(null)}
+                    className="btn-glass flex-1 h-10 text-xs font-semibold rounded-full cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={executeDelete}
+                    className="btn-danger flex-1 h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
         </AnimatePresence>
+
+        {/* Toast Notification */}
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-[calc(100%-3rem)] pointer-events-none">
+          <AnimatePresence>
+            {toasts.map((t) => (
+              <motion.div
+                key={t.id}
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                className="pointer-events-auto w-full p-4 rounded-xl border glass-panel flex items-start gap-3 shadow-2xl"
+              >
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                  t.type === "success" ? "bg-green-500/10 text-green-400 border border-green-500/10" : "bg-red-500/10 text-red-400 border border-red-500/10"
+                }`}>
+                  <CheckCircle className="w-3 h-3" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-white break-words">{t.message}</p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

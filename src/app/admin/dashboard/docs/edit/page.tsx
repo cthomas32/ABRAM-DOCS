@@ -216,7 +216,7 @@ function DocsEditorContent() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-2rem)] relative overflow-hidden -m-4 sm:-m-6 lg:-m-8">
+    <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Navbar Sub Header */}
       <div className="bg-[#0C0C0C] border-b border-white/5 px-6 py-4 flex items-center justify-between shrink-0 z-10">
         <div className="flex items-center gap-3">
