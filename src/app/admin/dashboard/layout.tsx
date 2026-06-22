@@ -89,7 +89,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <nav className="flex flex-col gap-1.5">
             {navLinks.map((link) => {
               const Icon = link.icon;
-              const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
+              const isActive = link.id === "overview" 
+                ? (pathname === "/admin/dashboard" || pathname === "/admin/dashboard/")
+                : (pathname === link.href || pathname.startsWith(link.href + "/"));
               return (
                 <Link
                   key={link.id}
@@ -129,7 +131,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <nav className="flex flex-col gap-3">
             {navLinks.map((link) => {
               const Icon = link.icon;
-              const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
+              const isActive = link.id === "overview" 
+                ? (pathname === "/admin/dashboard" || pathname === "/admin/dashboard/")
+                : (pathname === link.href || pathname.startsWith(link.href + "/"));
               return (
                 <Link
                   key={link.id}

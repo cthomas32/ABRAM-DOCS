@@ -24,6 +24,8 @@ interface AnalyticsSummary {
   broadcastsCount: number;
   totalViews: number;
   totalReads: number;
+  graphData: number[];
+  graphMonths: string[];
 }
 
 export default function DashboardOverviewPage() {
@@ -34,6 +36,8 @@ export default function DashboardOverviewPage() {
     broadcastsCount: 0,
     totalViews: 0,
     totalReads: 0,
+    graphData: [0, 0, 0, 0, 0, 0],
+    graphMonths: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
   });
   const [loading, setLoading] = useState(true);
   const [databaseWarning, setDatabaseWarning] = useState<string | null>(null);
@@ -86,35 +90,88 @@ export default function DashboardOverviewPage() {
       let totalReads = 0;
       const { data: analyticsData, error: analyticsErr } = await supabase
         .from("content_analytics")
-        .select("views, reads");
+        .select("blog_post_id, views, reads");
 
       if (analyticsData) {
-        totalViews = analyticsData.reduce((acc, curr) => acc + (curr.views || 0), 0);
-        totalReads = analyticsData.reduce((acc, curr) => acc + (curr.reads || 0), 0);
+        analyticsData.forEach((curr) => {
+          if (curr.blog_post_id) {
+            totalViews += curr.views || 0;
+            totalReads += curr.reads || 0;
+          }
+        });
+      }
+
+      // Fetch analytics events for the graph
+      const now = new Date();
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+      sixMonthsAgo.setDate(1);
+      sixMonthsAgo.setHours(0, 0, 0, 0);
+
+      const { data: eventsData, error: eventsErr } = await supabase
+        .from("analytics_events")
+        .select("created_at")
+        .eq("event_type", "view")
+        .gte("created_at", sixMonthsAgo.toISOString());
+
+      const monthlyCounts = [0, 0, 0, 0, 0, 0];
+      const monthNames = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date();
+        d.setMonth(now.getMonth() - i);
+        monthNames.push(d.toLocaleString("default", { month: "short" }));
+      }
+
+      if (eventsData) {
+        eventsData.forEach(event => {
+          const eventDate = new Date(event.created_at);
+          for (let i = 5; i >= 0; i--) {
+            const targetDate = new Date();
+            targetDate.setMonth(now.getMonth() - i);
+            if (eventDate.getMonth() === targetDate.getMonth() && eventDate.getFullYear() === targetDate.getFullYear()) {
+              monthlyCounts[5 - i]++;
+              break;
+            }
+          }
+        });
       }
 
       // 6. Gracefully handle missing schema warning or other errors
       const isSchemaMissing =
         (subErr && (subErr.code === "42P01" || subErr.code === "PGRST205")) ||
         (campErr && (campErr.code === "42P01" || campErr.code === "PGRST205")) ||
-        (analyticsErr && (analyticsErr.code === "42P01" || analyticsErr.code === "PGRST205"));
+        (analyticsErr && (analyticsErr.code === "42P01" || analyticsErr.code === "PGRST205")) ||
+        (eventsErr && (eventsErr.code === "42P01" || eventsErr.code === "PGRST205"));
 
       if (isSchemaMissing) {
         setDatabaseWarning("Marketing database schema additions are missing. Please run supabase-marketing-schema.sql in your Supabase SQL editor.");
+        setMetrics({
+          subscribersCount: 0,
+          blogCount: blogCount || 0,
+          releaseCount: releaseCount || 0,
+          broadcastsCount: campaignsCount || 0,
+          totalViews: 0,
+          totalReads: 0,
+          graphData: [120, 245, 190, 380, 420, 510],
+          graphMonths: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+        });
       } else {
         if (subErr) console.error("Subscribers count fetch error:", subErr);
         if (campErr) console.error("Campaigns count fetch error:", campErr);
         if (analyticsErr) console.error("Analytics fetch error:", analyticsErr);
-      }
+        if (eventsErr) console.error("Events fetch error:", eventsErr);
 
-      setMetrics({
-        subscribersCount,
-        blogCount: blogCount || 0,
-        releaseCount: releaseCount || 0,
-        broadcastsCount: campaignsCount || 0,
-        totalViews: totalViews || 0,
-        totalReads: totalReads || 0
-      });
+        setMetrics({
+          subscribersCount,
+          blogCount: blogCount || 0,
+          releaseCount: releaseCount || 0,
+          broadcastsCount: campaignsCount || 0,
+          totalViews: totalViews || 0,
+          totalReads: totalReads || 0,
+          graphData: monthlyCounts,
+          graphMonths: monthNames
+        });
+      }
 
     } catch (err) {
       console.error("Unexpected error fetching overview metrics:", err);
@@ -133,17 +190,34 @@ export default function DashboardOverviewPage() {
   }
 
   // Conversion rate: calculated as total subscribers / estimated traffic (fallback views)
-  const simulatedTraffic = metrics.totalViews > 0 ? metrics.totalViews * 2.5 : 45210;
-  const calculatedConversion = metrics.subscribersCount > 0 
-    ? ((metrics.subscribersCount / simulatedTraffic) * 100).toFixed(1) 
-    : "3.8";
+  const isFallback = !!databaseWarning;
+  const trafficVal = isFallback 
+    ? 45210 
+    : (metrics.totalViews > 0 ? metrics.totalViews * 2.5 : 0);
+
+  const calculatedConversion = (trafficVal > 0 && metrics.subscribersCount > 0)
+    ? ((metrics.subscribersCount / trafficVal) * 100).toFixed(1)
+    : (isFallback ? "3.8" : "0.0");
 
   const kpis = [
     { label: "Total Subscribers", value: metrics.subscribersCount.toLocaleString(), change: "+14.2% MoM", icon: Users, route: "/admin/dashboard/subscribers" },
-    { label: "Blog Views", value: metrics.totalViews > 0 ? metrics.totalViews.toLocaleString() : "45,210", change: "+8.6% WoW", icon: Eye, route: "/admin/dashboard/blog" },
+    { label: "Blog Views", value: isFallback ? "45,210" : metrics.totalViews.toLocaleString(), change: "+8.6% WoW", icon: Eye, route: "/admin/dashboard/blog" },
     { label: "Email Campaigns", value: metrics.broadcastsCount.toLocaleString(), change: "100% Sent", icon: Mail, route: "/admin/dashboard/broadcasts" },
     { label: "Conversion Rate", value: `${calculatedConversion}%`, change: "+0.4% MoM", icon: Percent, route: "/admin/dashboard/subscribers" },
   ];
+
+  // Generate SVG path coordinates from metrics.graphData
+  const xCoords = [40, 140, 240, 340, 440, 560];
+  const maxVal = Math.max(...metrics.graphData);
+  const yCoords = metrics.graphData.map(val => {
+    if (maxVal === 0) return 170; // Flat line at the bottom if no data
+    return 170 - (val / maxVal) * 130; // y-range: [40, 170]
+  });
+
+  const linePath = `M ${xCoords[0]} ${yCoords[0]} ` + 
+    xCoords.slice(1).map((x, i) => `L ${x} ${yCoords[i+1]}`).join(' ');
+
+  const areaPath = `${linePath} L 560 170 L 40 170 Z`;
 
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
@@ -222,32 +296,26 @@ export default function DashboardOverviewPage() {
                 </defs>
                 {/* Spline area */}
                 <path
-                  d="M 40 160 C 140 100, 240 140, 340 80 C 440 60, 500 50, 560 40 L 560 170 L 40 170 Z"
+                  d={areaPath}
                   fill="url(#glow)"
                 />
                 {/* Spline line */}
                 <path
-                  d="M 40 160 C 140 100, 240 140, 340 80 C 440 60, 500 50, 560 40"
+                  d={linePath}
                   fill="none"
                   stroke="rgba(255,255,255,0.4)"
                   strokeWidth="2"
                 />
                 {/* Points */}
-                <circle cx="40" cy="160" r="3" fill="#ffffff" />
-                <circle cx="140" cy="115" r="3" fill="#ffffff" />
-                <circle cx="240" cy="130" r="3" fill="#ffffff" />
-                <circle cx="340" cy="88" r="3" fill="#ffffff" />
-                <circle cx="440" cy="65" r="3" fill="#ffffff" />
-                <circle cx="560" cy="40" r="3" fill="#ffffff" />
+                {xCoords.map((x, i) => (
+                  <circle key={i} cx={x} cy={yCoords[i]} r="3" fill="#ffffff" />
+                ))}
               </svg>
             </div>
             <div className="flex justify-between text-[10px] text-zinc-500 font-mono px-6">
-              <span>Jan</span>
-              <span>Feb</span>
-              <span>Mar</span>
-              <span>Apr</span>
-              <span>May</span>
-              <span>Jun</span>
+              {metrics.graphMonths.map((m, i) => (
+                <span key={i}>{m}</span>
+              ))}
             </div>
           </div>
 
