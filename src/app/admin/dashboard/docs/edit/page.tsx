@@ -411,11 +411,13 @@ function DocsEditorContent() {
                       {warn.fix && (
                         <button
                           onClick={() => {
+                            let term = "";
                             if (warn.id.startsWith("jargon-") || warn.id.startsWith("platform-")) {
-                              const term = warn.id.split("-").slice(1).join("-");
-                              setContent((prev) => prev.replaceAll(term, warn.fix!));
+                              term = warn.id.split("-").slice(1).join("-");
                             } else if (warn.id.startsWith("brand-")) {
-                              const term = warn.id.replace("brand-", "");
+                              term = warn.id.replace("brand-", "");
+                            }
+                            if (term) {
                               setContent((prev) => prev.replaceAll(new RegExp(`\\b${term}\\b`, "gi"), warn.fix!));
                             }
                           }}
