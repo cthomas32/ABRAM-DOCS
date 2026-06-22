@@ -118,6 +118,7 @@ export default function DashboardOverviewPage() {
       const monthNames = [];
       for (let i = 5; i >= 0; i--) {
         const d = new Date();
+        d.setDate(1); // Avoid overflow issues (e.g. if today is 31st and target month has only 30 days)
         d.setMonth(now.getMonth() - i);
         monthNames.push(d.toLocaleString("default", { month: "short" }));
       }
@@ -127,6 +128,7 @@ export default function DashboardOverviewPage() {
           const eventDate = new Date(event.created_at);
           for (let i = 5; i >= 0; i--) {
             const targetDate = new Date();
+            targetDate.setDate(1); // Avoid overflow issues
             targetDate.setMonth(now.getMonth() - i);
             if (eventDate.getMonth() === targetDate.getMonth() && eventDate.getFullYear() === targetDate.getFullYear()) {
               monthlyCounts[5 - i]++;

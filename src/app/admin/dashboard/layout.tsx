@@ -89,9 +89,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <nav className="flex flex-col gap-1.5">
             {navLinks.map((link) => {
               const Icon = link.icon;
-              const isActive = link.id === "overview" 
-                ? (pathname === "/admin/dashboard" || pathname === "/admin/dashboard/")
-                : (pathname === link.href || pathname.startsWith(link.href + "/"));
+              const cleanPath = pathname ? pathname.replace(/\/$/, "") : "";
+              const cleanHref = link.href.replace(/\/$/, "");
+              const isActive = cleanHref === "/admin/dashboard"
+                ? cleanPath === "/admin/dashboard"
+                : cleanPath === cleanHref || cleanPath.startsWith(cleanHref + "/");
               return (
                 <Link
                   key={link.id}
@@ -131,9 +133,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <nav className="flex flex-col gap-3">
             {navLinks.map((link) => {
               const Icon = link.icon;
-              const isActive = link.id === "overview" 
-                ? (pathname === "/admin/dashboard" || pathname === "/admin/dashboard/")
-                : (pathname === link.href || pathname.startsWith(link.href + "/"));
+              const cleanPath = pathname ? pathname.replace(/\/$/, "") : "";
+              const cleanHref = link.href.replace(/\/$/, "");
+              const isActive = cleanHref === "/admin/dashboard"
+                ? cleanPath === "/admin/dashboard"
+                : cleanPath === cleanHref || cleanPath.startsWith(cleanHref + "/");
               return (
                 <Link
                   key={link.id}
