@@ -360,7 +360,126 @@ export default function DashboardOverviewPage() {
 
             <div className="p-3.5 rounded-xl border border-white/5 bg-zinc-950/45 text-[11px] text-zinc-400 leading-relaxed">
               <span className="font-bold text-white block mb-0.5">Integrations Active</span>
-              Syncs contacts automatically with your configured Resend audience. External drafts can be created programmatically by pointing your bots to the new API routes.
+              External platform connections are configured. See telemetry controls below for Google Analytics and Resend Engine status.
+            </div>
+          </div>
+        </div>
+
+        {/* Connected Services & Telemetry */}
+        <div className="space-y-3 pt-2">
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans">
+              Connected Services & Telemetry
+            </h2>
+            <p className="text-[10px] text-zinc-500 mt-1">
+              Active integrations, API stream configurations, and external telemetry services.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Google Analytics Integration Card */}
+            <div className="glass-panel p-5 rounded-2xl border border-white/5 flex flex-col justify-between hover:border-white/10 transition-all duration-200 hover:bg-white/[0.01]">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </div>
+                    <span className="font-bold text-white text-xs font-sans">Google Analytics</span>
+                  </div>
+                  <span className="text-[9px] bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-0.5 rounded font-mono font-bold">
+                    G-KCDWS029PK
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-[11px] border-t border-white/5 pt-4">
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream Name</span>
+                    <span className="text-zinc-300 font-medium font-sans">ABRAM Landing Page</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Measurement ID</span>
+                    <span className="text-white font-mono font-semibold">G-KCDWS029PK</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream ID</span>
+                    <span className="text-zinc-300 font-mono font-medium">15139917057</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream URL</span>
+                    <a 
+                      href="https://abram.network" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-zinc-300 hover:text-white underline decoration-zinc-700 hover:decoration-zinc-400 transition-colors"
+                    >
+                      https://abram.network
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 pt-3 border-t border-white/5 flex justify-end">
+                <a 
+                  href="https://analytics.google.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                >
+                  <span>Launch Console</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
+                </a>
+              </div>
+            </div>
+
+            {/* Resend Email Engine Integration Card */}
+            <div className="glass-panel p-5 rounded-2xl border border-white/5 flex flex-col justify-between hover:border-white/10 transition-all duration-200 hover:bg-white/[0.01]">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </div>
+                    <span className="font-bold text-white text-xs font-sans">Resend Email Engine</span>
+                  </div>
+                  <span className="text-[9px] bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-0.5 rounded font-mono font-bold">
+                    CONNECTED
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-[11px] border-t border-white/5 pt-4">
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Service Provider</span>
+                    <span className="text-zinc-300 font-medium font-sans">Resend Inc.</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Contact Audience</span>
+                    <span className="text-zinc-300 font-medium font-sans">ABRAM Subscribers</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">API Dispatcher</span>
+                    <span className="text-zinc-300 font-mono font-medium">Active (SDK)</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Webhook Sync</span>
+                    <span className="text-zinc-300 font-medium font-sans">Automatic</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 pt-3 border-t border-white/5 flex justify-end">
+                <a 
+                  href="https://resend.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                >
+                  <span>Launch Console</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
