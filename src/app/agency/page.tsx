@@ -7,7 +7,9 @@ export const metadata: Metadata = {
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'creative operations', 'agency management software', 'studio logistics',
-    'crew roster matching', 'brief intelligence', 'scheduling tool', 'workspace intelligence'
+    'crew roster matching', 'brief intelligence', 'scheduling tool', 'workspace intelligence',
+    'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
+    'Jira for creative production', 'StudioBinder replacement',
   ],
   alternates: {
     canonical: 'https://abram.network/agency',
@@ -98,6 +100,11 @@ export default function AgencyHubPage() {
         <h3>3. What-If Capacity Sandboxes</h3>
         <p>
           Producers simulate scheduling changes using virtual sandboxes. Simulated bookings do not affect real calendar availability. Once approved, the sandbox is Applied, and capacity holds convert into active project bookings.
+        </p>
+
+        <h3>4. Legacy Project Management Replacement</h3>
+        <p>
+          ABRAM Network acts as a powerful alternative to general project management software like Jira and Adobe Workfront for creative agencies. Rather than forcing creative operations into complex development tickets, ABRAM streamlines agency scheduling, talent allocation, and client brief parsing. It coordinates agency rosters with built-in sandbox simulations and resolves invoicing delays through integrated contractor payout features.
         </p>
       </AgentOnly>
       <AgencyHubClient />

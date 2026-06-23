@@ -31,13 +31,16 @@ export const metadata: Metadata = {
     default: 'ABRAM Network — The AI Platform for Creative Intelligence',
     template: '%s | ABRAM Network',
   },
-  description: 'Official documentation and help center for ABRAM Network — the AI-powered creative operations platform and creative production software for crew scheduling, talent matchmaking, and automated invoicing.',
+  description: 'Official documentation and help center for ABRAM Network — the AI-powered creative operations and creative ops platform, and creative production software for crew scheduling, talent matchmaking, and production accounting.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
-    'ABRAM', 'ABRAM Network', 'creative production management', 'AI platform',
-    'crew scheduling', 'talent matchmaking', 'freelancer invoicing', 'production management software',
+    'creative ops platform', 'creative ops tools', 'ABRAM', 'ABRAM Network',
+    'creative production management', 'AI platform',
+    'crew scheduling', 'talent matchmaking', 'crew payouts', 'production management software',
     'creative agency tools', 'AI brief analyzer', 'work order management', 'crew management',
     'production workflow', 'help center', 'documentation',
+    'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
+    'Jira for creative production', 'StudioBinder replacement',
   ],
   authors: [{ name: 'ABRAM Network', url: 'https://abram.network' }],
   creator: 'ABRAM Network',
@@ -171,7 +174,7 @@ export default function RootLayout({
                     'height': '28'
                   },
                   'image': 'https://abram.network/og-image.png',
-                  'description': 'ABRAM is the AI-powered platform for creative production management, crew scheduling, talent matchmaking, and automated invoicing.',
+                  'description': 'ABRAM is the AI-powered platform for creative production management, crew scheduling, talent matchmaking, and production accounting.',
                   'sameAs': [
                     'https://x.com/abramnetwork',
                     'https://linkedin.com/company/abram-network'

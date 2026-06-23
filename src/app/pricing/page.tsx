@@ -3,26 +3,26 @@ import PricingClient from './PricingClient';
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and automated invoicing.',
+  description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and production accounting.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'ABRAM pricing', 'creative production pricing', 'freelancer tools pricing',
     'crew management software cost', 'production management plans',
-    'AI production tools', 'SaaS pricing', 'free tier',
+    'AI production tools', 'SaaS pricing', 'free tier', 'crew payouts', 'production accounting',
   ],
   alternates: {
     canonical: 'https://abram.network/pricing',
   },
   openGraph: {
     title: 'ABRAM Pricing — Plans for Every Creative Team',
-    description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and automated invoicing.',
+    description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and production accounting.',
     type: 'website',
     url: 'https://abram.network/pricing',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ABRAM Pricing — Plans for Every Creative Team',
-    description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and automated invoicing.',
+    description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and production accounting.',
   },
 };
 
@@ -44,7 +44,7 @@ export default function PricingPage() {
                 '@id': 'https://abram.network/pricing/#webpage',
                 'url': 'https://abram.network/pricing',
                 'name': 'ABRAM Pricing — Plans for Every Creative Team',
-                'description': 'Explore ABRAM pricing plans for freelancers, teams, and creative agencies. Start free with AI-powered production management, crew scheduling, and automated invoicing.',
+                'description': 'Explore ABRAM pricing plans for freelancers, teams, and creative agencies. Start free with AI-powered production management, crew scheduling, and production accounting.',
                 'isPartOf': { '@id': 'https://abram.network/#website' },
                 'breadcrumb': { '@id': 'https://abram.network/pricing/#breadcrumb' }
               },
