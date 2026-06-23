@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Check,
@@ -16,49 +16,77 @@ import {
   Sparkles,
   Smartphone,
   ArrowUpRight,
-  HelpCircle
+  HelpCircle,
+  ChevronDown
 } from "lucide-react";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 export default function StudioBinderClient() {
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+
   const comparisonFeatures = [
     {
       feature: "Digital Call Sheets",
       abram: "Dynamic, live call sheets with active SMS & Slack broadcasts",
-      studiobinder: "Static PDF generator or basic email distributions",
-      winner: "abram"
+      studiobinder: "Visually elegant, templated call sheets with manual email distribution",
+      abramCheck: true,
+      studiobinderCheck: true
     },
     {
       feature: "Crew Payments & Payroll",
       abram: "Integrated Stripe Connect payouts (5% processing fee)",
-      studiobinder: "No financial processing; requires external tools",
-      winner: "abram"
+      studiobinder: "Focuses on logistics; payroll requires external accounting integrations",
+      abramCheck: true,
+      studiobinderCheck: false
     },
     {
       feature: "Union Turnaround Checking",
       abram: "Automatic SAG-AFTRA, DGA & IATSE wrap-to-call margin warnings",
-      studiobinder: "Manual calculations only; no automated safety guards",
-      winner: "abram"
+      studiobinder: "Flexible scheduling parameters with manual compliance validation",
+      abramCheck: true,
+      studiobinderCheck: false
     },
     {
       feature: "Unified Roster Calendar",
       abram: "Bi-directional Google/Outlook sync with live shared availability",
-      studiobinder: "Isolated project calendars; no unified cross-project roster search",
-      winner: "abram"
+      studiobinder: "Project-level calendar schedules and contact directories",
+      abramCheck: true,
+      studiobinderCheck: false
     },
     {
       feature: "Screenplay Breakdown Engine",
       abram: "AI-assisted parsing of characters, props, VFX with auto-matching",
-      studiobinder: "Manual tag-and-click breakdown workflow",
-      winner: "abram"
+      studiobinder: "Highly visual, manual click-and-tag breakdown workspace",
+      abramCheck: true,
+      studiobinderCheck: true
     },
     {
-      feature: "Brief-to-Schedule Ingestion",
-      abram: "AI analysis parses client briefs directly into milestone estimates",
-      studiobinder: "Manual project creation from scratch only",
-      winner: "abram"
+      feature: "Project Scheduling",
+      abram: "Drag-and-drop calendar boards with auto-turnaround safety alerts",
+      studiobinder: "Visual stripboards and calendar tools for scene scheduling",
+      abramCheck: true,
+      studiobinderCheck: true
     }
   ];
+
+  const faqs = [
+    {
+      q: "How does ABRAM compare to StudioBinder for production management?",
+      a: "StudioBinder is a widely respected, visually elegant cloud platform known for its shot list builders and call sheet templates. ABRAM is a unified creative operations alternative built to bridge logistics and finance—adding direct Stripe Connect crew payouts, bi-directional calendar synchronization, and automated union rest compliance warnings to the scheduling and call sheet workflow."
+    },
+    {
+      q: "Can I manage crew payouts directly inside ABRAM?",
+      a: "Yes. While StudioBinder focuses exclusively on pre-production planning and scheduling logistics, ABRAM includes built-in Stripe Connect integrations. This enables production managers to pay freelance crew members directly from approved milestones and track expenses against the project budget."
+    },
+    {
+      q: "How does ABRAM handle call sheet updates compared to StudioBinder?",
+      a: "StudioBinder generates beautiful static call sheets that can be emailed or sent as PDFs. ABRAM links call sheets dynamically to the live schedule stripboard. If a producer updates shoot times on the stripboard, call sheets update instantly, and crew members are notified of the changes via SMS or Slack with one-click RSVP confirmation."
+    }
+  ];
+
+  const toggleFaq = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
 
   return (
     <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 select-none relative z-10 isolate">
@@ -153,7 +181,7 @@ export default function StudioBinderClient() {
                   </h3>
                 </div>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">
-                  StudioBinder leaves crew invoicing and payroll completely up to you. ABRAM has a native integration with Stripe Connect. You can approve a milestone work package and payout your contractors directly with a single click.
+                  While StudioBinder focuses exclusively on production planning and scheduling logistics, ABRAM extends the workflow into the financial pipeline with native Stripe Connect integration, allowing you to pay crew directly from approved milestones.
                 </p>
                 <ul className="text-xs text-zinc-500 space-y-2 mb-6 font-sans">
                   <li className="flex items-start gap-2">
@@ -180,7 +208,7 @@ export default function StudioBinderClient() {
                   </h3>
                 </div>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">
-                  Keep crew safe and avoid SAG-AFTRA, DGA, or IATSE turnaround penalties. ABRAM automatically tracks daily wrap times and warns planners when call sheets violate mandatory union rest windows.
+                  Ensure scheduling safety and track union compliance automatically. ABRAM monitors daily wrap times and alerts coordinators of SAG-AFTRA, DGA, or IATSE rest window alignments directly on the schedule.
                 </p>
                 <ul className="text-xs text-zinc-500 space-y-2 mb-6 font-sans">
                   <li className="flex items-start gap-2">
@@ -207,7 +235,7 @@ export default function StudioBinderClient() {
                   </h3>
                 </div>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">
-                  StudioBinder generates beautiful static call sheets, but they don't sync. If the shoot schedule changes in ABRAM, the call sheets update automatically. Crew members receive live SMS and Slack notifications with directions, weather, and call times.
+                  StudioBinder is renowned for generating visually stunning call sheets. ABRAM builds on this by keeping call sheets dynamically linked to the live schedule. If scheduling times update, call sheets sync automatically, and notifications (via SMS or Slack) alert the crew instantly.
                 </p>
                 <ul className="text-xs text-zinc-500 space-y-2 mb-6 font-sans">
                   <li className="flex items-start gap-2">
@@ -284,13 +312,21 @@ export default function StudioBinderClient() {
                     <td className="p-4 text-xs font-semibold text-zinc-100">{row.feature}</td>
                     <td className="p-4 text-xs text-zinc-300">
                       <div className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                        {row.abramCheck ? (
+                          <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                        ) : (
+                          <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />
+                        )}
                         <span>{row.abram}</span>
                       </div>
                     </td>
                     <td className="p-4 text-xs text-zinc-500">
                       <div className="flex items-center gap-2">
-                        <X className="w-3.5 h-3.5 text-rose-500/80 shrink-0" />
+                        {row.studiobinderCheck ? (
+                          <Check className="w-4 h-4 text-emerald-400/60 shrink-0" />
+                        ) : (
+                          <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />
+                        )}
                         <span>{row.studiobinder}</span>
                       </div>
                     </td>
@@ -299,6 +335,53 @@ export default function StudioBinderClient() {
               </tbody>
             </table>
           </div>
+        </div>
+      </section>
+
+      {/* Accordion FAQ Block */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+        <div className="text-center mb-10">
+          <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white font-sans">
+            Frequently Asked Questions
+          </h2>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, idx) => (
+            <div
+              key={idx}
+              className="glass-panel rounded-2xl border border-white/5 overflow-hidden transition-all duration-300"
+            >
+              <button
+                onClick={() => toggleFaq(idx)}
+                type="button"
+                className="w-full flex items-center justify-between p-5 text-left text-sm font-medium text-zinc-200 hover:text-white transition-colors select-none focus:outline-none"
+              >
+                <span>{faq.q}</span>
+                <ChevronDown
+                  className={`h-4 w-4 text-zinc-500 transition-transform duration-300 ${
+                    activeFaq === idx ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              <AnimatePresence initial={false}>
+                {activeFaq === idx && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden border-t border-white/[0.03]"
+                  >
+                    <p className="p-5 text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans select-text">
+                      {faq.a}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
         </div>
       </section>
 

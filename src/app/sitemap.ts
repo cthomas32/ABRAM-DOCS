@@ -277,6 +277,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/alternatives/workfront`,
+      lastModified: DEFAULT_RELEASE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/blog`,
       lastModified: maxBlogDate,
       changeFrequency: 'weekly' as const,

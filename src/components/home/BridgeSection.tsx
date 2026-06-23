@@ -27,10 +27,10 @@ export default function BridgeSection() {
           className="text-3xl md:text-5xl font-medium tracking-tight font-sans leading-tight md:leading-normal"
         >
           <span className="text-white block">
-            Production intelligence, for the people
+            Production intelligence,
           </span>
           <span className="text-zinc-400 block mt-2">
-            who can't be replaced.
+            built to amplify human craft.
           </span>
         </motion.h2>
       </div>

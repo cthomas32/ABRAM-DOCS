@@ -23,7 +23,7 @@ export default function HomeFooter({
             </Link>
             {/* Subtext: text-[11px] */}
             <p className="text-[11px] text-white/30 max-w-xs leading-relaxed font-light">
-              The private intelligence platform for creative production.
+              The AI platform for creative intelligence.
             </p>
           </div>
           <div className="text-[10px] text-white/20 font-light tracking-widest pt-2 sm:pt-4">
@@ -106,12 +106,6 @@ export default function HomeFooter({
           >
             Sign Up
           </a>
-          <Link href="/alternatives/studiobinder" title="StudioBinder Alternative" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit pt-1.5 border-t border-white/[0.04] mt-1 w-full">
-            StudioBinder Alternative
-          </Link>
-          <Link href="/alternatives/moviemagic" title="Movie Magic Alternative" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-            Movie Magic Alternative
-          </Link>
         </div>
 
         {/* Column 5: Resources & Legal */}
@@ -145,8 +139,24 @@ export default function HomeFooter({
         </div>
       </div>
 
+      {/* Alternatives Horizontal Bar */}
+      <div className="max-w-8xl mx-auto mt-8 pt-4 border-t border-white/[0.04] flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-xs text-zinc-500">
+        <span className="text-zinc-400 font-medium">Alternatives:</span>
+        <div className="flex flex-wrap gap-x-6 gap-y-2">
+          <Link href="/alternatives/studiobinder" title="StudioBinder Alternative" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200">
+            StudioBinder Alternative
+          </Link>
+          <Link href="/alternatives/moviemagic" title="Movie Magic Alternative" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200">
+            Movie Magic Alternative
+          </Link>
+          <Link href="/alternatives/workfront" title="Adobe Workfront Alternative" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200">
+            Adobe Workfront Alternative
+          </Link>
+        </div>
+      </div>
+
       {/* Trademark Disclaimer */}
-      <div className="max-w-8xl mx-auto mt-8 pt-4 border-t border-white/[0.04]">
+      <div className="max-w-8xl mx-auto mt-4 pt-4 border-t border-white/[0.04]">
         <p className="text-[9px] text-zinc-600/80 leading-relaxed font-light">
           Disclaimer: All third-party trademarks, brand names, labor union names, and logos mentioned on this website, in the documentation, or within templates, mockups, and platform descriptions (including SAG-AFTRA, DGA, IATSE, Directors Guild of America, International Alliance of Theatrical Stage Employees, Frame.io, Slack, ARRI, RED, Sony, Cooke, Sennheiser, and other equipment manufacturers, guilds, or associations, as well as fictitious brands such as Nebula, Onyx, Vortex, Helix, Sensa, Aura, and Spire) are the property of their respective owners. ABRAM is an independent platform and is not affiliated with, endorsed by, or sponsored by Screen Actors Guild-American Federation of Television and Radio Artists (SAG-AFTRA), Directors Guild of America (DGA), International Alliance of Theatrical Stage Employees (IATSE), Adobe Inc., Slack Technologies, LLC, Salesforce, Inc., or any other respective trademark or labor organization holders. Reference to these trademarks, unions, or rules is for illustrative, reference, and integration demo purposes only. Any compliance indicators, flags, or features (such as those representing SAG-AFTRA, DGA, or IATSE rules or rest periods) are provided solely for informational and user-organizational purposes and do not constitute legal or union-binding representation. Certain features, services, and integrations depicted in templates, mockups, or platform descriptions may be under active development, in beta, or designated as coming soon. We reserve the right to modify, suspend, or discontinue any feature at any time without notice. All interactive tools, sandboxes, and demos presented on this site are fictitious, do not represent a 1-for-1 experience of the actual ABRAM application, and are provided solely for demonstration purposes.
         </p>

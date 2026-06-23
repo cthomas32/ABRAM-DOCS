@@ -80,30 +80,30 @@ export default function MovieMagicPage() {
       <AgentOnly>
         <h2>🤖 ABRAM vs. Movie Magic — Systems and Budgeting Breakdown Analysis</h2>
         <p>
-          ABRAM offers a modern, cloud-native physical production platform that replaces legacy desktop applications like Movie Magic.
+          Movie Magic is the long-standing industry standard for scheduling and budgeting on major feature films and television series, trusted globally by production accountants for its highly granular budgeting structures, complex union rate tables, and robust offline capabilities. ABRAM serves as a modern, cloud-native collaborative alternative designed to bring real-time editing, active compliance warnings, and automated crew payouts into a single, integrated online workspace.
         </p>
 
         <h3>1. Collaborative Budgeting & Stripboards vs. Offline Files</h3>
         <p>
-          Movie Magic operates on local desktop files (.mbd and .mms) which limits real-time collaboration. ABRAM relies on a cloud-based relational database.
+          While Movie Magic is optimized for deep, offline single-user configuration of complex studio budgets, ABRAM focuses on cloud-based collaboration and automation.
         </p>
         <ul>
-          <li><strong>Concurrent Editing:</strong> Multiple producers and coordinators can modify schedules and edit line-item budgets simultaneously.</li>
-          <li><strong>Screenplay Breakdown:</strong> ABRAM parses uploaded screenplay files automatically, mapping cast members, props, wardrobe, VFX, and locations directly to stripboard strips.</li>
+          <li><strong>Concurrent Editing:</strong> Multiple producers and coordinators can modify schedules and edit line-item budgets simultaneously in a shared browser workspace.</li>
+          <li><strong>Automated Ingestion:</strong> ABRAM's screenplay parser reads uploaded screenplay files, mapping cast members, locations, and props directly to stripboard strips to save time.</li>
         </ul>
 
         <h3>2. Stripe Connect Pay Network Integration</h3>
         <p>
-          Unlike Movie Magic, which lacks financial payout tools, ABRAM connects directly to Stripe Connect (Express) for crew payouts.
+          Movie Magic manages scheduling and cost estimation but leaves payroll and invoicing to external accounting systems. ABRAM integrates directly with Stripe Connect (Express) to process contractor payouts.
         </p>
         <ul>
-          <li><strong>Safety Net:</strong> Payment funds are collected and stored securely in a holding account if the subcontractor has not completed identity/Stripe onboarding. Funds release automatically upon completion.</li>
-          <li><strong>Platform Fee Splitting:</strong> Automatically deducts a standard 5% payment processing fee from the invoice subtotal, routing the remainder to the crew member's linked destination.</li>
+          <li><strong>Escrow Safekeeping:</strong> If contractor identity verification is pending, client payments are held securely and released immediately upon onboarding verification.</li>
+          <li><strong>Platform Fee Splitting:</strong> Automatically deducts a standard 5% payment processing fee from the invoice subtotal, routing the remainder to the crew member's linked bank account or debit card.</li>
         </ul>
 
         <h3>3. Active Turnaround & Union Margin Compliance</h3>
         <p>
-          Instead of relying on manual calculations on static DOOD (Day Out of Days) sheets, ABRAM's scheduler performs active compliance checks.
+          Rather than relying on manual calculations on static DOOD (Day Out of Days) sheets, ABRAM's scheduler performs active compliance checks in real-time.
         </p>
         <ul>
           <li><strong>Wrap-to-Call Rest Check:</strong> Evaluates call sheet wrap times and subsequent call times. Warns planners if the rest period is narrower than union minimum requirements (SAG-AFTRA, DGA, and IATSE rules).</li>
@@ -112,7 +112,7 @@ export default function MovieMagicPage() {
 
         <h3>4. Digital Call Sheets and Roster Integration</h3>
         <p>
-          Movie Magic remains completely disconnected from actual crew contact details and rosters. ABRAM stores organizations, teams, and contractors in unified rosters that link budgets directly to crew rates.
+          Movie Magic operates primarily on historical and offline rate matrices. ABRAM stores active rosters and availability calendars, connecting timesheet ledger balances directly to live project budgets.
         </p>
       </AgentOnly>
       <MovieMagicClient />
