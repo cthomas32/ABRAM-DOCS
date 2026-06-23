@@ -46,6 +46,7 @@ interface Plan {
   };
   audience: string;
   features: Record<string, boolean | string>;
+  marketingFeatures: string[];
 }
 
 // --- Data ---
@@ -58,7 +59,7 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "workspace_storage", name: "Workspace Storage" },
       { id: "active_projects", name: "Active Projects" },
       { id: "locations", name: "Workspace Locations" },
-      { id: "interactive_scheduler", name: "Drag-and-Drop Resource Scheduler" },
+      { id: "interactive_scheduler", name: "Advanced Scheduling Access" },
       { id: "barcode_scanning", name: "Barcode Equipment Scanning" },
       { id: "audit_logs_viewer", name: "Compliance Audit Logs" },
       { id: "team_permissions", name: "Team Roles & Permissions" },
@@ -108,7 +109,8 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "stripe_express", name: "Stripe Express Onboarding" },
       { id: "invoicing", name: "Invoice Generation & Standard Payouts" },
       { id: "financial_dashboard", name: "Client-Contractor Financial Dashboard" },
-      { id: "po_holds", name: "Purchase Order (PO) 7-day Card Holds" }
+      { id: "po_holds", name: "Purchase Order (PO) 7-day Card Holds" },
+      { id: "budgeting_access", name: "Advanced Budgeting Access" }
     ]
   }
 ];
@@ -127,7 +129,7 @@ const PLANS: Plan[] = [
       workspace_storage: "500 MB",
       active_projects: "Up to 1",
       locations: "Unlimited",
-      interactive_scheduler: true,
+      interactive_scheduler: "Read-Only",
       barcode_scanning: false,
       audit_logs_viewer: false,
       team_permissions: false,
@@ -142,7 +144,7 @@ const PLANS: Plan[] = [
       domain_gating: false,
       personal_calendar: true,
       integrated_timesheets: true,
-      calendar_sync: true,
+      calendar_sync: false,
       talent_search: false,
       ai_matchmaking: false,
       capacity_planning: "Basic Dashboard",
@@ -157,8 +159,15 @@ const PLANS: Plan[] = [
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
-      po_holds: true
-    }
+      po_holds: true,
+      budgeting_access: "Trial (5 lines/expenses)"
+    },
+    marketingFeatures: [
+      "1 seat & 1 active project limit",
+      "Digital call sheet builder (watermarked)",
+      "View-only resource scheduler",
+      "500 MB workspace storage limit"
+    ]
   },
   {
     id: "solo_lite",
@@ -173,7 +182,7 @@ const PLANS: Plan[] = [
       workspace_storage: "3 GB",
       active_projects: "Unlimited",
       locations: "Unlimited",
-      interactive_scheduler: true,
+      interactive_scheduler: "Read-Only",
       barcode_scanning: false,
       audit_logs_viewer: false,
       team_permissions: false,
@@ -188,7 +197,7 @@ const PLANS: Plan[] = [
       domain_gating: false,
       personal_calendar: true,
       integrated_timesheets: true,
-      calendar_sync: true,
+      calendar_sync: false,
       talent_search: false,
       ai_matchmaking: true,
       capacity_planning: "Full Dashboard",
@@ -203,8 +212,16 @@ const PLANS: Plan[] = [
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
-      po_holds: true
-    }
+      po_holds: true,
+      budgeting_access: "Trial (5 lines/expenses)"
+    },
+    marketingFeatures: [
+      "1 seat & Unlimited active projects",
+      "Digital call sheet builder (watermarked)",
+      "View-only resource scheduler",
+      "Track up to 30 resource items",
+      "3 GB workspace storage"
+    ]
   },
   {
     id: "solo_pro",
@@ -219,10 +236,10 @@ const PLANS: Plan[] = [
       workspace_storage: "10 GB",
       active_projects: "Unlimited",
       locations: "Unlimited",
-      interactive_scheduler: true,
+      interactive_scheduler: "Full Access",
       barcode_scanning: false,
       audit_logs_viewer: false,
-      team_permissions: false,
+      team_permissions: "10 Custom Roles",
       transit_buffers: false,
       return_inspections: false,
       repair_lockouts: false,
@@ -249,8 +266,19 @@ const PLANS: Plan[] = [
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
-      po_holds: true
-    }
+      po_holds: true,
+      budgeting_access: "Full Access"
+    },
+    marketingFeatures: [
+      "1 seat & Unlimited active projects",
+      "Crew roster management & invitations",
+      "Watermark-free PDF exports",
+      "Call sheet email distribution to crew",
+      "Interactive resource scheduler",
+      "AI production brief parser",
+      "Google & Outlook calendar sync",
+      "10 GB workspace storage"
+    ]
   },
   {
     id: "team",
@@ -265,10 +293,10 @@ const PLANS: Plan[] = [
       workspace_storage: "10 GB",
       active_projects: "Unlimited",
       locations: "Unlimited",
-      interactive_scheduler: true,
+      interactive_scheduler: "Full Access",
       barcode_scanning: false,
       audit_logs_viewer: false,
-      team_permissions: true,
+      team_permissions: "15 Custom Roles",
       transit_buffers: true,
       return_inspections: true,
       repair_lockouts: true,
@@ -295,8 +323,21 @@ const PLANS: Plan[] = [
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
-      po_holds: true
-    }
+      po_holds: true,
+      budgeting_access: "Full Access"
+    },
+    marketingFeatures: [
+      "2 – 5 team seats",
+      "Collaborative team workspace",
+      "Unlimited active projects",
+      "Interactive resource scheduler & templates",
+      "Watermark-free PDF exports & distribution",
+      "Role-based member permissions",
+      "1 Active Custom Intake Form",
+      "AI production brief parser",
+      "Advanced Logistics & Operations settings",
+      "10 GB workspace storage"
+    ]
   },
   {
     id: "studio",
@@ -311,10 +352,10 @@ const PLANS: Plan[] = [
       workspace_storage: "15 GB",
       active_projects: "Unlimited",
       locations: "Unlimited",
-      interactive_scheduler: true,
-      barcode_scanning: false,
+      interactive_scheduler: "Full Access",
+      barcode_scanning: true,
       audit_logs_viewer: false,
-      team_permissions: true,
+      team_permissions: "30 Custom Roles",
       transit_buffers: true,
       return_inspections: true,
       repair_lockouts: true,
@@ -341,8 +382,22 @@ const PLANS: Plan[] = [
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
-      po_holds: true
-    }
+      po_holds: true,
+      budgeting_access: "Full Access"
+    },
+    marketingFeatures: [
+      "6 – 20 team seats",
+      "Collaborative studio workspace",
+      "Unlimited active projects",
+      "Interactive resource scheduler & templates",
+      "Watermark-free PDF exports & distribution",
+      "Production calendar & calendar sync",
+      "Unlimited project request forms",
+      "AI production brief parser",
+      "Advanced Logistics & Operations settings",
+      "Barcode Equipment Scanning",
+      "15 GB workspace storage"
+    ]
   },
   {
     id: "enterprise",
@@ -351,16 +406,16 @@ const PLANS: Plan[] = [
     price_type: "custom",
     billing_cycle: "monthly",
     seats: { min: 21, max: null, included: 21 },
-    ai_credits: { monthly_quota: -1, is_per_seat: false, custom: true },
+    ai_credits: { monthly_quota: -2, is_per_seat: false, custom: true },
     audience: "Enterprise agencies, media networks, and large studio facilities.",
     features: {
-      workspace_storage: "Custom",
+      workspace_storage: "Custom (100 GB base)",
       active_projects: "Unlimited",
       locations: "Unlimited",
-      interactive_scheduler: true,
-      barcode_scanning: false,
+      interactive_scheduler: "Full Access",
+      barcode_scanning: true,
       audit_logs_viewer: true,
-      team_permissions: true,
+      team_permissions: "Unlimited Roles",
       transit_buffers: true,
       return_inspections: true,
       repair_lockouts: true,
@@ -387,8 +442,20 @@ const PLANS: Plan[] = [
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
-      po_holds: true
-    }
+      po_holds: true,
+      budgeting_access: "Full Access"
+    },
+    marketingFeatures: [
+      "Unlimited team seats",
+      "Dedicated corporate workspace",
+      "Unlimited active projects",
+      "Custom storage limits (100 GB base)",
+      "Custom AI credits",
+      "Advanced Logistics & Operations settings",
+      "Barcode Equipment Scanning",
+      "Compliance Audit Logs & Viewer",
+      "SSO & Directory Sync (SAML/SCIM)"
+    ]
   }
 ];
 
@@ -397,7 +464,7 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   active_projects: "The number of projects that can be concurrently managed, scheduled, and active in your workspace.",
   workspace_storage: "Total cloud storage capacity allowed for project assets, files, and workspace media.",
   locations: "Distinct geographic hubs or physical equipment lockup locations supported within a single workspace.",
-  interactive_scheduler: "Visual timeline for assigning crew shifts and booking physical production gear in real-time.",
+  interactive_scheduler: "Access levels for the interactive stripboard calendar. Read-only for Free/Solo Lite; full drag-and-drop, AI Sort, Sync Crew, and breaks for higher tiers.",
   barcode_scanning: "Camera-based barcode scanning to process physical equipment check-ins, check-outs, and inventory tracking.",
   audit_logs_viewer: "Granular activity logs and compliance history tracking member, permission, and workspace modifications.",
   team_permissions: "Granular role-based access controls to manage view/edit permissions for staff, crew, and clients.",
@@ -436,7 +503,8 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   stripe_express: "Simplified dashboard enabling crew members and contractors to securely link bank accounts for direct payout.",
   invoicing: "Generate professional invoices automatically from tracked time, rates, and budgets, with direct bank payouts.",
   financial_dashboard: "A secure pane tracking project budgets, pending invoices, approved expenses, and historical payouts.",
-  po_holds: "Pre-authorize and hold project budgets on client cards for 7 days to guarantee payment before production kick-off."
+  po_holds: "Pre-authorize and hold project budgets on client cards for 7 days to guarantee payment before production kick-off.",
+  budgeting_access: "Advanced Budgeting limits: trial access (up to 5 line items and 5 expenses) for Free/Solo Lite; unlimited items and expenses for higher tiers."
 };
 
 export default function PricingClient() {
@@ -796,145 +864,12 @@ export default function PricingClient() {
   
                       {/* Bullet List for quick review */}
                       <ul className="space-y-2.5 lg:space-y-2 mb-8 lg:mb-4">
-                        {plan.id === "free" && (
-                          <>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>500 MB workspace storage</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>1 active project</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Unlimited locations</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Timesheets & time tracking</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Interactive resource scheduler</span>
-                            </li>
-                          </>
-                        )}
-                        {plan.id === "solo_lite" && (
-                          <>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400 font-semibold text-zinc-300">
-                              <span>Includes Free, plus:</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>3 GB workspace storage</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Unlimited projects</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Full capacity dashboard</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>AI matchmaking copilot</span>
-                            </li>
-                          </>
-                        )}
-                        {plan.id === "solo_pro" && (
-                          <>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400 font-semibold text-zinc-300">
-                              <span>Includes Solo Lite, plus:</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>10 GB workspace storage</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Brief Intelligence AI</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>PDF callsheet exports</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Email distribution</span>
-                            </li>
-                          </>
-                        )}
-                        {plan.id === "team" && (
-                          <>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400 font-semibold text-zinc-300">
-                              <span>Includes Solo Pro, plus:</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>10 GB pooled storage</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Multi-seat admin</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Custom intake forms</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Intake form skill mapping</span>
-                            </li>
-                          </>
-                        )}
-                        {plan.id === "studio" && (
-                          <>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400 font-semibold text-zinc-300">
-                              <span>Includes Team, plus:</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>15 GB pooled storage</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Up to 20 seats limit</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Unlimited custom forms</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Complete platform sync</span>
-                            </li>
-                          </>
-                        )}
-                        {plan.id === "enterprise" && (
-                          <>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400 font-semibold text-zinc-300">
-                              <span>Full operational power:</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Custom storage limits</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>SAML / SCIM Sync</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Compliance Audit Logs</span>
-                            </li>
-                            <li className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
-                              <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
-                              <span>Unlimited external seats</span>
-                            </li>
-                          </>
-                        )}
+                        {plan.marketingFeatures.map((mFeature, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm lg:text-xs xl:text-sm text-zinc-400">
+                            <Check className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-[#8ECAFF] shrink-0 mt-0.5" />
+                            <span>{mFeature}</span>
+                          </li>
+                        ))}
                       </ul>
                     </div>
 

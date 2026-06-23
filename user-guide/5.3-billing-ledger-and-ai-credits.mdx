@@ -106,7 +106,27 @@ If a network disconnect or timeout occurs during an analysis, the platform ensur
 
 ---
 
-## 6. Upgrading Plans and Buying Credits
+## 6. Budgeting & Scheduling Feature Gating
+
+To provide flexibility while encouraging tier upgrades, ABRAM gates advanced scheduling and budgeting features based on subscription level. This allows users on Free and Solo Lite tiers to test budgeting capabilities prior to upgrading.
+
+| Tier | Scheduling Access | Budgeting Access |
+| :--- | :--- | :--- |
+| **Free** | **Read-Only**: Can view the stripboard and calendar. Editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create and edit up to **5 budget line items** and **5 expenses**. Saving or adding items beyond that limit is locked. |
+| **Solo Lite** | **Read-Only**: Can view the stripboard and calendar. Editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create and edit up to **5 budget line items** and **5 expenses**. Saving or adding items beyond that limit is locked. |
+| **Solo Pro** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Team** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Studio** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Enterprise** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
+
+### Gating Indicators & Upgrade Paths
+* **Locked Controls**: In read-only scheduling mode, action buttons (such as "Add Production Day", "Sync Crew to Schedule", and "AI Sort Board") render as locked, and drag-and-drop interactions are disabled.
+* **Trial Restrictions**: When the limit of 5 budget line items or 5 expenses is reached on Free or Solo Lite plans, the system blocks the insertion of new items and displays a notification inviting the user to upgrade.
+* **Banners**: Persistent upgrade prompts are displayed at the top of the scheduling stripboard and financial overview frames for users on trial or restricted tiers, pointing to subscription settings for self-service upgrading.
+
+---
+
+## 7. Upgrading Plans and Buying Credits
 
 Owners and Admins can purchase additional credits or upgrade plan tiers in **Settings** -> **Billing**:
 
