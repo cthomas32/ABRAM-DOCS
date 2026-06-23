@@ -382,5 +382,16 @@
     "group": "FAQs & Support",
     "groupIcon": "help-circle",
     "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "7.2-cookie-consent-and-tag-behavior"
+    ],
+    "path": "user-guide/7.2-cookie-consent-and-tag-behavior",
+    "title": "Cookie Consent & Tag Behavior",
+    "group": "FAQs & Support",
+    "groupIcon": "help-circle",
+    "product": "Help Center"
   }
 ]

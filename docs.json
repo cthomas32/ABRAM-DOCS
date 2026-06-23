@@ -106,7 +106,8 @@
             "group": "FAQs & Support",
             "icon": "help-circle",
             "pages": [
-              "user-guide/7.1-faqs-and-troubleshooting"
+              "user-guide/7.1-faqs-and-troubleshooting",
+              "user-guide/7.2-cookie-consent-and-tag-behavior"
             ]
           }
         ]

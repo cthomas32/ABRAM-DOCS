@@ -70,6 +70,7 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
 
     // Call gtag.js update if available
     if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("set", "ads_data_redaction", !marketing);
       (window as any).gtag("consent", "update", {
         ad_storage: marketing ? "granted" : "denied",
         ad_user_data: marketing ? "granted" : "denied",

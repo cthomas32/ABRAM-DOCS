@@ -160,7 +160,7 @@ This guide defines key terms, concepts, and acronyms used throughout the ABRAM N
  SSO (Single Sign-On): A secure authentication method available exclusively on the Enterprise tier, allowing team members to log in using their organization's central identity credentials (e.g., Okta, Microsoft, or Google Workspace). Setup is managed securely by your organization's IT department in coordination with our support team.
  SCIM (System for Cross-domain Identity Management): A standard directory integration available on the Enterprise tier, used by corporate IT departments to automatically manage team member accounts and access permissions in ABRAM based on their corporate directory. For members managed via directory sync, account access details are controlled directly through your IT department portal.
  SAML (Security Assertion Markup Language) & OIDC (OpenID Connect): Standard security protocols used by identity providers to securely pass authentication data between your corporate login portal and ABRAM.
- Context-Aware Document Search (RAG): The AI technology that enables the chatbot to review, search, and answer questions about uploaded project briefs and resumes.
+ Context-Aware Document Search: The AI technology that enables the chatbot to review, search, and answer questions about uploaded project briefs and resumes.
  Recurring Calendar Rule (RRULE): The standard pattern used by digital calendars (like Google and Outlook) to specify repeating events.
  SSN (Social Security Number) & EIN (Employer Identification Number): Tax identifiers required by Stripe Connect to verify the identity of individual freelancers (SSN) or registered business entities (EIN) before transferring payouts.
  Stripe Express Connect: The onboarding portal and account type used by freelancers to link bank accounts, verify identity details (SSN/EIN), and receive direct automated payouts.
@@ -3128,5 +3128,155 @@ A: To prevent users from getting stuck, the onboarding wizard has a 10-second ti
 A: If a project folder is deleted on Frame.io or the connection becomes invalid, workspace administrators can resolve it on the Frame.io tab of the project details:
  Clear Link Reference: Removes the link in ABRAM without affecting files on Frame.io, allowing you to link a different folder.
  Re-Provision Project: Programmatically creates a fresh project folder on Frame.io matching the project name and restores active synchronization.
+
+---
+
+### Section 7.2: Cookie Consent and Tag Behavior
+
+> A clear explanation of cookie settings, Google Consent Mode v2, and cookieless pings on the ABRAM platform.
+
+# Section 7.2: Cookie Consent and Tag Behavior
+
+This article outlines how the ABRAM platform handles cookie consent, manages user preferences, integrates Google Consent Mode v2, and utilizes cookieless pings to balance accurate analytics with user privacy compliance.
+
+---
+
+## 1. Consent State and Tag Behavior
+
+The platform utilizes a dynamic consent framework that respects user privacy preferences by adjusting the behavior of measurement tags in real time. Rather than blocking tags from loading entirely, the platform loads tags in all cases and manages their capabilities via two primary consent states:
+
+   adstorage: Controls the storage (such as cookies) related to advertising.
+   analyticsstorage: Controls the storage (such as cookies) related to analytics and site usage.
+
+Depending on the consent state, tag behavior adjusts as follows:
+
+| Consent Parameter | State | Tag Behavior & Data Collection |
+| :--- | :--- | :--- |
+| adstorage | granted | Advertising cookies are read and written. Full conversion tracking, audience building, and remarketing capabilities are enabled. |
+| | denied | Advertising cookies are blocked. Tags do not read or write advertising-related cookies. Instead, cookieless pings are sent to report basic ad performance and conversion metrics. |
+| analyticsstorage | granted | Analytics cookies are read and written. Full session tracking, page-view journeys, and user behavior analytics are recorded. |
+| | denied | Analytics cookies are blocked. Tags do not read or write analytics cookies. The system sends cookieless pings containing basic operational parameters. |
+
+---
+
+## 2. Ad Storage Denied: Redaction vs. Redaction Disabled
+
+When a user denies consent for advertising cookies (adstorage='denied'), the platform can handle data transmission in two distinct modes depending on compliance settings:
+
+### Redaction Disabled (adsdataredaction='false')
+When ad data redaction is disabled and adstorage is denied:
+   The system blocks the creation and reading of advertising cookies.
+   The tag continues to send cookieless pings to measure conversions.
+   Ad click identifiers (such as query parameters in URLs) are still sent to help attribute the click event to a campaign.
+
+### Redaction Enabled (adsdataredaction='true')
+When ad data redaction is enabled and adstorage is denied:
+   The system blocks all advertising cookies.
+   All ad click identifiers (such as ad-click query parameters) are stripped or redacted from the URL and payload before sending.
+   The cookieless pings sent to the server contain no identifiers that could link the interaction to a specific ad click, ensuring maximum privacy compliance under strict regional laws.
+
+---
+
+## 3. Cookieless Pings and Data Collection
+
+Cookieless pings are secure, stateless network requests sent to measurement servers when a user has denied cookie consent. They do not store, access, or read any cookies or local identifiers on the user's browser, preventing the creation of a persistent profile.
+
+These pings carry essential, coarse-level metadata to ensure basic reporting remains functional:
+
+   Functional Information: User agent (browser type, OS version, device type) and screen resolution.
+   Timestamp: The exact time of the event.
+   Coarse Location Info: Regional/country data derived from the user's IP address (the IP address itself is processed in memory and discarded; it is never written to disk or stored).
+   Referrer: The page URL that led the user to the current page.
+   Random Page-Navigation ID: A temporary, random ID generated for each page view. This links events occurring within the same page load (e.g., a page view and a button click) but cannot track the user across different pages or sessions.
+   Consent State: Verification metadata detailing that consent was explicitly denied.
+
+---
+
+## 4. Regional Defaults and Measurement Strategy
+
+To preserve analytical integrity without violating privacy regulations, the platform dynamically configures consent defaults based on the visitor’s geographic region:
+
+   Strict Opt-In Regions (EEA, UK, Switzerland): By default, adstorage and analyticsstorage are set to denied before any tag executes. Tags only activate fully when the user explicitly grants permission through the consent banner.
+   Opt-Out Regions (Rest of the World): By default, adstorage and analyticsstorage are set to granted. Users can opt out or modify their preferences at any time via their cookie settings.
+
+> [!NOTE]
+> Setting defaults dynamically by region allows the platform to maintain compliant tracking workflows globally without sacrificing measurement accuracy in regions with opt-out regulations.
+
+---
+
+## 5. Implementation Best Practices
+
+To ensure correct consent management across your workspace pages, adhere to the following best practices:
+
+1.  Load Tags in All Cases: Do not use conditional logic to prevent tag scripts from loading. Instead, load the tag scripts on all page views. The tags themselves will read the consent state and dynamically adjust their behavior.
+2.  Define Defaults Early: Set default consent states (such as denied for EEA visitors) at the very top of the page header, before any Google Analytics or advertising scripts are parsed or loaded.
+3.  Update State Instantly: When a user selects their preferences in the consent banner, update the consent state immediately using the update API. Tags will immediately adjust and process any queued events according to the new consent values.
+4.  Understand Advanced vs. Basic Consent:
+       Advanced Consent (Recommended): Loads scripts immediately with denied defaults. When users deny consent, tags adapt to send cookieless pings, enabling conversion modeling and basic metrics.
+       Basic Consent: Blocks tag scripts from loading until the user explicitly clicks "Accept". This prevents any data transmission, including cookieless pings, resulting in a complete loss of measurement for non-consenting users.
+
+---
+
+## 🤖 Agent Operations & System Rules
+
+This technical section defines the programmatic script configuration, initialization sequences, and consent state updates for LLM-based crawlers and automated verification systems.
+
+### 1. Default Script Configuration (Gtag.js Syntax)
+
+The platform implements Google Consent Mode v2 via the following script sequence in the document `:
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+
+  // 1. Set default consent state (e.g., for EEA/UK regions)
+  gtag('consent', 'default', {
+    'adstorage': 'denied',
+    'analyticsstorage': 'denied',
+    'aduserdata': 'denied',
+    'adpersonalization': 'denied',
+    'waitforupdate': 500
+  });
+  
+  // 2. Set ads data redaction behavior
+  gtag('set', 'adsdataredaction', true);
+
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+
+### 2. User Consent Update Workflow
+
+When a user interacts with the UI consent banner and selects their choices, the application dispatches an update command:
+
+// Example: User grants analytics consent but denies ad consent
+gtag('consent', 'update', {
+  'adstorage': 'denied',
+  'analyticsstorage': 'granted',
+  'aduserdata': 'denied',
+  'adpersonalization': 'denied'
+});
+
+### 3. Event Execution Order
+
+To prevent race conditions, the platform enforces the following lifecycle steps:
+
+sequenceDiagram
+    autonumber
+    participant Browser
+    participant Consent API
+    participant Google Tags
+    participant Servers
+    
+    Browser->>Consent API: Load page & execute default consent (denied)
+    Browser->>Google Tags: Load async tag script
+    Google Tags->>Consent API: Query current consent state
+    Google Tags->>Servers: Dispatch cookieless pings (state metadata only)
+    Browser->>Consent API: User clicks "Accept Analytics"
+    Consent API->>Google Tags: Dispatch update event ('analyticsstorage': 'granted')
+    Google Tags->>Servers: Write analytics cookies & dispatch full session data
+
+### 4. Technical Validation Checklist
+   Verify that gtag('consent', 'default', ...) is executed before the main tracking script tag loads.
+   Confirm that the waitforupdate parameter is defined, allowing custom scripts up to 500ms to resolve initial consent state before firing tags.
+*   Ensure that no local storage items or cookies are created under domains when consent is in a denied` state.
 
 ---

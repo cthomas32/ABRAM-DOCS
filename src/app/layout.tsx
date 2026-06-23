@@ -84,29 +84,55 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               
-              var consentPrefs = null;
-              try {
-                var saved = localStorage.getItem('abram-consent-v2');
-                if (saved) {
-                  consentPrefs = JSON.parse(saved);
-                }
-              } catch (e) {}
+              var eeaRegions = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB', 'CH', 'LI', 'NO', 'IS'];
               
-              var defaultConsent = {
+              var eeaConsent = {
                 'ad_storage': 'denied',
                 'ad_user_data': 'denied',
                 'ad_personalization': 'denied',
-                'analytics_storage': 'denied'
+                'analytics_storage': 'denied',
+                'region': eeaRegions
               };
               
-              if (consentPrefs) {
-                defaultConsent.ad_storage = consentPrefs.ad_storage ? 'granted' : 'denied';
-                defaultConsent.ad_user_data = consentPrefs.ad_user_data ? 'granted' : 'denied';
-                defaultConsent.ad_personalization = consentPrefs.ad_personalization ? 'granted' : 'denied';
-                defaultConsent.analytics_storage = consentPrefs.analytics_storage ? 'granted' : 'denied';
+              var otherConsent = {
+                'ad_storage': 'granted',
+                'ad_user_data': 'granted',
+                'ad_personalization': 'granted',
+                'analytics_storage': 'granted'
+              };
+              
+              var saved = null;
+              try {
+                var savedStr = localStorage.getItem('abram-consent-v2');
+                if (savedStr) {
+                  saved = JSON.parse(savedStr);
+                }
+              } catch (e) {}
+              
+              if (saved) {
+                var resolvedAdStorage = saved.ad_storage ? 'granted' : 'denied';
+                var resolvedAdUserData = saved.ad_user_data ? 'granted' : 'denied';
+                var resolvedAdPersonalization = saved.ad_personalization ? 'granted' : 'denied';
+                var resolvedAnalyticsStorage = saved.analytics_storage ? 'granted' : 'denied';
+                
+                eeaConsent.ad_storage = resolvedAdStorage;
+                eeaConsent.ad_user_data = resolvedAdUserData;
+                eeaConsent.ad_personalization = resolvedAdPersonalization;
+                eeaConsent.analytics_storage = resolvedAnalyticsStorage;
+                
+                otherConsent.ad_storage = resolvedAdStorage;
+                otherConsent.ad_user_data = resolvedAdUserData;
+                otherConsent.ad_personalization = resolvedAdPersonalization;
+                otherConsent.analytics_storage = resolvedAnalyticsStorage;
               }
               
-              gtag('consent', 'default', defaultConsent);
+              gtag('consent', 'default', eeaConsent);
+              gtag('consent', 'default', otherConsent);
+              
+              var finalAdStorageDenied = saved ? !saved.ad_storage : true;
+              if (finalAdStorageDenied) {
+                gtag('set', 'ads_data_redaction', true);
+              }
             `
           }}
         />
