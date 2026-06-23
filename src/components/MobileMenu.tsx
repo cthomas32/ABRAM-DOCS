@@ -120,7 +120,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
             animate="open"
             exit="closed"
             variants={panelVariants}
-            className="relative w-full bg-zinc-950/95 backdrop-blur-[20px] border-b border-white/8 shadow-2xl pointer-events-auto flex flex-col px-6 py-8 md:px-8 max-h-full overflow-y-auto"
+            className="relative w-full bg-zinc-950/98 backdrop-blur-[32px] border-b border-white/8 shadow-2xl pointer-events-auto flex flex-col px-6 py-8 md:px-8 max-h-full overflow-y-auto"
           >
             <div className="w-full max-w-md mx-auto">
               <nav className="flex flex-col gap-2.5">

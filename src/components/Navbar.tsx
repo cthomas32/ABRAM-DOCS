@@ -145,7 +145,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.96 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute top-full left-0 mt-2 w-64 rounded-2xl border border-white/8 bg-zinc-950/95 backdrop-blur-[20px] p-2 shadow-2xl flex flex-col gap-1 z-50 pointer-events-auto"
+                  className="absolute top-full left-0 mt-2 w-64 rounded-2xl border border-white/8 bg-zinc-950/98 backdrop-blur-[32px] p-2 shadow-2xl flex flex-col gap-1 z-50 pointer-events-auto"
                 >
                   <Link
                     href="/film-production"
@@ -230,7 +230,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.96 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute top-full left-0 mt-2 w-64 rounded-2xl border border-white/8 bg-zinc-950/95 backdrop-blur-[20px] p-2 shadow-2xl flex flex-col gap-1 z-50 pointer-events-auto"
+                  className="absolute top-full left-0 mt-2 w-64 rounded-2xl border border-white/8 bg-zinc-950/98 backdrop-blur-[32px] p-2 shadow-2xl flex flex-col gap-1 z-50 pointer-events-auto"
                 >
                   <Link
                     href="/agency"
