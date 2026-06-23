@@ -13,14 +13,14 @@ export const metadata: Metadata = {
     canonical: "https://abram.network/blog",
   },
   openGraph: {
-    title: "Blog | ABRAM Docs",
+    title: "Blog | ABRAM Blog",
     description: "The latest announcements, updates, and articles from the ABRAM Network team.",
     type: "website",
     url: "https://abram.network/blog",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog | ABRAM Docs",
+    title: "Blog | ABRAM Blog",
     description: "The latest announcements, updates, and articles from the ABRAM Network team.",
   },
 };

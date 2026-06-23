@@ -44,14 +44,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const { data: releases, error: releasesError } = await supabase
       .from('release_notes')
-      .select('version, published_at, updated_at')
+      .select('*')
       .eq('status', 'published');
 
     if (releasesError) {
       console.error('Error fetching release notes for sitemap:', releasesError);
     } else if (releases) {
       changelogPages = releases.map((release) => {
-        const releaseSlug = release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, '-') || 'undefined';
+        const releaseSlug = release.slug || release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, '-') || 'undefined';
         return {
           url: `${baseUrl}/changelog/${releaseSlug}`,
           lastModified: release.updated_at || release.published_at ? new Date(release.updated_at || release.published_at) : new Date(),

@@ -73,7 +73,7 @@ export default function BriefIntelligenceClient() {
             </motion.span>
             <motion.h1
               variants={itemVariants}
-              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight font-sans select-text"
+              className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight font-sans select-text"
             >
               Translate briefs to structured plans with Brief Intelligence.
             </motion.h1>

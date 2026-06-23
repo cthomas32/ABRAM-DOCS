@@ -36,9 +36,9 @@
 - Other glass-styled elements (like the search dialog container) use the `.glass-panel` class:
   ```css
   .glass-panel {
-    background: rgba(10, 10, 10, 0.5) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
+    background: rgba(10, 10, 10, 0.85) !important;
+    backdrop-filter: blur(60px) !important;
+    -webkit-backdrop-filter: blur(60px) !important;
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
   }
   ```

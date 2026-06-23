@@ -224,7 +224,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${title} | ABRAM Docs`,
+    title,
     description,
     keywords: finalKeywords,
     category,
@@ -233,7 +233,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${title} | ABRAM Docs`,
+      title,
       description,
       type: "article",
       url: canonicalUrl,
@@ -245,7 +245,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | ABRAM Docs`,
+      title,
       description,
     },
     robots: {

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import CreativeCopilotClient from "@/app/intelligence/creative-copilot/CreativeCopilotClient";
 
 export const metadata: Metadata = {
-  title: "ABRAM Playground — Interactive Studio AI | ABRAM Network",
-  description: "Experience ABRAM's conversational scoping engine. Interactively parse screenplays, optimize calendar schedules, resequence broadcast rundowns, and search crew talent.",
+  title: "ABRAM Playground & Studio AI",
+  description: "Experience ABRAM's conversational scoping engine. Interactively parse screenplays, optimize calendar schedules, and search crew talent in real-time.",
   keywords: [
     "abram",
     "screenplay parser",
@@ -17,15 +17,15 @@ export const metadata: Metadata = {
     canonical: "https://abram.network/intelligence/creative-copilot",
   },
   openGraph: {
-    title: "ABRAM Playground — Interactive Studio AI | ABRAM Network",
-    description: "Experience ABRAM's conversational scoping engine. Interactively parse screenplays, optimize calendar schedules, resequence broadcast rundowns, and search crew talent.",
+    title: "ABRAM Playground & Studio AI | ABRAM Network",
+    description: "Experience ABRAM's conversational scoping engine. Interactively parse screenplays, optimize calendar schedules, and search crew talent in real-time.",
     type: "website",
     url: "https://abram.network/intelligence/creative-copilot",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ABRAM Playground — Interactive Studio AI | ABRAM Network",
-    description: "Experience ABRAM's conversational scoping engine. Interactively parse screenplays, optimize calendar schedules, resequence broadcast rundowns, and search crew talent.",
+    title: "ABRAM Playground & Studio AI | ABRAM Network",
+    description: "Experience ABRAM's conversational scoping engine. Interactively parse screenplays, optimize calendar schedules, and search crew talent in real-time.",
   },
 };
 

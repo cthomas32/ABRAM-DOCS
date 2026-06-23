@@ -11,8 +11,54 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://abram.network/film-production',
   },
+  openGraph: {
+    title: 'Film Production Suite — Dynamic Creative Operations | ABRAM Network',
+    description: 'Streamline physical production. Analyze daily burn rates and coordinate crew turnaround safety margins.',
+    type: 'website',
+    url: 'https://abram.network/film-production',
+    siteName: 'ABRAM Network',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Film Production Suite — Dynamic Creative Operations',
+    description: 'Streamline physical production. Analyze daily burn rates and coordinate crew turnaround safety margins.',
+  },
 };
 
+function AgentOnly({ children }: { children: React.ReactNode }) {
+  return <div className="sr-only" data-agent-only="true">{children}</div>;
+}
+
 export default function FilmProductionPage() {
-  return <FilmProductionHubClient />;
+  return (
+    <>
+      <AgentOnly>
+        <h2>🤖 Film Production Logistics & Script Breakdown Specifications</h2>
+        <p>
+          ABRAM's Film Production Suite provides advanced tools for physical production, timeline scheduling, and budget estimation.
+        </p>
+
+        <h3>1. Screenplay Parser & Element Extraction</h3>
+        <p>
+          The parser accepts script files in PDF, industry-standard screenplay, and plain text formats. It reconstructs layouts by identifying scene headings, action descriptions, characters, and dialogue.
+        </p>
+        <ul>
+          <li><strong>Automated Element Extraction:</strong> Extracts cast members, locations, props, wardrobe, VFX, SFX, vehicles, and audio cues, compiling them into digital scene breakdown sheets.</li>
+          <li><strong>Conflict Resolution:</strong> Resolves differences between screenplay versions by letting users Merge changes (preserving manual adjustments), Overwrite existing data, or Skip updates.</li>
+          <li><strong>System Thresholds:</strong> Enforces a 150-page document limit, a 4,000 token limit per scene window (with a 3,000-token fallback for high density), and a 45-second processing timeout.</li>
+        </ul>
+
+        <h3>2. Budget Estimation & Turnaround Compliance</h3>
+        <p>
+          Helps producers manage financial risks and scheduling compliance.
+        </p>
+        <ul>
+          <li><strong>Rough Order of Magnitude (ROM) Scopes:</strong> Enables producers to set Min/Max budgets and rate scheduling confidence (low, medium, high). Manual updates overwrite AI settings directly.</li>
+          <li><strong>Work Order State Synchronization:</strong> Changing a Work Order status modifies calendar availability: Draft creates tentative holds, Scheduled confirms bookings, In Progress activates them, and Cancelled releases the block.</li>
+          <li><strong>Turnaround Safety Margins:</strong> The system tracks labor compliance rules, warning planners if crew bookings violate rest windows between wrap time and the next call.</li>
+        </ul>
+      </AgentOnly>
+      <FilmProductionHubClient />
+    </>
+  );
 }

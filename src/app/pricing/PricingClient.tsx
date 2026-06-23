@@ -732,9 +732,9 @@ export default function PricingClient() {
                             Placeholder
                           </span>
                         )}
-                        <h3 className="text-lg lg:text-base xl:text-lg font-semibold tracking-tight text-white">
+                        <h2 className="text-lg lg:text-base xl:text-lg font-semibold tracking-tight text-white">
                           {plan.name}
-                        </h3>
+                        </h2>
                       </div>
                       <p className="text-xs lg:text-xs leading-relaxed text-zinc-500 h-10 lg:h-12 line-clamp-3 mb-6 lg:mb-4">
                         {plan.audience}

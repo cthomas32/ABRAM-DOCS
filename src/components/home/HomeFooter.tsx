@@ -1,7 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default function HomeFooter() {
+export default function HomeFooter({
+  onCookieSettingsClick,
+}: {
+  onCookieSettingsClick?: () => void;
+}) {
   return (
     <footer className="w-full bg-[#0A0A0A] border-t border-white/[0.08] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-8xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 md:gap-12 text-sm text-zinc-400">
@@ -124,6 +128,13 @@ export default function HomeFooter() {
           <Link href="/acceptable-use-policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Acceptable Use Policy
           </Link>
+          <button
+            onClick={onCookieSettingsClick}
+            type="button"
+            className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit text-left cursor-pointer border-t border-white/[0.04] pt-1.5 mt-1 w-full"
+          >
+            Cookie Settings
+          </button>
         </div>
       </div>
 

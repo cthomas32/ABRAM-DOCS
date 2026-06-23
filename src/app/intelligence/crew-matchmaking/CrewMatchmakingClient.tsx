@@ -74,7 +74,7 @@ export default function CrewMatchmakingClient() {
             </motion.span>
             <motion.h1
               variants={itemVariants}
-              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight font-sans select-text"
+              className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight font-sans select-text"
             >
               Optimize team selection with the Crew Matchmaking Engine.
             </motion.h1>

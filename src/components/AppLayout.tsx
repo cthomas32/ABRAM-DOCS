@@ -11,6 +11,7 @@ import SearchModal from "./SearchModal";
 import HomeFooter from "./home/HomeFooter";
 import MobileMenu from "./MobileMenu";
 import BackgroundGlow from "./BackgroundGlow";
+import CookieConsent from "./CookieConsent";
 
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -18,6 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cookieSettingsOpen, setCookieSettingsOpen] = useState(false);
 
   // Normalize pathname to strip trailing slashes for matching
   const cleanPathname = pathname ? pathname.replace(/\/$/, "") || "/" : "/";
@@ -64,9 +66,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 w-full">
           {children}
         </main>
-        <HomeFooter />
+        <HomeFooter onCookieSettingsClick={() => setCookieSettingsOpen(true)} />
         <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+        <CookieConsent isOpen={cookieSettingsOpen} onClose={() => setCookieSettingsOpen(false)} />
       </BackgroundGlow>
     );
   }
@@ -98,13 +101,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <PrevNextNav />
               </div>
 
-              <HomeFooter />
+              <HomeFooter onCookieSettingsClick={() => setCookieSettingsOpen(true)} />
             </div>
           </main>
         </div>
 
         <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+        <CookieConsent isOpen={cookieSettingsOpen} onClose={() => setCookieSettingsOpen(false)} />
       </BackgroundGlow>
     );
   }
@@ -130,11 +134,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </div>
-        <HomeFooter />
+        <HomeFooter onCookieSettingsClick={() => setCookieSettingsOpen(true)} />
       </main>
 
       <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} pathname={cleanPathname} />
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <CookieConsent isOpen={cookieSettingsOpen} onClose={() => setCookieSettingsOpen(false)} />
     </BackgroundGlow>
   );
 }

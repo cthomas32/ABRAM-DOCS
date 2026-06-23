@@ -399,6 +399,7 @@ export default function ResourceManagementMock() {
 
   // Calendar Interactions
   const handleCellClick = (resource: CalendarResource, dayIdx: number) => {
+    setSelectedBooking(null);
     setNewBookingData({
       resourceId: resource.id,
       resourceName: resource.name,
@@ -642,8 +643,9 @@ export default function ResourceManagementMock() {
         </div>
 
         {/* Tab Content Display Area */}
-        <div className="min-h-[360px]">
-          <AnimatePresence mode="wait">
+        <div className={`min-h-[360px] ${(selectedBooking || isNewBookingOpen) ? "grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start" : "block"}`}>
+          <div className="w-full min-w-0">
+            <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 6 }}
@@ -965,6 +967,7 @@ export default function ResourceManagementMock() {
                                       }}
                                       onClick={(e) => {
                                         e.stopPropagation();
+                                        setIsNewBookingOpen(false);
                                         setSelectedBooking(b);
                                       }}
                                       className={`z-10 m-1.5 rounded-lg border p-2 flex flex-col justify-center pointer-events-auto cursor-pointer shadow-md select-none transition-all hover:brightness-110 active:scale-[0.98] ${colorClasses}`}
@@ -991,6 +994,235 @@ export default function ResourceManagementMock() {
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {/* Details Panel / Form */}
+        <AnimatePresence mode="wait">
+          {selectedBooking && (
+            <motion.div
+              key="booking-details"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="w-full lg:w-[320px] shrink-0 glass-panel border border-white/10 rounded-2xl overflow-hidden relative z-10"
+            >
+              {/* Pantone border bar */}
+              <div
+                className="h-1"
+                style={{
+                  backgroundColor:
+                    selectedBooking.color === "violet" ? "#8b5cf6" :
+                    selectedBooking.color === "pink" ? "#ec4899" :
+                    selectedBooking.color === "orange" ? "#f97316" :
+                    "#10b981"
+                }}
+              />
+              
+              <div className="p-5 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="text-[9px] text-zinc-500 uppercase tracking-widest font-bold font-mono">CONFIRMED RESERVATION</span>
+                    <h2 className="text-sm font-semibold text-white tracking-tight !m-0 mt-1">{selectedBooking.projectName}</h2>
+                  </div>
+                  <button
+                    onClick={() => setSelectedBooking(null)}
+                    className="p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                  >
+                    <LucideIcons.X size={16} />
+                  </button>
+                </div>
+                
+                <div className="space-y-3 divide-y divide-white/5">
+                  <div className="grid grid-cols-[80px_1fr] text-xs pt-1.5">
+                    <span className="text-zinc-500 font-medium">Resource:</span>
+                    <span className="text-white font-semibold flex items-center gap-1.5 truncate">
+                      <LucideIcons.Package size={12} className="text-zinc-400 shrink-0" />
+                      <span className="truncate">{selectedBooking.resourceName}</span>
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[80px_1fr] text-xs pt-2">
+                    <span className="text-zinc-500 font-medium">Work Order:</span>
+                    <span className="text-zinc-300 font-medium truncate">{selectedBooking.workOrder}</span>
+                  </div>
+                  <div className="grid grid-cols-[80px_1fr] text-xs pt-2">
+                    <span className="text-zinc-500 font-medium">Operator:</span>
+                    <span className="text-white font-semibold flex items-center gap-1.5 truncate">
+                      <LucideIcons.User size={12} className="text-zinc-400 shrink-0" />
+                      <span className="truncate">{selectedBooking.operator}</span>
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[80px_1fr] text-xs pt-2">
+                    <span className="text-zinc-500 font-medium">Timeline:</span>
+                    <span className="text-zinc-300 font-mono font-medium text-[11px] leading-relaxed">
+                      {WEEK_DAYS[selectedBooking.startDayIdx].label} ({WEEK_DAYS[selectedBooking.startDayIdx].date}) – <br />
+                      {WEEK_DAYS[selectedBooking.endDayIdx].label} ({WEEK_DAYS[selectedBooking.endDayIdx].date})
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col gap-2 pt-2">
+                  <button
+                    onClick={() => deleteBooking(selectedBooking.id)}
+                    className="btn-danger w-full justify-center"
+                  >
+                    <LucideIcons.Trash2 size={12} />
+                    <span>Release Booking</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedBooking(null)}
+                    className="btn-glass w-full justify-center"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {isNewBookingOpen && (
+            <motion.div
+              key="new-booking-form"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="w-full lg:w-[320px] shrink-0 glass-panel border border-white/10 rounded-2xl relative z-10 overflow-hidden"
+            >
+              <div className="p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                  <h2 className="text-xs font-bold text-white uppercase tracking-wider">New Booking Request</h2>
+                  <button
+                    onClick={() => setIsNewBookingOpen(false)}
+                    className="p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                  >
+                    <LucideIcons.X size={16} />
+                  </button>
+                </div>
+
+                <form onSubmit={createBooking} className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Target Resource</label>
+                    <input
+                      type="text"
+                      readOnly
+                      value={newBookingData.resourceName}
+                      className="w-full bg-[#141414] border border-white/5 rounded-lg px-3 py-2 text-xs font-semibold text-zinc-400 outline-none cursor-not-allowed"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Project Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={newBookingData.projectName}
+                      onChange={(e) => setNewBookingData({ ...newBookingData, projectName: e.target.value })}
+                      placeholder="e.g. Apparel Brand Spotlight"
+                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Work Order Details</label>
+                    <input
+                      type="text"
+                      required
+                      value={newBookingData.workOrder}
+                      onChange={(e) => setNewBookingData({ ...newBookingData, workOrder: e.target.value })}
+                      placeholder="e.g. A-Camera Pack & Rigging"
+                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Operator / Crew</label>
+                    <input
+                      type="text"
+                      required
+                      value={newBookingData.operator}
+                      onChange={(e) => setNewBookingData({ ...newBookingData, operator: e.target.value })}
+                      placeholder="e.g. Marcus Chen"
+                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Start Day</label>
+                      <select
+                        value={newBookingData.startDayIdx}
+                        onChange={(e) => {
+                          const startVal = Number(e.target.value);
+                          setNewBookingData({
+                            ...newBookingData,
+                            startDayIdx: startVal,
+                            endDayIdx: Math.max(newBookingData.endDayIdx, startVal)
+                          });
+                        }}
+                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white outline-none cursor-pointer"
+                      >
+                        {WEEK_DAYS.map((d, i) => (
+                          <option key={i} value={i}>{d.label} ({d.date})</option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">End Day</label>
+                      <select
+                        value={newBookingData.endDayIdx}
+                        onChange={(e) => setNewBookingData({ ...newBookingData, endDayIdx: Number(e.target.value) })}
+                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white outline-none cursor-pointer"
+                      >
+                        {WEEK_DAYS.map((d, i) => (
+                          <option key={i} value={i} disabled={i < newBookingData.startDayIdx}>{d.label} ({d.date})</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold block mb-1.5">Accent Tag</label>
+                    <div className="flex items-center gap-3">
+                      {(["violet", "pink", "orange", "emerald"] as const).map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => setNewBookingData({ ...newBookingData, color: c })}
+                          className={`w-6 h-6 rounded-full border transition-all ${
+                            newBookingData.color === c ? "scale-110 ring-2 ring-white/20 border-white" : "opacity-60 hover:opacity-100 border-transparent"
+                          }`}
+                          style={{
+                            backgroundColor:
+                              c === "violet" ? "rgb(139, 92, 246)" :
+                              c === "pink" ? "rgb(236, 72, 153)" :
+                              c === "orange" ? "rgb(249, 115, 22)" :
+                              "rgb(16, 185, 129)"
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2 pt-3 border-t border-white/5">
+                    <button
+                      type="submit"
+                      className="btn-primary w-full justify-center"
+                    >
+                      Confirm Booking
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsNewBookingOpen(false)}
+                      className="btn-glass w-full justify-center"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       </div>
 
@@ -1047,258 +1279,7 @@ export default function ResourceManagementMock() {
         )}
       </AnimatePresence>
 
-      {/* --- OVERLAY MODALS & TOOLTIPS (AnimatePresence) --- */}
-      
-      {/* 1. View Booking Details Overlay */}
-      <AnimatePresence>
-        {selectedBooking && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedBooking(null)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            />
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.15 }}
-              className="bg-[#121212] border border-white/10 rounded-2xl w-full max-w-sm shadow-2xl relative overflow-hidden z-10"
-            >
-              {/* Pantone border bar */}
-              <div
-                className="h-1"
-                style={{
-                  backgroundColor:
-                    selectedBooking.color === "violet" ? "#8b5cf6" :
-                    selectedBooking.color === "pink" ? "#ec4899" :
-                    selectedBooking.color === "orange" ? "#f97316" :
-                    "#10b981"
-                }}
-              />
-              
-              <div className="p-5 space-y-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold font-mono">CONFIRMED RESERVATION</span>
-                    <h2 className="text-base font-semibold text-white tracking-tight !m-0 mt-1">{selectedBooking.projectName}</h2>
-                  </div>
-                  <button
-                    onClick={() => setSelectedBooking(null)}
-                    className="p-1 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors"
-                  >
-                    <LucideIcons.X size={16} />
-                  </button>
-                </div>
-                
-                <div className="space-y-3 divide-y divide-white/5">
-                  <div className="grid grid-cols-[100px_1fr] text-xs pt-1.5">
-                    <span className="text-gray-500 font-medium">Resource:</span>
-                    <span className="text-white font-semibold flex items-center gap-1.5">
-                      <LucideIcons.Package size={12} className="text-gray-400" />
-                      {selectedBooking.resourceName}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-[100px_1fr] text-xs pt-2">
-                    <span className="text-gray-500 font-medium">Work Order:</span>
-                    <span className="text-gray-300 font-medium">{selectedBooking.workOrder}</span>
-                  </div>
-                  <div className="grid grid-cols-[100px_1fr] text-xs pt-2">
-                    <span className="text-gray-500 font-medium">Operator:</span>
-                    <span className="text-white font-semibold flex items-center gap-1.5">
-                      <LucideIcons.User size={12} className="text-gray-400" />
-                      {selectedBooking.operator}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-[100px_1fr] text-xs pt-2">
-                    <span className="text-gray-500 font-medium">Timeline:</span>
-                    <span className="text-gray-300 font-mono font-medium">
-                      {WEEK_DAYS[selectedBooking.startDayIdx].label} ({WEEK_DAYS[selectedBooking.startDayIdx].date}) –{" "}
-                      {WEEK_DAYS[selectedBooking.endDayIdx].label} ({WEEK_DAYS[selectedBooking.endDayIdx].date})
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between gap-2 pt-2">
-                  <button
-                    onClick={() => deleteBooking(selectedBooking.id)}
-                    className="px-3 py-1.5 text-xs font-semibold bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors flex items-center gap-1.5"
-                  >
-                    <LucideIcons.Trash2 size={12} />
-                    <span>Release Booking</span>
-                  </button>
-                  <button
-                    onClick={() => setSelectedBooking(null)}
-                    className="px-4 py-1.5 text-xs font-semibold bg-white/5 hover:bg-white/10 text-white border border-white/5 rounded-lg transition-colors"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
-      {/* 2. New Booking Request Form Overlay */}
-      <AnimatePresence>
-        {isNewBookingOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsNewBookingOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            />
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.15 }}
-              className="bg-[#121212] border border-white/10 rounded-2xl w-full max-w-md shadow-2xl relative z-10 overflow-hidden"
-            >
-              <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-white/5 pb-3">
-                  <h2 className="text-base font-semibold text-white tracking-tight">New Booking Request</h2>
-                  <button
-                    onClick={() => setIsNewBookingOpen(false)}
-                    className="p-1 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors"
-                  >
-                    <LucideIcons.X size={16} />
-                  </button>
-                </div>
-
-                <form onSubmit={createBooking} className="space-y-4">
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Target Resource</label>
-                    <input
-                      type="text"
-                      readOnly
-                      value={newBookingData.resourceName}
-                      className="w-full bg-[#141414] border border-white/5 rounded-lg px-3 py-2 text-xs font-semibold text-gray-300 outline-none cursor-not-allowed"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Project Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={newBookingData.projectName}
-                      onChange={(e) => setNewBookingData({ ...newBookingData, projectName: e.target.value })}
-                      placeholder="e.g. Apparel Brand Spotlight"
-                      className="w-full bg-[#141414] border border-[#27272a] rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-gray-600 outline-none focus:border-white/20 transition-colors"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Work Order Details</label>
-                    <input
-                      type="text"
-                      required
-                      value={newBookingData.workOrder}
-                      onChange={(e) => setNewBookingData({ ...newBookingData, workOrder: e.target.value })}
-                      placeholder="e.g. A-Camera Pack & Rigging"
-                      className="w-full bg-[#141414] border border-[#27272a] rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-gray-600 outline-none focus:border-white/20 transition-colors"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Operator / Crew</label>
-                    <input
-                      type="text"
-                      required
-                      value={newBookingData.operator}
-                      onChange={(e) => setNewBookingData({ ...newBookingData, operator: e.target.value })}
-                      placeholder="e.g. Marcus Chen"
-                      className="w-full bg-[#141414] border border-[#27272a] rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-gray-600 outline-none focus:border-white/20 transition-colors"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-1">
-                      <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Start Day</label>
-                      <select
-                        value={newBookingData.startDayIdx}
-                        onChange={(e) => {
-                          const startVal = Number(e.target.value);
-                          setNewBookingData({
-                            ...newBookingData,
-                            startDayIdx: startVal,
-                            endDayIdx: Math.max(newBookingData.endDayIdx, startVal)
-                          });
-                        }}
-                        className="w-full bg-[#141414] border border-[#27272a] rounded-lg px-3 py-2 text-xs font-medium text-white outline-none cursor-pointer"
-                      >
-                        {WEEK_DAYS.map((d, i) => (
-                          <option key={i} value={i}>{d.label} ({d.date})</option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div className="space-y-1">
-                      <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">End Day</label>
-                      <select
-                        value={newBookingData.endDayIdx}
-                        onChange={(e) => setNewBookingData({ ...newBookingData, endDayIdx: Number(e.target.value) })}
-                        className="w-full bg-[#141414] border border-[#27272a] rounded-lg px-3 py-2 text-xs font-medium text-white outline-none cursor-pointer"
-                      >
-                        {WEEK_DAYS.map((d, i) => (
-                          <option key={i} value={i} disabled={i < newBookingData.startDayIdx}>{d.label} ({d.date})</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1.5">Pantone Accent Tag</label>
-                    <div className="flex items-center gap-3">
-                      {(["violet", "pink", "orange", "emerald"] as const).map((c) => (
-                        <button
-                          key={c}
-                          type="button"
-                          onClick={() => setNewBookingData({ ...newBookingData, color: c })}
-                          className={`w-6 h-6 rounded-full border transition-all ${
-                            newBookingData.color === c ? "scale-110 ring-2 ring-white/20 border-white" : "opacity-60 hover:opacity-100 border-transparent"
-                          }`}
-                          style={{
-                            backgroundColor:
-                              c === "violet" ? "rgb(139, 92, 246)" :
-                              c === "pink" ? "rgb(236, 72, 153)" :
-                              c === "orange" ? "rgb(249, 115, 22)" :
-                              "rgb(16, 185, 129)"
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/5">
-                    <button
-                      type="button"
-                      onClick={() => setIsNewBookingOpen(false)}
-                      className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-white transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-4 py-2 text-xs font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors shadow-lg shadow-blue-500/20"
-                    >
-                      Confirm Booking
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
     </div>
   );

@@ -646,46 +646,46 @@ export default function InteractivePlayground() {
     <div className="w-full text-zinc-100 flex flex-col font-sans select-none pb-12">
       
       {/* 1. Playful Metric Header Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="glass-panel rounded-xl p-4 flex flex-col justify-between">
-          <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Scenes Tracked</span>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-bold tracking-tight text-white">{scheduleStats.sceneCount}</span>
-            <span className="text-xs text-zinc-400 font-medium">scenes</span>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6">
+        <div className="glass-panel rounded-xl p-3 md:p-4 flex flex-col justify-between">
+          <span className="text-[9px] md:text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Scenes Tracked</span>
+          <div className="flex items-baseline gap-1 md:gap-2 mt-1 md:mt-2">
+            <span className="text-2xl md:text-3xl font-bold tracking-tight text-white">{scheduleStats.sceneCount}</span>
+            <span className="text-[10px] md:text-xs text-zinc-400 font-medium">scenes</span>
           </div>
         </div>
-        <div className="glass-panel rounded-xl p-4 flex flex-col justify-between">
-          <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Total Script Volume</span>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-2xl font-bold tracking-tight text-white">{scheduleStats.totalPagesFormatted}</span>
+        <div className="glass-panel rounded-xl p-3 md:p-4 flex flex-col justify-between">
+          <span className="text-[9px] md:text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Total Script Volume</span>
+          <div className="flex items-baseline gap-1 md:gap-2 mt-1 md:mt-2">
+            <span className="text-xl md:text-2xl font-bold tracking-tight text-white">{scheduleStats.totalPagesFormatted}</span>
           </div>
         </div>
-        <div className="glass-panel rounded-xl p-4 flex flex-col justify-between">
-          <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Production Duration</span>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-bold tracking-tight text-white">{scheduleStats.shootDays}</span>
-            <span className="text-xs text-zinc-400 font-medium">{scheduleStats.shootDays === 1 ? 'shoot day' : 'shoot days'}</span>
+        <div className="glass-panel rounded-xl p-3 md:p-4 flex flex-col justify-between">
+          <span className="text-[9px] md:text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Production Duration</span>
+          <div className="flex items-baseline gap-1 md:gap-2 mt-1 md:mt-2">
+            <span className="text-2xl md:text-3xl font-bold tracking-tight text-white">{scheduleStats.shootDays}</span>
+            <span className="text-[10px] md:text-xs text-zinc-400 font-medium">{scheduleStats.shootDays === 1 ? 'day' : 'days'}</span>
           </div>
         </div>
-        <div className="glass-panel rounded-xl p-4 flex flex-col justify-between border-l border-amber-500/30 bg-amber-500/[0.01]">
-          <span className="text-[10px] font-semibold tracking-wider text-amber-500 uppercase flex items-center gap-1">
+        <div className="glass-panel rounded-xl p-3 md:p-4 flex flex-col justify-between border-l border-amber-500/30 bg-amber-500/[0.01]">
+          <span className="text-[9px] md:text-[10px] font-semibold tracking-wider text-amber-500 uppercase flex items-center gap-1">
             <AlertTriangle className="w-3.5 h-3.5" /> Total Holds
           </span>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-bold tracking-tight text-amber-400">{scheduleStats.holdDays}</span>
-            <span className="text-xs text-zinc-400 font-medium">{scheduleStats.holdDays === 1 ? 'hold day' : 'hold days'}</span>
+          <div className="flex items-baseline gap-1 md:gap-2 mt-1 md:mt-2">
+            <span className="text-2xl md:text-3xl font-bold tracking-tight text-amber-400">{scheduleStats.holdDays}</span>
+            <span className="text-[10px] md:text-xs text-zinc-400 font-medium">{scheduleStats.holdDays === 1 ? 'day' : 'days'}</span>
           </div>
         </div>
       </div>
 
       {/* 2. Interactive Navigation Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/8 mb-6 pb-2 gap-4">
-        <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 sm:pb-0 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/8 mb-4 md:mb-6 pb-2 gap-3 md:gap-4">
+        <div className="flex gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 sm:pb-0 w-full sm:w-auto">
           {(['stripboard', 'dood', 'budget'] as TabType[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] md:min-h-0 flex items-center justify-center ${
+              className={`px-3 md:px-4 py-2.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] md:min-h-0 flex items-center justify-center ${
                 activeTab === tab
                   ? 'bg-white text-black font-semibold'
                   : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
@@ -699,17 +699,17 @@ export default function InteractivePlayground() {
         </div>
         
         {activeTab === 'stripboard' && (
-          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+          <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:items-center sm:w-auto justify-end">
             <button
               onClick={() => setViewMode(viewMode === 'card' ? 'row' : 'card')}
-              className="btn-glass w-full sm:w-auto px-3 py-2.5 md:py-1.5 text-xs flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-0"
+              className="btn-glass w-full px-3 py-2.5 md:py-1.5 text-xs flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-0"
             >
               {viewMode === 'card' ? <List className="w-3.5 h-3.5" /> : <Grid className="w-3.5 h-3.5" />}
               <span>{viewMode === 'card' ? 'Classic Rows' : 'Cards'}</span>
             </button>
             <button
               onClick={() => setShowAddModal(true)}
-              className="btn-primary w-full sm:w-auto px-4 py-2.5 md:py-1.5 text-xs flex items-center justify-center gap-1 min-h-[44px] md:min-h-0"
+              className="btn-primary w-full px-4 py-2.5 md:py-1.5 text-xs flex items-center justify-center gap-1 min-h-[44px] md:min-h-0"
             >
               <Plus className="w-3.5 h-3.5 text-black" /> <span>Add Scene</span>
             </button>
@@ -738,7 +738,144 @@ export default function InteractivePlayground() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
+              <AnimatePresence>
+                {showAddModal && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden mb-4"
+                  >
+                    <div className="glass-panel rounded-xl p-4 md:p-5 border border-white/10 space-y-3 md:space-y-4">
+                      <h3 className="text-xs font-bold text-white uppercase tracking-wider">Add New Stripboard Scene</h3>
+                      
+                      <form onSubmit={handleCreateScene} className="space-y-3 md:space-y-3.5 text-xs">
+                        
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="space-y-1 col-span-1">
+                            <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Scene #</label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="e.g. 6"
+                              value={newSceneNumber}
+                              onChange={(e) => setNewSceneNumber(e.target.value)}
+                              className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2.5 min-h-[44px] md:min-h-0 md:p-2 text-white font-sans focus:outline-none focus:border-white/30"
+                            />
+                          </div>
+                          
+                          <div className="space-y-1 col-span-2">
+                            <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Pages (Eighths)</label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="e.g. 1 3/8 or 0.5"
+                              value={newPagesString}
+                              onChange={(e) => setNewPagesString(e.target.value)}
+                              className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2.5 min-h-[44px] md:min-h-0 md:p-2 text-white font-sans focus:outline-none focus:border-white/30"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Setting</label>
+                            <select
+                              value={newSetting}
+                              onChange={(e: any) => setNewSetting(e.target.value)}
+                              className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2.5 min-h-[44px] md:min-h-0 md:p-2 text-white font-sans focus:outline-none focus:border-white/30"
+                            >
+                              <option value="INT">INT. (Interior)</option>
+                              <option value="EXT">EXT. (Exterior)</option>
+                            </select>
+                          </div>
+                          
+                          <div className="space-y-1">
+                            <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Time of Day</label>
+                            <select
+                              value={newTimeOfDay}
+                              onChange={(e: any) => setNewTimeOfDay(e.target.value)}
+                              className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2.5 min-h-[44px] md:min-h-0 md:p-2 text-white font-sans focus:outline-none focus:border-white/30"
+                            >
+                              <option value="DAY">DAY</option>
+                              <option value="NIGHT">NIGHT</option>
+                              <option value="DAWN">DAWN</option>
+                              <option value="DUSK">DUSK</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Location Name</label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. Backlot Hangar"
+                            value={newLocation}
+                            onChange={(e) => setNewLocation(e.target.value)}
+                            className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2.5 min-h-[44px] md:min-h-0 md:p-2 text-white font-sans focus:outline-none focus:border-white/30"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Synopsis</label>
+                          <textarea
+                            required
+                            rows={2}
+                            placeholder="Brief synopsis of what happens in the scene..."
+                            value={newSynopsis}
+                            onChange={(e) => setNewSynopsis(e.target.value)}
+                            className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2.5 min-h-[44px] md:min-h-0 md:p-2 text-white font-sans focus:outline-none focus:border-white/30 resize-none"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans mb-1">Cast Members Involved</label>
+                          <div className="flex flex-wrap gap-2">
+                            {cast.map((actor) => {
+                              const isSelected = newCastIds.includes(actor.id);
+                              return (
+                                <button
+                                  key={actor.id}
+                                  type="button"
+                                  onClick={() => toggleCastSelection(actor.id)}
+                                  className={`px-3 py-2.5 md:px-2.5 md:py-1 rounded-full border text-[10px] font-medium transition-all min-h-[44px] md:min-h-0 flex items-center justify-center ${
+                                    isSelected
+                                      ? 'bg-white text-black font-semibold border-white'
+                                      : 'bg-transparent text-zinc-400 border-white/10 hover:border-white/20'
+                                  }`}
+                                >
+                                  {actor.name}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2 pt-3">
+                          <button
+                            type="button"
+                            onClick={() => setShowAddModal(false)}
+                            className="btn-glass flex-1 py-2.5 md:py-2 text-xs min-h-[44px] md:min-h-0 flex items-center justify-center"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            className="btn-primary flex-1 py-2.5 md:py-2 text-xs min-h-[44px] md:min-h-0 flex items-center justify-center"
+                          >
+                            Create Strip
+                          </button>
+                        </div>
+
+                      </form>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className={viewMode === 'row' ? "overflow-x-auto w-full pb-2" : "w-full"}>
+                <div className={viewMode === 'row' ? "min-w-[600px] flex flex-col gap-1.5" : "flex flex-col gap-2"}>
                 {stripboardItems.map((item, index) => {
                   
                   // DAY BREAK CARD
@@ -782,9 +919,9 @@ export default function InteractivePlayground() {
                       <motion.div
                         key={scene.id}
                         layout
-                        className="glass-panel rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:bg-zinc-900/30 hover:border-white/10"
+                        className="glass-panel rounded-xl p-3 md:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 transition-all hover:bg-zinc-900/30 hover:border-white/10"
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-start gap-3 md:gap-4">
                           <div className="flex flex-col items-center justify-center bg-zinc-900/80 border border-white/8 h-14 w-14 rounded-lg flex-shrink-0">
                             <span className="text-[9px] uppercase font-bold text-zinc-500">Scene</span>
                             <span className="text-lg font-bold text-white font-mono">{scene.sceneNumber}</span>
@@ -917,6 +1054,7 @@ export default function InteractivePlayground() {
                     </motion.div>
                   );
                 })}
+                </div>
               </div>
             </motion.div>
           )}
@@ -929,7 +1067,7 @@ export default function InteractivePlayground() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15 }}
-              className="grid grid-cols-1 lg:grid-cols-4 gap-6"
+              className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6"
             >
               
               {/* Warnings and SAG Rules explanation */}
@@ -976,7 +1114,7 @@ export default function InteractivePlayground() {
                   <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
                 </div>
                 <div className="overflow-x-auto rounded-xl border border-white/5 bg-zinc-950/20 backdrop-blur-md">
-                  <table className="min-w-full border-collapse text-left text-xs font-sans text-zinc-300">
+                  <table className="min-w-[600px] lg:min-w-full border-collapse text-left text-xs font-sans text-zinc-300">
                     <thead>
                       <tr className="border-b border-white/8 bg-zinc-900/40">
                         <th className="sticky left-0 z-10 min-w-[180px] bg-zinc-950/80 px-4 py-3 font-semibold text-white backdrop-blur-md">
@@ -1046,11 +1184,11 @@ export default function InteractivePlayground() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15 }}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6"
             >
               
               {/* Sliders Control Pane */}
-              <div className="lg:col-span-1 space-y-6 bg-zinc-950/30 border border-white/5 rounded-2xl p-5">
+              <div className="lg:col-span-1 space-y-4 md:space-y-6 bg-zinc-950/30 border border-white/5 rounded-2xl p-4 md:p-5">
                 <h3 className="text-sm font-semibold tracking-tight text-white flex items-center gap-1.5">
                   <Sliders className="w-4 h-4 text-zinc-400" /> Dynamic Variable Board
                 </h3>
@@ -1085,7 +1223,7 @@ export default function InteractivePlayground() {
                       step={1}
                       value={crewCount}
                       onChange={(e) => setCrewCount(parseInt(e.target.value, 10))}
-                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1"
+                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1 py-3 md:py-1.5"
                     />
                   </div>
 
@@ -1102,7 +1240,7 @@ export default function InteractivePlayground() {
                       step={50}
                       value={crewRate}
                       onChange={(e) => setCrewRate(parseInt(e.target.value, 10))}
-                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1"
+                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1 py-3 md:py-1.5"
                     />
                   </div>
 
@@ -1119,7 +1257,7 @@ export default function InteractivePlayground() {
                       step={100}
                       value={gearRate}
                       onChange={(e) => setGearRate(parseInt(e.target.value, 10))}
-                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1"
+                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1 py-3 md:py-1.5"
                     />
                   </div>
 
@@ -1136,7 +1274,7 @@ export default function InteractivePlayground() {
                       step={100}
                       value={actorRate}
                       onChange={(e) => setActorRate(parseInt(e.target.value, 10))}
-                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1"
+                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1 py-3 md:py-1.5"
                     />
                   </div>
                 </div>
@@ -1261,135 +1399,7 @@ export default function InteractivePlayground() {
         </AnimatePresence>
       </div>
 
-      {/* ADD SCENE MODAL PANEL */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="glass-panel max-w-md w-full rounded-2xl p-6 space-y-4 relative">
-            <h3 className="text-base font-bold text-white">Add New Stripboard Scene</h3>
-            
-            <form onSubmit={handleCreateScene} className="space-y-3.5 text-xs">
-              
-              <div className="grid grid-cols-3 gap-3">
-                <div className="space-y-1 col-span-1">
-                  <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Scene #</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. 6"
-                    value={newSceneNumber}
-                    onChange={(e) => setNewSceneNumber(e.target.value)}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2 text-white font-sans focus:outline-none focus:border-white/30"
-                  />
-                </div>
-                
-                <div className="space-y-1 col-span-2">
-                  <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Pages (Eighths)</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. 1 3/8 or 0.5"
-                    value={newPagesString}
-                    onChange={(e) => setNewPagesString(e.target.value)}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2 text-white font-sans focus:outline-none focus:border-white/30"
-                  />
-                </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Setting</label>
-                  <select
-                    value={newSetting}
-                    onChange={(e: any) => setNewSetting(e.target.value)}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2 text-white font-sans focus:outline-none focus:border-white/30"
-                  >
-                    <option value="INT">INT. (Interior)</option>
-                    <option value="EXT">EXT. (Exterior)</option>
-                  </select>
-                </div>
-                
-                <div className="space-y-1">
-                  <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Time of Day</label>
-                  <select
-                    value={newTimeOfDay}
-                    onChange={(e: any) => setNewTimeOfDay(e.target.value)}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2 text-white font-sans focus:outline-none focus:border-white/30"
-                  >
-                    <option value="DAY">DAY</option>
-                    <option value="NIGHT">NIGHT</option>
-                    <option value="DAWN">DAWN</option>
-                    <option value="DUSK">DUSK</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Location Name</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Backlot Hangar"
-                  value={newLocation}
-                  onChange={(e) => setNewLocation(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2 text-white font-sans focus:outline-none focus:border-white/30"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans">Synopsis</label>
-                <textarea
-                  required
-                  rows={2}
-                  placeholder="Brief synopsis of what happens in the scene..."
-                  value={newSynopsis}
-                  onChange={(e) => setNewSynopsis(e.target.value)}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2 text-white font-sans focus:outline-none focus:border-white/30 resize-none"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-zinc-500 font-medium uppercase tracking-wider block font-sans mb-1">Cast Members Involved</label>
-                <div className="flex flex-wrap gap-2">
-                  {cast.map((actor) => {
-                    const isSelected = newCastIds.includes(actor.id);
-                    return (
-                      <button
-                        key={actor.id}
-                        type="button"
-                        onClick={() => toggleCastSelection(actor.id)}
-                        className={`px-2.5 py-1 rounded-full border text-[10px] font-medium transition-all ${
-                          isSelected
-                            ? 'bg-white text-black font-semibold border-white'
-                            : 'bg-transparent text-zinc-400 border-white/10 hover:border-white/20'
-                        }`}
-                      >
-                        {actor.name}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="flex gap-2 pt-3">
-                <button
-                  type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="btn-glass flex-1 py-2 text-xs"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="btn-primary flex-1 py-2 text-xs"
-                >
-                  Create Strip
-                </button>
-              </div>
-
-            </form>
-          </div>
-        </div>
-      )}
 
     </div>
   );

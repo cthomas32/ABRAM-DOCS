@@ -73,12 +73,12 @@ export async function generateMetadata({ params }: ChangelogDetailPageProps): Pr
 
   if (!release) {
     return {
-      title: "Release Not Found | ABRAM Docs",
+      title: "Release Not Found",
     };
   }
 
   const releaseSlug = release.slug || release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined";
-  const title = `v${release.version}: ${release.title} | ABRAM Changelog`;
+  const title = `v${release.version}: ${release.title}`;
   const description = release.summary || `Release notes for version ${release.version} of the ABRAM Network.`;
   const canonicalUrl = `https://abram.network/changelog/${releaseSlug}`;
   const keywords = ["ABRAM", "changelog", "release notes", `version ${release.version}`].concat(
@@ -97,7 +97,7 @@ export async function generateMetadata({ params }: ChangelogDetailPageProps): Pr
       description,
       type: "article",
       url: canonicalUrl,
-      siteName: "ABRAM Docs",
+      siteName: "ABRAM Network",
       locale: "en_US",
       publishedTime: release.published_at || release.created_at,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: title }],

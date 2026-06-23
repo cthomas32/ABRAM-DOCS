@@ -109,6 +109,7 @@ We share your data with the following categories of third parties. ABRAM has exe
 | Google/Microsoft | Calendar events, availability | Calendar sync |
 | Resend | Email address, email content | Transactional email delivery |
 | Anthropic, PBC | User inputs and context passed through AI features | AI inference for Platform features |
+| Google Analytics | Usage data, page views, device & browser metadata | Platform traffic measurement & analytics |
 
 Data shared with Anthropic, PBC is processed securely via their developer API. In accordance with Anthropic's commercial terms, data sent via the API is not used to train or improve their models, is stored securely, and is deleted in accordance with their data retention policies.
 
@@ -130,15 +131,15 @@ If ABRAM is acquired by or merged with another company, your data may be transfe
 
 ## 6. Cookies & Tracking
 
-We use a Consent Management Platform (CMP) to manage cookie preferences. Cookies are categorized as:
+We use Google Analytics to understand Platform usage and measure traffic. To manage cookie preferences in compliance with Google Consent Mode v2, we utilize a Consent Management Platform (CMP). Cookies are categorized as:
 
 - **Strictly Necessary Cookies:** Required for the Platform to function (authentication, session management, security). Cannot be disabled without preventing core functionality.
-- **Analytics & Performance Cookies:** Used to understand Platform usage. Require opt-in consent.
-- **Third-Party / Integration Cookies:** Set by integrated tools such as Sentry. Require opt-in consent.
+- **Analytics & Performance Cookies (including Google Analytics):** Used to measure and analyze Platform traffic and usage. Require opt-in consent.
+- **Third-Party / Integration Cookies (including Sentry):** Set by integrated tools such as telemetry and diagnostic providers. Require opt-in consent.
 
 We do not use advertising cookies or behavioral tracking cookies for marketing purposes.
 
-Upon your first visit, a cookie consent banner will be displayed. You may Accept All, Reject All, or manage preferences by category. Accept and Reject options are presented with equal visual prominence. No optional categories are pre-selected. You may update your preferences at any time through the Cookie Settings link in the Platform footer.
+Under our Google Consent Mode v2 configuration, all optional consent parameters (`ad_storage`, `ad_user_data`, `ad_personalization`, and `analytics_storage`) default to a 'denied' state unless the user explicitly grants consent in the cookie banner. These optional categories are only activated if you choose to opt in. Upon your first visit, a cookie consent banner will be displayed. You may Accept All, Reject All, or manage and customize preferences by category. Accept and Reject options are presented with equal visual prominence, and no optional categories are pre-selected. Your consent preferences are saved in your browser's local storage (`localStorage`) and can be updated or revoked at any time via the 'Cookie Settings' button in the footer.
 
 ---
 

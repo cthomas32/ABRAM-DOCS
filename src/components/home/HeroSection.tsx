@@ -138,7 +138,7 @@ export default function HeroSection() {
             });
           }
         }}
-        className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2.5 group cursor-pointer focus:outline-none"
+        className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2.5 group cursor-pointer focus:outline-none px-6 py-2 min-w-[64px]"
       >
         <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-400 group-hover:text-white transition-colors duration-300 select-none">
           Explore

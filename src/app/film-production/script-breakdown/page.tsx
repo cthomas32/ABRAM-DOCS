@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import ScriptBreakdownClient from './ScriptBreakdownClient';
 
 export const metadata: Metadata = {
-  title: 'AI Script Breakdown — Automated Screenplay Parsing | ABRAM Network',
+  title: 'AI Script Breakdown & Screenplay Parsing',
   description: 'Transform screenplays into production-ready stripboards in seconds. Automatically parse scenes, extract characters, and compile scheduling elements.',
   keywords: [
     'AI script breakdown', 'screenplay parsing', 'automated stripboard', 
@@ -12,14 +12,14 @@ export const metadata: Metadata = {
     canonical: 'https://abram.network/film-production/script-breakdown',
   },
   openGraph: {
-    title: 'AI Script Breakdown — Automated Screenplay Parsing | ABRAM Network',
+    title: 'AI Script Breakdown & Screenplay Parsing | ABRAM Network',
     description: 'Transform screenplays into production-ready stripboards in seconds.',
     type: 'website',
     url: 'https://abram.network/film-production/script-breakdown',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Script Breakdown — Automated Screenplay Parsing | ABRAM Network',
+    title: 'AI Script Breakdown & Screenplay Parsing | ABRAM Network',
     description: 'Transform screenplays into production-ready stripboards in seconds.',
   },
 };

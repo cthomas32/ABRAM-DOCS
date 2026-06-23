@@ -55,9 +55,13 @@ export const MockArtifactCanvas: React.FC<MockArtifactCanvasProps> = ({
             transition={{ duration: 0.3 }}
             className="max-w-[816px] mx-auto bg-[#18181b] shadow-[0_30px_100px_rgba(0,0,0,0.8)] border border-white/5 min-h-[400px] sm:min-h-[800px] p-6 sm:p-12 md:p-16 relative rounded-md"
           >
-            <h1 className="text-2xl font-bold tracking-tight mb-8 text-white border-b border-white/5 pb-4">
+            <div 
+              className="text-2xl font-bold tracking-tight mb-8 text-white border-b border-white/5 pb-4"
+              role="heading"
+              aria-level={3}
+            >
               {documentTitle}
-            </h1>
+            </div>
             {content}
           </motion.div>
         </AnimatePresence>

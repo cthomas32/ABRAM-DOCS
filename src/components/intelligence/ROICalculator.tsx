@@ -192,7 +192,7 @@ export default function ROICalculator() {
               <button
                 key={tier.id}
                 onClick={() => setActiveTier(tier.id)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold font-sans transition-all duration-200 cursor-pointer ${
+                className={`px-4 py-3 md:py-1.5 rounded-full text-xs font-semibold font-sans transition-all duration-200 cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center ${
                   activeTier === tier.id
                     ? "bg-white text-black shadow-lg"
                     : "text-zinc-400 hover:text-white hover:bg-white/[0.03]"

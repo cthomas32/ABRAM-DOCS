@@ -7,22 +7,22 @@ import Link from "next/link";
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
 export const metadata: Metadata = {
-  title: "Changelog | ABRAM Docs",
+  title: "Updates",
   description: "Updates, improvements, and new features added to the ABRAM Network.",
   alternates: {
     canonical: "https://abram.network/changelog",
   },
   openGraph: {
-    title: "Changelog | ABRAM Docs",
+    title: "Updates | ABRAM Changelog",
     description: "Updates, improvements, and new features added to the ABRAM Network.",
     url: "https://abram.network/changelog",
-    siteName: "ABRAM Docs",
+    siteName: "ABRAM Network",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Changelog | ABRAM Docs",
+    title: "Updates | ABRAM Changelog",
     description: "Updates, improvements, and new features added to the ABRAM Network.",
   },
 };

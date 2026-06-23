@@ -57,7 +57,7 @@ export default function HeroSection() {
           >
             <a
               href="#roi-calculator"
-              className="btn-glass px-6 py-2.5 text-xs font-semibold rounded-full flex items-center gap-2 cursor-pointer select-none transition-all duration-200 hover:bg-white/[0.08]"
+              className="btn-glass px-6 py-2.5 text-xs font-semibold rounded-full flex items-center justify-center gap-2 cursor-pointer select-none transition-all duration-200 hover:bg-white/[0.08] min-h-[44px] md:min-h-0"
             >
               <span>Launch Calculator</span>
               <ArrowDown className="w-3.5 h-3.5 text-zinc-400 animate-bounce" />

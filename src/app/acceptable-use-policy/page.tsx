@@ -13,8 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const fileContent = fs.readFileSync(filePath, "utf8");
   const { data } = matter(fileContent);
   return {
-    title: `${data.title || "Acceptable Use Policy"} | ABRAM Docs`,
+    title: data.title || "Acceptable Use Policy",
     description: data.description || "Acceptable Use Policy for the ABRAM creative intelligence platform.",
+    alternates: {
+      canonical: 'https://abram.network/acceptable-use-policy',
+    },
   };
 }
 

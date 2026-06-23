@@ -5,6 +5,7 @@ import "lenis/dist/lenis.css";
 import AppLayout from "@/components/AppLayout";
 import LenisProvider from "@/components/LenisProvider";
 import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +28,8 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   metadataBase: new URL('https://abram.network'),
   title: {
-    default: 'ABRAM Docs — AI-Powered Creative Production Platform',
-    template: '%s | ABRAM Docs',
+    default: 'ABRAM Network — The AI Platform for Creative Intelligence',
+    template: '%s | ABRAM Network',
   },
   description: 'Official documentation and help center for ABRAM Network — the AI-powered platform for creative production management, crew scheduling, talent matchmaking, and automated invoicing.',
   keywords: [
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'ABRAM Docs',
+    siteName: 'ABRAM Network',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM — The AI Platform for Creative Intelligence' }],
   },
   twitter: {
@@ -66,9 +67,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  alternates: {
-    canonical: 'https://abram.network',
-  },
 };
 
 export default function RootLayout({
@@ -79,6 +77,51 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} h-full antialiased dark`}>
       <body className="min-h-full bg-background-base text-foreground font-sans">
+        <script
+          id="consent-default"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              
+              var consentPrefs = null;
+              try {
+                var saved = localStorage.getItem('abram-consent-v2');
+                if (saved) {
+                  consentPrefs = JSON.parse(saved);
+                }
+              } catch (e) {}
+              
+              var defaultConsent = {
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'analytics_storage': 'denied'
+              };
+              
+              if (consentPrefs) {
+                defaultConsent.ad_storage = consentPrefs.ad_storage ? 'granted' : 'denied';
+                defaultConsent.ad_user_data = consentPrefs.ad_user_data ? 'granted' : 'denied';
+                defaultConsent.ad_personalization = consentPrefs.ad_personalization ? 'granted' : 'denied';
+                defaultConsent.analytics_storage = consentPrefs.analytics_storage ? 'granted' : 'denied';
+              }
+              
+              gtag('consent', 'default', defaultConsent);
+            `
+          }}
+        />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-KCDWS029PK"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-KCDWS029PK');
+          `}
+        </Script>
         <LenisProvider>
           <AppLayout>{children}</AppLayout>
         </LenisProvider>
@@ -92,46 +135,54 @@ export default function RootLayout({
                 {
                   '@type': 'Organization',
                   '@id': 'https://abram.network/#organization',
-                  name: 'ABRAM Network',
-                  url: 'https://abram.network',
-                  logo: {
+                  'name': 'ABRAM Network',
+                  'url': 'https://abram.network',
+                  'logo': {
                     '@type': 'ImageObject',
-                    url: 'https://abram.network/logo/dark.svg',
+                    'url': 'https://abram.network/logo/dark.svg',
+                    'width': '112',
+                    'height': '28'
                   },
-                  description: 'ABRAM is the AI-powered platform for creative production management — project intake, crew scheduling, talent matchmaking, and automated invoicing for brands and freelancers.',
+                  'image': 'https://abram.network/og-image.png',
+                  'description': 'ABRAM is the AI-powered platform for creative production management, crew scheduling, talent matchmaking, and automated invoicing.',
+                  'sameAs': [
+                    'https://x.com/abramnetwork',
+                    'https://linkedin.com/company/abram-network'
+                  ]
                 },
                 {
                   '@type': 'WebApplication',
                   '@id': 'https://app.abram.network/#application',
-                  name: 'ABRAM',
-                  applicationCategory: 'BusinessApplication',
-                  operatingSystem: 'Web Browser',
-                  description: 'AI-powered creative production management platform for brands and freelancers.',
-                  offers: {
+                  'name': 'ABRAM App',
+                  'applicationCategory': 'BusinessApplication',
+                  'operatingSystem': 'Web Browser',
+                  'browserRequirements': 'Requires HTML5, CSS3, and JavaScript enabled. Compatible with Chrome, Safari, Firefox, and Edge.',
+                  'description': 'Web-based application workspace for managing creative agency and studio production logistics, scheduling, and billing.',
+                  'offers': {
                     '@type': 'Offer',
-                    price: '0',
-                    priceCurrency: 'USD',
-                    description: 'Free tier available with AI credits',
+                    'price': '0',
+                    'priceCurrency': 'USD',
+                    'description': 'Free tier available with credit-based usage'
                   },
-                  publisher: { '@id': 'https://abram.network/#organization' },
+                  'publisher': { '@id': 'https://abram.network/#organization' }
                 },
                 {
                   '@type': 'WebSite',
                   '@id': 'https://abram.network/#website',
-                  name: 'ABRAM Docs',
-                  url: 'https://abram.network',
-                  description: 'Official documentation and help center for ABRAM Network.',
-                  publisher: { '@id': 'https://abram.network/#organization' },
-                  potentialAction: {
+                  'name': 'ABRAM Network',
+                  'url': 'https://abram.network',
+                  'description': 'Official portal, documentation, and help center for the ABRAM platform.',
+                  'publisher': { '@id': 'https://abram.network/#organization' },
+                  'potentialAction': {
                     '@type': 'SearchAction',
-                    target: {
+                    'target': {
                       '@type': 'EntryPoint',
-                      urlTemplate: 'https://abram.network/docs?q={search_term_string}',
+                      'urlTemplate': 'https://abram.network/docs?q={search_term_string}'
                     },
-                    'query-input': 'required name=search_term_string',
-                  },
-                },
-              ],
+                    'query-input': 'required name=search_term_string'
+                  }
+                }
+              ]
             }).replace(/</g, '\\u003c'),
           }}
         />

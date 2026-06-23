@@ -57,11 +57,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: "Article Not Found | ABRAM Docs",
+      title: "Article Not Found",
     };
   }
 
-  const title = `${post.title} | ABRAM Blog`;
+  const title = post.title;
   const description = post.summary || post.title;
   const canonicalUrl = `https://abram.network/blog/${post.slug}`;
   const keywords = ["ABRAM", "blog", "article", post.author || "ABRAM Team"].concat(
@@ -80,7 +80,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       description,
       type: "article",
       url: canonicalUrl,
-      siteName: "ABRAM Docs",
+      siteName: "ABRAM Network",
       locale: "en_US",
       publishedTime: post.published_at || post.created_at,
       authors: [post.author || "ABRAM Network"],
