@@ -546,7 +546,7 @@ export default function ScriptBreakdownTimeline() {
                           <button
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
-                            className={`px-3 py-1 rounded-full text-[10px] font-medium tracking-wide uppercase transition-all duration-200 cursor-pointer ${
+                            className={`px-3 py-2.5 md:py-1 rounded-full text-[10px] font-medium tracking-wide uppercase transition-all duration-200 cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center ${
                               activeCategory === cat 
                                 ? "bg-white text-zinc-950 font-semibold" 
                                 : "bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-zinc-200"
@@ -720,7 +720,7 @@ export default function ScriptBreakdownTimeline() {
                     {!resolvedCharacter ? (
                       <button
                         onClick={() => setResolvedCharacter(true)}
-                        className="btn-primary w-full text-xs"
+                        className="btn-primary w-full text-xs min-h-[44px] md:min-h-0 flex items-center justify-center"
                       >
                         Merge into single identity "Leo Vance"
                       </button>
@@ -760,7 +760,7 @@ export default function ScriptBreakdownTimeline() {
                               key={opt}
                               onClick={() => setSceneAction(opt)}
                               disabled={resolvedScene}
-                              className={`flex-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                              className={`flex-1 px-2.5 py-2.5 md:py-1.5 rounded-lg border text-[10px] font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center ${
                                 sceneAction === opt 
                                   ? "bg-white text-zinc-950 border-white" 
                                   : "bg-zinc-900 border-white/5 text-zinc-400 hover:text-zinc-200 disabled:opacity-50"
@@ -776,7 +776,7 @@ export default function ScriptBreakdownTimeline() {
                     {!resolvedScene ? (
                       <button
                         onClick={() => setResolvedScene(true)}
-                        className="btn-primary w-full text-xs"
+                        className="btn-primary w-full text-xs min-h-[44px] md:min-h-0 flex items-center justify-center"
                       >
                         Apply "{sceneAction === "overwrite" ? "Overwrite" : sceneAction === "split" ? "Split as Scene 12A" : "Keep Original"}" Resolution
                       </button>
@@ -822,14 +822,14 @@ export default function ScriptBreakdownTimeline() {
             <button
               onClick={() => setActiveStep((prev) => (prev > 1 ? (prev - 1) as 1 | 2 | 3 | 4 : 1))}
               disabled={activeStep === 1}
-              className="btn-ghost text-[10px] !px-3 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              className="btn-ghost text-[10px] !px-3 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center"
             >
               Previous Step
             </button>
             <button
               onClick={() => setActiveStep((prev) => (prev < 4 ? (prev + 1) as 1 | 2 | 3 | 4 : 4))}
               disabled={activeStep === 4}
-              className="btn-glass text-[10px] !px-3 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1"
+              className="btn-glass text-[10px] !px-3 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-1 min-h-[44px] md:min-h-0"
             >
               <span>Next Step</span>
               <ChevronRight className="w-3 h-3" />

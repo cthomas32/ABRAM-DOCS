@@ -311,13 +311,90 @@ export const blockquote = ({ children }: React.HTMLAttributes<HTMLQuoteElement>)
 };
 
 // Custom Tables
-export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTableElement>) => (
-  <div className="my-6 w-full overflow-x-auto border border-zinc-200 dark:border-zinc-800 rounded-lg">
-    <table className="w-full border-collapse text-left text-sm" {...props}>
-      {children}
-    </table>
-  </div>
-);
+export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTableElement>) => {
+  const childrenArray = React.Children.toArray(children);
+  
+  // Check if there is already a thead, tbody, or tfoot container in the children
+  const hasTheadOrTbody = childrenArray.some(
+    (child) =>
+      React.isValidElement(child) &&
+      (child.type === "thead" ||
+        child.type === "tbody" ||
+        child.type === "tfoot" ||
+        (typeof child.type === "string" && ["thead", "tbody", "tfoot"].includes(child.type.toLowerCase())) ||
+        (typeof child.type === "function" && ["thead", "tbody", "tfoot"].includes(child.type.name)))
+  );
+
+  let processedChildren = children;
+
+  if (!hasTheadOrTbody) {
+    const trElements: React.ReactNode[] = [];
+    const otherElements: React.ReactNode[] = [];
+
+    childrenArray.forEach((child) => {
+      if (
+        React.isValidElement(child) &&
+        (child.type === "tr" ||
+          (typeof child.type === "string" && child.type.toLowerCase() === "tr") ||
+          (typeof child.type === "function" && child.type.name === "tr"))
+      ) {
+        trElements.push(child);
+      } else {
+        otherElements.push(child);
+      }
+    });
+
+    if (trElements.length > 0) {
+      const headerTrs: React.ReactNode[] = [];
+      const bodyTrs: React.ReactNode[] = [];
+
+      trElements.forEach((trNode) => {
+        if (React.isValidElement(trNode)) {
+          const trElement = trNode as React.ReactElement<{ children?: React.ReactNode }>;
+          const trChildren = React.Children.toArray(trElement.props.children);
+          const hasTh = trChildren.some(
+            (c) =>
+              React.isValidElement(c) &&
+              (c.type === "th" ||
+                (typeof c.type === "string" && c.type.toLowerCase() === "th") ||
+                (typeof c.type === "function" && c.type.name === "th"))
+          );
+          if (hasTh) {
+            headerTrs.push(trNode);
+          } else {
+            bodyTrs.push(trNode);
+          }
+        } else {
+          bodyTrs.push(trNode);
+        }
+      });
+
+      processedChildren = (
+        <>
+          {headerTrs.length > 0 && (
+            <thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
+              {headerTrs}
+            </thead>
+          )}
+          {bodyTrs.length > 0 && (
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              {bodyTrs}
+            </tbody>
+          )}
+          {otherElements}
+        </>
+      );
+    }
+  }
+
+  return (
+    <div className="my-6 w-full overflow-x-auto border border-zinc-200 dark:border-zinc-800 rounded-lg">
+      <table className="w-full border-collapse text-left text-sm" {...props}>
+        {processedChildren}
+      </table>
+    </div>
+  );
+};
 
 export const thead = ({ children, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => (
   <thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800" {...props}>

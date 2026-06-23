@@ -126,7 +126,7 @@ export default function FilmProductionHubClient() {
               <div>
                 <Link 
                   href="/film-production/scheduling-budgeting" 
-                  className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium"
+                  className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
                 >
                   <span>Launch Playground</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -173,7 +173,7 @@ export default function FilmProductionHubClient() {
               <div>
                 <Link 
                   href="/film-production/call-sheets" 
-                  className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium"
+                  className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
                 >
                   <span>Open Call Sheets</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -213,7 +213,7 @@ export default function FilmProductionHubClient() {
             <div className="flex justify-start">
               <Link 
                 href="/film-production/script-breakdown" 
-                className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium"
+                className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
               >
                 <span>Launch Breakdown Engine</span>
                 <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -293,7 +293,7 @@ export default function FilmProductionHubClient() {
             <div className="flex justify-center pt-2">
               <Link 
                 href="/production-brain"
-                className="btn-glass inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium"
+                className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
               >
                 <span>Explore Collaboration Brain</span>
                 <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />

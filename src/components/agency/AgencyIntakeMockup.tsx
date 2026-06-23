@@ -164,7 +164,7 @@ export default function AgencyIntakeMockup() {
       <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-4 border-b border-white/5 mb-6">
         <button
           onClick={() => handleTemplateChange("video-campaign")}
-          className={`px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 ${
+          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] flex items-center justify-center ${
             template === "video-campaign"
               ? "bg-white text-black"
               : "bg-white/5 text-zinc-400 hover:text-zinc-200 border border-white/5"
@@ -174,7 +174,7 @@ export default function AgencyIntakeMockup() {
         </button>
         <button
           onClick={() => handleTemplateChange("brand-identity")}
-          className={`px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 ${
+          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] flex items-center justify-center ${
             template === "brand-identity"
               ? "bg-white text-black"
               : "bg-white/5 text-zinc-400 hover:text-zinc-200 border border-white/5"
@@ -184,7 +184,7 @@ export default function AgencyIntakeMockup() {
         </button>
         <button
           onClick={() => handleTemplateChange("social-bundle")}
-          className={`px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 ${
+          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] flex items-center justify-center ${
             template === "social-bundle"
               ? "bg-white text-black"
               : "bg-white/5 text-zinc-400 hover:text-zinc-200 border border-white/5"
@@ -214,7 +214,7 @@ export default function AgencyIntakeMockup() {
                 type="text"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
-                className="w-full bg-zinc-900 border border-white/5 rounded-lg px-3.5 py-2 text-xs text-white outline-none focus:border-white/10"
+                className="w-full bg-zinc-900 border border-white/5 rounded-lg px-3.5 py-2 text-xs text-white outline-none focus:border-white/10 min-h-[44px]"
               />
             </div>
 
@@ -240,7 +240,7 @@ export default function AgencyIntakeMockup() {
                 step={1000}
                 value={budgetCap}
                 onChange={(e) => setBudgetCap(Number(e.target.value))}
-                className="w-full accent-white bg-zinc-900 h-1.5 rounded-lg appearance-none cursor-pointer"
+                className="w-full accent-white bg-zinc-900 h-1.5 rounded-lg appearance-none cursor-pointer py-3"
               />
             </div>
           </div>
@@ -249,7 +249,7 @@ export default function AgencyIntakeMockup() {
             <button
               onClick={handleRunScoping}
               disabled={isScoping}
-              className="btn-primary w-full py-2.5 text-xs flex items-center justify-center gap-2 cursor-pointer"
+              className="btn-primary w-full min-h-[44px] text-xs flex items-center justify-center gap-2 cursor-pointer"
             >
               {isScoping ? (
                 <>
@@ -333,14 +333,14 @@ export default function AgencyIntakeMockup() {
                     <span className="text-[9px] uppercase font-mono tracking-wider text-zinc-500 block">Extracted Deliverables</span>
                     <div className="space-y-1.5 text-xs">
                       {scopedOutput.deliverables.map((item, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-2 rounded bg-zinc-950/60 border border-white/5">
-                          <div className="flex items-center gap-2">
-                            <Layers className="w-3 h-3 text-zinc-500" />
-                            <span className="text-zinc-200">{item.name}</span>
+                        <div key={idx} className="flex items-center justify-between p-2 rounded bg-zinc-950/60 border border-white/5 gap-2 min-w-0">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Layers className="w-3 h-3 text-zinc-500 shrink-0" />
+                            <span className="text-zinc-200 truncate">{item.name}</span>
                           </div>
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             <span className="text-[9px] px-1.5 py-0.5 rounded bg-zinc-900 border border-white/5 text-zinc-400 font-mono uppercase">
-                              {item.complexity} Complexity
+                              {item.complexity}
                             </span>
                             <span className="text-white font-mono font-semibold">x{item.qty}</span>
                           </div>
@@ -370,8 +370,8 @@ export default function AgencyIntakeMockup() {
                     <span className="text-[9px] uppercase font-mono tracking-wider text-zinc-500 block">Structured Milestone Targets</span>
                     <div className="space-y-1 text-xs">
                       {scopedOutput.milestones.map((item, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-1.5 text-zinc-400 border-l border-white/10 pl-3 ml-2">
-                          <span className="truncate">{item.name}</span>
+                        <div key={idx} className="flex items-center justify-between p-1.5 text-zinc-400 border-l border-white/10 pl-3 ml-2 min-w-0">
+                          <span className="truncate mr-2">{item.name}</span>
                           <span className="text-[9px] font-mono text-zinc-500 font-semibold shrink-0">Day {item.targetDay}</span>
                         </div>
                       ))}
@@ -385,14 +385,14 @@ export default function AgencyIntakeMockup() {
           {scopedOutput && !isScoping && (
             <div className="pt-6 border-t border-white/5 mt-6">
               {isApproved ? (
-                <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center gap-2 text-emerald-400 text-xs">
+                <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center gap-2 text-emerald-400 text-xs min-h-[44px]">
                   <CheckCircle2 className="w-4 h-4" />
                   <span className="font-semibold font-mono text-[10px] uppercase tracking-wider">Project Scoped & Pushed to Crew Roster</span>
                 </div>
               ) : (
                 <button
                   onClick={handleApprove}
-                  className="btn-glass w-full py-2.5 text-xs flex items-center justify-center gap-1.5 cursor-pointer font-sans"
+                  className="btn-glass w-full min-h-[44px] text-xs flex items-center justify-center gap-1.5 cursor-pointer font-sans"
                 >
                   <FileCheck className="w-4 h-4" />
                   <span>Approve Blueprint & Allocate Resources</span>

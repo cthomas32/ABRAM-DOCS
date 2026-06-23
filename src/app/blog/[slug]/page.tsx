@@ -232,7 +232,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
         </header>
 
-        <div className="text-zinc-300 font-sans select-text">
+        <div className="text-zinc-300 font-sans select-text release-notes-content">
           <MDXRemote source={post.content} components={mdxComponents} />
         </div>
       </article>

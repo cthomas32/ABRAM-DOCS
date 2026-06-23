@@ -679,13 +679,13 @@ export default function InteractivePlayground() {
       </div>
 
       {/* 2. Interactive Navigation Tabs */}
-      <div className="flex items-center justify-between border-b border-white/8 mb-6 pb-2">
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/8 mb-6 pb-2 gap-4">
+        <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 sm:pb-0 w-full sm:w-auto">
           {(['stripboard', 'dood', 'budget'] as TabType[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 ${
+              className={`px-4 py-2.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] md:min-h-0 flex items-center justify-center ${
                 activeTab === tab
                   ? 'bg-white text-black font-semibold'
                   : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
@@ -699,19 +699,19 @@ export default function InteractivePlayground() {
         </div>
         
         {activeTab === 'stripboard' && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
             <button
               onClick={() => setViewMode(viewMode === 'card' ? 'row' : 'card')}
-              className="btn-glass sm px-3 py-1.5 text-xs flex items-center gap-1.5"
+              className="btn-glass w-full sm:w-auto px-3 py-2.5 md:py-1.5 text-xs flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-0"
             >
               {viewMode === 'card' ? <List className="w-3.5 h-3.5" /> : <Grid className="w-3.5 h-3.5" />}
-              {viewMode === 'card' ? 'Switch to Classic Rows' : 'Switch to Cards'}
+              <span>{viewMode === 'card' ? 'Classic Rows' : 'Cards'}</span>
             </button>
             <button
               onClick={() => setShowAddModal(true)}
-              className="btn-primary sm px-4 py-1.5 text-xs flex items-center gap-1"
+              className="btn-primary w-full sm:w-auto px-4 py-2.5 md:py-1.5 text-xs flex items-center justify-center gap-1 min-h-[44px] md:min-h-0"
             >
-              <Plus className="w-3.5 h-3.5 text-black" /> Add Scene
+              <Plus className="w-3.5 h-3.5 text-black" /> <span>Add Scene</span>
             </button>
           </div>
         )}
@@ -828,7 +828,7 @@ export default function InteractivePlayground() {
                           <button
                             onClick={() => addDayBreak(index)}
                             title="Insert Day Break After"
-                            className="btn-glass sm px-2.5 py-1.5 text-zinc-400 hover:text-white"
+                            className="btn-glass sm px-2.5 py-2.5 md:py-1.5 text-zinc-400 hover:text-white min-h-[44px] md:min-h-0 flex items-center justify-center gap-1"
                           >
                             <Calendar className="w-3.5 h-3.5 text-zinc-400" />
                             <span className="sr-only md:not-sr-only text-[10px]">Add Break</span>
@@ -838,7 +838,7 @@ export default function InteractivePlayground() {
                             <button
                               onClick={() => moveItem(index, 'up')}
                               disabled={index === 0}
-                              className="p-2 hover:bg-white/10 text-zinc-400 hover:text-white disabled:opacity-20 disabled:pointer-events-none cursor-pointer transition-colors"
+                              className="p-3 md:p-2 hover:bg-white/10 text-zinc-400 hover:text-white disabled:opacity-20 disabled:pointer-events-none cursor-pointer transition-colors min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center"
                               title="Move Scene Up"
                             >
                               <ArrowUp className="w-3.5 h-3.5" />
@@ -847,7 +847,7 @@ export default function InteractivePlayground() {
                             <button
                               onClick={() => moveItem(index, 'down')}
                               disabled={index === stripboardItems.length - 1}
-                              className="p-2 hover:bg-white/10 text-zinc-400 hover:text-white disabled:opacity-20 disabled:pointer-events-none cursor-pointer transition-colors"
+                              className="p-3 md:p-2 hover:bg-white/10 text-zinc-400 hover:text-white disabled:opacity-20 disabled:pointer-events-none cursor-pointer transition-colors min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center"
                               title="Move Scene Down"
                             >
                               <ArrowDown className="w-3.5 h-3.5" />
@@ -857,7 +857,7 @@ export default function InteractivePlayground() {
                           <button
                             onClick={() => removeItem(index)}
                             title="Remove Scene"
-                            className="p-2 text-zinc-500 hover:text-red-400 transition-colors cursor-pointer rounded-full hover:bg-red-500/5"
+                            className="p-2.5 text-zinc-500 hover:text-red-400 transition-colors cursor-pointer rounded-full hover:bg-red-500/5 min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -890,26 +890,26 @@ export default function InteractivePlayground() {
                         <button
                           onClick={() => moveItem(index, 'up')}
                           disabled={index === 0}
-                          className="p-1 hover:bg-white/5 text-zinc-400 disabled:opacity-10 cursor-pointer"
+                          className="p-2.5 md:p-1 hover:bg-white/5 text-zinc-400 disabled:opacity-10 cursor-pointer min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center"
                         >
                           <ArrowUp className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => moveItem(index, 'down')}
                           disabled={index === stripboardItems.length - 1}
-                          className="p-1 hover:bg-white/5 text-zinc-400 disabled:opacity-10 cursor-pointer"
+                          className="p-2.5 md:p-1 hover:bg-white/5 text-zinc-400 disabled:opacity-10 cursor-pointer min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center"
                         >
                           <ArrowDown className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => addDayBreak(index)}
-                          className="p-1 hover:bg-white/5 text-zinc-500 hover:text-amber-500 cursor-pointer"
+                          className="p-2.5 md:p-1 hover:bg-white/5 text-zinc-500 hover:text-amber-500 cursor-pointer min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center"
                         >
                           <Calendar className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => removeItem(index)}
-                          className="p-1 hover:bg-white/5 text-zinc-500 hover:text-red-400 cursor-pointer"
+                          className="p-2.5 md:p-1 hover:bg-white/5 text-zinc-500 hover:text-red-400 cursor-pointer min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -971,6 +971,10 @@ export default function InteractivePlayground() {
 
               {/* Matrix Grid */}
               <div className="lg:col-span-3">
+                <div className="flex items-center justify-between mb-2 md:hidden">
+                  <span className="text-[10px] text-zinc-500 uppercase font-semibold">Cast Matrix</span>
+                  <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                </div>
                 <div className="overflow-x-auto rounded-xl border border-white/5 bg-zinc-950/20 backdrop-blur-md">
                   <table className="min-w-full border-collapse text-left text-xs font-sans text-zinc-300">
                     <thead>

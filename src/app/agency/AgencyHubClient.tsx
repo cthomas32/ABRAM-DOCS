@@ -75,7 +75,7 @@ export default function AgencyHubClient() {
               <motion.h1
                 variants={revealVariants}
                 custom={0.1}
-                className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
+                className="text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
               >
                 Studio Orchestration.
                 <span className="block mt-[8px] text-zinc-500">
@@ -123,9 +123,9 @@ export default function AgencyHubClient() {
 
                   {/* Inline visual preview */}
                   <div className="p-3.5 rounded bg-zinc-950/40 border border-white/5 text-[10px] font-mono space-y-2 opacity-80 group-hover:opacity-100 transition-opacity select-none">
-                    <div className="flex items-center justify-between text-zinc-500">
-                      <span>helix_brief.txt</span>
-                      <span className="text-emerald-400 flex items-center gap-1">
+                    <div className="flex items-center justify-between text-zinc-500 gap-2">
+                      <span className="truncate">helix_brief.txt</span>
+                      <span className="text-emerald-400 flex items-center gap-1 shrink-0">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Parsed
                       </span>
                     </div>
@@ -141,7 +141,7 @@ export default function AgencyHubClient() {
                 <div className="pt-6">
                   <Link 
                     href="/agency/client-intake" 
-                    className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium"
+                    className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px]"
                   >
                     <span>Intake Portal</span>
                     <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -172,13 +172,13 @@ export default function AgencyHubClient() {
 
                   {/* Inline visual preview */}
                   <div className="p-3.5 rounded bg-zinc-950/40 border border-white/5 text-[10px] font-mono space-y-2 opacity-80 group-hover:opacity-100 transition-opacity select-none">
-                    <div className="flex justify-between items-center text-zinc-300">
-                      <span>Vesper Lin (3D Lead)</span>
-                      <span className="text-emerald-400">98% Match</span>
+                    <div className="flex justify-between items-center text-zinc-300 gap-2">
+                      <span className="truncate">Vesper Lin (3D Lead)</span>
+                      <span className="text-emerald-400 shrink-0">98% Match</span>
                     </div>
-                    <div className="flex justify-between items-center text-zinc-500">
-                      <span>Rate: $700/d</span>
-                      <span className="px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Available</span>
+                    <div className="flex justify-between items-center text-zinc-500 gap-2">
+                      <span className="truncate">Rate: $700/d</span>
+                      <span className="px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">Available</span>
                     </div>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export default function AgencyHubClient() {
                 <div className="pt-6">
                   <Link 
                     href="/agency/crew-roster" 
-                    className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium"
+                    className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px]"
                   >
                     <span>Roster Board</span>
                     <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -217,11 +217,11 @@ export default function AgencyHubClient() {
 
                   {/* Inline visual preview */}
                   <div className="p-3.5 rounded bg-zinc-950/40 border border-white/5 text-[10px] font-mono space-y-2 opacity-80 group-hover:opacity-100 transition-opacity select-none">
-                    <div className="flex justify-between items-center text-red-400 bg-red-500/5 border border-red-500/15 p-1 rounded">
-                      <span className="flex items-center gap-1">⚠️ Schedule Conflict</span>
-                      <span>Wed Overlap</span>
+                    <div className="flex justify-between items-center text-red-400 bg-red-500/5 border border-red-500/15 p-1 rounded gap-2">
+                      <span className="flex items-center gap-1 truncate">⚠️ Schedule Conflict</span>
+                      <span className="shrink-0">Wed Overlap</span>
                     </div>
-                    <div className="text-zinc-500 text-[9px] uppercase">
+                    <div className="text-zinc-500 text-[9px] uppercase truncate">
                       AI resolution recommended →
                     </div>
                   </div>
@@ -230,7 +230,7 @@ export default function AgencyHubClient() {
                 <div className="pt-6">
                   <Link 
                     href="/agency/smart-scheduling" 
-                    className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium"
+                    className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px]"
                   >
                     <span>Timeline Calendar</span>
                     <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -301,7 +301,7 @@ export default function AgencyHubClient() {
               <div className="pt-6 flex justify-center">
                 <Link
                   href="/production-brain"
-                  className="btn-glass inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium"
+                  className="btn-glass inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px]"
                 >
                   <span>Explore Workspace Intelligence</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />

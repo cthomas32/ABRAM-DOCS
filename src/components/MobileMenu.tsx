@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowUpRight } from "lucide-react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,12 +12,19 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProps) {
-  const [filmProductionOpen, setFilmProductionOpen] = useState(false);
+  // Manage open dropdowns by name/ID
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  // Automatically open the film production sub-menu if pathname starts with it
+  // Automatically open the appropriate sub-menu if pathname starts with it
   useEffect(() => {
-    if (isOpen && pathname.startsWith("/film-production")) {
-      setFilmProductionOpen(true);
+    if (isOpen) {
+      if (pathname.startsWith("/film-production")) {
+        setOpenDropdown("Film Production");
+      } else if (pathname.startsWith("/agency")) {
+        setOpenDropdown("Creative Ops");
+      } else {
+        setOpenDropdown(null);
+      }
     }
   }, [isOpen, pathname]);
 
@@ -32,6 +39,10 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  const toggleDropdown = (name: string) => {
+    setOpenDropdown(prev => prev === name ? null : name);
+  };
 
   const panelVariants: Variants = {
     closed: {
@@ -72,6 +83,17 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Digital Call Sheets", href: "/film-production/call-sheets", desc: "Daily schedule, weather & crew call times" },
       ]
     },
+    {
+      name: "Creative Ops",
+      href: "/agency",
+      isDropdown: true,
+      submenu: [
+        { name: "Overview Hub", href: "/agency", desc: "Suite control cockpit & client dashboard" },
+        { name: "Client Intake", href: "/agency/client-intake", desc: "Intake forms, briefs & requirements" },
+        { name: "Crew Roster", href: "/agency/crew-roster", desc: "Contractor directory & availability" },
+        { name: "Smart Scheduling", href: "/agency/smart-scheduling", desc: "AI-driven matching & booking board" },
+      ]
+    },
     { name: "Brain", href: "/production-brain" },
     { name: "Learn", href: "/docs" },
     { name: "Blog", href: "/blog" },
@@ -105,22 +127,23 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
                 {menuLinks.map((link) => {
                   if (link.isDropdown && link.submenu) {
                     const isParentActive = pathname.startsWith(link.href);
+                    const isCurrentDropdownOpen = openDropdown === link.name;
                     return (
                       <motion.div key={link.name} variants={itemVariants} className="flex flex-col">
                         <button
-                          onClick={() => setFilmProductionOpen(!filmProductionOpen)}
-                          className={`flex items-center justify-between w-full rounded-xl border px-4 py-3.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer text-left ${
+                          onClick={() => toggleDropdown(link.name)}
+                          className={`flex items-center justify-between w-full min-h-[44px] rounded-xl border px-4 py-3 text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer text-left ${
                             isParentActive
                               ? "bg-white/5 border-white/10 text-white shadow-md shadow-white/5"
                               : "border-transparent text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.02] hover:border-white/5"
                           }`}
                         >
                           <span className="font-sans">{link.name}</span>
-                          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${filmProductionOpen ? "rotate-180" : ""}`} />
+                          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCurrentDropdownOpen ? "rotate-180" : ""}`} />
                         </button>
                         
                         <AnimatePresence initial={false}>
-                          {filmProductionOpen && (
+                          {isCurrentDropdownOpen && (
                             <motion.div
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}
@@ -135,7 +158,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
                                     key={sublink.name}
                                     href={sublink.href}
                                     onClick={onClose}
-                                    className={`flex flex-col gap-0.5 rounded-xl border p-3 text-left transition-all duration-200 ${
+                                    className={`flex flex-col gap-0.5 rounded-xl border p-3 min-h-[44px] text-left transition-all duration-200 ${
                                       isSubActive
                                         ? "bg-white/5 border-white/10 text-white"
                                         : "border-transparent text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.01] hover:border-white/5"
@@ -163,7 +186,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
                       <Link
                         href={link.href}
                         onClick={onClose}
-                        className={`flex items-center rounded-xl border px-4 py-3.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
+                        className={`flex items-center min-h-[44px] rounded-xl border px-4 py-3 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
                           isActive
                             ? "bg-white/5 border-white/10 text-white shadow-md shadow-white/5"
                             : "border-transparent text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.02] hover:border-white/5"
@@ -174,6 +197,20 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
                     </motion.div>
                   );
                 })}
+
+                {/* Get Started Button (CTA) */}
+                <motion.div variants={itemVariants} className="mt-2.5">
+                  <a
+                    href="https://app.abram.network"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={onClose}
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-white text-black min-h-[44px] px-4 py-3 text-xs font-semibold uppercase tracking-wider hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
+                  >
+                    <span>Get Started</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                </motion.div>
               </nav>
             </div>
           </motion.div>

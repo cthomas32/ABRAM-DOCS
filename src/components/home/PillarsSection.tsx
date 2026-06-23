@@ -481,10 +481,9 @@ export default function PillarsSection() {
   const yValue = useTransform(scrollYProgress, [0, 1], [30, -30]);
 
   const cardVariants: Variants = {
-    initial: { opacity: 0, filter: "blur(10px)" },
+    initial: { opacity: 0 },
     animate: (i: number) => ({
       opacity: 1,
-      filter: "blur(0px)",
       transition: { duration: 1.0, ease: "easeOut", delay: i * 0.12 },
     }),
   };
@@ -510,11 +509,10 @@ export default function PillarsSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={{
-            hidden: { opacity: 0, y: 30, filter: "blur(6px)" },
+            hidden: { opacity: 0, y: 30 },
             visible: { 
               opacity: 1, 
               y: 0, 
-              filter: "blur(0px)",
               transition: { duration: 0.8, ease: "easeOut" } 
             }
           }}

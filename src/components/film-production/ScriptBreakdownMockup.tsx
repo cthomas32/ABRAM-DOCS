@@ -348,11 +348,11 @@ export default function ScriptBreakdownMockup() {
           )}
         </div>
 
-        <div>
+        <div className="w-full sm:w-auto">
           {status === "idle" && (
             <button
               onClick={handleRunBreakdown}
-              className="btn-primary flex items-center gap-1.5 text-xs select-none"
+              className="btn-primary w-full sm:w-auto flex items-center justify-center gap-1.5 text-xs select-none min-h-[44px] md:min-h-0"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Run AI Breakdown</span>
@@ -362,7 +362,7 @@ export default function ScriptBreakdownMockup() {
           {status === "parsing" && (
             <button
               disabled
-              className="btn-glass flex items-center gap-1.5 text-xs select-none opacity-50 cursor-not-allowed"
+              className="btn-glass w-full sm:w-auto flex items-center justify-center gap-1.5 text-xs select-none opacity-50 cursor-not-allowed min-h-[44px] md:min-h-0"
             >
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
               <span>Analyzing Screenplay...</span>
@@ -372,7 +372,7 @@ export default function ScriptBreakdownMockup() {
           {status === "complete" && (
             <button
               onClick={handleReset}
-              className="btn-glass flex items-center gap-1.5 text-xs select-none"
+              className="btn-glass w-full sm:w-auto flex items-center justify-center gap-1.5 text-xs select-none min-h-[44px] md:min-h-0"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reset Demo</span>

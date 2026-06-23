@@ -175,7 +175,7 @@ export default function AgencySchedulingMockup() {
               <button
                 onClick={handleResolve}
                 disabled={isOptimizing}
-                className="btn-primary py-2 px-3 shrink-0 flex items-center gap-1 text-[11px] font-semibold text-black cursor-pointer bg-red-400 border-none hover:bg-red-300"
+                className="btn-primary min-h-[44px] px-3.5 shrink-0 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-black cursor-pointer bg-red-400 border-none hover:bg-red-300 rounded-full"
               >
                 {isOptimizing ? (
                   <>
@@ -210,7 +210,7 @@ export default function AgencySchedulingMockup() {
               </div>
               <button
                 onClick={handleReset}
-                className="btn-ghost py-1 px-3 text-[10px] shrink-0 text-zinc-400 hover:text-white"
+                className="btn-ghost min-h-[44px] px-3.5 text-[10px] shrink-0 text-zinc-400 hover:text-white flex items-center justify-center"
               >
                 Reset Layout
               </button>
@@ -219,79 +219,87 @@ export default function AgencySchedulingMockup() {
         )}
       </AnimatePresence>
 
+      {/* Timeline Scroll Hint */}
+      <div className="flex justify-between items-center px-1 mb-2 text-[10px] text-zinc-500 font-mono md:hidden gap-2">
+        <span>Timeline Board</span>
+        <span className="text-[9px] text-zinc-400 animate-pulse shrink-0">Swipe to view full schedule →</span>
+      </div>
+
       {/* Timeline Layout */}
-      <div className="space-y-4">
-        {/* Timeline Header Row (Days of Week) */}
-        <div className="grid grid-cols-12 border-b border-white/5 pb-2 text-[10px] uppercase tracking-wider font-semibold text-zinc-500 font-mono">
-          <div className="col-span-3 sm:col-span-4 pl-2">Resource Name</div>
-          <div className="col-span-9 sm:col-span-8 grid grid-cols-5 text-center">
-            {daysOfWeek.map((day) => (
-              <div key={day} className="py-1 border-l border-white/5">
-                {day}
+      <div className="overflow-x-auto scrollbar-thin">
+        <div className="min-w-[650px] md:min-w-0 space-y-4">
+          {/* Timeline Header Row (Days of Week) */}
+          <div className="grid grid-cols-12 border-b border-white/5 pb-2 text-[10px] uppercase tracking-wider font-semibold text-zinc-500 font-mono">
+            <div className="col-span-3 sm:col-span-4 pl-2">Resource Name</div>
+            <div className="col-span-9 sm:col-span-8 grid grid-cols-5 text-center">
+              {daysOfWeek.map((day) => (
+                <div key={day} className="py-1 border-l border-white/5">
+                  {day}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Resources Rows */}
+          <div className="divide-y divide-white/5 border border-white/5 rounded-xl bg-zinc-950/20 overflow-hidden">
+            {resources.map((res, rowIdx) => (
+              <div key={rowIdx} className="grid grid-cols-12 items-center min-h-[56px] hover:bg-white/[0.005] transition-all">
+                {/* Resource Meta */}
+                <div className="col-span-3 sm:col-span-4 p-3 border-r border-white/5 flex flex-col justify-center">
+                  <span className="text-xs font-semibold text-white block">{res.name}</span>
+                  <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-mono mt-0.5">{res.type}</span>
+                </div>
+
+                {/* Weekly Timeline Blocks */}
+                <div className="col-span-9 sm:col-span-8 grid grid-cols-5 relative h-full items-center select-none">
+                  {/* Visual Grid Lines */}
+                  <div className="absolute inset-0 grid grid-cols-5 pointer-events-none">
+                    {daysOfWeek.map((_, i) => (
+                      <div key={i} className="h-full border-r border-white/5 last:border-r-0" />
+                    ))}
+                  </div>
+
+                  {/* Blocks Container */}
+                  <div className="absolute inset-0 px-1 py-2 flex flex-col justify-center relative">
+                    {res.blocks.map((block) => {
+                      const startIdx = block.days[0];
+                      const colSpan = block.days.length;
+                      const widthPercent = (colSpan / 5) * 100;
+                      const leftOffset = (startIdx / 5) * 100;
+                      
+                      return (
+                        <motion.div
+                          key={block.id}
+                          layout
+                          transition={{ type: "spring", stiffness: 200, damping: 25 }}
+                          style={{
+                            left: `${leftOffset}%`,
+                            width: `calc(${widthPercent}% - 8px)`,
+                            position: "absolute"
+                          }}
+                          className={`h-9 border rounded-lg px-2 flex flex-col justify-center overflow-hidden transition-all ${
+                            !isResolved && block.conflict
+                              ? "bg-red-500/10 border-red-500/30 text-red-400 font-semibold"
+                              : block.color
+                          }`}
+                        >
+                          <span className="text-[10px] truncate block font-sans font-semibold">
+                            {block.label}
+                          </span>
+                          <div className="flex items-center justify-between text-[8px] font-mono opacity-80 mt-0.5">
+                            <span className="truncate uppercase">{block.project}</span>
+                            {!isResolved && block.conflict && (
+                              <span className="text-red-400 animate-pulse font-bold text-[9px]">CONFLICT</span>
+                            )}
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Resources Rows */}
-        <div className="divide-y divide-white/5 border border-white/5 rounded-xl bg-zinc-950/20 overflow-hidden">
-          {resources.map((res, rowIdx) => (
-            <div key={rowIdx} className="grid grid-cols-12 items-center min-h-[56px] hover:bg-white/[0.005] transition-all">
-              {/* Resource Meta */}
-              <div className="col-span-3 sm:col-span-4 p-3 border-r border-white/5 flex flex-col justify-center">
-                <span className="text-xs font-semibold text-white block">{res.name}</span>
-                <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-mono mt-0.5">{res.type}</span>
-              </div>
-
-              {/* Weekly Timeline Blocks */}
-              <div className="col-span-9 sm:col-span-8 grid grid-cols-5 relative h-full items-center select-none">
-                {/* Visual Grid Lines */}
-                <div className="absolute inset-0 grid grid-cols-5 pointer-events-none">
-                  {daysOfWeek.map((_, i) => (
-                    <div key={i} className="h-full border-r border-white/5 last:border-r-0" />
-                  ))}
-                </div>
-
-                {/* Blocks Container */}
-                <div className="absolute inset-0 px-1 py-2 flex flex-col justify-center relative">
-                  {res.blocks.map((block) => {
-                    const startIdx = block.days[0];
-                    const colSpan = block.days.length;
-                    const widthPercent = (colSpan / 5) * 100;
-                    const leftOffset = (startIdx / 5) * 100;
-                    
-                    return (
-                      <motion.div
-                        key={block.id}
-                        layout
-                        transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                        style={{
-                          left: `${leftOffset}%`,
-                          width: `calc(${widthPercent}% - 8px)`,
-                          position: "absolute"
-                        }}
-                        className={`h-9 border rounded-lg px-2 flex flex-col justify-center overflow-hidden transition-all ${
-                          !isResolved && block.conflict
-                            ? "bg-red-500/10 border-red-500/30 text-red-400 font-semibold"
-                            : block.color
-                        }`}
-                      >
-                        <span className="text-[10px] truncate block font-sans font-semibold">
-                          {block.label}
-                        </span>
-                        <div className="flex items-center justify-between text-[8px] font-mono opacity-80 mt-0.5">
-                          <span className="truncate uppercase">{block.project}</span>
-                          {!isResolved && block.conflict && (
-                            <span className="text-red-400 animate-pulse font-bold text-[9px]">CONFLICT</span>
-                          )}
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 

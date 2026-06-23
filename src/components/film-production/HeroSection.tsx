@@ -54,19 +54,22 @@ export default function HeroSection() {
           <motion.div
             variants={revealVariants}
             custom={0.3}
-            className="flex flex-wrap items-center justify-center gap-3 mb-16"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16 w-full px-4 sm:px-0"
           >
             <a
               href="https://app.abram.network"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary group"
+              className="btn-primary group w-full sm:w-auto min-h-[44px] md:min-h-0 flex items-center justify-center gap-1.5"
             >
-              Start Building
+              <span>Start Building</span>
               <ArrowUpRight className="h-4.5 w-4.5 opacity-75 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>
-            <a href="#interactive-playground" className="btn-glass group flex items-center gap-1 cursor-pointer">
-              Learn More
+            <a 
+              href="#interactive-playground" 
+              className="btn-glass group flex items-center justify-center gap-1 cursor-pointer w-full sm:w-auto min-h-[44px] md:min-h-0"
+            >
+              <span>Learn More</span>
               <ArrowDown className="h-3.5 w-3.5 opacity-70 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all duration-200" />
             </a>
           </motion.div>
@@ -83,7 +86,8 @@ export default function HeroSection() {
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="font-mono text-zinc-400 font-semibold uppercase">abram_brain: main_board</span>
               </div>
-              <div className="flex gap-4">
+              <div className="flex items-center gap-4">
+                <span className="text-[10px] text-zinc-400 md:hidden block font-mono animate-pulse">Swipe to view →</span>
                 <span>Total Days: <strong className="text-white">18</strong></span>
                 <span>Est. Budget: <strong className="text-white">$2,450,000</strong></span>
               </div>

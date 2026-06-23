@@ -103,13 +103,13 @@ export default function AgencyRosterMockup() {
         <div className="flex flex-col sm:flex-row gap-3 w-full md:max-w-xl">
           {/* Search Box */}
           <div className="relative w-full">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
             <input
               type="text"
               placeholder="Search crew, skills, gear..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-zinc-900 border border-white/5 rounded-full pl-9 pr-4 py-2 text-xs text-white outline-none focus:border-white/10"
+              className="w-full bg-zinc-900 border border-white/5 rounded-full pl-9 pr-4 text-xs text-white outline-none focus:border-white/10 min-h-[44px]"
             />
           </div>
           
@@ -119,7 +119,7 @@ export default function AgencyRosterMockup() {
               <button
                 key={d}
                 onClick={() => setSelectedDept(d)}
-                className={`px-3 py-2 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 ${
+                className={`px-3.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] flex items-center justify-center shrink-0 ${
                   selectedDept === d
                     ? "bg-white text-black"
                     : "bg-white/5 text-zinc-400 hover:text-zinc-200 border border-white/5"
@@ -135,7 +135,7 @@ export default function AgencyRosterMockup() {
         <button
           onClick={handleRunOptimizer}
           disabled={isOptimizing}
-          className="btn-primary shrink-0 flex items-center gap-1.5 cursor-pointer py-2 text-xs font-semibold"
+          className="btn-primary shrink-0 flex items-center justify-center gap-1.5 cursor-pointer text-xs font-semibold min-h-[44px] px-4"
         >
           {isOptimizing ? (
             <>
@@ -155,11 +155,14 @@ export default function AgencyRosterMockup() {
         
         {/* Left Column: Roster List */}
         <div className="lg:col-span-8 flex flex-col space-y-4">
-          <div className="flex justify-between items-center px-1">
-            <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase font-mono">
+          <div className="flex justify-between items-center px-1 gap-2">
+            <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase font-mono truncate">
               Roster database ({filteredRoster.length} matches)
             </span>
-            <span className="text-[9px] text-zinc-400 hidden sm:block font-mono">
+            <span className="text-[9px] text-zinc-400 font-mono md:hidden shrink-0 animate-pulse">
+              Swipe to view →
+            </span>
+            <span className="text-[9px] text-zinc-400 hidden md:block font-mono shrink-0">
               Click ROW to shortlist crew asset
             </span>
           </div>
@@ -315,7 +318,7 @@ export default function AgencyRosterMockup() {
                 onClick={() => {
                   alert("Roster shortlist locked! Invites dispatched to the 4 shortlisted contractors via SMS & Portal.");
                 }}
-                className="btn-glass w-full py-2.5 text-xs flex items-center justify-center gap-1.5 cursor-pointer font-sans"
+                className="btn-glass w-full min-h-[44px] text-xs flex items-center justify-center gap-1.5 cursor-pointer font-sans"
               >
                 <UserCheck className="w-4 h-4" />
                 <span>Lock Shortlist & Dispatch Invites</span>

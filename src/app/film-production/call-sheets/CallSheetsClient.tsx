@@ -69,19 +69,22 @@ export default function CallSheetsClient() {
             <motion.div
               variants={revealVariants}
               custom={0.3}
-              className="flex flex-wrap items-center justify-center gap-3 mb-16"
+              className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16 w-full px-4 sm:px-0"
             >
               <a
                 href="https://app.abram.network"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary group animate-none"
+                className="btn-primary group animate-none w-full sm:w-auto min-h-[44px] md:min-h-0 flex items-center justify-center gap-1.5"
               >
-                Start Scheduling
+                <span>Start Scheduling</span>
                 <ArrowUpRight className="h-4.5 w-4.5 opacity-75 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
-              <a href="#core-features" className="btn-glass group">
-                Learn More
+              <a 
+                href="#core-features" 
+                className="btn-glass group flex items-center justify-center gap-1 cursor-pointer w-full sm:w-auto min-h-[44px] md:min-h-0"
+              >
+                <span>Learn More</span>
                 <ArrowDown className="h-3.5 w-3.5 opacity-75 group-hover:translate-y-0.5 transition-transform" />
               </a>
             </motion.div>

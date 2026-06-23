@@ -266,12 +266,16 @@ export default function CallSheetMockup() {
 
       {/* Tabs Navigation */}
       <div className="px-4 sm:px-6 pt-4 border-b border-white/5 bg-zinc-950/20">
+        <div className="flex items-center justify-between md:hidden mb-2">
+          <span className="text-[10px] text-zinc-500 uppercase font-semibold">Options</span>
+          <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe tabs →</span>
+        </div>
         <div className="flex gap-1 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 select-none">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 ${
+              className={`relative px-3.5 py-2.5 md:py-1.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] md:min-h-0 flex items-center justify-center ${
                 activeTab === tab.id
                   ? "text-black animate-none"
                   : "text-zinc-400 hover:text-zinc-200"
@@ -310,7 +314,7 @@ export default function CallSheetMockup() {
                   </span>
                   <button 
                     onClick={() => setShowAddForm(!showAddForm)}
-                    className="btn-glass px-3 py-1 text-[10px]"
+                    className="btn-glass px-3 py-2.5 md:py-1 text-[10px] min-h-[44px] md:min-h-0 flex items-center justify-center gap-1"
                   >
                     <Plus className="w-3.5 h-3.5" /> Add Timeline Item
                   </button>
@@ -398,17 +402,17 @@ export default function CallSheetMockup() {
                         className="w-full bg-zinc-900 border border-white/10 rounded px-2.5 py-1.5 text-xs text-white outline-none focus:border-white/20 resize-none"
                       />
                     </div>
-                    <div className="flex justify-end gap-2 pt-1">
+                    <div className="flex flex-col sm:flex-row justify-end gap-2 pt-1">
                       <button 
                         type="button" 
                         onClick={() => setShowAddForm(false)}
-                        className="btn-ghost py-1 px-3 text-[10px]"
+                        className="btn-ghost py-2.5 md:py-1 px-3 text-[10px] min-h-[44px] md:min-h-0 flex items-center justify-center"
                       >
                         Cancel
                       </button>
                       <button 
                         type="submit" 
-                        className="btn-primary py-1 px-3.5 text-[10px]"
+                        className="btn-primary py-2.5 md:py-1 px-3.5 text-[10px] min-h-[44px] md:min-h-0 flex items-center justify-center"
                       >
                         Add to Timeline
                       </button>
@@ -502,7 +506,7 @@ export default function CallSheetMockup() {
                             <button
                               type="button"
                               onClick={() => cycleStatus(row.id)}
-                              className={`w-7 h-7 rounded-full text-xs font-mono font-bold transition-all hover:scale-105 cursor-pointer ${
+                              className={`w-11 h-11 md:w-7 md:h-7 rounded-full text-xs font-mono font-bold transition-all hover:scale-105 cursor-pointer flex items-center justify-center ${
                                 row.status === "W"
                                   ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
                                   : row.status === "H"
@@ -573,7 +577,7 @@ export default function CallSheetMockup() {
                     type="button"
                     onClick={runAIAutofill}
                     disabled={isAutofilling}
-                    className="btn-primary shrink-0 flex items-center gap-2"
+                    className="btn-primary w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 min-h-[44px] md:min-h-0"
                   >
                     {isAutofilling ? (
                       <>
@@ -700,24 +704,24 @@ export default function CallSheetMockup() {
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-                    <div className="text-xs text-zinc-500 font-mono">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 w-full">
+                    <div className="text-xs text-zinc-500 font-mono w-full sm:w-auto text-center sm:text-left">
                       {ledgerSyncSuccess && (
                         <motion.span 
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="text-emerald-400 font-semibold flex items-center gap-1.5"
+                          className="text-emerald-400 font-semibold flex items-center justify-center sm:justify-start gap-1.5"
                         >
                           <Check className="w-4 h-4" /> Financial ledger synced successfully!
                         </motion.span>
                       )}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                       <button
                         type="button"
                         onClick={runLedgerSync}
                         disabled={isSyncingLedger}
-                        className="btn-glass px-4 py-2 text-xs flex items-center gap-1.5"
+                        className="btn-glass w-full sm:w-auto px-4 py-2.5 md:py-2 text-xs flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-0"
                       >
                         {isSyncingLedger ? (
                           <>
@@ -736,7 +740,7 @@ export default function CallSheetMockup() {
                         onClick={() => {
                           alert("Action simulated: New billing Work Order has been generated using active crew assets!");
                         }}
-                        className="btn-primary px-4 py-2 text-xs flex items-center gap-1.5"
+                        className="btn-primary w-full sm:w-auto px-4 py-2.5 md:py-2 text-xs flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-0"
                       >
                         <FileText className="w-3.5 h-3.5 text-black" /> Create Work Order from Call Sheet
                       </button>

@@ -6,10 +6,9 @@ import { ArrowUpRight } from "lucide-react";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 const titleVariants: Variants = {
-  hidden: { opacity: 0, filter: "blur(10px)" },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    filter: "blur(0px)",
     transition: {
       duration: 1.0,
       ease: "easeOut" as const,
@@ -19,10 +18,9 @@ const titleVariants: Variants = {
 };
 
 const ctaVariants: Variants = {
-  hidden: { opacity: 0, filter: "blur(10px)" },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    filter: "blur(0px)",
     transition: {
       duration: 1.0,
       ease: "easeOut" as const,

@@ -21,8 +21,8 @@ export default function BridgeSection() {
 
       <div className="max-w-[1380px] mx-auto w-full text-center relative z-10">
         <motion.h2
-          initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
-          animate={isInView ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(10px)", y: 20 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
           className="text-3xl md:text-5xl font-medium tracking-tight font-sans leading-tight md:leading-normal"
         >

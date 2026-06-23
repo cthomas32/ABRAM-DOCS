@@ -117,6 +117,12 @@ keywords:
 - **Clean Formatting**: Format any UI status values or dropdown settings using capitalized words without code styling/backticks unless specifically representing literal code in an agent-only context (e.g. use `Reserved` or `In Use` instead of `reserved` or `in_use`).
 - **No Real Brand Names**: Never use real-world brand names (such as "Nike", "Adidas", "Apple", "Google", "Netflix", "Sony", "Dolby", "Spotify", "A24", "RED", etc.) in templates, mockups, documentation, or code examples. Always use fictitious, placeholder brand names (e.g., "Helix", "Nebula", "Sensa", "Onyx", "Aura", "Spire", "Vesper", "Apex", "Vortex", etc.).
 
+### 7. Formatting Tables (Standard Markdown vs. HTML Tables)
+- **Prefer Markdown Tables**: When adding tables to articles or blog posts, always use standard GitHub Flavored Markdown (GFM) table syntax (e.g., `| Col 1 | Col 2 |`) rather than raw `<table>` HTML.
+- **HTML Table Structure (If Required)**: If you must use raw HTML `<table>` tags, you **must** structure them with `<thead>` and `<tbody>` sections containing their respective `<tr>` elements. Do **not** place `<tr>` tags directly as immediate children of `<table>`, as this causes React DOM validation and hydration errors:
+  - **Incorrect**: `<table> <tr><th>Col</th></tr> <tr><td>Val</td></tr> </table>`
+  - **Correct**: `<table> <thead><tr><th>Col</th></tr></thead> <tbody><tr><td>Val</td></tr></tbody> </table>`
+
 ---
 
 ## 🎨 Design System Enforcement

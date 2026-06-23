@@ -137,10 +137,15 @@ export default function FeatureCatalogList() {
                   <span className="text-[9px] font-mono tracking-widest uppercase text-zinc-500">Live Preview</span>
                   <h4 className="text-sm font-semibold text-zinc-200 mt-0.5">{activeFeature.title}</h4>
                 </div>
-                <div className="flex gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-zinc-800" />
-                  <span className="h-2 w-2 rounded-full bg-zinc-800" />
-                  <span className="h-2 w-2 rounded-full bg-zinc-800" />
+                <div className="flex items-center gap-2">
+                  {activeFeature.previewType === "dood" && (
+                    <span className="text-[10px] text-zinc-400 md:hidden block font-mono animate-pulse mr-2">Swipe to view →</span>
+                  )}
+                  <div className="flex gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-zinc-800" />
+                    <span className="h-2 w-2 rounded-full bg-zinc-800" />
+                    <span className="h-2 w-2 rounded-full bg-zinc-800" />
+                  </div>
                 </div>
               </div>
 
