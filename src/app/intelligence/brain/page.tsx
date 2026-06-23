@@ -9,8 +9,9 @@ import CollaborationIntegrations from '@/components/production-brain/Collaborati
 
 export const metadata: Metadata = {
   title: 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
-  description: 'Discover ABRAM\'s Production Brain. A private, secure workspace intelligence engine that learns crew preferences, rates, and briefs over years, not seconds.',
+  description: 'Discover ABRAM\'s Production Brain. A private, secure workspace intelligence engine built for our creative operations platform and creative production software.',
   keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
     'Production Brain', 'ABRAM Workspace Memory', 'AI production memory',
     'crew matching scores', 'workspace search', 'data security',
     'creative agency AI co-pilot', 'brief analyzer scoping',
@@ -20,14 +21,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
-    description: 'A private, secure workspace intelligence engine that learns crew preferences, rates, and briefs over years, not seconds.',
+    description: 'Discover ABRAM\'s Production Brain. A private, secure workspace intelligence engine built for our creative operations platform and creative production software.',
     type: 'website',
     url: 'https://abram.network/intelligence/brain',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
-    description: 'A private, secure workspace intelligence engine that learns crew preferences, rates, and briefs over years, not seconds.',
+    description: 'Discover ABRAM\'s Production Brain. A private, secure workspace intelligence engine built for our creative operations platform and creative production software.',
   },
 };
 
@@ -39,24 +40,53 @@ export default function ProductionBrainPage() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'WebPage',
-            name: 'ABRAM Production Brain',
-            description: 'Workspace memory and AI capabilities in the ABRAM creative production platform.',
-            url: 'https://abram.network/intelligence/brain',
-            isPartOf: { '@id': 'https://abram.network/#website' },
-            publisher: { '@id': 'https://abram.network/#organization' },
-            mainEntity: {
-              '@type': 'SoftwareApplication',
-              name: 'ABRAM',
-              applicationCategory: 'BusinessApplication',
-              featureList: [
-                'Unified Workspace Memory',
-                'Secured Row-Level Security Isolated Scopes',
-                'Interactive Action Plan Approvals',
-                'Suitability Index Calculation Sliders',
-                'Continuous Passive Data Learning',
-              ],
-            },
+            '@graph': [
+              {
+                '@type': 'WebPage',
+                '@id': 'https://abram.network/intelligence/brain#webpage',
+                'name': 'ABRAM Production Brain',
+                'description': 'Workspace memory and AI capabilities in the ABRAM creative production platform.',
+                'url': 'https://abram.network/intelligence/brain',
+                'isPartOf': { '@id': 'https://abram.network/#website' },
+                'publisher': { '@id': 'https://abram.network/#organization' },
+                'mainEntity': {
+                  '@type': 'SoftwareApplication',
+                  'name': 'ABRAM',
+                  'applicationCategory': 'BusinessApplication',
+                  'featureList': [
+                    'Unified Workspace Memory',
+                    'Secured Row-Level Security Isolated Scopes',
+                    'Interactive Action Plan Approvals',
+                    'Suitability Index Calculation Sliders',
+                    'Continuous Passive Data Learning',
+                  ],
+                },
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://abram.network/intelligence/brain#breadcrumb',
+                'itemListElement': [
+                  {
+                    '@type': 'ListItem',
+                    'position': 1,
+                    'name': 'Home',
+                    'item': 'https://abram.network/'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    'position': 2,
+                    'name': 'AI Intelligence',
+                    'item': 'https://abram.network/intelligence'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    'position': 3,
+                    'name': 'Production Brain',
+                    'item': 'https://abram.network/intelligence/brain'
+                  }
+                ]
+              }
+            ]
           }).replace(/</g, '\\u003c'),
         }}
       />

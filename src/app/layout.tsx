@@ -31,8 +31,9 @@ export const metadata: Metadata = {
     default: 'ABRAM Network — The AI Platform for Creative Intelligence',
     template: '%s | ABRAM Network',
   },
-  description: 'Official documentation and help center for ABRAM Network — the AI-powered platform for creative production management, crew scheduling, talent matchmaking, and automated invoicing.',
+  description: 'Official documentation and help center for ABRAM Network — the AI-powered creative operations platform and creative production software for crew scheduling, talent matchmaking, and automated invoicing.',
   keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
     'ABRAM', 'ABRAM Network', 'creative production management', 'AI platform',
     'crew scheduling', 'talent matchmaking', 'freelancer invoicing', 'production management software',
     'creative agency tools', 'AI brief analyzer', 'work order management', 'crew management',
@@ -207,6 +208,63 @@ export default function RootLayout({
                     },
                     'query-input': 'required name=search_term_string'
                   }
+                },
+                {
+                  "@type": "ItemList",
+                  "@id": "https://abram.network/#navigation",
+                  "name": "Main Navigation Menu",
+                  "description": "Main platform hubs and navigation links for ABRAM Network.",
+                  "itemListElement": [
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 1,
+                      "name": "Film Production Hub",
+                      "description": "AI-powered film production suite for script breakdown, budgeting, scheduling, and digital call sheets.",
+                      "url": "https://abram.network/film-production"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 2,
+                      "name": "Creative Agency Operations",
+                      "description": "Creative operations hub for client intake, crew rosters, and smart scheduling.",
+                      "url": "https://abram.network/agency"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 3,
+                      "name": "Creative Intelligence Suite",
+                      "description": "AI co-pilots, ROI engines, and production matchmaking tools for intelligence-driven workflows.",
+                      "url": "https://abram.network/intelligence"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 4,
+                      "name": "Platform Pricing Plans",
+                      "description": "Flexible and credit-based pricing tiers for creative teams and agencies.",
+                      "url": "https://abram.network/pricing"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 5,
+                      "name": "ABRAM Network Blog",
+                      "description": "Insights, stories, and articles about the future of film production and creative operations.",
+                      "url": "https://abram.network/blog"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 6,
+                      "name": "Product Changelog",
+                      "description": "Latest updates, feature releases, and system updates for the ABRAM platform.",
+                      "url": "https://abram.network/changelog"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 7,
+                      "name": "Help Guides & Documentation",
+                      "description": "Comprehensive help guides, tutorials, and system documentation for users.",
+                      "url": "https://abram.network/docs"
+                    }
+                  ]
                 }
               ]
             }).replace(/</g, '\\u003c'),

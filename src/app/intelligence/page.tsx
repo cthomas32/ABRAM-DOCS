@@ -3,8 +3,9 @@ import IntelligenceHubClient from '@/app/intelligence/IntelligenceHubClient';
 
 export const metadata: Metadata = {
   title: 'Roster Intelligence Hub & ROI Calculator',
-  description: 'Measure the yield of your operations. Quantify time and labor savings, prevent resource leakage, and model your ROI with our interactive calculator.',
+  description: 'Measure the yield of your operations. Quantify time and labor savings, prevent leakage, and model ROI on our advanced creative operations platform.',
   keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
     'roster intelligence', 'ROI calculator', 'studio efficiency', 'crew automation rate',
     'operational savings', 'leakage prevention', 'payback period', 'workspace intelligence'
   ],
@@ -13,14 +14,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Roster Intelligence Hub & ROI Calculator | ABRAM Network',
-    description: 'Measure the yield of your operations. Quantify time and labor savings, prevent resource leakage, and model your ROI with our interactive calculator.',
+    description: 'Measure the yield of your operations. Quantify time and labor savings, prevent leakage, and model ROI on our advanced creative operations platform.',
     type: 'website',
     url: 'https://abram.network/intelligence',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Roster Intelligence Hub & ROI Calculator | ABRAM Network',
-    description: 'Measure the yield of your operations. Quantify time and labor savings, prevent resource leakage, and model your ROI with our interactive calculator.',
+    description: 'Measure the yield of your operations. Quantify time and labor savings, prevent leakage, and model ROI on our advanced creative operations platform.',
   },
 };
 
@@ -31,24 +32,47 @@ function AgentOnly({ children }: { children: React.ReactNode }) {
 export default function IntelligenceHubPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: 'ABRAM Roster Intelligence Hub',
-    description: 'Quantify operational efficiency and model return on investment with our interactive ROI Calculator.',
-    url: 'https://abram.network/intelligence',
-    isPartOf: { '@id': 'https://abram.network/#website' },
-    publisher: { '@id': 'https://abram.network/#organization' },
-    mainEntity: {
-      '@type': 'SoftwareApplication',
-      name: 'ABRAM Roster Intelligence',
-      applicationCategory: 'BusinessApplication',
-      featureList: [
-        'Interactive Roster ROI Calculator',
-        'Administrative Labor Savings Modeler',
-        'Operational Leakage Prevention Estimator',
-        'Linear Boutique, Mid-Market, and Enterprise Scenarios',
-        'Payback Period Analysis',
-      ],
-    },
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': 'https://abram.network/intelligence#webpage',
+        'name': 'ABRAM Roster Intelligence Hub',
+        'description': 'Quantify operational efficiency and model return on investment with our interactive ROI Calculator.',
+        'url': 'https://abram.network/intelligence',
+        'isPartOf': { '@id': 'https://abram.network/#website' },
+        'publisher': { '@id': 'https://abram.network/#organization' },
+        'mainEntity': {
+          '@type': 'SoftwareApplication',
+          'name': 'ABRAM Roster Intelligence',
+          'applicationCategory': 'BusinessApplication',
+          'featureList': [
+            'Interactive Roster ROI Calculator',
+            'Administrative Labor Savings Modeler',
+            'Operational Leakage Prevention Estimator',
+            'Linear Boutique, Mid-Market, and Enterprise Scenarios',
+            'Payback Period Analysis',
+          ],
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': 'https://abram.network/intelligence#breadcrumb',
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Home',
+            'item': 'https://abram.network/'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'AI Intelligence',
+            'item': 'https://abram.network/intelligence'
+          }
+        ]
+      }
+    ]
   };
 
   return (

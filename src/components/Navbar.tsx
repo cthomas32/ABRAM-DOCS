@@ -121,6 +121,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           )}
           <Link 
             href="/" 
+            title="ABRAM Network Home"
             className="flex h-11 items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-zinc-700 rounded-md ml-1 sm:ml-0"
           >
             <Image
@@ -135,7 +136,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
         </div>
 
         {/* Right Section: External App Button & Mobile Menu */}
-        <div className="flex items-center gap-1 sm:gap-4">
+        <nav aria-label="Main Navigation" className="flex items-center gap-1 sm:gap-4">
           <div 
             className="relative"
             onMouseEnter={handleFilmMouseEnter}
@@ -143,6 +144,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           >
             <Link
               href="/film-production"
+              title="Film Production Suite"
               className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 border border-transparent ${
                 pathname.startsWith("/film-production")
                   ? "bg-white/10 text-white border-white/10"
@@ -164,6 +166,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/film-production"
                     onClick={() => setFilmDropdownOpen(false)}
+                    title="Film Production Overview Hub"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -178,6 +181,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/film-production/script-breakdown"
                     onClick={() => setFilmDropdownOpen(false)}
+                    title="AI Script Breakdown & Screenplay Parser"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -192,6 +196,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/film-production/scheduling-budgeting"
                     onClick={() => setFilmDropdownOpen(false)}
+                    title="Film Production Scheduling & Budgeting"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -206,6 +211,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/film-production/call-sheets"
                     onClick={() => setFilmDropdownOpen(false)}
+                    title="Digital Call Sheets & Crew Call Times"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -228,6 +234,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           >
             <Link
               href="/agency"
+              title="Creative Agency Operations Suite"
               className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 border border-transparent ${
                 pathname.startsWith("/agency")
                   ? "bg-white/10 text-white border-white/10"
@@ -249,6 +256,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/agency"
                     onClick={() => setAgencyDropdownOpen(false)}
+                    title="Creative Operations Overview Hub"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -263,6 +271,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/agency/client-intake"
                     onClick={() => setAgencyDropdownOpen(false)}
+                    title="Client Intake Briefs & Requirements"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -277,6 +286,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/agency/crew-roster"
                     onClick={() => setAgencyDropdownOpen(false)}
+                    title="Crew Roster & Contractor Availability"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -291,6 +301,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/agency/smart-scheduling"
                     onClick={() => setAgencyDropdownOpen(false)}
+                    title="AI Smart Scheduling & Crew Booking"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -312,6 +323,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           >
             <Link
               href="/intelligence"
+              title="Creative Intelligence Suite"
               className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 border border-transparent ${
                 pathname.startsWith("/intelligence")
                   ? "bg-white/10 text-white border-white/10"
@@ -333,6 +345,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/intelligence/creative-copilot"
                     onClick={() => setIntelligenceDropdownOpen(false)}
+                    title="ABRAM Core AI Workspace Co-Pilot"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -352,6 +365,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/intelligence"
                     onClick={() => setIntelligenceDropdownOpen(false)}
+                    title="ROI Yield Engine Calculator"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -366,6 +380,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/intelligence/brain"
                     onClick={() => setIntelligenceDropdownOpen(false)}
+                    title="Production Brain Workspace Memory & Search"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -380,6 +395,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/intelligence/brief-intelligence"
                     onClick={() => setIntelligenceDropdownOpen(false)}
+                    title="Brief Intelligence Blueprints & Scoping"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -394,6 +410,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   <Link
                     href="/intelligence/crew-matchmaking"
                     onClick={() => setIntelligenceDropdownOpen(false)}
+                    title="Crew Suitability Matchmaking Index"
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -411,6 +428,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
 
           <Link
             href="/blog"
+            title="ABRAM Network Blog & Insights"
             className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
               pathname.startsWith("/blog")
                 ? "bg-white/10 text-white border border-white/10"
@@ -421,6 +439,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           </Link>
           <Link
             href="/pricing"
+            title="ABRAM Platform Pricing Plans"
             className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
               pathname === "/pricing"
                 ? "bg-white/10 text-white border border-white/10"
@@ -433,12 +452,13 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             href="https://app.abram.network"
             target="_blank"
             rel="noopener noreferrer"
+            title="Get Started with ABRAM App"
             className="inline-flex items-center gap-1.5 rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             Get Started
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
-        </div>
+        </nav>
 
       </div>
 

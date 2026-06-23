@@ -3,8 +3,9 @@ import AgencyHubClient from '@/app/agency/AgencyHubClient';
 
 export const metadata: Metadata = {
   title: 'Creative Operations Hub & Studio Management',
-  description: 'Scale agency and studio workflows in a unified environment. Automate project brief requests, optimize crew composition, and streamline smart scheduling.',
+  description: 'Scale agency and studio workflows in a unified creative operations platform. Automate brief requests and optimize crew allocation with advanced creative production software.',
   keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
     'creative operations', 'agency management software', 'studio logistics',
     'crew roster matching', 'brief intelligence', 'scheduling tool', 'workspace intelligence'
   ],
@@ -13,14 +14,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Creative Operations Hub & Studio Management | ABRAM Network',
-    description: 'Scale agency and studio workflows in a unified environment. Automate project brief requests, optimize crew composition, and streamline smart scheduling.',
+    description: 'Scale agency and studio workflows in a unified creative operations platform. Automate brief requests and optimize crew allocation with advanced creative production software.',
     type: 'website',
     url: 'https://abram.network/agency',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Creative Operations Hub & Studio Management | ABRAM Network',
-    description: 'Scale agency and studio workflows in a unified environment. Automate project brief requests, optimize crew composition, and streamline smart scheduling.',
+    description: 'Scale agency and studio workflows in a unified creative operations platform. Automate brief requests and optimize crew allocation with advanced creative production software.',
   },
 };
 
@@ -31,6 +32,43 @@ function AgentOnly({ children }: { children: React.ReactNode }) {
 export default function AgencyHubPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebPage',
+                '@id': 'https://abram.network/agency#webpage',
+                'url': 'https://abram.network/agency',
+                'name': 'Creative Operations Hub & Studio Management',
+                'description': 'Scale agency and studio workflows in a unified environment. Automate project brief requests, optimize crew composition, and streamline smart scheduling.',
+                'isPartOf': { '@id': 'https://abram.network/#website' },
+                'publisher': { '@id': 'https://abram.network/#organization' }
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://abram.network/agency#breadcrumb',
+                'itemListElement': [
+                  {
+                    '@type': 'ListItem',
+                    'position': 1,
+                    'name': 'Home',
+                    'item': 'https://abram.network/'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    'position': 2,
+                    'name': 'Creative Agency',
+                    'item': 'https://abram.network/agency'
+                  }
+                ]
+              }
+            ]
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
       <AgentOnly>
         <h2>🤖 Agency Operations, Integrations & Resource Sandboxes</h2>
         <p>

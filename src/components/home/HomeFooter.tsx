@@ -12,7 +12,7 @@ export default function HomeFooter({
         {/* Column 1: Logo, description & Copyright */}
         <div className="flex flex-col justify-between space-y-4 col-span-2 sm:col-span-3 md:col-span-1">
           <div className="space-y-3">
-            <Link href="/" className="inline-block">
+            <Link href="/" title="ABRAM Network Home" className="inline-block">
               <Image
                 src="/abram-logo-lockup-cream.png"
                 alt="ABRAM"
@@ -34,16 +34,16 @@ export default function HomeFooter({
         {/* Column 2: Film Production */}
         <div className="flex flex-col space-y-2 col-span-1">
           <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Film Production</h4>
-          <Link href="/film-production" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/film-production" title="Film Production Hub Overview" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Overview Hub
           </Link>
-          <Link href="/film-production/script-breakdown" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/film-production/script-breakdown" title="AI Script Breakdown & Screenplay Parser" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Script Breakdown
           </Link>
-          <Link href="/film-production/scheduling-budgeting" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/film-production/scheduling-budgeting" title="Film Production Scheduling & Budgeting" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Scheduling & Budgeting
           </Link>
-          <Link href="/film-production/call-sheets" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/film-production/call-sheets" title="Digital Call Sheets & Crew Call Times" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Digital Call Sheets
           </Link>
         </div>
@@ -51,16 +51,16 @@ export default function HomeFooter({
         {/* Column 3: Creative Operations */}
         <div className="flex flex-col space-y-2 col-span-1">
           <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Creative Ops</h4>
-          <Link href="/agency" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/agency" title="Creative Operations Hub Overview" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Overview Hub
           </Link>
-          <Link href="/agency/client-intake" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/agency/client-intake" title="Client Intake Briefs & Requirements" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Client Intake
           </Link>
-          <Link href="/agency/crew-roster" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/agency/crew-roster" title="Crew Roster & Contractor Availability" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Crew Roster
           </Link>
-          <Link href="/agency/smart-scheduling" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/agency/smart-scheduling" title="AI Smart Scheduling & Crew Booking" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Smart Scheduling
           </Link>
         </div>
@@ -68,19 +68,19 @@ export default function HomeFooter({
         {/* Column 4: Intelligence */}
         <div className="flex flex-col space-y-2 col-span-1">
           <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Intelligence</h4>
-          <Link href="/intelligence/creative-copilot" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence/creative-copilot" title="ABRAM Core AI Workspace Co-Pilot" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             ABRAM
           </Link>
-          <Link href="/intelligence" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence" title="ROI Yield Engine Calculator" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             ROI Engine
           </Link>
-          <Link href="/intelligence/brain" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence/brain" title="Production Brain Workspace Memory & Search" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Production Brain
           </Link>
-          <Link href="/intelligence/brief-intelligence" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence/brief-intelligence" title="Brief Intelligence Blueprints & Scoping" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Brief Intelligence
           </Link>
-          <Link href="/intelligence/crew-matchmaking" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence/crew-matchmaking" title="Crew Suitability Matchmaking Index" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Crew Matchmaking
           </Link>
         </div>
@@ -88,19 +88,20 @@ export default function HomeFooter({
         {/* Column 5: Platform */}
         <div className="flex flex-col space-y-2 col-span-1">
           <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Platform</h4>
-          <Link href="/" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/" title="ABRAM Network Home" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Home
           </Link>
-          <Link href="/intelligence" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence" title="Creative Intelligence Suite" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Intelligence
           </Link>
-          <Link href="/pricing" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/pricing" title="ABRAM Platform Pricing Plans" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Pricing
           </Link>
           <a
             href="https://app.abram.network"
             target="_blank"
             rel="noopener noreferrer"
+            title="Sign Up for ABRAM App"
             className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit"
           >
             Sign Up
@@ -110,22 +111,22 @@ export default function HomeFooter({
         {/* Column 5: Resources & Legal */}
         <div className="flex flex-col space-y-2 col-span-2 sm:col-span-1">
           <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Resources & Legal</h4>
-          <Link href="/docs" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/docs" title="ABRAM Help Guides & Documentation" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Help Guides
           </Link>
-          <Link href="/blog" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/blog" title="ABRAM Network Blog & Insights" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Blog
           </Link>
-          <Link href="/changelog" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/changelog" title="Product Changelog & System Updates" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Changelog
           </Link>
-          <Link href="/privacy-policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit pt-1.5 border-t border-white/[0.04] mt-1 w-full">
+          <Link href="/privacy-policy" title="Privacy Policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit pt-1.5 border-t border-white/[0.04] mt-1 w-full">
             Privacy Policy
           </Link>
-          <Link href="/terms-of-use" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/terms-of-use" title="Terms of Use" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Terms of Use
           </Link>
-          <Link href="/acceptable-use-policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/acceptable-use-policy" title="Acceptable Use Policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Acceptable Use Policy
           </Link>
           <button

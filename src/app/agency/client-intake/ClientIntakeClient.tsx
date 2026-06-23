@@ -18,23 +18,52 @@ import { revealVariants, staggerContainer } from "@/lib/motion";
 export default function ClientIntakeClient() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "ABRAM Client Request & Brief Intake Portal",
-    "description": "AI-powered creative brief scoping and custom client forms in the ABRAM creative production platform.",
-    "url": "https://abram.network/agency/client-intake",
-    "isPartOf": { "@id": "https://abram.network/#website" },
-    "publisher": { "@id": "https://abram.network/#organization" },
-    "mainEntity": {
-      "@type": "SoftwareApplication",
-      "name": "ABRAM Brief Intelligence",
-      "applicationCategory": "BusinessApplication",
-      "featureList": [
-        "Natural Language Brief Scanning",
-        "Form Builder Drag-and-Drop Mapping",
-        "Milestone Scoping Calculation",
-        "Budget Capacity Warning Indicators"
-      ]
-    }
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://abram.network/agency/client-intake#webpage",
+        "name": "ABRAM Client Request & Brief Intake Portal",
+        "description": "AI-powered creative brief scoping and custom client forms in the ABRAM creative production platform.",
+        "url": "https://abram.network/agency/client-intake",
+        "isPartOf": { "@id": "https://abram.network/#website" },
+        "publisher": { "@id": "https://abram.network/#organization" },
+        "mainEntity": {
+          "@type": "SoftwareApplication",
+          "name": "ABRAM Brief Intelligence",
+          "applicationCategory": "BusinessApplication",
+          "featureList": [
+            "Natural Language Brief Scanning",
+            "Form Builder Drag-and-Drop Mapping",
+            "Milestone Scoping Calculation",
+            "Budget Capacity Warning Indicators"
+          ]
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://abram.network/agency/client-intake#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://abram.network/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Creative Agency",
+            "item": "https://abram.network/agency"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Client Intake",
+            "item": "https://abram.network/agency/client-intake"
+          }
+        ]
+      }
+    ]
   };
 
   return (

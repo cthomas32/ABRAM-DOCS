@@ -3,8 +3,9 @@ import PricingClient from './PricingClient';
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'Explore ABRAM pricing plans for freelancers, teams, and creative agencies. Start free with AI-powered production management, crew scheduling, and automated invoicing.',
+  description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and automated invoicing.',
   keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
     'ABRAM pricing', 'creative production pricing', 'freelancer tools pricing',
     'crew management software cost', 'production management plans',
     'AI production tools', 'SaaS pricing', 'free tier',
@@ -14,14 +15,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'ABRAM Pricing — Plans for Every Creative Team',
-    description: 'Start free with AI-powered production management. Plans for freelancers, teams, and agencies.',
+    description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and automated invoicing.',
     type: 'website',
     url: 'https://abram.network/pricing',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ABRAM Pricing — Plans for Every Creative Team',
-    description: 'Start free with AI-powered production management. Plans for freelancers, teams, and agencies.',
+    description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and automated invoicing.',
   },
 };
 
@@ -55,7 +56,7 @@ export default function PricingPage() {
                     '@type': 'ListItem',
                     'position': 1,
                     'name': 'Home',
-                    'item': 'https://abram.network'
+                    'item': 'https://abram.network/'
                   },
                   {
                     '@type': 'ListItem',

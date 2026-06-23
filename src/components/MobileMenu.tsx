@@ -73,43 +73,46 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
   };
 
   const menuLinks = [
-    { name: "Home", href: "/" },
+    { name: "Home", href: "/", title: "ABRAM Network Home" },
     { 
       name: "Film Production", 
       href: "/film-production",
       isDropdown: true,
+      title: "Film Production Suite",
       submenu: [
-        { name: "Overview Hub", href: "/film-production", desc: "Suite control cockpit & breakdowns" },
-        { name: "Script Breakdown", href: "/film-production/script-breakdown", desc: "AI screenplay parser & element mapping" },
-        { name: "Scheduling & Budgeting", href: "/film-production/scheduling-budgeting", desc: "Timeline board & daily burn rates" },
-        { name: "Digital Call Sheets", href: "/film-production/call-sheets", desc: "Daily schedule, weather & crew call times" },
+        { name: "Overview Hub", href: "/film-production", desc: "Suite control cockpit & breakdowns", title: "Film Production Overview Hub" },
+        { name: "Script Breakdown", href: "/film-production/script-breakdown", desc: "AI screenplay parser & element mapping", title: "AI Script Breakdown & Screenplay Parser" },
+        { name: "Scheduling & Budgeting", href: "/film-production/scheduling-budgeting", desc: "Timeline board & daily burn rates", title: "Film Production Scheduling & Budgeting" },
+        { name: "Digital Call Sheets", href: "/film-production/call-sheets", desc: "Daily schedule, weather & crew call times", title: "Digital Call Sheets & Crew Call Times" },
       ]
     },
     {
       name: "Creative Ops",
       href: "/agency",
       isDropdown: true,
+      title: "Creative Agency Operations Suite",
       submenu: [
-        { name: "Overview Hub", href: "/agency", desc: "Suite control cockpit & client dashboard" },
-        { name: "Client Intake", href: "/agency/client-intake", desc: "Intake forms, briefs & requirements" },
-        { name: "Crew Roster", href: "/agency/crew-roster", desc: "Contractor directory & availability" },
-        { name: "Smart Scheduling", href: "/agency/smart-scheduling", desc: "AI-driven matching & booking board" },
+        { name: "Overview Hub", href: "/agency", desc: "Suite control cockpit & client dashboard", title: "Creative Operations Overview Hub" },
+        { name: "Client Intake", href: "/agency/client-intake", desc: "Intake forms, briefs & requirements", title: "Client Intake Briefs & Requirements" },
+        { name: "Crew Roster", href: "/agency/crew-roster", desc: "Contractor directory & availability", title: "Crew Roster & Contractor Availability" },
+        { name: "Smart Scheduling", href: "/agency/smart-scheduling", desc: "AI-driven matching & booking board", title: "AI Smart Scheduling & Crew Booking" },
       ]
     },
     {
       name: "Intelligence",
       href: "/intelligence",
       isDropdown: true,
+      title: "Creative Intelligence Suite",
       submenu: [
-        { name: "ABRAM", href: "/intelligence/creative-copilot", desc: "Central conversational agent & workspace co-pilot" },
-        { name: "ROI Engine", href: "/intelligence", desc: "ROI calculator & yield overview" },
-        { name: "Production Brain", href: "/intelligence/brain", desc: "Workspace memory & search" },
-        { name: "Brief Intelligence", href: "/intelligence/brief-intelligence", desc: "AI brief intelligence & scoping" },
-        { name: "Crew Matchmaking", href: "/intelligence/crew-matchmaking", desc: "100-pt crew suitability index" },
+        { name: "ABRAM", href: "/intelligence/creative-copilot", desc: "Central conversational agent & workspace co-pilot", title: "ABRAM Core AI Workspace Co-Pilot" },
+        { name: "ROI Engine", href: "/intelligence", desc: "ROI calculator & yield overview", title: "ROI Yield Engine Calculator" },
+        { name: "Production Brain", href: "/intelligence/brain", desc: "Workspace memory & search", title: "Production Brain Workspace Memory & Search" },
+        { name: "Brief Intelligence", href: "/intelligence/brief-intelligence", desc: "AI brief intelligence & scoping", title: "Brief Intelligence Blueprints & Scoping" },
+        { name: "Crew Matchmaking", href: "/intelligence/crew-matchmaking", desc: "100-pt crew suitability index", title: "Crew Suitability Matchmaking Index" },
       ]
     },
-    { name: "Blog", href: "/blog" },
-    { name: "Pricing", href: "/pricing" },
+    { name: "Blog", href: "/blog", title: "ABRAM Network Blog & Insights" },
+    { name: "Pricing", href: "/pricing", title: "ABRAM Platform Pricing Plans" },
   ];
 
   return (
@@ -170,6 +173,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
                                     key={sublink.name}
                                     href={sublink.href}
                                     onClick={onClose}
+                                    title={sublink.title}
                                     className={`flex flex-col gap-0.5 rounded-xl border p-3 min-h-[44px] text-left transition-all duration-200 ${
                                       isSubActive
                                         ? "bg-white/5 border-white/10 text-white"
@@ -198,6 +202,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
                       <Link
                         href={link.href}
                         onClick={onClose}
+                        title={link.title}
                         className={`flex items-center min-h-[44px] rounded-xl border px-4 py-3 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
                           isActive
                             ? "bg-white/5 border-white/10 text-white shadow-md shadow-white/5"

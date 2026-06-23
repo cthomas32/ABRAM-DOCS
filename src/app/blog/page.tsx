@@ -7,21 +7,24 @@ export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "The latest announcements, updates, and articles from the ABRAM Network team.",
-  keywords: ["ABRAM", "blog", "updates", "announcements", "crewing", "production management"],
+  description: "The latest announcements, updates, and insights from ABRAM — the leading creative operations platform and AI creative production software.",
+  keywords: [
+    "creative production software", "creative production tools", "creative operations platform",
+    "ABRAM", "blog", "updates", "announcements", "crewing", "production management"
+  ],
   alternates: {
     canonical: "https://abram.network/blog",
   },
   openGraph: {
     title: "Blog | ABRAM Blog",
-    description: "The latest announcements, updates, and articles from the ABRAM Network team.",
+    description: "The latest announcements, updates, and insights from ABRAM — the leading creative operations platform and AI creative production software.",
     type: "website",
     url: "https://abram.network/blog",
   },
   twitter: {
     card: "summary_large_image",
     title: "Blog | ABRAM Blog",
-    description: "The latest announcements, updates, and articles from the ABRAM Network team.",
+    description: "The latest announcements, updates, and insights from ABRAM — the leading creative operations platform and AI creative production software.",
   },
 };
 
@@ -45,29 +48,51 @@ export default async function BlogListingPage() {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "@id": "https://abram.network/blog#collectionpage",
-    "url": "https://abram.network/blog",
-    "name": "ABRAM Network Blog",
-    "description": "The latest announcements, updates, and articles from the ABRAM Network team.",
-    "isPartOf": {
-      "@type": "WebSite",
-      "@id": "https://abram.network/#website"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "@id": "https://abram.network/#organization"
-    },
-    "mainEntity": {
-      "@type": "ItemList",
-      "numberOfItems": posts.length,
-      "itemListElement": posts.map((post: any, index: number) => ({
-        "@type": "ListItem",
-        "position": index + 1,
-        "url": `https://abram.network/blog/${post.slug}`,
-        "name": post.title,
-      }))
-    }
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://abram.network/blog#collectionpage",
+        "url": "https://abram.network/blog",
+        "name": "ABRAM Network Blog",
+        "description": "The latest announcements, updates, and articles from the ABRAM Network team.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://abram.network/#website"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://abram.network/#organization"
+        },
+        "mainEntity": {
+          "@type": "ItemList",
+          "numberOfItems": posts.length,
+          "itemListElement": posts.map((post: any, index: number) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "url": `https://abram.network/blog/${post.slug}`,
+            "name": post.title,
+          }))
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://abram.network/blog#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://abram.network/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://abram.network/blog"
+          }
+        ]
+      }
+    ]
   };
 
   return (

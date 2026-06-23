@@ -3,8 +3,9 @@ import DocsHubClient from './DocsHubClient';
 
 export const metadata: Metadata = {
   title: 'Documentation Hub',
-  description: 'Browse the complete ABRAM documentation — setup guides, AI features, crew management, invoicing, integrations, and troubleshooting for the creative production platform.',
+  description: 'Browse the complete documentation for ABRAM — the premier creative operations platform and creative production software. Learn about setup, crew scheduling, and invoicing.',
   keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
     'ABRAM documentation', 'help center', 'user guides', 'creative production',
     'AI brief analyzer', 'crew scheduling', 'talent matchmaking', 'invoicing',
     'project management', 'freelancer tools', 'production management',
@@ -14,14 +15,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'ABRAM Documentation Hub',
-    description: 'Browse the complete ABRAM documentation — setup guides, AI features, crew management, invoicing, integrations, and troubleshooting.',
+    description: 'Browse the complete documentation for ABRAM — the premier creative operations platform and creative production software. Learn about setup, crew scheduling, and invoicing.',
     type: 'website',
     url: 'https://abram.network/docs',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ABRAM Documentation Hub',
-    description: 'Browse the complete ABRAM documentation — setup guides, AI features, crew management, invoicing, and integrations.',
+    description: 'Browse the complete documentation for ABRAM — the premier creative operations platform and creative production software. Learn about setup, crew scheduling, and invoicing.',
   },
 };
 

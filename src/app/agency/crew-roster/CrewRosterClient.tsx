@@ -17,23 +17,52 @@ import { revealVariants, staggerContainer } from "@/lib/motion";
 export default function CrewRosterClient() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "ABRAM Crew & Assets Roster Optimization",
-    "description": "Talent matching index and crew database organization in the ABRAM creative production platform.",
-    "url": "https://abram.network/agency/crew-roster",
-    "isPartOf": { "@id": "https://abram.network/#website" },
-    "publisher": { "@id": "https://abram.network/#organization" },
-    "mainEntity": {
-      "@type": "SoftwareApplication",
-      "name": "ABRAM Matchmaker Engine",
-      "applicationCategory": "BusinessApplication",
-      "featureList": [
-        "Weighted Contractor Suitability Indexing",
-        "Unified Gear & Personnel Asset Directory",
-        "Automated Shortlist Selection Optimizer",
-        "One-Click Portal SMS Broadcast Dispatch"
-      ]
-    }
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://abram.network/agency/crew-roster#webpage",
+        "name": "ABRAM Crew & Assets Roster Optimization",
+        "description": "Talent matching index and crew database organization in the ABRAM creative production platform.",
+        "url": "https://abram.network/agency/crew-roster",
+        "isPartOf": { "@id": "https://abram.network/#website" },
+        "publisher": { "@id": "https://abram.network/#organization" },
+        "mainEntity": {
+          "@type": "SoftwareApplication",
+          "name": "ABRAM Matchmaker Engine",
+          "applicationCategory": "BusinessApplication",
+          "featureList": [
+            "Weighted Contractor Suitability Indexing",
+            "Unified Gear & Personnel Asset Directory",
+            "Automated Shortlist Selection Optimizer",
+            "One-Click Portal SMS Broadcast Dispatch"
+          ]
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://abram.network/agency/crew-roster#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://abram.network/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Creative Agency",
+            "item": "https://abram.network/agency"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Crew Roster",
+            "item": "https://abram.network/agency/crew-roster"
+          }
+        ]
+      }
+    ]
   };
 
   return (

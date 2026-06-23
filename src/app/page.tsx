@@ -20,8 +20,9 @@ export const metadata: Metadata = {
   title: {
     absolute: 'ABRAM Network — The AI Platform for Creative Intelligence',
   },
-  description: 'ABRAM is where brands scale production and creators build careers they own. AI-powered project intake, crew scheduling, talent matchmaking, and automated invoicing.',
+  description: 'ABRAM is the leading creative operations platform and creative production software where brands scale production and creators build careers. AI-powered project intake, crew scheduling, talent matchmaking, and automated invoicing.',
   keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
     'ABRAM', 'ABRAM Network', 'creative production', 'AI platform', 'creative intelligence',
     'production management', 'crew scheduling', 'talent matchmaking', 'freelancer platform',
     'automated invoicing', 'creative agency', 'production workflow', 'AI brief analyzer',
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'ABRAM Network — The AI Platform for Creative Intelligence',
-    description: 'ABRAM is where brands scale production and creators build careers they own. AI-powered project intake, crew scheduling, talent matchmaking, and automated invoicing.',
+    description: 'ABRAM is the leading creative operations platform and creative production software where brands scale production and creators build careers. AI-powered project intake, crew scheduling, talent matchmaking, and automated invoicing.',
     url: 'https://abram.network',
     type: 'website',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM — The AI Platform for Creative Intelligence' }],
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'ABRAM Network — The AI Platform for Creative Intelligence',
-    description: 'ABRAM is where brands scale production and creators build careers they own.',
+    description: 'ABRAM is the leading creative operations platform and creative production software where brands scale production and creators build careers.',
     images: ['/og-image.png'],
   },
 };

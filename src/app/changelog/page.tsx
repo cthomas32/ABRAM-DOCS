@@ -8,13 +8,17 @@ export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
 export const metadata: Metadata = {
   title: "Updates",
-  description: "Updates, improvements, and new features added to the ABRAM Network.",
+  description: "Updates, improvements, and new features added to ABRAM — the premier creative operations platform and creative production software.",
+  keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
+    'ABRAM updates', 'changelog', 'product release notes', 'production tools updates'
+  ],
   alternates: {
     canonical: "https://abram.network/changelog",
   },
   openGraph: {
     title: "Updates | ABRAM Changelog",
-    description: "Updates, improvements, and new features added to the ABRAM Network.",
+    description: "Updates, improvements, and new features added to ABRAM — the premier creative operations platform and creative production software.",
     url: "https://abram.network/changelog",
     siteName: "ABRAM Network",
     locale: "en_US",
@@ -23,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Updates | ABRAM Changelog",
-    description: "Updates, improvements, and new features added to the ABRAM Network.",
+    description: "Updates, improvements, and new features added to ABRAM — the premier creative operations platform and creative production software.",
   },
 };
 
@@ -45,8 +49,61 @@ export default async function ChangelogPage() {
     console.error("Error fetching release notes from Supabase:", err);
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://abram.network/changelog#collectionpage",
+        "url": "https://abram.network/changelog",
+        "name": "ABRAM Network Updates & Changelog",
+        "description": "Updates, improvements, and new features added to the ABRAM Network.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://abram.network/#website"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://abram.network/#organization"
+        },
+        "mainEntity": {
+          "@type": "ItemList",
+          "numberOfItems": releases.length,
+          "itemListElement": releases.map((release: any, index: number) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "url": `https://abram.network/changelog/${release.slug || release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}`,
+            "name": release.title,
+          }))
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://abram.network/changelog#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://abram.network/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Changelog",
+            "item": "https://abram.network/changelog"
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-zinc-50 font-sans">
           Changelog

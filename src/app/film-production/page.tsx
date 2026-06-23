@@ -3,8 +3,9 @@ import FilmProductionHubClient from './FilmProductionHubClient';
 
 export const metadata: Metadata = {
   title: 'Film Production Suite — Dynamic Creative Operations',
-  description: 'Streamline physical production. Analyze daily burn rates, coordinate crew turnaround safety margins, and break down screenplays with advanced parsing.',
+  description: 'Streamline physical production with our advanced creative production software. Analyze daily burn rates, coordinate crew turnaround safety margins, and break down screenplays in a unified creative operations platform.',
   keywords: [
+    'creative production software', 'creative production tools', 'creative operations platform',
     'film production management', 'crew scheduling', 'production budgeting',
     'union rates estimator', 'freelancer invoicing', 'timeline allocations',
   ],
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Film Production Suite — Dynamic Creative Operations | ABRAM Network',
-    description: 'Streamline physical production. Analyze daily burn rates and coordinate crew turnaround safety margins.',
+    description: 'Streamline physical production with our advanced creative production software. Analyze daily burn rates, coordinate crew turnaround safety margins, and break down screenplays.',
     type: 'website',
     url: 'https://abram.network/film-production',
     siteName: 'ABRAM Network',
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Film Production Suite — Dynamic Creative Operations',
-    description: 'Streamline physical production. Analyze daily burn rates and coordinate crew turnaround safety margins.',
+    description: 'Streamline physical production with our advanced creative production software. Analyze daily burn rates and coordinate crew turnaround safety margins.',
   },
 };
 
@@ -32,6 +33,43 @@ function AgentOnly({ children }: { children: React.ReactNode }) {
 export default function FilmProductionPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebPage',
+                '@id': 'https://abram.network/film-production#webpage',
+                'url': 'https://abram.network/film-production',
+                'name': 'Film Production Suite — Dynamic Creative Operations',
+                'description': 'Streamline physical production. Analyze daily burn rates, coordinate crew turnaround safety margins, and break down screenplays with advanced parsing.',
+                'isPartOf': { '@id': 'https://abram.network/#website' },
+                'publisher': { '@id': 'https://abram.network/#organization' }
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://abram.network/film-production#breadcrumb',
+                'itemListElement': [
+                  {
+                    '@type': 'ListItem',
+                    'position': 1,
+                    'name': 'Home',
+                    'item': 'https://abram.network/'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    'position': 2,
+                    'name': 'Film Production',
+                    'item': 'https://abram.network/film-production'
+                  }
+                ]
+              }
+            ]
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
       <AgentOnly>
         <h2>🤖 Film Production Logistics & Script Breakdown Specifications</h2>
         <p>
