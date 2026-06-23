@@ -465,13 +465,15 @@ export default function CallSheetMockup() {
                       Click status badge to cycle contractor activity codes: <span className="font-semibold text-white">W</span> (Work), <span className="font-semibold text-white">H</span> (Hold), <span className="font-semibold text-white">T</span> (Travel), <span className="font-semibold text-white">R</span> (Rehearsal).
                     </p>
                   </div>
-                  <span className="text-[10px] text-zinc-400 md:hidden block font-mono">
-                    Swipe →
-                  </span>
+                </div>
+
+                <div className="flex items-center justify-between mb-2 md:hidden">
+                  <span className="text-[10px] text-zinc-500 uppercase font-semibold">Personnel Roster</span>
+                  <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
                 </div>
 
                 <div className="overflow-x-auto border border-white/5 rounded-xl bg-zinc-950/30">
-                  <table className="w-full border-collapse text-left text-xs text-zinc-300">
+                  <table className="w-full border-collapse text-left text-xs text-zinc-300 min-w-[800px]">
                     <thead>
                       <tr className="border-b border-white/5 bg-zinc-950/40 text-[9px] uppercase tracking-wider font-semibold text-zinc-500">
                         <th className="px-4 py-3">ID</th>

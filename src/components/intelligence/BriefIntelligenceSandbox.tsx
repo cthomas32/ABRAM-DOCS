@@ -779,37 +779,43 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
 
                 {/* Tab 2: Deliverables */}
                 {blueprintTab === "deliverables" && (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse text-xs text-zinc-400">
-                      <thead>
-                        <tr className="border-b border-white/5 text-[10px] text-zinc-500 uppercase tracking-wider">
-                          <th className="py-2.5 px-3">Deliverable Name</th>
-                          <th className="py-2.5 px-3">Target Format</th>
-                          <th className="py-2.5 px-3">Target Deadline</th>
-                          <th className="py-2.5 px-3">Priority</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {blueprint.deliverables.map((del, index) => (
-                          <tr key={index} className="border-b border-white/5 hover:bg-white/[0.01] transition-colors">
-                            <td className="py-3 px-3 text-zinc-300 font-medium">{del.name}</td>
-                            <td className="py-3 px-3 font-mono">{del.format}</td>
-                            <td className="py-3 px-3">{del.deadline}</td>
-                            <td className="py-3 px-3">
-                              <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
-                                del.priority === "Critical" 
-                                  ? "bg-red-500/10 text-red-400" 
-                                  : del.priority === "High" 
-                                    ? "bg-amber-500/10 text-amber-400" 
-                                    : "bg-blue-500/10 text-blue-400"
-                              }`}>
-                                {del.priority}
-                              </span>
-                            </td>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between mb-2 md:hidden">
+                      <span className="text-[10px] text-zinc-500 uppercase font-semibold">Deliverables List</span>
+                      <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs text-zinc-400 min-w-[550px]">
+                        <thead>
+                          <tr className="border-b border-white/5 text-[10px] text-zinc-500 uppercase tracking-wider">
+                            <th className="py-2.5 px-3">Deliverable Name</th>
+                            <th className="py-2.5 px-3">Target Format</th>
+                            <th className="py-2.5 px-3">Target Deadline</th>
+                            <th className="py-2.5 px-3">Priority</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {blueprint.deliverables.map((del, index) => (
+                            <tr key={index} className="border-b border-white/5 hover:bg-white/[0.01] transition-colors">
+                              <td className="py-3 px-3 text-zinc-300 font-medium">{del.name}</td>
+                              <td className="py-3 px-3 font-mono">{del.format}</td>
+                              <td className="py-3 px-3">{del.deadline}</td>
+                              <td className="py-3 px-3">
+                                <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
+                                  del.priority === "Critical" 
+                                    ? "bg-red-500/10 text-red-400" 
+                                    : del.priority === "High" 
+                                      ? "bg-amber-500/10 text-amber-400" 
+                                      : "bg-blue-500/10 text-blue-400"
+                                }`}>
+                                  {del.priority}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 )}
 

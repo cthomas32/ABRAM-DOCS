@@ -159,17 +159,19 @@ export default function AgencyRosterMockup() {
             <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase font-mono truncate">
               Roster database ({filteredRoster.length} matches)
             </span>
-            <span className="text-[9px] text-zinc-400 font-mono md:hidden shrink-0 animate-pulse">
-              Swipe to view →
-            </span>
             <span className="text-[9px] text-zinc-400 hidden md:block font-mono shrink-0">
               Click ROW to shortlist crew asset
             </span>
           </div>
 
+          <div className="flex items-center justify-between mb-2 md:hidden">
+            <span className="text-[10px] text-zinc-500 uppercase font-semibold">Roster Database</span>
+            <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+          </div>
+
           <div className="border border-white/5 rounded-xl bg-zinc-950/30 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-xs">
+              <table className="w-full border-collapse text-left text-xs min-w-[700px]">
                 <thead>
                   <tr className="border-b border-white/5 bg-zinc-950/40 text-[9px] uppercase tracking-wider font-semibold text-zinc-500 font-mono">
                     <th className="px-4 py-3">Asset / Contractor</th>

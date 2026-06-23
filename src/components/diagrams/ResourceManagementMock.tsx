@@ -508,7 +508,7 @@ export default function ResourceManagementMock() {
 
         {/* Tab Selection & Filtering Controls Row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
-          <div className="bg-[#141414] border border-[#27272a] rounded-full p-1 inline-flex gap-1">
+          <div className="bg-[#141414] border border-[#27272a] rounded-full p-1 inline-flex gap-1 max-w-full overflow-x-auto scrollbar-none">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               const Icon = tab.icon;
@@ -516,7 +516,7 @@ export default function ResourceManagementMock() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 whitespace-nowrap px-4 py-1.5 text-[13px] rounded-full font-medium transition-all duration-200 outline-none ${
+                  className={`flex items-center gap-1.5 whitespace-nowrap px-3 py-2.5 md:px-4 md:py-1.5 text-[13px] rounded-full font-medium transition-all duration-200 outline-none min-h-[44px] md:min-h-0 cursor-pointer ${
                     isActive
                       ? "bg-[#27272a]/80 text-white shadow-sm font-semibold"
                       : "text-[#a1a1aa] hover:text-white hover:bg-[#27272a]/30"
@@ -539,7 +539,7 @@ export default function ResourceManagementMock() {
                     setIsCategoryMenuOpen(!isCategoryMenuOpen);
                     setIsLocationMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-[#141414] hover:bg-[#1c1c1c] text-gray-300 hover:text-white border border-[#27272a] rounded-lg transition-colors outline-none"
+                  className="flex items-center gap-2 px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-1.5 text-xs font-medium bg-[#141414] hover:bg-[#1c1c1c] text-gray-300 hover:text-white border border-[#27272a] rounded-lg transition-colors outline-none cursor-pointer"
                 >
                   <span>Category: <strong className="text-white font-semibold">{categoryFilter === "all" ? "All" : categoryFilter}</strong></span>
                   <LucideIcons.ChevronDown size={12} className={`text-gray-500 transition-transform ${isCategoryMenuOpen ? "rotate-180" : ""}`} />
@@ -563,7 +563,7 @@ export default function ResourceManagementMock() {
                               setCategoryFilter(category as any);
                               setIsCategoryMenuOpen(false);
                             }}
-                            className={`w-full text-left px-3 py-2 text-xs rounded-lg flex items-center justify-between transition-colors ${
+                            className={`w-full text-left px-3 py-2.5 md:py-2 text-xs rounded-lg flex items-center justify-between transition-colors min-h-[44px] md:min-h-0 cursor-pointer ${
                               categoryFilter === category
                                 ? "bg-white/10 text-white font-medium"
                                 : "text-gray-400 hover:bg-white/5 hover:text-white"
@@ -586,7 +586,7 @@ export default function ResourceManagementMock() {
                     setIsLocationMenuOpen(!isLocationMenuOpen);
                     setIsCategoryMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-[#141414] hover:bg-[#1c1c1c] text-gray-300 hover:text-white border border-[#27272a] rounded-lg transition-colors outline-none"
+                  className="flex items-center gap-2 px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-1.5 text-xs font-medium bg-[#141414] hover:bg-[#1c1c1c] text-gray-300 hover:text-white border border-[#27272a] rounded-lg transition-colors outline-none cursor-pointer"
                 >
                   <span>Location: <strong className="text-white font-semibold">{locationFilter === "all" ? "All" : locationFilter}</strong></span>
                   <LucideIcons.ChevronDown size={12} className={`text-gray-500 transition-transform ${isLocationMenuOpen ? "rotate-180" : ""}`} />
@@ -610,7 +610,7 @@ export default function ResourceManagementMock() {
                               setLocationFilter(location as any);
                               setIsLocationMenuOpen(false);
                             }}
-                            className={`w-full text-left px-3 py-2 text-xs rounded-lg flex items-center justify-between transition-colors ${
+                            className={`w-full text-left px-3 py-2.5 md:py-2 text-xs rounded-lg flex items-center justify-between transition-colors min-h-[44px] md:min-h-0 cursor-pointer ${
                               locationFilter === location
                                 ? "bg-white/10 text-white font-medium"
                                 : "text-gray-400 hover:bg-white/5 hover:text-white"
@@ -632,7 +632,7 @@ export default function ResourceManagementMock() {
                     setCategoryFilter("all");
                     setLocationFilter("all");
                   }}
-                  className="text-xs text-red-400 hover:text-red-300 px-2 py-1 flex items-center gap-1 transition-colors font-medium"
+                  className="text-xs text-red-400 hover:text-red-300 px-3 py-2.5 min-h-[44px] md:min-h-0 md:px-2 md:py-1 flex items-center gap-1 transition-colors font-medium cursor-pointer"
                 >
                   <LucideIcons.X size={12} />
                   <span>Clear</span>
@@ -679,82 +679,98 @@ export default function ResourceManagementMock() {
                     </div>
                   ) : (
                     /* Custom grid table */
-                    <div className="border border-white/5 rounded-2xl overflow-hidden bg-[#121212]/30">
-                      {/* Grid Header */}
-                      <div className="grid grid-cols-[40px_2.5fr_1.5fr_1.5fr_1fr_1.2fr] gap-2 items-center px-4 py-3 bg-white/[0.02] text-[10px] text-gray-500 uppercase font-bold tracking-wider border-b border-white/5">
-                        <button
-                          onClick={() => toggleSelectAll(filteredInventory.map((a) => a.id))}
-                          className="w-4 h-4 rounded border flex items-center justify-center transition-colors outline-none bg-transparent border-white/20 hover:border-white/40 animate-none"
-                        >
-                          {filteredInventory.every((a) => selectedAssets.has(a.id)) && (
-                            <LucideIcons.Check size={10} strokeWidth={3} className="text-white" />
-                          )}
-                        </button>
-                        <span>Resource Name</span>
-                        <span>Category</span>
-                        <span>Location</span>
-                        <span>Day Rate</span>
-                        <span>Status</span>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between mb-2 md:hidden">
+                        <span className="text-[10px] text-zinc-500 uppercase font-semibold">Inventory Pool</span>
+                        <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
                       </div>
-                      
-                      {/* Grid Rows */}
-                      <div className="divide-y divide-white/5">
-                        {filteredInventory.map((asset) => {
-                          const isSelected = selectedAssets.has(asset.id);
-                          return (
-                            <div
-                              key={asset.id}
-                              className={`grid grid-cols-[40px_2.5fr_1.5fr_1.5fr_1fr_1.2fr] gap-2 items-center px-4 py-3 transition-colors text-sm ${
-                                isSelected ? "bg-white/[0.03]" : "bg-transparent hover:bg-white/[0.01]"
-                              }`}
+                      <div className="overflow-x-auto rounded-2xl border border-white/5 bg-[#121212]/30">
+                        <div className="min-w-[750px]">
+                          {/* Grid Header */}
+                          <div className="grid grid-cols-[40px_2.5fr_1.5fr_1.5fr_1fr_1.2fr] gap-2 items-center px-4 py-3 bg-white/[0.02] text-[10px] text-gray-500 uppercase font-bold tracking-wider border-b border-white/5">
+                            <button
+                              onClick={() => toggleSelectAll(filteredInventory.map((a) => a.id))}
+                              className="w-11 h-11 -ml-3.5 -mr-3.5 md:w-4 md:h-4 md:m-0 flex items-center justify-center transition-colors outline-none bg-transparent shrink-0 cursor-pointer"
                             >
-                              {/* Custom checkbox */}
-                              <button
-                                onClick={() => toggleSelectAsset(asset.id)}
-                                className={`w-4 h-4 rounded border flex items-center justify-center transition-colors outline-none ${
-                                  isSelected
-                                    ? "bg-blue-500 border-blue-500 text-white"
-                                    : "bg-transparent border-white/20 hover:border-white/40"
-                                }`}
-                              >
-                                {isSelected && <LucideIcons.Check size={10} strokeWidth={3} />}
-                              </button>
-
-                              {/* Asset Info */}
-                              <div className="flex flex-col truncate">
-                                <span className="font-semibold text-white truncate">{asset.name}</span>
-                                <span className="text-[10px] font-mono text-gray-500 truncate mt-0.5">{asset.serial}</span>
+                              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                                filteredInventory.every((a) => selectedAssets.has(a.id))
+                                  ? "bg-white border-white text-black"
+                                  : "border-white/20 hover:border-white/40"
+                              }`}>
+                                {filteredInventory.every((a) => selectedAssets.has(a.id)) && (
+                                  <LucideIcons.Check size={10} strokeWidth={3} className="text-black" />
+                                )}
                               </div>
+                            </button>
+                            <span>Resource Name</span>
+                            <span>Category</span>
+                            <span>Location</span>
+                            <span>Day Rate</span>
+                            <span>Status</span>
+                          </div>
+                          
+                          {/* Grid Rows */}
+                          <div className="divide-y divide-white/5">
+                            {filteredInventory.map((asset) => {
+                              const isSelected = selectedAssets.has(asset.id);
+                              return (
+                                <div
+                                  key={asset.id}
+                                  className={`grid grid-cols-[40px_2.5fr_1.5fr_1.5fr_1fr_1.2fr] gap-2 items-center px-4 py-3 transition-colors text-sm ${
+                                    isSelected ? "bg-white/[0.03]" : "bg-transparent hover:bg-white/[0.01]"
+                                  }`}
+                                >
+                                  {/* Custom checkbox */}
+                                  <button
+                                    onClick={() => toggleSelectAsset(asset.id)}
+                                    className="w-11 h-11 -ml-3.5 -mr-3.5 md:w-4 md:h-4 md:m-0 flex items-center justify-center outline-none cursor-pointer shrink-0"
+                                  >
+                                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                                      isSelected
+                                        ? "bg-blue-500 border-blue-500 text-white"
+                                        : "bg-transparent border-white/20 hover:border-white/40"
+                                    }`}>
+                                      {isSelected && <LucideIcons.Check size={10} strokeWidth={3} />}
+                                    </div>
+                                  </button>
 
-                              {/* Category */}
-                              <span className="text-gray-400 font-medium text-xs truncate">{asset.category}</span>
+                                  {/* Asset Info */}
+                                  <div className="flex flex-col truncate">
+                                    <span className="font-semibold text-white truncate">{asset.name}</span>
+                                    <span className="text-[10px] font-mono text-gray-500 truncate mt-0.5">{asset.serial}</span>
+                                  </div>
 
-                              {/* Location */}
-                              <span className="text-gray-300 font-medium text-xs truncate flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-gray-500 shrink-0" />
-                                {asset.location}
-                              </span>
+                                  {/* Category */}
+                                  <span className="text-gray-400 font-medium text-xs truncate">{asset.category}</span>
 
-                              {/* Rate */}
-                              <span className="font-mono text-gray-300 font-medium text-xs">{asset.rate}</span>
+                                  {/* Location */}
+                                  <span className="text-gray-300 font-medium text-xs truncate flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-gray-500 shrink-0" />
+                                    {asset.location}
+                                  </span>
 
-                              {/* Status Badge */}
-                              <div>
-                                <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded ${
-                                  asset.status === "Available"
-                                    ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
-                                    : asset.status === "Booked"
-                                    ? "bg-blue-500/10 border border-blue-500/20 text-blue-400"
-                                    : asset.status === "In Maintenance"
-                                    ? "bg-amber-500/10 border border-amber-500/20 text-amber-400"
-                                    : "bg-rose-500/10 border border-rose-500/20 text-rose-400"
-                                }`}>
-                                  {asset.status}
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        })}
+                                  {/* Rate */}
+                                  <span className="font-mono text-gray-300 font-medium text-xs">{asset.rate}</span>
+
+                                  {/* Status Badge */}
+                                  <div>
+                                    <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded ${
+                                      asset.status === "Available"
+                                        ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+                                        : asset.status === "Booked"
+                                        ? "bg-blue-500/10 border border-blue-500/20 text-blue-400"
+                                        : asset.status === "In Maintenance"
+                                        ? "bg-amber-500/10 border border-amber-500/20 text-amber-400"
+                                        : "bg-rose-500/10 border border-rose-500/20 text-rose-400"
+                                    }`}>
+                                      {asset.status}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -839,7 +855,7 @@ export default function ResourceManagementMock() {
                                       toggleKitDeployment(kit);
                                     }}
                                     disabled={status === "Maintenance Required"}
-                                    className={`px-3 py-1.5 text-xs rounded-lg font-semibold transition-colors border ${
+                                    className={`px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-1.5 text-xs rounded-lg font-semibold transition-colors border flex items-center justify-center cursor-pointer ${
                                       status === "Available"
                                         ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
                                         : status === "Booked / Deployed"
@@ -896,17 +912,22 @@ export default function ResourceManagementMock() {
               {activeTab === "calendar" && (
                 <div className="space-y-4">
                   {/* Timeline controller header */}
-                  <div className="flex items-center justify-between bg-[#121212] border border-white/5 px-4 py-3 rounded-xl">
-                    <div className="flex items-center gap-2">
-                      <button className="h-7 w-7 rounded-md border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#121212] border border-white/5 p-3 md:px-4 md:py-3 rounded-xl gap-2">
+                    <div className="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
+                      <button className="h-11 w-11 md:h-7 md:w-7 rounded-md border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer shrink-0">
                         <LucideIcons.ChevronLeft size={14} />
                       </button>
                       <span className="text-xs font-semibold text-white">June 15 – June 21, 2026</span>
-                      <button className="h-7 w-7 rounded-md border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                      <button className="h-11 w-11 md:h-7 md:w-7 rounded-md border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer shrink-0">
                         <LucideIcons.ChevronRight size={14} />
                       </button>
                     </div>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Week View (Mon - Sun)</span>
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold self-end sm:self-auto">Week View (Mon - Sun)</span>
+                  </div>
+
+                  <div className="flex items-center justify-between mb-2 md:hidden">
+                    <span className="text-[10px] text-zinc-500 uppercase font-semibold">Calendar Timeline</span>
+                    <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
                   </div>
 
                   {/* Scrollable calendar grid container */}
@@ -1025,7 +1046,7 @@ export default function ResourceManagementMock() {
                   </div>
                   <button
                     onClick={() => setSelectedBooking(null)}
-                    className="p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                    className="p-2.5 md:p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors cursor-pointer min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center"
                   >
                     <LucideIcons.X size={16} />
                   </button>
@@ -1062,14 +1083,14 @@ export default function ResourceManagementMock() {
                 <div className="flex flex-col gap-2 pt-2">
                   <button
                     onClick={() => deleteBooking(selectedBooking.id)}
-                    className="btn-danger w-full justify-center"
+                    className="btn-danger w-full justify-center min-h-[44px] md:min-h-0 py-2.5 md:py-1.5 flex items-center"
                   >
-                    <LucideIcons.Trash2 size={12} />
+                    <LucideIcons.Trash2 size={12} className="mr-1.5" />
                     <span>Release Booking</span>
                   </button>
                   <button
                     onClick={() => setSelectedBooking(null)}
-                    className="btn-glass w-full justify-center"
+                    className="btn-glass w-full justify-center min-h-[44px] md:min-h-0 py-2.5 md:py-1.5 flex items-center"
                   >
                     Close
                   </button>
@@ -1091,12 +1112,12 @@ export default function ResourceManagementMock() {
                   <h2 className="text-xs font-bold text-white uppercase tracking-wider">New Booking Request</h2>
                   <button
                     onClick={() => setIsNewBookingOpen(false)}
-                    className="p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                    className="p-2.5 md:p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors cursor-pointer min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center"
                   >
                     <LucideIcons.X size={16} />
                   </button>
                 </div>
-
+ 
                 <form onSubmit={createBooking} className="space-y-4">
                   <div className="space-y-1">
                     <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Target Resource</label>
@@ -1104,10 +1125,10 @@ export default function ResourceManagementMock() {
                       type="text"
                       readOnly
                       value={newBookingData.resourceName}
-                      className="w-full bg-[#141414] border border-white/5 rounded-lg px-3 py-2 text-xs font-semibold text-zinc-400 outline-none cursor-not-allowed"
+                      className="w-full bg-[#141414] border border-white/5 rounded-lg px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-2 text-xs font-semibold text-zinc-400 outline-none cursor-not-allowed"
                     />
                   </div>
-
+ 
                   <div className="space-y-1">
                     <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Project Name</label>
                     <input
@@ -1116,10 +1137,10 @@ export default function ResourceManagementMock() {
                       value={newBookingData.projectName}
                       onChange={(e) => setNewBookingData({ ...newBookingData, projectName: e.target.value })}
                       placeholder="e.g. Apparel Brand Spotlight"
-                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
+                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
                     />
                   </div>
-
+ 
                   <div className="space-y-1">
                     <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Work Order Details</label>
                     <input
@@ -1128,10 +1149,10 @@ export default function ResourceManagementMock() {
                       value={newBookingData.workOrder}
                       onChange={(e) => setNewBookingData({ ...newBookingData, workOrder: e.target.value })}
                       placeholder="e.g. A-Camera Pack & Rigging"
-                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
+                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
                     />
                   </div>
-
+ 
                   <div className="space-y-1">
                     <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Operator / Crew</label>
                     <input
@@ -1140,10 +1161,10 @@ export default function ResourceManagementMock() {
                       value={newBookingData.operator}
                       onChange={(e) => setNewBookingData({ ...newBookingData, operator: e.target.value })}
                       placeholder="e.g. Marcus Chen"
-                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
+                      className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-2 text-xs font-medium text-white placeholder-zinc-600 outline-none focus:border-white/30 transition-colors"
                     />
                   </div>
-
+ 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Start Day</label>
@@ -1157,7 +1178,7 @@ export default function ResourceManagementMock() {
                             endDayIdx: Math.max(newBookingData.endDayIdx, startVal)
                           });
                         }}
-                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white outline-none cursor-pointer"
+                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-2 text-xs font-medium text-white outline-none cursor-pointer"
                       >
                         {WEEK_DAYS.map((d, i) => (
                           <option key={i} value={i}>{d.label} ({d.date})</option>
@@ -1170,7 +1191,7 @@ export default function ResourceManagementMock() {
                       <select
                         value={newBookingData.endDayIdx}
                         onChange={(e) => setNewBookingData({ ...newBookingData, endDayIdx: Number(e.target.value) })}
-                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white outline-none cursor-pointer"
+                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2.5 min-h-[44px] md:min-h-0 md:py-2 text-xs font-medium text-white outline-none cursor-pointer"
                       >
                         {WEEK_DAYS.map((d, i) => (
                           <option key={i} value={i} disabled={i < newBookingData.startDayIdx}>{d.label} ({d.date})</option>
@@ -1178,41 +1199,45 @@ export default function ResourceManagementMock() {
                       </select>
                     </div>
                   </div>
-
+ 
                   <div className="space-y-1">
-                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold block mb-1.5">Accent Tag</label>
-                    <div className="flex items-center gap-3">
+                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold block mb-1">Accent Tag</label>
+                    <div className="flex items-center gap-1 md:gap-3 flex-wrap">
                       {(["violet", "pink", "orange", "emerald"] as const).map((c) => (
                         <button
                           key={c}
                           type="button"
                           onClick={() => setNewBookingData({ ...newBookingData, color: c })}
-                          className={`w-6 h-6 rounded-full border transition-all ${
-                            newBookingData.color === c ? "scale-110 ring-2 ring-white/20 border-white" : "opacity-60 hover:opacity-100 border-transparent"
-                          }`}
-                          style={{
-                            backgroundColor:
-                              c === "violet" ? "rgb(139, 92, 246)" :
-                              c === "pink" ? "rgb(236, 72, 153)" :
-                              c === "orange" ? "rgb(249, 115, 22)" :
-                              "rgb(16, 185, 129)"
-                          }}
-                        />
+                          className="w-11 h-11 md:w-8 md:h-8 flex items-center justify-center outline-none cursor-pointer"
+                        >
+                          <div
+                            className={`w-6 h-6 rounded-full border transition-all ${
+                              newBookingData.color === c ? "scale-110 ring-2 ring-white/20 border-white" : "opacity-60 hover:opacity-100 border-transparent"
+                            }`}
+                            style={{
+                              backgroundColor:
+                                c === "violet" ? "rgb(139, 92, 246)" :
+                                c === "pink" ? "rgb(236, 72, 153)" :
+                                c === "orange" ? "rgb(249, 115, 22)" :
+                                "rgb(16, 185, 129)"
+                            }}
+                          />
+                        </button>
                       ))}
                     </div>
                   </div>
-
+ 
                   <div className="flex flex-col gap-2 pt-3 border-t border-white/5">
                     <button
                       type="submit"
-                      className="btn-primary w-full justify-center"
+                      className="btn-primary w-full justify-center min-h-[44px] md:min-h-0 py-2.5 md:py-2 flex items-center"
                     >
                       Confirm Booking
                     </button>
                     <button
                       type="button"
                       onClick={() => setIsNewBookingOpen(false)}
-                      className="btn-glass w-full justify-center"
+                      className="btn-glass w-full justify-center min-h-[44px] md:min-h-0 py-2.5 md:py-2 flex items-center"
                     >
                       Cancel
                     </button>

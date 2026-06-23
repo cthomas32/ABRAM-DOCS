@@ -495,33 +495,39 @@ export default function ProjectDetailMock() {
                     </div>
                   </div>
 
+                  <div className="flex items-center justify-between mb-2 md:hidden">
+                    <span className="text-[10px] text-zinc-500 uppercase font-semibold">Financial Ledger</span>
+                    <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                  </div>
                   <div className="border border-white/5 bg-[#121212] rounded-2xl overflow-hidden">
-                    <table className="w-full text-left border-collapse text-xs">
-                      <thead>
-                        <tr className="bg-white/[0.02] text-[9px] text-gray-500 uppercase font-bold tracking-wider border-b border-white/5">
-                          <th className="p-3 px-4">Expense Item</th>
-                          <th className="p-3">Budget</th>
-                          <th className="p-3">Incurred</th>
-                          <th className="p-3 px-4 text-right">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/[0.03] text-gray-300 font-light">
-                        {financialItems.map((item) => (
-                          <tr key={item.category} className="hover:bg-white/[0.01] transition-colors">
-                            <td className="p-3 px-4 font-medium text-white">{item.category}</td>
-                            <td className="p-3 font-mono">{item.budget}</td>
-                            <td className="p-3 font-mono">{item.spent}</td>
-                            <td className="p-3 px-4 text-right">
-                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                                item.status === "Paid" ? "bg-green-500/10 border-green-500/20 text-green-400" :
-                                item.status === "Incurred" || item.status === "Approved" ? "bg-blue-500/10 border-blue-500/20 text-blue-400" :
-                                "bg-zinc-500/10 border-zinc-850 text-zinc-400"
-                              }`}>{item.status}</span>
-                            </td>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs min-w-[500px]">
+                        <thead>
+                          <tr className="bg-white/[0.02] text-[9px] text-gray-500 uppercase font-bold tracking-wider border-b border-white/5">
+                            <th className="p-3 px-4">Expense Item</th>
+                            <th className="p-3">Budget</th>
+                            <th className="p-3">Incurred</th>
+                            <th className="p-3 px-4 text-right">Status</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="divide-y divide-white/[0.03] text-gray-300 font-light">
+                          {financialItems.map((item) => (
+                            <tr key={item.category} className="hover:bg-white/[0.01] transition-colors">
+                              <td className="p-3 px-4 font-medium text-white">{item.category}</td>
+                              <td className="p-3 font-mono">{item.budget}</td>
+                              <td className="p-3 font-mono">{item.spent}</td>
+                              <td className="p-3 px-4 text-right">
+                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                                  item.status === "Paid" ? "bg-green-500/10 border-green-500/20 text-green-400" :
+                                  item.status === "Incurred" || item.status === "Approved" ? "bg-blue-500/10 border-blue-500/20 text-blue-400" :
+                                  "bg-zinc-500/10 border-zinc-850 text-zinc-400"
+                                }`}>{item.status}</span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               )}
