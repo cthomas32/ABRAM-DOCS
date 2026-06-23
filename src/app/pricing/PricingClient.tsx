@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Check, 
@@ -520,6 +520,16 @@ export default function PricingClient() {
   const [teamSeats, setTeamSeats] = useState<number>(2);
   const [studioSeats, setStudioSeats] = useState<number>(6);
 
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    setIsDesktop(media.matches);
+    const listener = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, []);
+
   // Filter plans dynamically based on toggle selection
   const filteredPlans = PLANS.filter((plan) => 
     planFilter === "solo" 
@@ -783,7 +793,7 @@ export default function PricingClient() {
                       {(isTeam || isStudio) && (
                         <div className="mb-6 lg:mb-4 p-3.5 lg:p-2.5 rounded-xl bg-zinc-950/60 border border-white/5">
                           {/* Mobile view: Slider track with minus/plus */}
-                          <div className="lg:hidden">
+                          <div className="lg:hidden" aria-hidden={isDesktop ? "true" : "false"}>
                             <div className="flex justify-between items-center text-[10px] text-zinc-300 mb-2">
                               <span className="flex items-center gap-1">
                                 <Users className="w-3.5 h-3.5 text-zinc-400" />
@@ -798,6 +808,7 @@ export default function PricingClient() {
                                 }}
                                 className="w-11 h-11 rounded-full border border-white/10 hover:border-white/20 bg-zinc-950 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer shrink-0"
                                 disabled={currentSeats === minSeats}
+                                tabIndex={isDesktop ? -1 : 0}
                               >
                                 <Minus className="w-3.5 h-3.5" />
                               </button>
@@ -812,6 +823,7 @@ export default function PricingClient() {
                                   if (isStudio) setStudioSeats(val);
                                 }}
                                 className="flex-1 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-white min-w-0"
+                                tabIndex={isDesktop ? -1 : 0}
                               />
                               <button
                                 onClick={() => {
@@ -820,6 +832,7 @@ export default function PricingClient() {
                                 }}
                                 className="w-11 h-11 rounded-full border border-white/10 hover:border-white/20 bg-zinc-950 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer shrink-0"
                                 disabled={currentSeats === maxSeats}
+                                tabIndex={isDesktop ? -1 : 0}
                               >
                                 <Plus className="w-3.5 h-3.5" />
                               </button>
@@ -827,7 +840,7 @@ export default function PricingClient() {
                           </div>
   
                           {/* Desktop view: Tighter, no slider track, pure click counter */}
-                          <div className="hidden lg:flex items-center justify-between gap-1 w-full">
+                          <div className="hidden lg:flex items-center justify-between gap-1 w-full" aria-hidden={isDesktop ? "false" : "true"}>
                             <span className="text-xs text-zinc-400 font-medium whitespace-nowrap">Seats:</span>
                             <div className="flex items-center gap-1">
                               <button
@@ -837,6 +850,7 @@ export default function PricingClient() {
                                 }}
                                 className="w-5 h-5 rounded-full border border-white/10 hover:border-white/20 bg-zinc-950 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer shrink-0"
                                 disabled={currentSeats === minSeats}
+                                tabIndex={isDesktop ? 0 : -1}
                               >
                                 <Minus className="w-2 h-2" />
                               </button>
@@ -850,6 +864,7 @@ export default function PricingClient() {
                                 }}
                                 className="w-5 h-5 rounded-full border border-white/10 hover:border-white/20 bg-zinc-950 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer shrink-0"
                                 disabled={currentSeats === maxSeats}
+                                tabIndex={isDesktop ? 0 : -1}
                               >
                                 <Plus className="w-2 h-2" />
                               </button>

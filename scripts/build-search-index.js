@@ -2,24 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
-const { createClient } = require('@supabase/supabase-js');
-
-// Helper to parse .env.local manually
-function loadEnvLocal(projectDir) {
-  const envPath = path.join(projectDir, '.env.local');
-  if (fs.existsSync(envPath)) {
-    const content = fs.readFileSync(envPath, 'utf-8');
-    content.split('\n').forEach((line) => {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith('#')) return;
-      const index = trimmed.indexOf('=');
-      if (index === -1) return;
-      const key = trimmed.substring(0, index).trim();
-      const val = trimmed.substring(index + 1).trim().replace(/^['"]|['"]$/g, '');
-      process.env[key] = val;
-    });
-  }
-}
 
 function stripMdx(content) {
   let clean = content.replace(/<AgentOnly(?:\s+[^>]*?)?>[\s\S]*?<\/AgentOnly>/gi, '');
@@ -119,42 +101,81 @@ async function main() {
   const utilsDir = path.join(projectDir, 'src/utils');
   const docsJsonPath = path.join(projectDir, 'docs.json');
   
-  // Load environment variables from .env.local
-  loadEnvLocal(projectDir);
-  
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  
-  if (!supabaseUrl || !supabaseKey) {
-    console.error('Error: Supabase environment variables not found in .env.local');
-    process.exit(1);
-  }
-  
-  const supabase = createClient(supabaseUrl, supabaseKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-  
-  console.log('Fetching articles from Supabase...');
-  const { data: dbDocs, error } = await supabase
-    .from('help_docs')
-    .select('slug, title, sidebar_title, description, keywords, content');
-    
-  if (error) {
-    console.error('Error fetching articles from Supabase:', error);
-    process.exit(1);
-  }
-  
-  console.log(`Fetched ${dbDocs.length} articles from Supabase.`);
-  
-  const docMap = {};
-  dbDocs.forEach((doc) => {
-    docMap[doc.slug] = doc;
-  });
-  
   let docsJson = null;
   if (fs.existsSync(docsJsonPath)) {
     docsJson = JSON.parse(fs.readFileSync(docsJsonPath, 'utf-8'));
   }
+  
+  const docMap = {};
+  
+  // 1. Read overview/index page
+  const indexPath = path.join(projectDir, 'index.mdx');
+  if (fs.existsSync(indexPath)) {
+    const rawContent = fs.readFileSync(indexPath, 'utf-8');
+    const { data } = matter(rawContent);
+    docMap['overview'] = {
+      slug: 'overview',
+      title: data.title || '',
+      sidebar_title: data.sidebarTitle || '',
+      description: data.description || '',
+      keywords: data.keywords || [],
+      content: rawContent
+    };
+  }
+  
+  // 2. Read pages in docsJson
+  if (docsJson && docsJson.navigation && docsJson.navigation.products) {
+    docsJson.navigation.products.forEach((productObj) => {
+      if (!productObj.groups) return;
+      productObj.groups.forEach((groupObj) => {
+        if (!groupObj.pages) return;
+        groupObj.pages.forEach((pagePath) => {
+          const extensions = ['.md', '.mdx'];
+          let fileContent = '';
+          
+          for (const ext of extensions) {
+            const checkPath = path.join(projectDir, `${pagePath}${ext}`);
+            if (fs.existsSync(checkPath)) {
+              fileContent = fs.readFileSync(checkPath, 'utf-8');
+              break;
+            }
+          }
+          
+          if (!fileContent) {
+            // Try content/ folder as fallback
+            const checkContentPath = path.join(projectDir, 'content', `${path.basename(pagePath)}`);
+            for (const ext of extensions) {
+              const fullCheck = `${checkContentPath}${ext}`;
+              if (fs.existsSync(fullCheck)) {
+                fileContent = fs.readFileSync(fullCheck, 'utf-8');
+                break;
+              }
+            }
+          }
+          
+          if (fileContent) {
+            try {
+              const { data } = matter(fileContent);
+              docMap[pagePath] = {
+                slug: pagePath,
+                title: data.title || '',
+                sidebar_title: data.sidebarTitle || '',
+                description: data.description || '',
+                keywords: data.keywords || [],
+                content: fileContent
+              };
+            } catch (err) {
+              console.error(`Error processing file ${pagePath} for search index:`, err);
+            }
+          } else {
+            console.warn(`Warning: File not found for page path ${pagePath}`);
+          }
+        });
+      });
+    });
+  }
+  
+  console.log(`Resolved ${Object.keys(docMap).length} articles from local filesystem.`);
   
   console.log('Generating navigation data...');
   const navPages = generateNavigationIndex(docsJson, docMap);
