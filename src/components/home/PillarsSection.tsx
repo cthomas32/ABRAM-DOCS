@@ -34,10 +34,6 @@ function GanttVisualization() {
           0%, 100% { opacity: 0.25; }
           50% { opacity: 0.45; }
         }
-        @keyframes gantt-active-pulse {
-          0%, 100% { opacity: 0.55; }
-          50% { opacity: 0.85; }
-        }
         .gantt-bar {
           transform-origin: left center;
           animation: gantt-slide 3s ease-out forwards;
@@ -46,7 +42,7 @@ function GanttVisualization() {
           animation: gantt-shimmer 4s ease-in-out infinite;
         }
         .gantt-active {
-          animation: gantt-active-pulse 2.5s ease-in-out infinite;
+          opacity: 0.75;
         }
       `}</style>
 
@@ -134,14 +130,6 @@ function MindMapVisualization() {
       aria-hidden="true"
     >
       <style>{`
-        @keyframes node-breathe {
-          0%, 100% { opacity: 0.45; }
-          50% { opacity: 0.75; }
-        }
-        @keyframes center-pulse {
-          0%, 100% { opacity: 0.5; }
-          50% { opacity: 0.8; }
-        }
         @keyframes line-draw {
           0% { stroke-dashoffset: 80; opacity: 0; }
           30% { opacity: 0.3; }
@@ -152,10 +140,10 @@ function MindMapVisualization() {
           100% { opacity: 1; }
         }
         .mm-center {
-          animation: center-pulse 3.5s ease-in-out infinite;
+          opacity: 0.75;
         }
         .mm-node {
-          animation: node-breathe 4s ease-in-out infinite;
+          opacity: 0.6;
         }
         .mm-line {
           stroke-dasharray: 80;
@@ -275,29 +263,22 @@ function BudgetTickerVisualization() {
           60% { opacity: 0.65; }
           100% { stroke-dashoffset: ${dashOffset}; opacity: 0.65; }
         }
-        @keyframes ring-pulse {
-          0%, 100% { opacity: 0.65; }
-          50% { opacity: 0.85; }
-        }
         @keyframes ticker-fade {
           0% { opacity: 0; }
           100% { opacity: 1; }
         }
-        @keyframes status-glow {
-          0%, 100% { opacity: 0.45; }
-          50% { opacity: 0.75; }
-        }
         .ring-progress {
-          animation: ring-fill 2.5s ease-out forwards, ring-pulse 4s ease-in-out 2.5s infinite;
+          animation: ring-fill 2.5s ease-out forwards;
           transform: rotate(-90deg);
           transform-origin: 56px 64px;
+          opacity: 0.65;
         }
         .ticker-item {
           opacity: 0;
           animation: ticker-fade 0.8s ease-out forwards;
         }
         .status-dot {
-          animation: status-glow 2.5s ease-in-out infinite;
+          opacity: 0.6;
         }
       `}</style>
 

@@ -261,7 +261,7 @@ export default function AgencyRosterMockup() {
                 <Users className="w-8 h-8 text-zinc-600 mb-3 animate-pulse" />
                 <p className="text-xs font-semibold text-zinc-300 font-sans mb-1">Roster Allocation Empty</p>
                 <p className="text-[11px] text-zinc-500 leading-normal">
-                  Click on crew records to manually allocate them, or use the **AI Roster Matcher** to auto-select optimal members.
+                  Click on crew records to manually allocate them, or use the <strong className="font-semibold text-zinc-300">AI Roster Matcher</strong> to auto-select optimal members.
                 </p>
               </div>
             ) : (

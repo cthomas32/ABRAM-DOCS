@@ -24,7 +24,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const isAdminPage = cleanPathname.startsWith("/admin");
   // Marketing routes that need clean, un-padded full width presentation
-  const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain" || cleanPathname === "/film-production" || cleanPathname.startsWith("/film-production/") || cleanPathname === "/agency" || cleanPathname.startsWith("/agency/");
+  const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain" || cleanPathname === "/film-production" || cleanPathname.startsWith("/film-production/") || cleanPathname === "/agency" || cleanPathname.startsWith("/agency/") || cleanPathname === "/intelligence" || cleanPathname.startsWith("/intelligence/");
   const isDocsPage = cleanPathname.startsWith("/docs");
 
   // Keyboard shortcut listener for search modal
@@ -48,7 +48,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   if (isMarketingPage) {
-    const isBrainPage = cleanPathname === "/production-brain";
+    const isBrainPage = cleanPathname === "/production-brain" || cleanPathname === "/intelligence/brain";
     return (
       <BackgroundGlow 
         variant="premium" 

@@ -328,7 +328,7 @@ export default function ChatbotWidget() {
               <div 
                 ref={chatAreaRef}
                 data-lenis-prevent
-                className="flex-1 p-5 overflow-y-auto flex flex-col gap-4 scrollbar-none bg-neutral-950/40"
+                className="flex-1 p-5 overflow-y-auto flex flex-col gap-4 scrollbar-none bg-zinc-950/40"
               >
                 {messages.length === 0 ? (
                   <div className="flex-1 flex flex-col items-center justify-center text-center p-4 my-auto">
@@ -353,7 +353,7 @@ export default function ChatbotWidget() {
                     <div className="flex flex-col gap-2 w-full max-w-[320px] font-sans">
                       <button 
                         onClick={() => handleSend("Create a work order for Gaffer Jordan M.")}
-                        className="w-full bg-[#121212] hover:bg-[#181818] border border-white/[0.05] hover:border-white/10 text-neutral-300 hover:text-white px-3.5 py-2.5 rounded-xl text-xs text-left cursor-pointer flex items-center gap-3 transition-all duration-200"
+                        className="w-full bg-[#121212] hover:bg-[#181818] border border-white/[0.05] hover:border-white/10 text-zinc-300 hover:text-white px-3.5 py-2.5 rounded-xl text-xs text-left cursor-pointer flex items-center gap-3 transition-all duration-200"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
                         <span>Create a work order for Gaffer Jordan M.</span>
@@ -361,7 +361,7 @@ export default function ChatbotWidget() {
                       
                       <button 
                         onClick={() => handleSend("Generate a Call Sheet for Shoot Day 1.")}
-                        className="w-full bg-[#121212] hover:bg-[#181818] border border-white/[0.05] hover:border-white/10 text-neutral-300 hover:text-white px-3.5 py-2.5 rounded-xl text-xs text-left cursor-pointer flex items-center gap-3 transition-all duration-200"
+                        className="w-full bg-[#121212] hover:bg-[#181818] border border-white/[0.05] hover:border-white/10 text-zinc-300 hover:text-white px-3.5 py-2.5 rounded-xl text-xs text-left cursor-pointer flex items-center gap-3 transition-all duration-200"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
                         <span>Generate a Call Sheet for Shoot Day 1.</span>
@@ -369,7 +369,7 @@ export default function ChatbotWidget() {
 
                       <button 
                         onClick={() => handleSend("Check how Jordan M.'s booking impacts matching.")}
-                        className="w-full bg-[#121212] hover:bg-[#181818] border border-white/[0.05] hover:border-white/10 text-neutral-300 hover:text-white px-3.5 py-2.5 rounded-xl text-xs text-left cursor-pointer flex items-center gap-3 transition-all duration-200"
+                        className="w-full bg-[#121212] hover:bg-[#181818] border border-white/[0.05] hover:border-white/10 text-zinc-300 hover:text-white px-3.5 py-2.5 rounded-xl text-xs text-left cursor-pointer flex items-center gap-3 transition-all duration-200"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
                         <span>Check how Jordan's hold impacts matching.</span>
@@ -385,7 +385,7 @@ export default function ChatbotWidget() {
                           className={`max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed animate-in fade-in slide-in-from-bottom-2 ${
                             msg.sender === "user"
                               ? "self-end bg-white/[0.06] border border-white/[0.08] text-white rounded-br-none"
-                              : "self-start bg-transparent text-neutral-200 rounded-bl-none pl-0"
+                              : "self-start bg-transparent text-zinc-200 rounded-bl-none pl-0"
                           }`}
                         >
                           {parseMarkdown(msg.text)}
@@ -393,7 +393,7 @@ export default function ChatbotWidget() {
 
                         {/* Interactive Call Sheet Embed */}
                         {msg.callSheet && (
-                          <div className="self-start w-full max-w-[350px] border border-white/[0.08] rounded-xl bg-neutral-900/60 p-4 space-y-4 shadow-xl animate-in zoom-in-95 duration-300 font-sans text-xs">
+                          <div className="self-start w-full max-w-[350px] border border-white/[0.08] rounded-xl bg-zinc-900/60 p-4 space-y-4 shadow-xl animate-in zoom-in-95 duration-300 font-sans text-xs">
                             <div className="flex justify-between items-start border-b border-white/[0.06] pb-2">
                               <div>
                                 <span className="text-[9px] tracking-wide text-[#8ECAFF] font-medium">Apparel Campaign</span>
@@ -424,7 +424,7 @@ export default function ChatbotWidget() {
 
                         {/* Interactive Work Order Embed */}
                         {msg.workOrder && (
-                          <div className="self-start w-full max-w-[340px] border border-white/[0.08] rounded-xl bg-neutral-900/60 p-4 space-y-3 shadow-xl animate-in zoom-in-95 duration-300 font-sans text-xs">
+                          <div className="self-start w-full max-w-[340px] border border-white/[0.08] rounded-xl bg-zinc-900/60 p-4 space-y-3 shadow-xl animate-in zoom-in-95 duration-300 font-sans text-xs">
                             <div className="flex justify-between items-center border-b border-white/[0.06] pb-2">
                               <span className="font-medium text-white">Work Order: CLT-202</span>
                               <span className="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-medium">Scheduled</span>
@@ -452,12 +452,12 @@ export default function ChatbotWidget() {
 
                         {/* Interactive ROM Budget Embed */}
                         {msg.budget && (
-                          <div className="self-start w-full max-w-[340px] border border-white/[0.08] rounded-xl bg-neutral-900/60 p-4 space-y-3 shadow-xl animate-in zoom-in-95 duration-300 font-sans text-xs">
+                          <div className="self-start w-full max-w-[340px] border border-white/[0.08] rounded-xl bg-zinc-900/60 p-4 space-y-3 shadow-xl animate-in zoom-in-95 duration-300 font-sans text-xs">
                             <div className="border-b border-white/[0.06] pb-2">
                               <span className="text-[10px] text-zinc-500 uppercase font-semibold">Rough Order of Magnitude</span>
                               <h4 className="font-medium text-white text-sm">Apparel Campaign ROM</h4>
                             </div>
-                            <div className="space-y-2.5 font-mono text-[11px]">
+                            <div className="space-y-2.5 font-mono text-xs">
                               <div className="flex justify-between text-zinc-400">
                                 <span>1. Creative Roster:</span>
                                 <span className="text-white">$5,100</span>
@@ -482,14 +482,14 @@ export default function ChatbotWidget() {
 
                     {/* Streaming Text Container */}
                     {isStreaming && streamingText && (
-                      <div className="max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed self-start bg-transparent text-neutral-200 rounded-bl-none pl-0">
+                      <div className="max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed self-start bg-transparent text-zinc-200 rounded-bl-none pl-0">
                         {parseMarkdown(streamingText)}
                       </div>
                     )}
 
                     {/* Spinner Status */}
                     {isGenerating && !isStreaming && (
-                      <div className="self-start flex items-center gap-2.5 text-[11px] text-zinc-400 py-2 ">
+                      <div className="self-start flex items-center gap-2.5 text-xs text-zinc-400 py-2 ">
                         <span className="w-3.5 h-3.5 border border-white/20 border-t-[#8ECAFF] rounded-full animate-spin shrink-0" />
                         <span>Formulating response...</span>
                       </div>
@@ -502,7 +502,7 @@ export default function ChatbotWidget() {
               <div className="p-3 border-t border-white/[0.08] bg-[#0c0c0c] flex flex-col font-sans">
                 
                 {/* Input Frame */}
-                <div className="bg-[#121212] border border-[#262626] rounded-xl flex flex-col p-2 gap-1.5 focus-within:border-neutral-700 transition">
+                <div className="bg-[#121212] border border-[#262626] rounded-xl flex flex-col p-2 gap-1.5 focus-within:border-zinc-700 transition">
                   <textarea
                     ref={textareaRef}
                     data-lenis-prevent
@@ -524,18 +524,18 @@ export default function ChatbotWidget() {
                     {/* Skills Selector Dropdown */}
                     <div className="flex items-center gap-1 text-[10px] text-zinc-400 bg-white/[0.02] border border-white/[0.05] rounded-lg px-2.5 py-1 hover:bg-white/[0.05] transition cursor-pointer">
                       <Sparkles className="w-3 h-3 text-[#8ECAFF]" />
-                      <span className="font-semibold text-neutral-300">Skills</span>
+                      <span className="font-semibold text-zinc-300">Skills</span>
                       <ChevronDown className="w-3 h-3 text-zinc-500" />
                     </div>
 
                     {/* Meta stats and Send Button */}
                     <div className="flex items-center gap-3">
                       <span className="text-[10px] font-mono text-zinc-600 select-none">0</span>
-                      <Paperclip className="w-3.5 h-3.5 text-zinc-500 hover:text-neutral-300 transition cursor-pointer" />
+                      <Paperclip className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-300 transition cursor-pointer" />
                       <button
                         onClick={() => handleSend(inputVal)}
                         disabled={!inputVal.trim() || isGenerating || isStreaming}
-                        className="w-6.5 h-6.5 rounded-full bg-white text-black hover:bg-neutral-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer transition"
+                        className="w-6.5 h-6.5 rounded-full bg-white text-black hover:bg-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer transition"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
                       </button>

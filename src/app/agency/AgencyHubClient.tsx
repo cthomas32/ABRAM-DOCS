@@ -300,7 +300,7 @@ export default function AgencyHubClient() {
               {/* Sandbox Callout */}
               <div className="pt-6 flex justify-center">
                 <Link
-                  href="/production-brain"
+                  href="/intelligence/brain"
                   className="btn-glass inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px]"
                 >
                   <span>Explore Workspace Intelligence</span>

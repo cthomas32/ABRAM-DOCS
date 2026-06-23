@@ -292,7 +292,7 @@ export default function FilmProductionHubClient() {
 
             <div className="flex justify-center pt-2">
               <Link 
-                href="/production-brain"
+                href="/intelligence/brain"
                 className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
               >
                 <span>Explore Collaboration Brain</span>

@@ -178,7 +178,7 @@ function HorizontalGaugeRow({ label, sublabel, value, colorClass = "text-[#8ECAF
             ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
             : "bg-zinc-900/40 border-white/5 text-zinc-500"
         }`}>
-          {isActive && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />}
+          {isActive && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
           {isActive ? "Optimized" : "Idle"}
         </div>
       </div>
@@ -386,7 +386,7 @@ export default function RosterROISection() {
                           ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
                           : "bg-zinc-900/40 border-white/5 text-zinc-500"
                       }`}>
-                        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />}
+                        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
                         {isActive ? "Active" : "Bench"}
                       </div>
                     </div>
@@ -563,7 +563,7 @@ export default function RosterROISection() {
                 })}
                 {/* Blinking cursor */}
                 <div className="flex items-center gap-1">
-                  <span className="w-1.5 h-3 bg-[#8ECAFF] animate-[pulse_1s_infinite] inline-block" />
+                  <span className="w-1.5 h-3 bg-[#8ECAFF] inline-block" />
                 </div>
               </div>
             </div>

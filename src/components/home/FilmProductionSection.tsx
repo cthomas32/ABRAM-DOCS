@@ -117,7 +117,7 @@ function InteractiveProductionMockup() {
                 Compliance Monitor
               </span>
               <div className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${optimized ? "bg-emerald-400 animate-pulse" : "bg-red-400 animate-pulse"}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${optimized ? "bg-emerald-400" : "bg-red-400"}`} />
                 <span className="font-mono text-[9px] text-zinc-400">SAG Rule 14B</span>
               </div>
             </div>
@@ -125,11 +125,11 @@ function InteractiveProductionMockup() {
             {/* Turnaround Rest Info */}
             <div className="space-y-3.5">
               <div className="bg-zinc-900/30 border border-white/5 rounded-lg p-3 space-y-2">
-                <div className="flex items-center justify-between text-[11px] text-zinc-400 font-sans">
+                <div className="flex items-center justify-between text-xs text-zinc-400 font-sans">
                   <span>Crew Wrap Time:</span>
                   <span className="font-mono text-zinc-300">03:00 AM</span>
                 </div>
-                <div className="flex items-center justify-between text-[11px] text-zinc-400 font-sans">
+                <div className="flex items-center justify-between text-xs text-zinc-400 font-sans">
                   <span>Next Crew Call:</span>
                   <motion.span 
                     key={optimized ? "opt-call" : "unopt-call"}
@@ -141,7 +141,7 @@ function InteractiveProductionMockup() {
                   </motion.span>
                 </div>
                 <div className="border-t border-white/5 my-1.5" />
-                <div className="flex items-center justify-between text-[11px] text-zinc-300 font-sans">
+                <div className="flex items-center justify-between text-xs text-zinc-300 font-sans">
                   <span className="font-medium">Calculated Rest:</span>
                   <motion.span 
                     key={optimized ? "opt-rest" : "unopt-rest"}
@@ -202,14 +202,14 @@ function InteractiveProductionMockup() {
             {isOptimizing ? (
               <button 
                 disabled 
-                className="btn-glass px-4 py-2 text-[11px] min-h-[38px] w-full flex items-center justify-center opacity-50 cursor-not-allowed"
+                className="btn-glass px-4 py-2 text-xs min-h-[38px] w-full flex items-center justify-center opacity-50 cursor-not-allowed"
               >
                 <span>Optimizing schedule...</span>
               </button>
             ) : optimized ? (
               <button 
                 onClick={handleReset}
-                className="btn-glass px-4 py-2 text-[11px] min-h-[38px] w-full flex items-center justify-center gap-1.5 hover:bg-white/[0.08]"
+                className="btn-glass px-4 py-2 text-xs min-h-[38px] w-full flex items-center justify-center gap-1.5 hover:bg-white/[0.08]"
               >
                 <RotateCcw className="w-3.5 h-3.5 text-zinc-400" />
                 <span>Reset Demo</span>
@@ -217,7 +217,7 @@ function InteractiveProductionMockup() {
             ) : (
               <button 
                 onClick={handleOptimize}
-                className="btn-primary px-4 py-2 text-[11px] min-h-[38px] w-full flex items-center justify-center gap-1.5"
+                className="btn-primary px-4 py-2 text-xs min-h-[38px] w-full flex items-center justify-center gap-1.5"
               >
                 <Zap className="w-3.5 h-3.5 text-zinc-950 shrink-0" />
                 <span>Resolve Rest Violation</span>

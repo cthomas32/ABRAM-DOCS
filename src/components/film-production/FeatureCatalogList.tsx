@@ -315,10 +315,10 @@ export default function FeatureCatalogList() {
                   Calculations update in real-time
                 </span>
                 <a 
-                  href="/docs/scheduling" 
+                  href="https://app.abram.network" 
                   className="inline-flex items-center gap-1 text-white hover:underline hover:text-zinc-200"
                 >
-                  Read Docs
+                  Start Planning
                   <ArrowRight className="h-3.5 w-3.5" />
                 </a>
               </div>

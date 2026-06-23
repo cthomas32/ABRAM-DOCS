@@ -167,8 +167,8 @@ export default function AgencySchedulingMockup() {
                 <div>
                   <span className="font-semibold block sm:inline">Scheduling Conflicts Detected:</span>
                   <p className="text-[11px] text-red-400/80 mt-1 sm:mt-0.5">
-                    1. Double Booking: **Vesper Lin** is scheduled on Wednesday for both Helix 3D Modeling and Onyx Asset Render. <br />
-                    2. Rest Turnaround Warning: **Sarah Connor** finishes Helix prep at 2:00 AM Wed, scheduled for 8:00 AM Onyx shoot (only 6h rest; SAG margin requires 10h).
+                    1. Double Booking: <strong className="font-semibold text-red-200">Vesper Lin</strong> is scheduled on Wednesday for both Helix 3D Modeling and Onyx Asset Render. <br />
+                    2. Rest Turnaround Warning: <strong className="font-semibold text-red-200">Sarah Connor</strong> finishes Helix prep at 2:00 AM Wed, scheduled for 8:00 AM Onyx shoot (only 6h rest; SAG margin requires 10h).
                   </p>
                 </div>
               </div>

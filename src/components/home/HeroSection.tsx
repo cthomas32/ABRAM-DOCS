@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion, Variants } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { useLenis } from "lenis/react";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 const titleVariants: Variants = {
@@ -29,9 +30,23 @@ const ctaVariants: Variants = {
   },
 };
 
+const exploreVariants: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 1.0,
+      ease: "easeOut" as const,
+      delay: 0.4,
+    },
+  },
+};
+
 export default function HeroSection() {
+  const lenis = useLenis();
   return (
-    <section className="relative min-h-screen flex flex-col justify-center py-24 px-4 sm:px-6 lg:px-8 bg-transparent select-none overflow-hidden">
+    <section className="relative min-h-screen min-h-[100dvh] flex flex-col justify-center py-24 px-4 sm:px-6 lg:px-8 bg-transparent select-none overflow-hidden">
       {/* Top Center Logo (Visible on Hero before Scroll) */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none select-none">
         <Image
@@ -109,21 +124,31 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll to Explore Indicator */}
-      <button
+      <motion.button
+        variants={exploreVariants}
+        initial="hidden"
+        animate="visible"
         onClick={() => {
-          window.scrollTo({
-            top: window.innerHeight,
-            behavior: "smooth",
-          });
+          if (lenis) {
+            lenis.scrollTo(window.innerHeight);
+          } else {
+            window.scrollTo({
+              top: window.innerHeight,
+              behavior: "smooth",
+            });
+          }
         }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center group cursor-pointer focus:outline-none"
+        className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2.5 group cursor-pointer focus:outline-none"
       >
-        {/* Cream Track Line (1px thin) */}
-        <div className="w-[1px] h-10 bg-[#FAFAF9]/15 relative rounded-full">
+        <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-400 group-hover:text-white transition-colors duration-300 select-none">
+          Explore
+        </span>
+        {/* Cream Track Line */}
+        <div className="w-[1px] h-10 bg-white/20 relative rounded-full group-hover:bg-white/35 transition-colors duration-300">
           {/* Light-Blue Glowing Laser Segment (super thin, non-clipping glow) */}
           <div className="absolute top-0 left-0 w-[1px] h-3 bg-gradient-to-b from-transparent via-[#8ECAFF] to-transparent shadow-[0_0_8px_rgba(142,202,255,0.8),0_0_2px_rgba(59,130,246,0.5)] animate-laser-travel" />
         </div>
-      </button>
+      </motion.button>
     </section>
   );
 }

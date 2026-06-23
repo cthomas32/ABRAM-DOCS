@@ -22,6 +22,8 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         setOpenDropdown("Film Production");
       } else if (pathname.startsWith("/agency")) {
         setOpenDropdown("Creative Ops");
+      } else if (pathname.startsWith("/intelligence")) {
+        setOpenDropdown("Intelligence");
       } else {
         setOpenDropdown(null);
       }
@@ -94,8 +96,18 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Smart Scheduling", href: "/agency/smart-scheduling", desc: "AI-driven matching & booking board" },
       ]
     },
-    { name: "Brain", href: "/production-brain" },
-    { name: "Learn", href: "/docs" },
+    {
+      name: "Intelligence",
+      href: "/intelligence",
+      isDropdown: true,
+      submenu: [
+        { name: "ABRAM", href: "/intelligence/creative-copilot", desc: "Central conversational agent & workspace co-pilot" },
+        { name: "ROI Engine", href: "/intelligence", desc: "ROI calculator & yield overview" },
+        { name: "Production Brain", href: "/intelligence/brain", desc: "Workspace memory & search" },
+        { name: "Brief Intelligence", href: "/intelligence/brief-intelligence", desc: "AI brief intelligence & scoping" },
+        { name: "Crew Matchmaking", href: "/intelligence/crew-matchmaking", desc: "100-pt crew suitability index" },
+      ]
+    },
     { name: "Blog", href: "/blog" },
     { name: "Pricing", href: "/pricing" },
   ];

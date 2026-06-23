@@ -285,7 +285,7 @@ function ProjectFrameioTabMockup({ triggerSim }: { triggerSim: boolean }) {
               Frame.io Workspace Project: Helix
             </span>
             {isSyncing && (
-              <span className="text-[8px] font-mono text-purple-400 animate-pulse">Syncing...</span>
+              <span className="text-[9px] font-mono text-purple-400">Syncing...</span>
             )}
           </div>
           

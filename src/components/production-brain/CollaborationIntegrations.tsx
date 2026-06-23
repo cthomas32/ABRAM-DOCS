@@ -427,10 +427,10 @@ export default function CollaborationIntegrations() {
               <div className="px-4 py-3 border-t border-white/5 bg-zinc-950/40 flex items-center justify-between text-[10px] text-zinc-500">
                 <span>Secure App Authorization Protocols</span>
                 <a 
-                  href="/docs/user-guide/6.1-slack-notifications" 
+                  href="https://app.abram.network" 
                   className="hover:text-white flex items-center gap-1 transition-colors"
                 >
-                  Read Docs <ArrowRight className="h-3 w-3" />
+                  Configure Integrations <ArrowRight className="h-3 w-3" />
                 </a>
               </div>
 

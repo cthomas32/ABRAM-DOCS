@@ -228,7 +228,7 @@ function InteractiveIntakeMockup() {
                   <Cpu className="w-3.5 h-3.5 text-zinc-400" />
                   <span className="text-[10px] font-sans text-zinc-300">Brief Intent Parsing</span>
                 </div>
-                <span className={`text-[9px] font-semibold font-mono ${step !== "brief" ? "text-emerald-400" : "text-zinc-500 animate-pulse"}`}>
+                <span className={`text-[9px] font-semibold font-mono ${step !== "brief" ? "text-emerald-400" : "text-zinc-500"}`}>
                   {step !== "brief" ? "Completed" : "Ready"}
                 </span>
               </div>
@@ -238,7 +238,7 @@ function InteractiveIntakeMockup() {
                   <UserPlus className="w-3.5 h-3.5 text-zinc-400" />
                   <span className="text-[10px] font-sans text-zinc-300">Contractor Roster Check</span>
                 </div>
-                <span className={`text-[9px] font-semibold font-mono ${step === "roster" ? "text-emerald-400" : step === "matching" ? "text-amber-400 animate-pulse" : "text-zinc-500"}`}>
+                <span className={`text-[9px] font-semibold font-mono ${step === "roster" ? "text-emerald-400" : step === "matching" ? "text-amber-400" : "text-zinc-500"}`}>
                   {step === "roster" ? "3 Matches" : step === "matching" ? "Matching..." : "Pending"}
                 </span>
               </div>

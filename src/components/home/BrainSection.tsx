@@ -306,7 +306,7 @@ export default function BrainSection() {
             {/* Primary CTA (Using btn-glass variant with adequate hit target area) */}
             <div className="pt-4">
               <Link 
-                href="/production-brain"
+                href="/intelligence/brain"
                 className="btn-glass px-5 py-2.5 text-xs rounded-full inline-flex items-center gap-1.5 transition-all duration-200 min-h-[44px] group"
               >
                 <span>Explore the Brain</span>

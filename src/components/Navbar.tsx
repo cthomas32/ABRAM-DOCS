@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Menu, PanelLeft, Search, X, ChevronDown, LayoutGrid, Calendar, ClipboardList, Sparkles, Users, FileText } from "lucide-react";
+import { ArrowUpRight, Menu, PanelLeft, Search, X, ChevronDown, LayoutGrid, Calendar, ClipboardList, Sparkles, Users, FileText, Brain, Coins } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
@@ -20,8 +20,10 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
   const [isVisible, setIsVisible] = useState(!isMarketingPage);
   const [filmDropdownOpen, setFilmDropdownOpen] = useState(false);
   const [agencyDropdownOpen, setAgencyDropdownOpen] = useState(false);
+  const [intelligenceDropdownOpen, setIntelligenceDropdownOpen] = useState(false);
   const filmTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const agencyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const intelligenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleFilmMouseEnter = () => {
     if (filmTimeoutRef.current) clearTimeout(filmTimeoutRef.current);
@@ -45,10 +47,22 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
     }, 150);
   };
 
+  const handleIntelligenceMouseEnter = () => {
+    if (intelligenceTimeoutRef.current) clearTimeout(intelligenceTimeoutRef.current);
+    setIntelligenceDropdownOpen(true);
+  };
+
+  const handleIntelligenceMouseLeave = () => {
+    intelligenceTimeoutRef.current = setTimeout(() => {
+      setIntelligenceDropdownOpen(false);
+    }, 150);
+  };
+
   useEffect(() => {
     return () => {
       if (filmTimeoutRef.current) clearTimeout(filmTimeoutRef.current);
       if (agencyTimeoutRef.current) clearTimeout(agencyTimeoutRef.current);
+      if (intelligenceTimeoutRef.current) clearTimeout(intelligenceTimeoutRef.current);
     };
   }, []);
 
@@ -291,26 +305,110 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
               )}
             </AnimatePresence>
           </div>
-          <Link
-            href="/production-brain"
-            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
-              pathname === "/production-brain"
-                ? "bg-white/10 text-white border border-white/10"
-                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-            }`}
+          <div 
+            className="relative"
+            onMouseEnter={handleIntelligenceMouseEnter}
+            onMouseLeave={handleIntelligenceMouseLeave}
           >
-            Brain
-          </Link>
-          <Link
-            href="/docs"
-            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
-              pathname.startsWith("/docs")
-                ? "bg-white/10 text-white border border-white/10"
-                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-            }`}
-          >
-            Learn
-          </Link>
+            <Link
+              href="/intelligence"
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 border border-transparent ${
+                pathname.startsWith("/intelligence")
+                  ? "bg-white/10 text-white border-white/10"
+                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              }`}
+            >
+              Intelligence
+              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${intelligenceDropdownOpen ? 'rotate-180' : ''}`} />
+            </Link>
+            <AnimatePresence>
+              {intelligenceDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute top-full left-0 mt-2 w-64 rounded-2xl border border-white/8 bg-zinc-950/98 backdrop-blur-[32px] p-2 shadow-2xl flex flex-col gap-1 z-50 pointer-events-auto"
+                >
+                  <Link
+                    href="/intelligence/creative-copilot"
+                    onClick={() => setIntelligenceDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <Sparkles className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">ABRAM</h4>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-white text-[8px] uppercase font-bold tracking-wider">
+                          Core AI
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Central conversational agent & workspace co-pilot</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/intelligence"
+                    onClick={() => setIntelligenceDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <Coins className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">ROI Engine</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">ROI calculator & yield overview</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/intelligence/brain"
+                    onClick={() => setIntelligenceDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <Brain className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Production Brain</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Workspace memory & search</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/intelligence/brief-intelligence"
+                    onClick={() => setIntelligenceDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <FileText className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Brief Intelligence</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Brief blueprints & scoping</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/intelligence/crew-matchmaking"
+                    onClick={() => setIntelligenceDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <Users className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Crew Matchmaking</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">100-pt crew suitability index</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <Link
             href="/blog"
             className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
