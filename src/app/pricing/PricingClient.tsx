@@ -154,8 +154,8 @@ const PLANS: Plan[] = [
       callsheet_pdf_export: false,
       callsheet_email_distribution: false,
       asset_approvals: true,
-      slack_integration: true,
-      frameio_integration: true,
+      slack_integration: false,
+      frameio_integration: false,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -207,8 +207,8 @@ const PLANS: Plan[] = [
       callsheet_pdf_export: false,
       callsheet_email_distribution: false,
       asset_approvals: true,
-      slack_integration: true,
-      frameio_integration: true,
+      slack_integration: false,
+      frameio_integration: false,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -277,6 +277,7 @@ const PLANS: Plan[] = [
       "Interactive resource scheduler",
       "AI production brief parser",
       "Google & Outlook calendar sync",
+      "Frame.io & Slack integrations",
       "10 GB workspace storage"
     ]
   },
@@ -294,7 +295,7 @@ const PLANS: Plan[] = [
       active_projects: "Unlimited",
       locations: "Unlimited",
       interactive_scheduler: "Full Access",
-      barcode_scanning: false,
+      barcode_scanning: true,
       audit_logs_viewer: false,
       team_permissions: "15 Custom Roles",
       transit_buffers: true,
@@ -336,6 +337,8 @@ const PLANS: Plan[] = [
       "1 Active Custom Intake Form",
       "AI production brief parser",
       "Advanced Logistics & Operations settings",
+      "Barcode Equipment Scanning",
+      "Frame.io & Slack integrations",
       "10 GB workspace storage"
     ]
   },
@@ -396,6 +399,7 @@ const PLANS: Plan[] = [
       "AI production brief parser",
       "Advanced Logistics & Operations settings",
       "Barcode Equipment Scanning",
+      "Frame.io & Slack integrations",
       "15 GB workspace storage"
     ]
   },
@@ -453,6 +457,7 @@ const PLANS: Plan[] = [
       "Custom AI credits",
       "Advanced Logistics & Operations settings",
       "Barcode Equipment Scanning",
+      "Frame.io & Slack integrations",
       "Compliance Audit Logs & Viewer",
       "SSO & Directory Sync (SAML/SCIM)"
     ]
