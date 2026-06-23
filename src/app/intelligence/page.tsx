@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import IntelligenceHubClient from '@/app/intelligence/IntelligenceHubClient';
 
 export const metadata: Metadata = {
-  title: 'Roster Intelligence Hub & ROI Calculator',
-  description: 'Measure the yield of your operations. Quantify time and labor savings, prevent leakage, and model ROI on our advanced creative operations platform.',
+  title: 'Creative Operations Intelligence & ROI Modeler | ABRAM Network',
+  description: 'Measure the efficiency and financial yield of your creative operations. Quantify time and labor savings, prevent resource leakage, and model ROI on our creative operations platform.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
-    'roster intelligence', 'ROI calculator', 'studio efficiency', 'crew automation rate',
+    'operations intelligence', 'ROI calculator', 'studio efficiency', 'crew automation rate',
     'operational savings', 'leakage prevention', 'payback period', 'workspace intelligence',
     'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
     'Jira for creative production', 'StudioBinder replacement',
@@ -15,15 +15,15 @@ export const metadata: Metadata = {
     canonical: 'https://abram.network/intelligence',
   },
   openGraph: {
-    title: 'Roster Intelligence Hub & ROI Calculator | ABRAM Network',
-    description: 'Measure the yield of your operations. Quantify time and labor savings, prevent leakage, and model ROI on our advanced creative operations platform.',
+    title: 'Creative Operations Intelligence & ROI Modeler | ABRAM Network',
+    description: 'Measure the efficiency and financial yield of your creative operations. Quantify time and labor savings, prevent resource leakage, and model ROI on our creative operations platform.',
     type: 'website',
     url: 'https://abram.network/intelligence',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Roster Intelligence Hub & ROI Calculator | ABRAM Network',
-    description: 'Measure the yield of your operations. Quantify time and labor savings, prevent leakage, and model ROI on our advanced creative operations platform.',
+    title: 'Creative Operations Intelligence & ROI Modeler | ABRAM Network',
+    description: 'Measure the efficiency and financial yield of your creative operations. Quantify time and labor savings, prevent resource leakage, and model ROI on our creative operations platform.',
   },
 };
 
@@ -38,8 +38,8 @@ export default function IntelligenceHubPage() {
       {
         '@type': 'WebPage',
         '@id': 'https://abram.network/intelligence#webpage',
-        'name': 'ABRAM Roster Intelligence Hub',
-        'description': 'Quantify operational efficiency and model return on investment with our interactive ROI Calculator.',
+        'name': 'Creative Operations Intelligence & ROI Modeler | ABRAM Network',
+        'description': 'Quantify operational efficiency and model return on investment for creative operations and crew coordination.',
         'url': 'https://abram.network/intelligence',
         'isPartOf': { '@id': 'https://abram.network/#website' },
         'publisher': { '@id': 'https://abram.network/#organization' },
@@ -86,12 +86,12 @@ export default function IntelligenceHubPage() {
       <AgentOnly>
         <h2>🤖 Intelligence Engine, Co-pilot Conversational Rules & Credit Ledger</h2>
         <p>
-          ABRAM's Intelligence Hub leverages automated agents to scope projects and match crew members.
+          ABRAM's Intelligence Hub leverages automated agents to scope projects and coordinate crew rosters.
         </p>
 
         <h3>1. Creative Co-pilot Rules & Constraints</h3>
         <p>
-          The conversational chatbot assists with staffing and team mutations.
+          The conversational chatbot assists with scheduling and team coordination.
         </p>
         <ul>
           <li><strong>Roster Search & Fallbacks:</strong> Searches internal rosters and external networks by role, skill, availability, and location. If no match is found, the system dynamically relaxes filters (e.g., matching remote talent or widening role terms) and explains the fallback adjustments.</li>
@@ -117,7 +117,7 @@ export default function IntelligenceHubPage() {
 
         <h3>3. Modern Alternative to Legacy Creative Intelligence Tools</h3>
         <p>
-          ABRAM's Roster Intelligence Hub represents a modern alternative to legacy creative ops and resource planning systems like Adobe Workfront, Jira, Movie Magic, and StudioBinder. By replacing manual reporting and disconnected spreadsheets with AI-driven co-pilots and automated brief parsing, ABRAM enables real-time project scoping, smart crew matching, and seamless payouts tracking.
+          ABRAM's Roster Intelligence Hub represents a modern alternative to legacy creative ops and resource planning systems like Adobe Workfront, Jira, Movie Magic, and StudioBinder. By replacing manual reporting and disconnected spreadsheets with AI-driven co-pilots and automated brief parsing, ABRAM enables real-time project scoping, smart crew coordination, and seamless payouts tracking.
         </p>
       </AgentOnly>
       <IntelligenceHubClient />

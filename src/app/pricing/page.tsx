@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import PricingClient from './PricingClient';
 
 export const metadata: Metadata = {
-  title: 'Pricing',
-  description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and production accounting.',
+  title: 'ABRAM Pricing — Plans for Creative Teams & Agencies | ABRAM Network',
+  description: 'Explore pricing plans for our creative operations platform. Get started with advanced creative operations tools, crew scheduling, and production accounting.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
-    'ABRAM pricing', 'creative production pricing', 'freelancer tools pricing',
+    'ABRAM pricing', 'creative operations pricing', 'production software cost',
     'crew management software cost', 'production management plans',
     'AI production tools', 'SaaS pricing', 'free tier', 'crew payouts', 'production accounting',
   ],
@@ -14,15 +14,15 @@ export const metadata: Metadata = {
     canonical: 'https://abram.network/pricing',
   },
   openGraph: {
-    title: 'ABRAM Pricing — Plans for Every Creative Team',
-    description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and production accounting.',
+    title: 'ABRAM Pricing — Plans for Creative Teams & Agencies | ABRAM Network',
+    description: 'Explore pricing plans for our creative operations platform. Get started with advanced creative operations tools, crew scheduling, and production accounting.',
     type: 'website',
     url: 'https://abram.network/pricing',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ABRAM Pricing — Plans for Every Creative Team',
-    description: 'Explore pricing plans for our creative operations platform. Get started with the ultimate creative production tools, crew scheduling, and production accounting.',
+    title: 'ABRAM Pricing — Plans for Creative Teams & Agencies | ABRAM Network',
+    description: 'Explore pricing plans for our creative operations platform. Get started with advanced creative operations tools, crew scheduling, and production accounting.',
   },
 };
 
@@ -43,8 +43,8 @@ export default function PricingPage() {
                 '@type': 'WebPage',
                 '@id': 'https://abram.network/pricing/#webpage',
                 'url': 'https://abram.network/pricing',
-                'name': 'ABRAM Pricing — Plans for Every Creative Team',
-                'description': 'Explore ABRAM pricing plans for freelancers, teams, and creative agencies. Start free with AI-powered production management, crew scheduling, and production accounting.',
+                'name': 'ABRAM Pricing — Plans for Creative Teams & Agencies | ABRAM Network',
+                'description': 'Explore ABRAM pricing plans for teams, production companies, and creative agencies. Start free with AI-powered brief parsing, crew scheduling, and production accounting.',
                 'isPartOf': { '@id': 'https://abram.network/#website' },
                 'breadcrumb': { '@id': 'https://abram.network/pricing/#breadcrumb' }
               },
@@ -72,7 +72,7 @@ export default function PricingPage() {
                 'name': 'ABRAM Platform Plans',
                 'applicationCategory': 'BusinessApplication',
                 'operatingSystem': 'Web Browser',
-                'description': 'Flexible subscription tiers for the ABRAM creative production management suite.',
+                'description': 'Flexible subscription tiers for the ABRAM creative operations and production management suite.',
                 'publisher': { '@id': 'https://abram.network/#organization' },
                 'offers': {
                   '@type': 'AggregateOffer',
@@ -86,7 +86,7 @@ export default function PricingPage() {
                       'name': 'Free Tier',
                       'price': '0',
                       'priceCurrency': 'USD',
-                      'description': 'For freelancers and creative contractors. Includes 1 seat, 1 active project, digital call sheets, and view-only schedules.'
+                      'description': 'For independent creative contractors and crew members. Includes 1 seat, 1 active project, digital call sheets, and view-only schedules.'
                     },
                     {
                       '@type': 'Offer',
@@ -128,7 +128,7 @@ export default function PricingPage() {
                     'name': 'What payment methods does ABRAM support for payouts?',
                     'acceptedAnswer': {
                       '@type': 'Answer',
-                      'text': 'ABRAM integrates with Stripe Express to manage onboarding and payouts. Freelancers can link their bank account or debit card directly to receive secure payouts. If identity setup is not complete, client payments are held securely until onboarding finishes.'
+                      'text': 'ABRAM integrates with Stripe Express to manage onboarding and payouts. Creative professionals can link their bank account or debit card directly to receive secure payouts. If identity setup is not complete, client payments are held securely until onboarding finishes.'
                     }
                   },
                   {

@@ -6,7 +6,7 @@ import { Sparkles } from "lucide-react";
 import { revealVariants } from "@/lib/motion";
 import AnimatedChatbot, { ChatMessage } from "./AnimatedChatbot";
 
-const TALENT_SEARCH_SEQUENCE: ChatMessage[] = [
+const ROSTER_SEARCH_SEQUENCE: ChatMessage[] = [
   {
     id: "msg1",
     type: "user",
@@ -17,7 +17,7 @@ const TALENT_SEARCH_SEQUENCE: ChatMessage[] = [
     id: "msg2",
     type: "tool_execution",
     content: "",
-    toolName: "search_talent_network",
+    toolName: "check_roster_availability",
     delayMs: 2500,
   },
   {
@@ -112,7 +112,7 @@ export default function OutcomeSection() {
         className="w-full max-w-3xl px-4 z-10 perspective-[2000px] mx-auto flex justify-center"
       >
         <AnimatedChatbot 
-          sequence={TALENT_SEARCH_SEQUENCE} 
+          sequence={ROSTER_SEARCH_SEQUENCE} 
           className="w-full sm:w-[450px] h-[650px]" 
         />
       </motion.div>

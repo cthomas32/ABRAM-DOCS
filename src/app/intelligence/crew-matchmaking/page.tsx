@@ -2,26 +2,26 @@ import type { Metadata } from 'next';
 import CrewMatchmakingClient from './CrewMatchmakingClient';
 
 export const metadata: Metadata = {
-  title: 'Crew Matchmaking Engine & Suitability Scoring | ABRAM Network',
-  description: 'Match crew members to project slots using our Suitability Matrix. Verify availability and schedule holds in our creative operations platform.',
+  title: 'Crew Recommendations & Suitability Scoring | ABRAM Network',
+  description: 'Optimize crew allocations and resource slots using our Suitability Matrix. Verify availability and coordinate schedule holds in our creative operations platform.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
-    'crew matchmaking', 'suitability index matrix', 'talent match scoring',
-    'capacity synchronization hold', 'freelancer booking availability', 'abram network'
+    'crew coordination', 'suitability index matrix', 'crew roster management',
+    'resource availability sync', 'abram network'
   ],
   alternates: {
     canonical: 'https://abram.network/intelligence/crew-matchmaking',
   },
   openGraph: {
-    title: 'Crew Matchmaking Engine & Suitability Scoring | ABRAM Network',
-    description: 'Match crew members to project slots using our Suitability Matrix. Verify availability and schedule holds in our creative operations platform.',
+    title: 'Crew Recommendations & Suitability Scoring | ABRAM Network',
+    description: 'Optimize crew allocations and resource slots using our Suitability Matrix. Verify availability and coordinate schedule holds in our creative operations platform.',
     type: 'website',
     url: 'https://abram.network/intelligence/crew-matchmaking',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Crew Matchmaking Engine & Suitability Scoring | ABRAM Network',
-    description: 'Match crew members to project slots using our Suitability Matrix. Verify availability and schedule holds in our creative operations platform.',
+    title: 'Crew Recommendations & Suitability Scoring | ABRAM Network',
+    description: 'Optimize crew allocations and resource slots using our Suitability Matrix. Verify availability and coordinate schedule holds in our creative operations platform.',
   },
 };
 
@@ -32,8 +32,8 @@ export default function CrewMatchmakingPage() {
       {
         '@type': 'WebPage',
         '@id': 'https://abram.network/intelligence/crew-matchmaking#webpage',
-        'name': 'ABRAM Crew Matchmaking Sandbox',
-        'description': 'AI-powered crew matchmaking, suitability index scoring, and capacity synchronization checks in the ABRAM creative production platform.',
+        'name': 'Crew Recommendations & Suitability Scoring | ABRAM Network',
+        'description': 'AI-powered crew recommendations, suitability index scoring, and capacity synchronization checks in the ABRAM creative operations platform.',
         'url': 'https://abram.network/intelligence/crew-matchmaking',
         'isPartOf': { '@id': 'https://abram.network/#website' },
         'publisher': { '@id': 'https://abram.network/#organization' },

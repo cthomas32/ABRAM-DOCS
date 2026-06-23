@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import AgencyHubClient from '@/app/agency/AgencyHubClient';
 
 export const metadata: Metadata = {
-  title: 'Creative Operations Hub & Studio Management',
-  description: 'Scale agency and studio workflows in a unified creative operations platform. Automate brief requests and optimize crew allocation with advanced creative production software.',
+  title: 'Creative Agency Operations & Project Management | ABRAM Network',
+  description: 'Scale agency and studio workflows in a unified creative operations platform. Parse project briefs and coordinate crew rosters with advanced production management tools.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'creative operations', 'agency management software', 'studio logistics',
-    'crew roster matching', 'brief intelligence', 'scheduling tool', 'workspace intelligence',
+    'crew roster management', 'brief intelligence', 'scheduling tool', 'workspace intelligence',
     'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
     'Jira for creative production', 'StudioBinder replacement',
   ],
@@ -15,15 +15,15 @@ export const metadata: Metadata = {
     canonical: 'https://abram.network/agency',
   },
   openGraph: {
-    title: 'Creative Operations Hub & Studio Management | ABRAM Network',
-    description: 'Scale agency and studio workflows in a unified creative operations platform. Automate brief requests and optimize crew allocation with advanced creative production software.',
+    title: 'Creative Agency Operations & Project Management | ABRAM Network',
+    description: 'Scale agency and studio workflows in a unified creative operations platform. Parse project briefs and coordinate crew rosters with advanced production management tools.',
     type: 'website',
     url: 'https://abram.network/agency',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Creative Operations Hub & Studio Management | ABRAM Network',
-    description: 'Scale agency and studio workflows in a unified creative operations platform. Automate brief requests and optimize crew allocation with advanced creative production software.',
+    title: 'Creative Agency Operations & Project Management | ABRAM Network',
+    description: 'Scale agency and studio workflows in a unified creative operations platform. Parse project briefs and coordinate crew rosters with advanced production management tools.',
   },
 };
 
@@ -44,8 +44,8 @@ export default function AgencyHubPage() {
                 '@type': 'WebPage',
                 '@id': 'https://abram.network/agency#webpage',
                 'url': 'https://abram.network/agency',
-                'name': 'Creative Operations Hub & Studio Management',
-                'description': 'Scale agency and studio workflows in a unified environment. Automate project brief requests, optimize crew composition, and streamline smart scheduling.',
+                'name': 'Creative Agency Operations & Project Management | ABRAM Network',
+                'description': 'Scale agency and studio workflows in a unified environment. Automate project brief requests, coordinate crew rosters, and streamline smart scheduling.',
                 'isPartOf': { '@id': 'https://abram.network/#website' },
                 'publisher': { '@id': 'https://abram.network/#organization' }
               },
@@ -104,7 +104,7 @@ export default function AgencyHubPage() {
 
         <h3>4. Legacy Project Management Replacement</h3>
         <p>
-          ABRAM Network acts as a powerful alternative to general project management software like Jira and Adobe Workfront for creative agencies. Rather than forcing creative operations into complex development tickets, ABRAM streamlines agency scheduling, talent allocation, and client brief parsing. It coordinates agency rosters with built-in sandbox simulations and resolves invoicing delays through integrated contractor payout features.
+          ABRAM Network acts as a powerful alternative to general project management software like Jira and Adobe Workfront for creative agencies. Rather than forcing creative operations into complex development tickets, ABRAM streamlines agency scheduling, crew roster scheduling, and client brief parsing. It coordinates agency rosters with built-in sandbox simulations and resolves invoicing delays through integrated crew payout features.
         </p>
       </AgentOnly>
       <AgencyHubClient />

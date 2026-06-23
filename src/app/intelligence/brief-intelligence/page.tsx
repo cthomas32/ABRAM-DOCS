@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BriefIntelligenceClient from './BriefIntelligenceClient';
 
 export const metadata: Metadata = {
-  title: 'Brief Intelligence & AI Scoping | ABRAM Network',
-  description: 'Upload a brief to generate Work Packages, extract tasks, and resolve ambiguities using advanced AI creative production tools.',
+  title: 'AI Brief Intelligence & Project Scoping | ABRAM Network',
+  description: 'Upload creative and operational briefs to generate Work Packages, extract tasks, and allocate resources using advanced AI creative operations tools.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'brief intelligence', 'ai brief analyzer', 'scoping software',
@@ -13,15 +13,15 @@ export const metadata: Metadata = {
     canonical: 'https://abram.network/intelligence/brief-intelligence',
   },
   openGraph: {
-    title: 'Brief Intelligence & AI Scoping | ABRAM Network',
-    description: 'Upload a brief to generate Work Packages, extract tasks, and resolve ambiguities using advanced AI creative production tools.',
+    title: 'AI Brief Intelligence & Project Scoping | ABRAM Network',
+    description: 'Upload creative and operational briefs to generate Work Packages, extract tasks, and allocate resources using advanced AI creative operations tools.',
     type: 'website',
     url: 'https://abram.network/intelligence/brief-intelligence',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Brief Intelligence & AI Scoping | ABRAM Network',
-    description: 'Upload a brief to generate Work Packages, extract tasks, and resolve ambiguities using advanced AI creative production tools.',
+    title: 'AI Brief Intelligence & Project Scoping | ABRAM Network',
+    description: 'Upload creative and operational briefs to generate Work Packages, extract tasks, and allocate resources using advanced AI creative operations tools.',
   },
 };
 
@@ -32,8 +32,8 @@ export default function BriefIntelligencePage() {
       {
         '@type': 'WebPage',
         '@id': 'https://abram.network/intelligence/brief-intelligence#webpage',
-        'name': 'ABRAM Brief Intelligence Sandbox',
-        'description': 'AI-powered creative brief scoping, automatic Work Packages generation, and deliverable parsing in the ABRAM creative production platform.',
+        'name': 'AI Brief Intelligence & Project Scoping | ABRAM Network',
+        'description': 'AI-powered creative brief scoping, automatic Work Packages generation, and deliverable parsing in the ABRAM creative operations platform.',
         'url': 'https://abram.network/intelligence/brief-intelligence',
         'isPartOf': { '@id': 'https://abram.network/#website' },
         'publisher': { '@id': 'https://abram.network/#organization' },

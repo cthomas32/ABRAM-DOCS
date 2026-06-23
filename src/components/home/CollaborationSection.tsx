@@ -654,12 +654,12 @@ const PILLARS: Pillar[] = [
   },
   {
     icon: Users,
-    title: "AI Matchmaking & Dynamic Crew Assembly",
-    shortDesc: "Intelligent suitability matching and backups",
+    title: "AI-Assisted Roster Matching & Crew Assembly",
+    shortDesc: "Intelligent suitability checking and backups",
     badge: "AI ASSEMBLY MATRIX",
-    rationale: "Build rosters with real-time suitability scoring. Instantly identify call conflicts and auto-assign top backup replacements.",
+    rationale: "Build internal rosters with real-time suitability checking. Instantly identify schedule conflicts and assign backup crew replacements from your network.",
     benefits: [
-      "Automated suitability scoring based on rating history.",
+      "Curated roster matching based on capabilities and availability.",
       "Visual schedule conflict identification badges.",
       "One-click backup replacement slot resolution."
     ],

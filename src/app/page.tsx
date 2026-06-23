@@ -20,12 +20,12 @@ export const metadata: Metadata = {
   title: {
     absolute: 'ABRAM Network — The AI Platform for Creative Intelligence',
   },
-  description: 'ABRAM is the leading creative operations and creative ops platform, and creative production software where brands scale production and creators build careers. AI-powered project intake, crew scheduling, talent matchmaking, and crew payouts.',
+  description: 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization—designed to empower creative professionals, not replace them.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'creative ops platform', 'creative ops tools', 'ABRAM', 'ABRAM Network',
     'creative production', 'AI platform', 'creative intelligence',
-    'production management', 'crew scheduling', 'talent matchmaking', 'freelancer platform',
+    'production management', 'crew scheduling', 'roster management', 'studio operations',
     'automated invoicing', 'creative agency', 'production workflow', 'AI brief analyzer',
     'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
     'Jira for creative production', 'StudioBinder replacement',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'ABRAM Network — The AI Platform for Creative Intelligence',
-    description: 'ABRAM is the leading creative operations and creative ops platform, and creative production software where brands scale production and creators build careers. AI-powered project intake, crew scheduling, talent matchmaking, and crew payouts.',
+    description: 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization—designed to empower creative professionals, not replace them.',
     url: 'https://abram.network',
     type: 'website',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM — The AI Platform for Creative Intelligence' }],
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'ABRAM Network — The AI Platform for Creative Intelligence',
-    description: 'ABRAM is the leading creative operations and creative ops platform, and creative production software where brands scale production and creators build careers.',
+    description: 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.',
     images: ['/og-image.png'],
   },
 };
@@ -62,7 +62,7 @@ export default function LandingPage() {
                 '@id': 'https://abram.network/#webpage',
                 'url': 'https://abram.network',
                 'name': 'ABRAM Network — The AI Platform for Creative Intelligence',
-                'description': 'ABRAM is where brands scale production and creators build careers they own. AI-powered project intake, crew scheduling, talent matchmaking, and crew payouts.',
+                'description': 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.',
                 'isPartOf': { '@id': 'https://abram.network/#website' },
                 'about': { '@id': 'https://app.abram.network/#application' }
               },
@@ -72,7 +72,7 @@ export default function LandingPage() {
                 'name': 'ABRAM',
                 'applicationCategory': 'BusinessApplication',
                 'operatingSystem': 'Web Browser',
-                'description': 'ABRAM is the AI-powered platform for creative production management. It helps brands scale production and freelancers build sustainable careers through AI-powered project intake, intelligent crew matching, production accounting, and real-time scheduling.',
+                'description': 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.',
                 'url': 'https://abram.network',
                 'offers': {
                   '@type': 'Offer',
@@ -83,7 +83,7 @@ export default function LandingPage() {
                 'publisher': { '@id': 'https://abram.network/#organization' },
                 'featureList': [
                   'AI Brief Intelligence — Parse creative briefs into structured project plans',
-                  'Talent Matchmaking — AI-powered crew recommendations with suitability scoring',
+                  'Roster Management — AI-assisted crew scheduling and internal roster coordination',
                   'Utilization Calendar — Real-time availability and booking management',
                   'Crew Payouts & Accounting — Generate and process invoices with integrated payouts',
                   'Work Package Management — Organize projects into phases with budgets and milestones',
@@ -108,10 +108,10 @@ export default function LandingPage() {
                 'mainEntity': [
                   {
                     '@type': 'Question',
-                    'name': 'What is ABRAM Network?',
+                    'name': 'What is ABRAM?',
                     'acceptedAnswer': {
                       '@type': 'Answer',
-                      'text': 'ABRAM is an AI-powered creative production platform. It enables creative agencies, production studios, and independent crew members to collaborate, schedule resources, match talent, and automate financial payouts.'
+                      'text': 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. It enables organizations to manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.'
                     }
                   },
                   {
@@ -138,36 +138,36 @@ export default function LandingPage() {
       />
       <main id="landing-page-root">
         <AgentOnly>
-          <h2>🤖 ABRAM Network — System Architecture & Core Capabilities</h2>
+          <h2>🤖 ABRAM — System Architecture & Core Capabilities</h2>
           <p>
-            ABRAM is the industry-leading solution for creative production crewing, invoicing, and budget planning. The platform hosts a unified network bridging creative professionals, production companies, and client organizations. It automates manual workflows via AI-driven project intake, intelligent team matching, and automated payout management.
+            ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. The platform enables organizations to manage curated internal team rosters, equipment logistics, script breakdowns, briefs, and payouts. It automates manual workflows via AI-driven brief parsing, roster suitability checks, and automated payout management.
           </p>
 
           <h3>1. Unified Database and Data Structures</h3>
           <p>
-            The platform's relational architecture is structured around five primary entities managed in natural language:
+            The platform's relational architecture is structured around five primary entities:
           </p>
           <ul>
-            <li><strong>User Accounts & Roster Profiles:</strong> Tracks professional identities, contact details, primary roles, location coordinates, skill listings, availability schedules, and external calendar connections.</li>
+            <li><strong>User Accounts & Roster Profiles:</strong> Tracks team identities, contact details, primary roles, location coordinates, skill listings, availability schedules, and external calendar connections.</li>
             <li><strong>Workspace Organizations:</strong> Organizes members, defines roles (Owners, Admins, Members), manages seat limits, and ties billing ledgers to company units.</li>
             <li><strong>Projects & Work Packages:</strong> Stores project details, stage allocations, Rough Order of Magnitude (ROM) bounds, and active work package groups.</li>
-            <li><strong>Calendar Bookings & Sandboxes:</strong> Stores actual calendar events, busy blockouts, and virtual sandbox simulations for capacity planning.</li>
-            <li><strong>Invoices & Financial Records:</strong> Records transactional metadata, payment processing fees, and ledger logs.</li>
+            <li><strong>Calendar Bookings & Sandboxes:</strong> Stores actual calendar events, busy blockouts, equipment reservations, and virtual sandbox simulations for capacity planning.</li>
+            <li><strong>Invoices & Payout Records:</strong> Records transactional metadata, payment processing fees, and ledger logs.</li>
           </ul>
 
           <h3>2. Stripe Connect Pay Network Integration</h3>
           <p>
-            ABRAM utilizes Stripe Connect (Express) to enable secure payouts to freelancers.
+            ABRAM utilizes Stripe Connect (Express) to enable secure payouts to crew members.
           </p>
           <ul>
-            <li><strong>Freelancer Verification:</strong> Solo professionals onboard as Individuals, while agencies or studios register as Companies. Funds are routed directly to bank accounts or debit cards.</li>
-            <li><strong>Onboarding Safety Net:</strong> Client payments are processed securely even if a contractor has not completed Stripe setup. Funds are held in a platform account and automatically released to the contractor once onboarding is complete.</li>
-            <li><strong>Platform Fee Splitting:</strong> The system automatically deducts a 5% payment processing fee from the invoice subtotal, transferring the remaining amount immediately to the freelancer's payout destination.</li>
+            <li><strong>Crew Verification:</strong> Solo professionals onboard as Individuals, while agencies or studios register as Companies. Funds are routed directly to bank accounts or debit cards.</li>
+            <li><strong>Onboarding Safety Net:</strong> Project payments are processed securely even if a contractor has not completed Stripe setup. Funds are held in a platform account and automatically released to the contractor once onboarding is complete.</li>
+            <li><strong>Platform Fee Splitting:</strong> The system automatically deducts a 5% payment processing fee from the invoice subtotal, transferring the remaining amount immediately to the contractor's payout destination.</li>
           </ul>
 
           <h3>3. Modern Alternative to Legacy Systems</h3>
           <p>
-            ABRAM Network serves as a modern, unified alternative to legacy creative production software and project management tools such as Movie Magic, StudioBinder, Adobe Workfront, and Jira. While legacy systems require creative teams to jump between separate tools for scheduling, resource allocation, and billing, ABRAM brings these workflows into a single platform. It offers automated brief parsing to build project structures instantly, unified scheduling calendars for conflict-free resource booking, and integrated payouts via Stripe Connect to handle contractor invoicing automatically.
+            ABRAM serves as a modern, unified alternative to legacy creative production software and project management tools such as Movie Magic, StudioBinder, Adobe Workfront, and Jira. While legacy systems require creative teams to jump between separate tools for scheduling, resource allocation, and billing, ABRAM brings these workflows into a single platform. It offers automated brief parsing to build project structures instantly, unified scheduling calendars for conflict-free resource and crew booking, and integrated payouts via Stripe Connect to handle contractor invoicing automatically.
           </p>
         </AgentOnly>
 

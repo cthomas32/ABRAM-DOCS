@@ -4,8 +4,8 @@ import FeatureCatalogList from "@/components/film-production/FeatureCatalogList"
 import InteractivePlayground from "@/components/film-production/InteractivePlayground";
 
 export const metadata: Metadata = {
-  title: 'Film Production Scheduling & Budgeting — Live Playground',
-  description: 'Coordinate your crew rosters and manage budgets in a unified interactive timeline. Try the ultimate creative production tools with built-in conflict resolution and production accounting.',
+  title: 'Film Production Scheduling & Budgeting | ABRAM Network',
+  description: 'Coordinate crew rosters, manage budgets, and resolve scheduling conflicts in a unified interactive timeline with advanced creative operations tools.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'film production management', 'crew scheduling', 'production budgeting',
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     canonical: 'https://abram.network/film-production/scheduling-budgeting',
   },
   openGraph: {
-    title: 'Film Production Scheduling & Budgeting — Live Playground | ABRAM Network',
-    description: 'Coordinate crew rosters and manage budgets in a unified interactive timeline using advanced creative production tools.',
+    title: 'Film Production Scheduling & Budgeting | ABRAM Network',
+    description: 'Coordinate crew rosters, manage budgets, and resolve scheduling conflicts in a unified interactive timeline with advanced creative operations tools.',
     type: 'website',
     url: 'https://abram.network/film-production/scheduling-budgeting',
   },
@@ -35,8 +35,8 @@ export default function SchedulingBudgetingPage() {
                 '@type': 'WebPage',
                 '@id': 'https://abram.network/film-production/scheduling-budgeting#webpage',
                 'url': 'https://abram.network/film-production/scheduling-budgeting',
-                'name': 'Film Production Scheduling & Budgeting — Live Playground',
-                'description': 'Coordinate your crew rosters and manage budgets in a unified interactive timeline with built-in conflict resolution and production accounting.',
+                'name': 'Film Production Scheduling & Budgeting | ABRAM Network',
+                'description': 'Coordinate crew rosters, manage budgets, and resolve scheduling conflicts in a unified interactive timeline with advanced creative operations tools.',
                 'isPartOf': { '@id': 'https://abram.network/#website' },
                 'publisher': { '@id': 'https://abram.network/#organization' }
               },

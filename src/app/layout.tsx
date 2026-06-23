@@ -31,12 +31,12 @@ export const metadata: Metadata = {
     default: 'ABRAM Network — The AI Platform for Creative Intelligence',
     template: '%s | ABRAM Network',
   },
-  description: 'Official documentation and help center for ABRAM Network — the AI-powered creative operations and creative ops platform, and creative production software for crew scheduling, talent matchmaking, and production accounting.',
+  description: 'Official documentation and help center for ABRAM Network — the AI-powered creative operations platform and project management software. Streamline crew scheduling, equipment allocation, script breakdown, and production accounting.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'creative ops platform', 'creative ops tools', 'ABRAM', 'ABRAM Network',
     'creative production management', 'AI platform',
-    'crew scheduling', 'talent matchmaking', 'crew payouts', 'production management software',
+    'crew scheduling', 'crew roster management', 'crew payouts', 'production management software',
     'creative agency tools', 'AI brief analyzer', 'work order management', 'crew management',
     'production workflow', 'help center', 'documentation',
     'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'ABRAM Network',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM — The AI Platform for Creative Intelligence' }],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM Network — The AI Platform for Creative Intelligence' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -174,7 +174,7 @@ export default function RootLayout({
                     'height': '28'
                   },
                   'image': 'https://abram.network/og-image.png',
-                  'description': 'ABRAM is the AI-powered platform for creative production management, crew scheduling, talent matchmaking, and production accounting.',
+                  'description': 'ABRAM is the AI-powered platform for creative operations and production management, enabling crew scheduling, roster management, and production accounting.',
                   'sameAs': [
                     'https://x.com/abramnetwork',
                     'https://linkedin.com/company/abram-network'
@@ -236,7 +236,7 @@ export default function RootLayout({
                       "@type": "SiteNavigationElement",
                       "position": 3,
                       "name": "Creative Intelligence Suite",
-                      "description": "AI co-pilots, ROI engines, and production matchmaking tools for intelligence-driven workflows.",
+                      "description": "AI co-pilots, ROI engines, and brief intelligence for operationally-driven workflows.",
                       "url": "https://abram.network/intelligence"
                     },
                     {

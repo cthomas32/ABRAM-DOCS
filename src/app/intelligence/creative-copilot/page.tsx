@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import CreativeCopilotClient from "@/app/intelligence/creative-copilot/CreativeCopilotClient";
 
 export const metadata: Metadata = {
-  title: "ABRAM Playground & Studio AI",
-  description: "Experience ABRAM's conversational scoping engine inside our creative production software. Parse screenplays and search crew in real-time.",
+  title: "Creative Co-pilot & Conversational Scoping | ABRAM Network",
+  description: "Experience ABRAM's conversational scoping engine. Parse screenplays, schedule crew resources, and coordinate project variables in real-time.",
   keywords: [
     "creative production software",
     "creative production tools",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     "screenplay parser",
     "stripboard schedule optimization",
     "broadcast rundown planner",
-    "crew talent matchmaker",
+    "crew roster management",
     "abram intelligence",
     "workspace conversational ai"
   ],
@@ -20,15 +20,15 @@ export const metadata: Metadata = {
     canonical: "https://abram.network/intelligence/creative-copilot",
   },
   openGraph: {
-    title: "ABRAM Playground & Studio AI | ABRAM Network",
-    description: "Experience ABRAM's conversational scoping engine inside our creative production software. Parse screenplays and search crew in real-time.",
+    title: "Creative Co-pilot & Conversational Scoping | ABRAM Network",
+    description: "Experience ABRAM's conversational scoping engine. Parse screenplays, schedule crew resources, and coordinate project variables in real-time.",
     type: "website",
     url: "https://abram.network/intelligence/creative-copilot",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ABRAM Playground & Studio AI | ABRAM Network",
-    description: "Experience ABRAM's conversational scoping engine inside our creative production software. Parse screenplays and search crew in real-time.",
+    title: "Creative Co-pilot & Conversational Scoping | ABRAM Network",
+    description: "Experience ABRAM's conversational scoping engine. Parse screenplays, schedule crew resources, and coordinate project variables in real-time.",
   },
 };
 
@@ -39,8 +39,8 @@ export default function CreativeCopilotPage() {
       {
         '@type': 'WebPage',
         '@id': 'https://abram.network/intelligence/creative-copilot#webpage',
-        'name': 'ABRAM Dashboard & Playground',
-        'description': 'Conversational agent playground for screenplays, scheduling, and live rundowns.',
+        'name': 'Creative Co-pilot & Conversational Scoping | ABRAM Network',
+        'description': 'Conversational agent interface for screenplays, scheduling, and live rundowns.',
         'url': 'https://abram.network/intelligence/creative-copilot',
         'isPartOf': { '@id': 'https://abram.network/#website' },
         'publisher': { '@id': 'https://abram.network/#organization' },
@@ -52,7 +52,7 @@ export default function CreativeCopilotPage() {
             'AI Screenplay Metadata Parsing',
             'Stripboard Schedule Hold Day Optimization',
             'Dynamic Broadcast Rundown Resequencing',
-            'Weighted Talent Suitability Matchmaking',
+            'AI Crew Recommendations & Roster Suitability Scores',
             'Structured Action Plan Confirmation Alerts',
           ],
         },

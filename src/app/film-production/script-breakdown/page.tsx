@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import ScriptBreakdownClient from './ScriptBreakdownClient';
 
 export const metadata: Metadata = {
-  title: 'AI Script Breakdown & Screenplay Parsing',
-  description: 'Transform screenplays into production-ready stripboards. Discover AI script breakdown inside ABRAM\'s advanced creative production software.',
+  title: 'AI Script Breakdown & Screenplay Parsing | ABRAM Network',
+  description: 'Transform screenplays into production-ready stripboards. Discover AI script breakdown and screenplay parsing tools inside ABRAM\'s creative operations platform.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'AI script breakdown', 'screenplay parsing', 'automated stripboard', 
@@ -37,7 +37,7 @@ export default function ScriptBreakdownPage() {
               {
                 '@type': 'WebPage',
                 '@id': 'https://abram.network/film-production/script-breakdown#webpage',
-                'name': 'AI Script Breakdown — Automated Screenplay Parsing',
+                'name': 'AI Script Breakdown & Screenplay Parsing | ABRAM Network',
                 'description': 'Automated screenplay parsing and scheduling breakdown tools inside the ABRAM Network platform.',
                 'url': 'https://abram.network/film-production/script-breakdown',
                 'isPartOf': { '@id': 'https://abram.network/#website' },

@@ -298,7 +298,7 @@ export default function BrainSection() {
 
             {/* Body Paragraph (leading-7 text-zinc-400) */}
             <p className="text-sm md:text-base font-normal leading-7 text-zinc-400 max-w-xl">
-              A private workspace memory that unifies briefs, budgets, and crew availability. It learns from past projects to automate team matching and resource planning.
+              A private workspace memory that unifies briefs, budgets, and crew availability. It learns from past projects to automate roster coordination and resource planning.
             </p>
 
 

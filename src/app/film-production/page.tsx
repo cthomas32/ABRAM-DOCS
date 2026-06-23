@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import FilmProductionHubClient from './FilmProductionHubClient';
 
 export const metadata: Metadata = {
-  title: 'Film Production Suite — Dynamic Creative Operations',
-  description: 'Streamline physical production with our advanced creative production software. Analyze daily burn rates, coordinate crew turnaround safety margins, and break down screenplays in a unified creative operations platform.',
+  title: 'Film Production Operations & Studio Management | ABRAM Network',
+  description: 'Streamline physical production with our advanced creative operations platform. Analyze daily burn rates, coordinate crew turnaround compliance, and break down screenplays in a unified system.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'film production management', 'crew scheduling', 'production budgeting',
-    'union rates estimator', 'freelancer invoicing', 'timeline allocations',
+    'union rates estimator', 'crew billing', 'roster management', 'timeline allocations',
     'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
     'Jira for creative production', 'StudioBinder replacement',
   ],
@@ -15,16 +15,16 @@ export const metadata: Metadata = {
     canonical: 'https://abram.network/film-production',
   },
   openGraph: {
-    title: 'Film Production Suite — Dynamic Creative Operations | ABRAM Network',
-    description: 'Streamline physical production with our advanced creative production software. Analyze daily burn rates, coordinate crew turnaround safety margins, and break down screenplays.',
+    title: 'Film Production Operations & Studio Management | ABRAM Network',
+    description: 'Streamline physical production with our advanced creative operations platform. Analyze daily burn rates, coordinate crew turnaround compliance, and break down screenplays.',
     type: 'website',
     url: 'https://abram.network/film-production',
     siteName: 'ABRAM Network',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Film Production Suite — Dynamic Creative Operations',
-    description: 'Streamline physical production with our advanced creative production software. Analyze daily burn rates and coordinate crew turnaround safety margins.',
+    title: 'Film Production Operations & Studio Management',
+    description: 'Streamline physical production with our advanced creative operations platform. Analyze daily burn rates and coordinate crew turnaround compliance.',
   },
 };
 
@@ -45,8 +45,8 @@ export default function FilmProductionPage() {
                 '@type': 'WebPage',
                 '@id': 'https://abram.network/film-production#webpage',
                 'url': 'https://abram.network/film-production',
-                'name': 'Film Production Suite — Dynamic Creative Operations',
-                'description': 'Streamline physical production. Analyze daily burn rates, coordinate crew turnaround safety margins, and break down screenplays with advanced parsing.',
+                'name': 'Film Production Operations & Studio Management | ABRAM Network',
+                'description': 'Streamline physical production. Analyze daily burn rates, coordinate crew turnaround compliance, and break down screenplays with advanced parsing.',
                 'isPartOf': { '@id': 'https://abram.network/#website' },
                 'publisher': { '@id': 'https://abram.network/#organization' }
               },
@@ -100,7 +100,7 @@ export default function FilmProductionPage() {
 
         <h3>3. Unified Alternative to Legacy Film Production Software</h3>
         <p>
-          ABRAM offers a modern alternative to legacy film production tools like Movie Magic and StudioBinder. Instead of managing screenplay breakdowns, crew scheduling, and contractor invoicing in fragmented applications, ABRAM provides a unified platform. Our system automates the intake process with advanced brief parsing, coordinates crew turnaround safety margins on a centralized utilization calendar, and handles contractor payouts directly within the workflow.
+          ABRAM offers a modern alternative to legacy film production tools like Movie Magic and StudioBinder. Instead of managing screenplay breakdowns, crew scheduling, and crew invoicing in fragmented applications, ABRAM provides a unified platform. Our system automates the intake process with advanced brief parsing, coordinates crew turnaround safety margins on a centralized utilization calendar, and handles crew payouts directly within the workflow.
         </p>
       </AgentOnly>
       <FilmProductionHubClient />

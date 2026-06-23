@@ -9,11 +9,11 @@ import CollaborationIntegrations from '@/components/production-brain/Collaborati
 
 export const metadata: Metadata = {
   title: 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
-  description: 'Discover ABRAM\'s Production Brain. A private, secure workspace intelligence engine built for our creative operations platform and creative production software.',
+  description: 'Discover ABRAM\'s Production Brain: a private, secure workspace memory engine built for creative operations and production management. Build institutional memory across resources, projects, and rosters.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'Production Brain', 'ABRAM Workspace Memory', 'AI production memory',
-    'crew matching scores', 'workspace search', 'data security',
+    'crew roster alignment', 'workspace search', 'data security',
     'creative agency AI co-pilot', 'brief analyzer scoping',
   ],
   alternates: {
@@ -21,14 +21,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
-    description: 'Discover ABRAM\'s Production Brain. A private, secure workspace intelligence engine built for our creative operations platform and creative production software.',
+    description: 'Discover ABRAM\'s Production Brain: a private, secure workspace memory engine built for creative operations and production management. Build institutional memory across resources, projects, and rosters.',
     type: 'website',
     url: 'https://abram.network/intelligence/brain',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
-    description: 'Discover ABRAM\'s Production Brain. A private, secure workspace intelligence engine built for our creative operations platform and creative production software.',
+    description: 'Discover ABRAM\'s Production Brain: a private, secure workspace memory engine built for creative operations and production management. Build institutional memory across resources, projects, and rosters.',
   },
 };
 
@@ -44,8 +44,8 @@ export default function ProductionBrainPage() {
               {
                 '@type': 'WebPage',
                 '@id': 'https://abram.network/intelligence/brain#webpage',
-                'name': 'ABRAM Production Brain',
-                'description': 'Workspace memory and AI capabilities in the ABRAM creative production platform.',
+                'name': 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
+                'description': 'Workspace memory and AI capabilities in the ABRAM creative operations platform.',
                 'url': 'https://abram.network/intelligence/brain',
                 'isPartOf': { '@id': 'https://abram.network/#website' },
                 'publisher': { '@id': 'https://abram.network/#organization' },

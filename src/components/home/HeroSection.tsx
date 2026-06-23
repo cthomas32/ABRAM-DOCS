@@ -99,11 +99,19 @@ export default function HeroSection() {
           {/* Headline */}
           <motion.h1
             variants={titleVariants}
-            className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-10 select-text max-w-2xl"
+            className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 select-text max-w-2xl"
           >
             A new standard
             <span className="block mt-[5px]">for creative production</span>
           </motion.h1>
+
+          {/* Subtitle / Tagline */}
+          <motion.p
+            variants={ctaVariants}
+            className="text-sm sm:text-base font-normal leading-relaxed text-zinc-300 mb-10 select-text max-w-2xl font-sans"
+          >
+            ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization—designed to empower creative professionals, not replace them.
+          </motion.p>
 
           {/* Single Minimalist Capsule CTA */}
           <motion.div

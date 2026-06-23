@@ -202,7 +202,7 @@ function InteractiveIntakeMockup() {
                 </button>
               ) : (
                 <button onClick={handleNextStep} className="btn-primary px-4.5 py-1.5 text-[10px] flex items-center gap-1">
-                  <span>{step === "brief" ? "Parse with AI Matchmaker" : "Lock Crew & Book"}</span>
+                  <span>{step === "brief" ? "Parse with AI Brief Analyzer" : "Lock Crew & Book"}</span>
                   <ArrowRight className="w-3 h-3 text-zinc-950" />
                 </button>
               )}
@@ -282,17 +282,17 @@ export default function CreativeOpsSection() {
     {
       icon: Users,
       title: "Crew Roster Matrix",
-      description: "Manage contractor databases, day rates, skill tagging, and profile parameters in one clean portal."
+      description: "Manage internal team databases, day rates, skill tagging, and crew parameters in one clean portal."
     },
     {
       icon: CalendarDays,
       title: "Smart Scheduling",
-      description: "Track team utilization, match projects with talent, and schedule without calendar overlaps."
+      description: "Track team utilization, coordinate rosters with project timelines, and schedule crew without overlaps."
     },
     {
       icon: Sparkles,
-      title: "AI-Powered Matchmaking",
-      description: "Run automated availability searches to lock your dream production crew in seconds."
+      title: "AI-Assisted Roster Matching",
+      description: "Run automated availability searches against your curated roster to staff production crew in seconds."
     }
   ];
 
@@ -323,7 +323,7 @@ export default function CreativeOpsSection() {
 
             {/* Description */}
             <p className="text-sm md:text-base font-normal leading-7 text-zinc-400 max-w-xl font-sans">
-              Accelerate client intake, schedule crew rosters, and match project briefs with the ideal talent automatically. Reduce booking friction and optimize resource allocation across all campaigns.
+              Accelerate client intake, coordinate crew schedules, and parse project briefs to optimize internal rosters and resource allocation. Reduce booking friction and track equipment logistics seamlessly.
             </p>
 
             {/* CTA */}

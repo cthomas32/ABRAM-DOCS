@@ -47,12 +47,12 @@ const PHASE_DATA: Record<PhaseId, PhaseData> = {
     ]
   },
   crew: {
-    title: "Verified Roster Matchmaking",
+    title: "AI-Assisted Roster Matching",
     tabLabel: "Crew Match",
     num: "1.2",
     chatMessages: [
       { type: "user", text: "Assemble optimal crew for Winter Campaign shooting days.", timestamp: "10:05 AM" },
-      { type: "info", text: "Scanning verified creator network. Scoring credentials, availability, and rates.", timestamp: "10:05 AM" },
+      { type: "info", text: "Scanning curated roster database. Checking credentials, availability, and rates.", timestamp: "10:05 AM" },
       { type: "success", text: "✓ DP Alex K. matched (98% score). availability verified, rate locked.", timestamp: "10:06 AM" },
       { type: "warning", text: "⚠️ Calendar Collision: Gaffer Jordan M. has a secondary timeline hold.", timestamp: "10:06 AM" },
       { type: "success", text: "✓ Conflict resolved: Backup Gaffer Marcus T. matched (94% score, proposed).", timestamp: "10:07 AM" }
@@ -83,13 +83,13 @@ const PHASE_DATA: Record<PhaseId, PhaseData> = {
     ]
   },
   payments: {
-    title: "Direct Escrow Settlements",
+    title: "Direct Crew Payouts",
     tabLabel: "Direct Payouts",
     num: "1.4",
     chatMessages: [
       { type: "user", text: "Approve wrap deliverables and trigger settlements.", timestamp: "10:15 AM" },
-      { type: "info", text: "Resolving escrow routing metrics. Triggering Stripe Connect ledgers.", timestamp: "10:15 AM" },
-      { type: "success", text: "✓ Deliverables accepted. Escrow released to creator profiles.", timestamp: "10:16 AM" },
+      { type: "info", text: "Resolving payout routing metrics. Triggering Stripe Connect ledgers.", timestamp: "10:15 AM" },
+      { type: "success", text: "✓ Deliverables accepted. Payouts released to crew members.", timestamp: "10:16 AM" },
       { type: "success", text: "✓ DP Alex K.: $3,600 paid via instant settlement.", timestamp: "10:16 AM" },
       { type: "success", text: "✓ Gaffer Marcus T.: $3,450 paid via instant settlement.", timestamp: "10:17 AM" }
     ],
@@ -97,7 +97,7 @@ const PHASE_DATA: Record<PhaseId, PhaseData> = {
       { code: "ABR-401", title: "Extract Campaign Scope", column: "done", tag: "Intake" },
       { code: "ABR-402", title: "Build Workspace Memory", column: "done", tag: "Brain" },
       { code: "ABR-403", title: "Gaffer Marcus T. (Proposed)", column: "done", tag: "Matcher" },
-      { code: "ABR-404", title: "Direct Creator Settlements", column: "done", tag: "Payments", active: true }
+      { code: "ABR-404", title: "Direct Crew Payouts", column: "done", tag: "Payments", active: true }
     ]
   }
 };
