@@ -126,6 +126,7 @@ export default function CopilotSandbox() {
   const [executedPrompts, setExecutedPrompts] = useState<string[]>([]);
   
   const scrollRef = useRef<HTMLDivElement>(null);
+  const touchStartRef = useRef<number | null>(null);
 
   const welcomeMessage: ChatMessage = {
     id: "welcome",
@@ -611,6 +612,39 @@ export default function CopilotSandbox() {
     });
   };
 
+  const handleNestedScrollWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const deltaY = e.deltaY;
+
+    const canScrollUp = scrollTop > 0 && deltaY < 0;
+    const canScrollDown = scrollTop + clientHeight < scrollHeight - 1 && deltaY > 0;
+
+    if (canScrollUp || canScrollDown) {
+      e.stopPropagation();
+    }
+  };
+
+  const handleNestedScrollTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartRef.current = e.touches[0].clientY;
+  };
+
+  const handleNestedScrollTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartRef.current === null) return;
+
+    const container = e.currentTarget;
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const currentY = e.touches[0].clientY;
+    const deltaY = touchStartRef.current - currentY;
+
+    const canScrollUp = scrollTop > 0 && deltaY < 0;
+    const canScrollDown = scrollTop + clientHeight < scrollHeight - 1 && deltaY > 0;
+
+    if (canScrollUp || canScrollDown) {
+      e.stopPropagation();
+    }
+  };
+
   return (
     <div className="w-full font-sans">
       
@@ -662,7 +696,9 @@ export default function CopilotSandbox() {
           <div
             ref={scrollRef}
             className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-none"
-            data-lenis-prevent="true"
+            onWheel={handleNestedScrollWheel}
+            onTouchStart={handleNestedScrollTouchStart}
+            onTouchMove={handleNestedScrollTouchMove}
           >
             {chatHistory.map((message, idx) => (
               <div key={message.id || idx} className="w-full">
@@ -986,7 +1022,9 @@ export default function CopilotSandbox() {
           {/* Documents display area */}
           <div
             className="flex-1 overflow-y-auto mt-6 pr-1 space-y-4"
-            data-lenis-prevent="true"
+            onWheel={handleNestedScrollWheel}
+            onTouchStart={handleNestedScrollTouchStart}
+            onTouchMove={handleNestedScrollTouchMove}
           >
             <AnimatePresence mode="popLayout">
               {documents

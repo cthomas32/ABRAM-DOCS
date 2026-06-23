@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -11,6 +12,15 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProps) {
+  const [filmProductionOpen, setFilmProductionOpen] = useState(false);
+
+  // Automatically open the film production sub-menu if pathname starts with it
+  useEffect(() => {
+    if (isOpen && pathname.startsWith("/film-production")) {
+      setFilmProductionOpen(true);
+    }
+  }, [isOpen, pathname]);
+
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isOpen) {
@@ -51,6 +61,17 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
 
   const menuLinks = [
     { name: "Home", href: "/" },
+    { 
+      name: "Film Production", 
+      href: "/film-production",
+      isDropdown: true,
+      submenu: [
+        { name: "Overview Hub", href: "/film-production", desc: "Suite control cockpit & breakdowns" },
+        { name: "Script Breakdown", href: "/film-production/script-breakdown", desc: "AI screenplay parser & element mapping" },
+        { name: "Scheduling & Budgeting", href: "/film-production/scheduling-budgeting", desc: "Timeline board & daily burn rates" },
+        { name: "Digital Call Sheets", href: "/film-production/call-sheets", desc: "Daily schedule, weather & crew call times" },
+      ]
+    },
     { name: "Brain", href: "/production-brain" },
     { name: "Learn", href: "/docs" },
     { name: "Blog", href: "/blog" },
@@ -82,6 +103,56 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
             <div className="w-full max-w-md mx-auto">
               <nav className="flex flex-col gap-2.5">
                 {menuLinks.map((link) => {
+                  if (link.isDropdown && link.submenu) {
+                    const isParentActive = pathname.startsWith(link.href);
+                    return (
+                      <motion.div key={link.name} variants={itemVariants} className="flex flex-col">
+                        <button
+                          onClick={() => setFilmProductionOpen(!filmProductionOpen)}
+                          className={`flex items-center justify-between w-full rounded-xl border px-4 py-3.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer text-left ${
+                            isParentActive
+                              ? "bg-white/5 border-white/10 text-white shadow-md shadow-white/5"
+                              : "border-transparent text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.02] hover:border-white/5"
+                          }`}
+                        >
+                          <span className="font-sans">{link.name}</span>
+                          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${filmProductionOpen ? "rotate-180" : ""}`} />
+                        </button>
+                        
+                        <AnimatePresence initial={false}>
+                          {filmProductionOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25, ease: "easeInOut" }}
+                              className="overflow-hidden pl-4 pr-1 flex flex-col gap-1.5 mt-1.5 border-l border-white/5 ml-4"
+                            >
+                              {link.submenu.map((sublink) => {
+                                const isSubActive = pathname === sublink.href;
+                                return (
+                                  <Link
+                                    key={sublink.name}
+                                    href={sublink.href}
+                                    onClick={onClose}
+                                    className={`flex flex-col gap-0.5 rounded-xl border p-3 text-left transition-all duration-200 ${
+                                      isSubActive
+                                        ? "bg-white/5 border-white/10 text-white"
+                                        : "border-transparent text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.01] hover:border-white/5"
+                                    }`}
+                                  >
+                                    <span className="text-xs font-semibold font-sans text-zinc-200">{sublink.name}</span>
+                                    <span className="text-[10px] text-zinc-500 font-sans leading-normal font-light">{sublink.desc}</span>
+                                  </Link>
+                                );
+                              })}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    );
+                  }
+
                   const isActive = 
                     link.href === "/" 
                       ? pathname === "/" 

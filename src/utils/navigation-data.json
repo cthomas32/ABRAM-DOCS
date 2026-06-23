@@ -155,6 +155,17 @@
   {
     "slug": [
       "user-guide",
+      "2.4-ai-script-breakdown"
+    ],
+    "path": "user-guide/2.4-ai-script-breakdown",
+    "title": "AI Script Breakdown",
+    "group": "Project Intake & Scoping",
+    "groupIcon": "clipboard-list",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
       "3.1-master-project-detail-overview"
     ],
     "path": "user-guide/3.1-master-project-detail-overview",

@@ -5,7 +5,7 @@ description: Terms of Use for the ABRAM creative intelligence platform.
 
 # Terms of Use
 
-**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
+**Effective Date:** June 19, 2026 | **Last Updated:** June 23, 2026
 Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
 
 ---
@@ -242,6 +242,10 @@ The Platform integrates with third-party services. When you connect a third-part
 
 Use of these services is subject to their respective Terms and Privacy Policies. ABRAM has executed Data Processing Agreements with each of these service providers where required by applicable law.
 
+### 10.1 Third-Party Trademarks & Affiliation Disclaimer
+
+All third-party trademarks, service marks, logos, brand names, and labor union names (including but not limited to SAG-AFTRA, Frame.io, Adobe, Slack, Salesforce, and others) are the property of their respective owners. The integration with, compliance tracking for, or mention of these services, unions, or rules does not imply any affiliation with, endorsement by, or sponsorship from their respective owners or organizations (such as Screen Actors Guild-American Federation of Television and Radio Artists for SAG-AFTRA, Adobe Inc. for Frame.io, or Slack Technologies, LLC / Salesforce, Inc. for Slack). These integrations and indicators are provided "as-is" and "as-available" without warranties of any kind. You acknowledge that we are not responsible for the performance, reliability, availability, or security of any third-party services, and your use of them is subject to their respective terms and policies.
+
 ---
 
 ## 11. Prohibited Conduct
@@ -318,6 +322,8 @@ Nothing in this Section limits ABRAM's liability for: (i) fraud or fraudulent mi
 ### 15.1 Union & Guild Compliance
 
 The Platform is used by professionals covered by union or guild agreements (e.g., SAG-AFTRA, IATSE, DGA, WGA, Teamsters). It is your sole responsibility to ensure that engagements made through the Platform comply with applicable union, guild, or collective bargaining agreements. ABRAM does not manage, verify, or guarantee union compliance for any project or engagement.
+
+Without limiting the generality of the foregoing, any feature, setting, label, tag, badge, status, toggle, or visual indicator within the Platform designated or described as "SAG-AFTRA compliant" (or referring to compliance with any other union, guild, or regulatory standard) is provided solely for informational and user-organizational purposes. Such indicators represent a user-configured or system-suggested status flag based on user inputs and generic settings, and do NOT constitute legal verification, certification, or a guarantee of compliance with SAG-AFTRA or other union rules, rates, or agreements. You agree that you will not rely solely on any such indicator, and you assume all liability for verifying actual compliance with applicable guild or union rules. ABRAM shall have no liability whatsoever for any reliance on, or errors, omissions, or inaccuracies in, any such compliance indicators, flags, or features.
 
 ### 15.2 Production Permits & Insurance
 

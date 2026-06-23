@@ -330,34 +330,54 @@ function ChangelogEditorContent() {
       }
 
       // Strip optional leading 'v' when saving if we want standard formatting, or keep as typed
-      const payload = {
+      const payload: any = {
         version: version.trim().replace(/^v/i, ""), // Normalize format in DB as raw version numbers
-        slug: slug.trim(),
         title: title.trim(),
         content: content,
         status: status,
         published_at: published_at_val
       };
 
+      const payloadWithSlug = { ...payload, slug: slug.trim() };
+
       if (idParam) {
-        const { error } = await supabase
+        let { error } = await supabase
           .from("release_notes")
-          .update(payload)
+          .update(payloadWithSlug)
           .eq("id", idParam);
+
+        if (error && error.message.includes('column "slug"')) {
+          // Retry without slug column
+          const retry = await supabase
+            .from("release_notes")
+            .update(payload)
+            .eq("id", idParam);
+          error = retry.error;
+        }
 
         if (error) throw error;
         showToast("Release notes saved successfully!", "success");
       } else {
-        const { data, error } = await supabase
+        let res = await supabase
           .from("release_notes")
-          .insert(payload)
+          .insert(payloadWithSlug)
           .select()
           .single();
 
-        if (error) throw error;
+        if (res.error && res.error.message.includes('column "slug"')) {
+          // Retry without slug column
+          res = await supabase
+            .from("release_notes")
+            .insert(payload)
+            .select()
+            .single();
+        }
+
+        if (res.error) throw res.error;
         showToast("Release notes created successfully!", "success");
-        router.replace(`/admin/dashboard/changelog/edit?id=${data.id}`);
+        router.replace(`/admin/dashboard/changelog/edit?id=${res.data.id}`);
       }
+
     } catch (err: any) {
       showToast(err.message || "Failed to save release notes.", "error");
     } finally {

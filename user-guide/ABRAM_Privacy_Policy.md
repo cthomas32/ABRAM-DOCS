@@ -112,7 +112,7 @@ We share your data with the following categories of third parties. ABRAM has exe
 
 Data shared with Anthropic, PBC is processed securely via their developer API. In accordance with Anthropic's commercial terms, data sent via the API is not used to train or improve their models, is stored securely, and is deleted in accordance with their data retention policies.
 
-Sentry's privacy policy is available at sentry.io/privacy. Anthropic's privacy policy is available at anthropic.com/privacy. Stripe's privacy policy is available at stripe.com/privacy.
+Sentry's privacy policy is available at sentry.io/privacy. Anthropic's privacy policy is available at anthropic.com/privacy. Stripe's privacy policy is available at stripe.com/privacy. Adobe/Frame.io's privacy policy is available at adobe.com/privacy. Slack's privacy policy is available at slack.com/trust/privacy/policy. Use of these integrations is subject to the respective third parties' privacy policies and terms of service, and we encourage you to review them before connecting your accounts.
 
 ### 5.2 Between Users
 

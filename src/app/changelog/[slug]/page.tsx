@@ -17,43 +17,30 @@ interface ChangelogDetailPageProps {
 
 const getRelease = cache(async (slug: string) => {
   try {
-    // 1. Try to fetch by slug
-    const { data: releaseBySlug } = await supabase
+    const { data: releases } = await supabase
       .from("release_notes")
       .select("*")
-      .eq("slug", slug)
-      .eq("status", "published")
-      .maybeSingle();
+      .eq("status", "published");
 
-    if (releaseBySlug) {
-      return releaseBySlug;
-    }
+    if (!releases) return null;
 
-    // 2. Try to fetch by version number fallback (slugified version -> dots)
+    // 1. Try to match by slug
+    const releaseBySlug = releases.find(
+      (r) => r.slug === slug || (r.version && r.version.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") === slug)
+    );
+    if (releaseBySlug) return releaseBySlug;
+
+    // 2. Try to match by version number fallback (slugified version -> dots)
     const versionCandidate = slug.replace(/^v/i, "").replace(/-/g, ".");
-    const { data: releaseByVersion } = await supabase
-      .from("release_notes")
-      .select("*")
-      .or(`version.eq.${versionCandidate},version.eq.v${versionCandidate}`)
-      .eq("status", "published")
-      .maybeSingle();
+    const releaseByVersion = releases.find(
+      (r) => r.version === versionCandidate || r.version === `v${versionCandidate}`
+    );
+    if (releaseByVersion) return releaseByVersion;
 
-    if (releaseByVersion) {
-      return releaseByVersion;
-    }
-
-    // 3. Try to fetch by ID fallback if it is a valid UUID
+    // 3. Try to match by ID fallback if it is a valid UUID
     if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug)) {
-      const { data: releaseById } = await supabase
-        .from("release_notes")
-        .select("*")
-        .eq("id", slug)
-        .eq("status", "published")
-        .maybeSingle();
-
-      if (releaseById) {
-        return releaseById;
-      }
+      const releaseById = releases.find((r) => r.id === slug);
+      if (releaseById) return releaseById;
     }
 
     return null;
@@ -67,7 +54,7 @@ export async function generateStaticParams() {
   try {
     const { data: releases } = await supabase
       .from("release_notes")
-      .select("slug, version")
+      .select("*")
       .eq("status", "published");
 
     if (!releases) return [];

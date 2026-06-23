@@ -5,6 +5,7 @@ import MemorySpheres from '@/components/production-brain/MemorySpheres';
 import PassiveLearning from '@/components/production-brain/PassiveLearning';
 import MatchmakingEngine from '@/components/production-brain/MatchmakingEngine';
 import UnderTheHood from '@/components/production-brain/UnderTheHood';
+import CollaborationIntegrations from '@/components/production-brain/CollaborationIntegrations';
 
 export const metadata: Metadata = {
   title: 'Production Brain — Enterprise Workspace Memory',
@@ -152,7 +153,10 @@ export default function ProductionBrainPage() {
           </div>
         </div>
 
-        {/* Section 6: Under the Hood */}
+        {/* Section 6: Collaboration Integrations */}
+        <CollaborationIntegrations />
+
+        {/* Section 7: Under the Hood */}
         <div className="relative py-24 md:py-36">
           {/* Slate-900/15 glow behind Under the Hood */}
           <div 

@@ -8,6 +8,9 @@ import ResourcesCalendarSection from "@/components/home/ResourcesCalendarSection
 import RosterROISection from "@/components/home/RosterROISection";
 import FinalCTASection from "@/components/home/FinalCTASection";
 import BrainSection from "@/components/home/BrainSection";
+import FilmProductionSection from "@/components/home/FilmProductionSection";
+import CollaborationSection from "@/components/home/CollaborationSection";
+
 
 
 export const metadata: Metadata = {
@@ -79,6 +82,8 @@ export default function LandingPage() {
         <ArtifactsSection />
         {/* <OutcomeSection /> */}
         <ResourcesCalendarSection />
+        <FilmProductionSection />
+        <CollaborationSection />
         <RosterROISection />
         <BrainSection />
         <FinalCTASection />

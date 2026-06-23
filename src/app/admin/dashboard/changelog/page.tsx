@@ -80,10 +80,10 @@ export default function ChangelogManagerPage() {
     setPublishingId(id);
     const now = new Date().toISOString();
     try {
-      // 1. Fetch current release to get version and current slug
+      // 1. Fetch current release to get version and current slug (select * is safe if slug column is missing)
       const { data: release, error: fetchErr } = await supabase
         .from("release_notes")
-        .select("version, slug")
+        .select("*")
         .eq("id", id)
         .single();
 
@@ -93,18 +93,29 @@ export default function ChangelogManagerPage() {
       const updatePayload: any = { status: "published", published_at: now };
       
       // If slug is null/empty, auto-populate it
-      if (!release.slug || !release.slug.trim()) {
+      if (release && (!release.slug || !release.slug.trim())) {
         const autoSlug = release.version ? release.version.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") : `v-${id}`;
         updatePayload.slug = autoSlug;
       }
 
-      // 3. Perform the update
-      const { error } = await supabase
+      // 3. Perform the update (retry without slug if it fails)
+      let { error } = await supabase
         .from("release_notes")
         .update(updatePayload)
         .eq("id", id);
 
+      if (error && error.message.includes('column "slug"')) {
+        // Retry without slug
+        delete updatePayload.slug;
+        const retry = await supabase
+          .from("release_notes")
+          .update(updatePayload)
+          .eq("id", id);
+        error = retry.error;
+      }
+
       if (error) throw error;
+
       showToast("Release notes published live!", "success");
       fetchReleases();
     } catch (err: any) {

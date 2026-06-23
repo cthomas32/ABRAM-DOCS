@@ -155,3 +155,27 @@ All components and pages **must** be fully usable and visually correct on mobile
 - **Decorative elements**: Large decorative blurs, glows, and background shapes must scale down on mobile to prevent layout issues (e.g., `w-[400px] md:w-[800px]`).
 - **Sticky/scroll-driven sections**: Reduce scroll heights on mobile (e.g., `h-[200vh] md:h-[400vh]`). Ensure stacked content fits within viewport-height sticky containers.
 - **Test breakpoints**: Verify all new UI at **375px** (iPhone SE), **390px** (iPhone 14), **768px** (iPad), and **1024px** (laptop) before merging.
+
+---
+
+## 🚀 Guidelines for Adding New Pages (Landing & Marketing Routes)
+
+When creating new pages (such as features, dashboards, or static marketing pages), follow these steps to maintain SEO, structure, and system stability:
+
+### 1. Sitemap Registration
+- Whenever a new user-facing route is created (e.g. `src/app/my-new-page/page.tsx`), you **must** register it in the `staticPages` array inside [src/app/sitemap.ts](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/app/sitemap.ts) with its appropriate priority (typically `0.8` for landing pages, `0.6` for articles).
+
+### 2. Page Metadata & Canonical URLs
+- Always export a `metadata` object in the page file.
+- It **must** include a `canonical` URL definition matching the route (e.g. `alternates: { canonical: 'https://abram.network/my-new-page' }`).
+- For product/feature pages, include the JSON-LD schema block (like the one in `production-brain/page.tsx` or `film-production/page.tsx`) to support rich Google search results.
+
+### 3. Database Schema & Query Resilience
+- When querying tables (like `release_notes`) where columns may vary or be missing in the remote database (e.g., the missing `slug` column), **do not** filter directly on the missing columns in SQL or explicitly select them in the query, as this will crash the page rendering.
+- **Querying**: Fetch all columns using `.select("*")` or query by ID/version, and perform slug/version resolution in-memory in Javascript.
+- **Saving/Updating**: Write self-healing insert/update functions that try to write columns like `slug` first, but catch any database column errors and retry the write without the missing column in the payload.
+
+### 4. Layout & Footer Inheritance
+- All pages automatically inherit the fixed Navbar and the standardized `HomeFooter` via the global `AppLayout` wrapper defined in [src/components/AppLayout.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/components/AppLayout.tsx).
+- **Rule**: Never import or render `HomeFooter` or any custom footer locally within individual pages.
+

@@ -3,28 +3,50 @@ import Image from "next/image";
 
 export default function HomeFooter() {
   return (
-    <footer className="w-full bg-[#0A0A0A] border-t border-white/[0.08] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-sm text-zinc-400">
-        {/* Column 1: Logo and description */}
-        <div className="space-y-4">
-          <Link href="/" className="inline-block">
-            <Image
-              src="/abram-logo-lockup-cream.png"
-              alt="ABRAM"
-              width={110}
-              height={28}
-              className="h-7 w-auto block select-none"
-            />
-          </Link>
-          {/* Subtext: text-[11px] */}
-          <p className="text-[11px] text-white/30 max-w-xs leading-relaxed font-light">
-            The private intelligence platform for creative production.
-          </p>
+    <footer className="w-full bg-[#0A0A0A] border-t border-white/[0.08] py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-8xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-sm text-zinc-400">
+        {/* Column 1: Logo, description & Copyright */}
+        <div className="flex flex-col justify-between space-y-4 col-span-2 sm:col-span-1">
+          <div className="space-y-3">
+            <Link href="/" className="inline-block">
+              <Image
+                src="/abram-logo-lockup-cream.png"
+                alt="ABRAM"
+                width={110}
+                height={28}
+                className="h-7 w-auto block select-none"
+              />
+            </Link>
+            {/* Subtext: text-[11px] */}
+            <p className="text-[11px] text-white/30 max-w-xs leading-relaxed font-light">
+              The private intelligence platform for creative production.
+            </p>
+          </div>
+          <div className="text-[10px] text-white/20 font-light tracking-widest pt-2 sm:pt-4">
+            ©2026 ABRAM Network
+          </div>
         </div>
 
-        {/* Column 2: Platform */}
-        <div className="flex flex-col space-y-3">
-          <h4 className="text-xs font-medium tracking-wide text-white">Platform</h4>
+        {/* Column 2: Film Production */}
+        <div className="flex flex-col space-y-2 col-span-1">
+          <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Film Production</h4>
+          <Link href="/film-production" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Overview Hub
+          </Link>
+          <Link href="/film-production/script-breakdown" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Script Breakdown
+          </Link>
+          <Link href="/film-production/scheduling-budgeting" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Scheduling & Budgeting
+          </Link>
+          <Link href="/film-production/call-sheets" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Digital Call Sheets
+          </Link>
+        </div>
+
+        {/* Column 3: Platform */}
+        <div className="flex flex-col space-y-2 col-span-1">
+          <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Platform</h4>
           <Link href="/" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Home
           </Link>
@@ -44,9 +66,9 @@ export default function HomeFooter() {
           </a>
         </div>
 
-        {/* Column 3: Resources */}
-        <div className="flex flex-col space-y-3">
-          <h4 className="text-xs font-medium tracking-wide text-white">Resources</h4>
+        {/* Column 4: Resources & Legal */}
+        <div className="flex flex-col space-y-2 col-span-2 sm:col-span-1">
+          <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Resources & Legal</h4>
           <Link href="/docs" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Learn
           </Link>
@@ -56,35 +78,22 @@ export default function HomeFooter() {
           <Link href="/changelog" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Changelog
           </Link>
-        </div>
-
-        {/* Column 4: Legal & Copyright */}
-        <div className="flex flex-col space-y-3 justify-between min-h-[120px] md:min-h-0">
-          <div className="space-y-3">
-            <h4 className="text-xs font-medium tracking-wide text-white">Legal</h4>
-            <div className="flex flex-col space-y-2">
-              <Link href="/privacy-policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-                Privacy Policy
-              </Link>
-              <Link href="/terms-of-use" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-                Terms of Use
-              </Link>
-              <Link href="/acceptable-use-policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-                Acceptable Use Policy
-              </Link>
-            </div>
-          </div>
-          {/* Subtext / Helper: text-[10px] */}
-          <div className="text-[10px] text-white/25 pt-4 md:pt-0 font-light tracking-widest">
-            ©2026 ABRAM Network
-          </div>
+          <Link href="/privacy-policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit pt-1.5 border-t border-white/[0.04] mt-1 w-full">
+            Privacy Policy
+          </Link>
+          <Link href="/terms-of-use" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Terms of Use
+          </Link>
+          <Link href="/acceptable-use-policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Acceptable Use Policy
+          </Link>
         </div>
       </div>
 
       {/* Trademark Disclaimer */}
-      <div className="max-w-8xl mx-auto mt-12 pt-6 border-t border-white/[0.04]">
-        <p className="text-[10px] text-zinc-600 leading-relaxed font-light">
-          Disclaimer: All third-party trademarks, brand names, and logos mentioned in these documents, templates, and mockups (including ARRI, RED, Sony, Cooke, Sennheiser, and other equipment manufacturers, as well as fictitious brands such as Nebula, Onyx, Vortex, Helix, Sensa, Aura, and Spire) are the property of their respective owners. Reference to these trademarks is for illustrative and demo purposes only, and does not imply any affiliation with, endorsement by, or sponsorship from the respective trademark holders. Certain features, services, and integrations depicted in templates, mockups, or platform descriptions may be under active development, in beta, or designated as coming soon. We reserve the right to modify, suspend, or discontinue any feature at any time without notice.
+      <div className="max-w-8xl mx-auto mt-8 pt-4 border-t border-white/[0.04]">
+        <p className="text-[9px] text-zinc-600/80 leading-relaxed font-light">
+          Disclaimer: All third-party trademarks, brand names, labor union names, and logos mentioned on this website, in the documentation, or within templates, mockups, and platform descriptions (including SAG-AFTRA, Frame.io, Slack, ARRI, RED, Sony, Cooke, Sennheiser, and other equipment manufacturers, guilds, or associations, as well as fictitious brands such as Nebula, Onyx, Vortex, Helix, Sensa, Aura, and Spire) are the property of their respective owners. ABRAM is an independent platform and is not affiliated with, endorsed by, or sponsored by Screen Actors Guild-American Federation of Television and Radio Artists (SAG-AFTRA), Adobe Inc., Slack Technologies, LLC, Salesforce, Inc., or any other respective trademark or labor organization holders. Reference to these trademarks, unions, or rules is for illustrative, reference, and integration demo purposes only. Any compliance indicators, flags, or features (such as those representing SAG-AFTRA rules or rest periods) are provided solely for informational and user-organizational purposes and do not constitute legal or union-binding representation. Certain features, services, and integrations depicted in templates, mockups, or platform descriptions may be under active development, in beta, or designated as coming soon. We reserve the right to modify, suspend, or discontinue any feature at any time without notice.
         </p>
       </div>
     </footer>
