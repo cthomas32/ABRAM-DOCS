@@ -11,6 +11,7 @@ import BrainSection from "@/components/home/BrainSection";
 import FilmProductionSection from "@/components/home/FilmProductionSection";
 import CreativeOpsSection from "@/components/home/CreativeOpsSection";
 import CollaborationSection from "@/components/home/CollaborationSection";
+import FAQSection from "@/components/home/FAQSection";
 
 function AgentOnly({ children }: { children: React.ReactNode }) {
   return <div className="sr-only" data-agent-only="true">{children}</div>;
@@ -55,79 +56,133 @@ export default function LandingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@graph': [
+            "@context": "https://schema.org",
+            "@graph": [
               {
-                '@type': 'WebPage',
-                '@id': 'https://abram.network/#webpage',
-                'url': 'https://abram.network',
-                'name': 'ABRAM Network — The AI Platform for Creative Intelligence',
-                'description': 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.',
-                'isPartOf': { '@id': 'https://abram.network/#website' },
-                'about': { '@id': 'https://app.abram.network/#application' }
+                "@type": "WebPage",
+                "@id": "https://abram.network/#webpage",
+                "url": "https://abram.network",
+                "name": "ABRAM Network — The AI Platform for Creative Intelligence",
+                "description": "ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.",
+                "isPartOf": { "@id": "https://abram.network/#website" },
+                "about": { "@id": "https://app.abram.network/#application" }
               },
               {
-                '@type': 'SoftwareApplication',
-                '@id': 'https://abram.network/#software',
-                'name': 'ABRAM',
-                'applicationCategory': 'BusinessApplication',
-                'operatingSystem': 'Web Browser',
-                'description': 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.',
-                'url': 'https://abram.network',
-                'offers': {
-                  '@type': 'Offer',
-                  'price': '0',
-                  'priceCurrency': 'USD',
-                  'description': 'Free tier available'
+                "@type": "SoftwareApplication",
+                "@id": "https://abram.network/#software",
+                "name": "ABRAM",
+                "applicationCategory": "BusinessApplication",
+                "operatingSystem": "Web Browser",
+                "description": "ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. Manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.",
+                "url": "https://abram.network",
+                "offers": {
+                  "@type": "AggregateOffer",
+                  "priceCurrency": "USD",
+                  "lowPrice": "0",
+                  "highPrice": "49",
+                  "offerCount": 5,
+                  "offers": [
+                    {
+                      "@type": "Offer",
+                      "name": "Free Tier",
+                      "price": "0",
+                      "priceCurrency": "USD",
+                      "description": "For independent creative contractors and crew members. Includes 1 seat, 1 active project, digital call sheets, and view-only schedules."
+                    },
+                    {
+                      "@type": "Offer",
+                      "name": "Solo Lite",
+                      "price": "19",
+                      "priceCurrency": "USD",
+                      "description": "For independent producers. Includes unlimited projects, 30 resource items, 300 AI credits, and 3 GB storage."
+                    },
+                    {
+                      "@type": "Offer",
+                      "name": "Solo Pro",
+                      "price": "34",
+                      "priceCurrency": "USD",
+                      "description": "For power users. Includes interactive schedules, watermark-free PDFs, email distribution, AI briefs, and 10 GB storage."
+                    },
+                    {
+                      "@type": "Offer",
+                      "name": "Team Tier",
+                      "price": "39",
+                      "priceCurrency": "USD",
+                      "description": "Per seat pricing for boutique agencies. Includes 2-5 seats, custom intake forms, barcode scans, and transit buffers."
+                    },
+                    {
+                      "@type": "Offer",
+                      "name": "Studio Tier",
+                      "price": "49",
+                      "priceCurrency": "USD",
+                      "description": "Per seat pricing for commercial production companies. Includes 6-20 seats, unlimited forms, and 15 GB storage."
+                    }
+                  ]
                 },
-                'publisher': { '@id': 'https://abram.network/#organization' },
-                'featureList': [
-                  'AI Brief Intelligence — Parse creative briefs into structured project plans',
-                  'Roster Management — AI-assisted crew scheduling and internal roster coordination',
-                  'Utilization Calendar — Real-time availability and booking management',
-                  'Crew Payouts & Accounting — Generate and process invoices with integrated payouts',
-                  'Work Package Management — Organize projects into phases with budgets and milestones',
-                  'Production Brain — AI workspace memory that learns from past projects'
+                "publisher": { "@id": "https://abram.network/#organization" },
+                "featureList": [
+                  "AI Brief Intelligence — Parse creative briefs into structured project plans",
+                  "Roster Management — AI-assisted crew scheduling and internal roster coordination",
+                  "Utilization Calendar — Real-time availability and booking management",
+                  "Crew Payouts & Accounting — Generate and process invoices with integrated payouts",
+                  "Work Package Management — Organize projects into phases with budgets and milestones",
+                  "Production Brain — AI workspace memory that learns from past projects"
                 ]
               },
               {
-                '@type': 'BreadcrumbList',
-                '@id': 'https://abram.network/#breadcrumb',
-                'itemListElement': [
+                "@type": "BreadcrumbList",
+                "@id": "https://abram.network/#breadcrumb",
+                "itemListElement": [
                   {
-                    '@type': 'ListItem',
-                    'position': 1,
-                    'name': 'Home',
-                    'item': 'https://abram.network'
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://abram.network"
                   }
                 ]
               },
               {
-                '@type': 'FAQPage',
-                '@id': 'https://abram.network/#faq',
-                'mainEntity': [
+                "@type": "FAQPage",
+                "@id": "https://abram.network/#faq",
+                "mainEntity": [
                   {
-                    '@type': 'Question',
-                    'name': 'What is ABRAM?',
-                    'acceptedAnswer': {
-                      '@type': 'Answer',
-                      'text': 'ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. It enables organizations to manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization.'
+                    "@type": "Question",
+                    "name": "What is ABRAM?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. It enables organizations to manage crew, equipment, scripts, and briefs with AI-assisted workflow optimization."
                     }
                   },
                   {
-                    '@type': 'Question',
-                    'name': 'How does the AI Brief Analyzer work?',
-                    'acceptedAnswer': {
-                      '@type': 'Answer',
-                      'text': 'The AI Brief Analyzer allows users to upload a creative or production brief and automatically parse it into structured project requirements, timeline phases, budget estimates, and recommended crew roles.'
+                    "@type": "Question",
+                    "name": "How much does ABRAM cost?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "ABRAM offers flexible pricing starting with a Free tier. Paid subscription plans include Solo Lite at $19/month, Solo Pro at $34/month, Team at $39/seat/month, and Studio at $49/seat/month."
                     }
                   },
                   {
-                    '@type': 'Question',
-                    'name': 'Does ABRAM support calendar synchronization?',
-                    'acceptedAnswer': {
-                      '@type': 'Answer',
-                      'text': 'Yes. ABRAM supports bi-directional calendar synchronization with external platforms (such as Google Calendar and Microsoft Outlook). Marked busy times are automatically imported to protect availability.'
+                    "@type": "Question",
+                    "name": "Is ABRAM affiliated with SAG-AFTRA, DGA, or IATSE?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "No. ABRAM is an independent platform and is not affiliated with, endorsed by, or sponsored by SAG-AFTRA, DGA, IATSE, or any other labor organization. Reference to these unions is for illustrative purposes, and any compliance flags are provided solely for user-organizational utility."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How does ABRAM manage film production scheduling and script breakdowns?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "ABRAM features AI-assisted tools that parse script uploads to automatically extract scene elements, cast roles, props, and locations. These elements are mapped onto a digital stripboard and scheduling calendar, allowing teams to organize shooting days and generate digital call sheets."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How does ABRAM compare to legacy scheduling software?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Unlike legacy software like Movie Magic or StudioBinder, which require jumping between isolated systems for scheduling, resource allocation, and billing, ABRAM integrates script breakdowns, stripboards, automated roster scheduling, calendar synchronization, and Stripe Connect payouts into a single, cohesive workflow."
                     }
                   }
                 ]
@@ -182,6 +237,7 @@ export default function LandingPage() {
         <CollaborationSection />
         <RosterROISection />
         <BrainSection />
+        <FAQSection />
         <FinalCTASection />
       </main>
     </>

@@ -71,6 +71,16 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  alternates: {
+    types: {
+      'text/markdown': [
+        {
+          url: 'https://abram.network/llms.txt',
+          title: 'ABRAM Network LLMs.txt Platform Specification',
+        },
+      ],
+    },
+  },
 };
 
 export default function RootLayout({

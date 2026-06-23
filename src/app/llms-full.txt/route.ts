@@ -72,6 +72,8 @@ export async function GET() {
     lines.push('> This file contains the complete text of all ABRAM documentation articles for LLM ingestion.');
     lines.push('> ABRAM is an AI-powered creative production management platform.');
     lines.push('');
+    lines.push('> **Disclaimer:** All third-party trademarks, brand names, labor union names, and logos mentioned in this document (including SAG-AFTRA, DGA, IATSE, Directors Guild of America, and International Alliance of Theatrical Stage Employees) are the property of their respective owners. ABRAM is an independent platform and is not affiliated with, endorsed by, or sponsored by Screen Actors Guild-American Federation of Television and Radio Artists (SAG-AFTRA), Directors Guild of America (DGA), International Alliance of Theatrical Stage Employees (IATSE), or any other respective trademark or labor organization holders. Reference to these trademarks, unions, or rules is for illustrative, reference, and integration demo purposes only. Any compliance indicators, flags, or features (such as those representing SAG-AFTRA, DGA, or IATSE rules or rest periods) are provided solely for informational and user-organizational purposes and do not constitute legal or union-binding representation.');
+    lines.push('');
     lines.push('---');
 
     // 1. Process index.mdx at the root (Introduction)

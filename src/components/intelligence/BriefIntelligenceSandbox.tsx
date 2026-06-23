@@ -92,7 +92,7 @@ export default function BriefIntelligenceSandbox() {
       const file = e.dataTransfer.files[0];
       setBriefText(
         `[Imported: ${file.name}]
-We are scoping a premium fashion campaign video shoot. Require a 4-person crew: Director, Camera Operator, Sound Recordist, and Post-Production VFX Editor. Production will take place on-site at a studio. High-end RED cinema camera packages are required. Deliverables must be formatted for both landscape desktop presentation and portrait social cutdowns.`
+We are scoping a premium fashion campaign video shoot. Require a 4-person crew: Director, Camera Operator, Sound Recordist, and Post-Production VFX Editor. Production will take place on-site at a studio. High-end cinema camera packages are required. Deliverables must be formatted for both landscape desktop presentation and portrait social cutdowns.`
       );
       setSelectedTemplate(null);
     }
@@ -197,13 +197,13 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
           { name: "Social Ad Cutdown B (9:16)", format: "H.264 MP4", deadline: "Wk 3", priority: "Medium" }
         ],
         roles: [
-          { name: "Video Editor", skills: ["Premiere Pro", "Sound Design", "Color Grading"] },
-          { name: "Motion Designer", skills: ["After Effects", "Illustrator", "2D Animation"] },
+          { name: "Video Editor", skills: ["Sensa Cut", "Sound Design", "Color Grading"] },
+          { name: "Motion Designer", skills: ["Vortex Motion", "Onyx Vector", "2D Animation"] },
           { name: "Art Director", skills: ["Storyboarding", "Creative Direction"] },
           { name: "Voice Artist", skills: ["Narration", "Vocal Performance"] }
         ],
         specs: {
-          software: ["Adobe Premiere Pro", "After Effects", "Audition"],
+          software: ["Sensa Cut Pro", "Vortex Motion", "Sensa Audio"],
           gear: ["Studio condenser mic", "Mirrorless camera package"]
         }
       };
@@ -292,13 +292,13 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
       roles: [
         { name: "Cinematographer", skills: ["Cinema cameras", "Macro lensing", "Camera rigs"] },
         { name: "Gaffer", skills: ["Studio lighting", "DMX control", "High-output fixtures"] },
-        { name: "Video Editor", skills: ["DaVinci Resolve", "Premiere Pro", "Speed ramping"] }
+        { name: "Video Editor", skills: ["Onyx Resolve", "Sensa Cut", "Speed ramping"] }
       ],
       specs: {
-        software: ["DaVinci Resolve Studio", "Adobe Premiere Pro"],
+        software: ["Onyx Resolve Studio", "Sensa Cut Pro"],
         gear: [
-          answers.gear === "cinema" ? "RED V-Raptor Cinema Package" : answers.gear === "mirrorless" ? "Sony FX3/FX6 Mirrorless Package" : "High-Speed Macro Probe Lens",
-          "Aputure Light Storm studio lights",
+          answers.gear === "cinema" ? "Spire V-Raptor Cinema Package" : answers.gear === "mirrorless" ? "Sensa FX3/FX6 Mirrorless Package" : "High-Speed Macro Probe Lens",
+          "Nebula Light Storm studio lights",
           "Precision product turntable"
         ]
       }
@@ -600,7 +600,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       {[
-                        { val: "cinema", label: "Cinema Package (RED / Arri)" },
+                        { val: "cinema", label: "Cinema Package (Spire / Sensa)" },
                         { val: "mirrorless", label: "Mirrorless Camera Setup" },
                         { val: "none", label: "None (Digital Assets Only)" }
                       ].map(opt => (

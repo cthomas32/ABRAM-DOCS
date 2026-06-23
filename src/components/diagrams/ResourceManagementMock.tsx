@@ -44,7 +44,7 @@ interface CalendarResource {
 const INITIAL_ASSETS: Asset[] = [
   {
     id: "asset-1",
-    name: "ARRI Alexa 35 Camera Body",
+    name: "Sensa Cine 35 Camera Body",
     category: "Camera & Lens",
     location: "L.A. Studio A",
     defaultLocation: "L.A. Studio A",
@@ -54,7 +54,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-2",
-    name: "Cooke S7/i 50mm Prime Lens",
+    name: "Onyx S7/i 50mm Prime Lens",
     category: "Camera & Lens",
     location: "L.A. Studio A",
     defaultLocation: "L.A. Studio A",
@@ -64,7 +64,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-3",
-    name: "O'Connor 2560 Tripod System",
+    name: "Vortex 2560 Tripod System",
     category: "Grip & Support",
     location: "L.A. Studio A",
     defaultLocation: "L.A. Studio A",
@@ -74,7 +74,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-4",
-    name: "SmallHD Cine 7 Monitor",
+    name: "Helix Cine 7 Monitor",
     category: "Camera & Lens",
     location: "L.A. Studio A",
     defaultLocation: "L.A. Studio A",
@@ -84,7 +84,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-5",
-    name: "RED V-Raptor 8K Camera",
+    name: "Spire V-Raptor 8K Camera",
     category: "Camera & Lens",
     location: "N.Y. Vault",
     defaultLocation: "N.Y. Vault",
@@ -94,7 +94,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-6",
-    name: "Sony FX6 Cinema Camera",
+    name: "Sensa FX6 Cinema Camera",
     category: "Camera & Lens",
     location: "On Location",
     defaultLocation: "L.A. Studio A",
@@ -104,7 +104,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-7",
-    name: "Aputure 600d Pro LED",
+    name: "Nebula 600d Pro LED",
     category: "Lighting",
     location: "L.A. Studio A",
     defaultLocation: "L.A. Studio A",
@@ -114,7 +114,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-8",
-    name: "Astera Titan Tubes (8-Tube Kit)",
+    name: "Vortex Titan Tubes (8-Tube Kit)",
     category: "Lighting",
     location: "Transit",
     defaultLocation: "N.Y. Vault",
@@ -124,7 +124,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-9",
-    name: "Sennheiser MKH416 Boom Mic",
+    name: "Sensa MKH416 Boom Mic",
     category: "Audio",
     location: "N.Y. Vault",
     defaultLocation: "N.Y. Vault",
@@ -134,7 +134,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-10",
-    name: "Sound Devices 833 Recorder",
+    name: "Onyx 833 Recorder",
     category: "Audio",
     location: "On Location",
     defaultLocation: "N.Y. Vault",
@@ -144,7 +144,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-11",
-    name: "Freefly Movi Pro Stabilizer",
+    name: "Helix Movi Pro Stabilizer",
     category: "Grip & Support",
     location: "L.A. Studio A",
     defaultLocation: "L.A. Studio A",
@@ -154,7 +154,7 @@ const INITIAL_ASSETS: Asset[] = [
   },
   {
     id: "asset-12",
-    name: "EasyRig Vario 5 Vest",
+    name: "Vesper Vario 5 Vest",
     category: "Grip & Support",
     location: "On Location",
     defaultLocation: "L.A. Studio A",
@@ -199,10 +199,10 @@ const WEEK_DAYS = [
 ];
 
 const CALENDAR_RESOURCES: CalendarResource[] = [
-  { id: "asset-1", name: "ARRI Alexa 35", category: "Camera" },
-  { id: "asset-5", name: "RED V-Raptor 8K", category: "Camera" },
-  { id: "asset-7", name: "Aputure 600d Pro", category: "Lighting" },
-  { id: "asset-10", name: "Sound Devices 833", category: "Audio" },
+  { id: "asset-1", name: "Sensa Cine 35", category: "Camera" },
+  { id: "asset-5", name: "Spire V-Raptor 8K", category: "Camera" },
+  { id: "asset-7", name: "Nebula 600d Pro", category: "Lighting" },
+  { id: "asset-10", name: "Onyx 833", category: "Audio" },
   { id: "crew-1", name: "Marcus Chen", category: "Director of Photography" },
   { id: "crew-2", name: "Sarah Jenkins", category: "Lead Editor" },
   { id: "crew-3", name: "Amelia Lewis", category: "Executive Producer" },
@@ -212,7 +212,7 @@ const INITIAL_BOOKINGS: Booking[] = [
   {
     id: "booking-1",
     resourceId: "asset-1",
-    resourceName: "ARRI Alexa 35",
+    resourceName: "Sensa Cine 35",
     projectName: "Commercial Video Campaign",
     workOrder: "A-Camera Package",
     operator: "Marcus Chen",
@@ -223,7 +223,7 @@ const INITIAL_BOOKINGS: Booking[] = [
   {
     id: "booking-2",
     resourceId: "asset-5",
-    resourceName: "RED V-Raptor 8K",
+    resourceName: "Spire V-Raptor 8K",
     projectName: "Apparel Brand Spotlight",
     workOrder: "B-Camera Package",
     operator: "Sarah Jenkins",
@@ -234,7 +234,7 @@ const INITIAL_BOOKINGS: Booking[] = [
   {
     id: "booking-3",
     resourceId: "asset-7",
-    resourceName: "Aputure 600d Pro",
+    resourceName: "Nebula 600d Pro",
     projectName: "Commercial Video Campaign",
     workOrder: "Key Light Setup",
     operator: "Marcus Chen",
@@ -245,7 +245,7 @@ const INITIAL_BOOKINGS: Booking[] = [
   {
     id: "booking-4",
     resourceId: "asset-10",
-    resourceName: "Sound Devices 833",
+    resourceName: "Onyx 833",
     projectName: "Apparel Brand Spotlight",
     workOrder: "Audio Field Kit",
     operator: "Sarah Jenkins",

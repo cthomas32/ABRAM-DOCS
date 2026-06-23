@@ -1,76 +1,92 @@
 export const revalidate = 86400; // Cache for 24 hours
 
 export async function GET() {
-  const markdown = `# ABRAM Network Platform Specs & Guide Index
+  const markdown = `# ABRAM Network — Creative Operations & Film Production Platform
 
-> ABRAM is an AI-powered creative production management platform. It coordinates Brief Intelligence, screenplay parsing, crew scheduling, Stripe Express payouts, and utilization calendars in a single studio workspace.
+> ABRAM is a creative production management platform. It consolidates screenplay parsing, scheduling stripboards, client brief intake, crew matchmaking, Stripe Connect payouts, and utilization calendars into a unified workspace.
 
-## Core Module Specifications & Limits
+## Positioning & Core Value Propositions
 
-### 1. The Three-Pool Credit System
-- **Deduction Order**: Monthly Allowance -> Trial Credits -> Purchased Balance.
-- **Top-up Packs**: Basic (150 for $10), Pro (500 for $25), Max (1200 for $50).
-- **Onboarding Bonus**: 250 welcome credits.
-- **Cache Optimization**: Cache reads cost ~10% of standard; writes cost ~125% input rate. Saved role estimates cost 0 credits.
+ABRAM is a modern alternative to legacy physical production scheduling tools and generic agency project management software. It combines creative scoping, union compliance tracking, mobile-friendly call sheets, and financial calculations into a single, integrated studio dashboard.
 
-### 2. AI Screenplay Parser Bounds
-- **Supported Formats**: PDF, FDX, TXT (Max 150 pages, 20MB limit).
-- **Cost**: 2 credits per page processed.
-- **Caching**: SHA-256 hash match within 24 hours costs 0 credits.
-- **Scene Size**: 4,000-token extraction window; overflows process in 3,000-token blocks ("High Density").
-- **Timeout**: 45s hard processing limit (triggers db rollback).
+## Core Platform Suites
 
-### 3. Stripe Connect Payouts & Fees
-- **Platform Processing Fee**: Flat 5% on subtotal.
-- **Pre-Auth Hold**: 7-day authorization hold placed on client cards upon milestone approval.
-- **Onboarding Escrow**: Client payments are held securely if the freelancer's Stripe Express setup is incomplete, releasing immediately upon verification.
+### 1. Film Production Hub
+The **Film Production Hub** automates scheduling and logistical workflows:
+- **AI Screenplay Parser**: Instantly parses PDF, FDX, or TXT screenplays (up to 150 pages) to isolate scene headers, action blocks, character cues, and dialogue.
+- **Master Element Catalog**: Automatically extracts cast, locations, props, wardrobe, VFX/SFX, vehicles, and audio cues into scene breakdown sheets.
+- **Revision Reconciler**: Compares script drafts and resolves differences with Merge, Overwrite, or Skip controls to protect manual schedule modifications.
+- **Connected Stripboard**: An interactive drag-and-drop timeline color-coding scenes by type (Interior/Exterior) and time of day (Day/Night/Dawn/Dusk).
+- **Day Out of Days (DOOD) Matrix**: Compiles cast scheduling views, tracking actor booking states (Start, Work, Hold, Finish, and SWF) to calculate total days.
+- **Safety & Labor Compliance Telemetry**: Tracks wrap-to-call rest windows, proactively flagging DGA, SAG-AFTRA, or IATSE turnaround violations before schedules are distributed.
+- **Digital Call Sheets**: Builds daily agendas with mixed scene/non-scene blocks, location routing coordinates (Basecamp, Sets, Parking), and SMS/email crew dispatch logs with mobile-friendly check-in and public RSVPs.
 
-### 4. Utilization Calendar States
-- **Work Orders**: Draft (Tentative Block) -> Scheduled (Confirmed) -> In Progress (Active) -> Cancelled (Cleared).
-- **External Calendars**: Google/Outlook sync maps external events as busy blockouts.
-- **Sandbox Modes**: Simulated (non-blocking) -> Applied (converted to active project holds).
+### 2. Creative Operations (Agency) Hub
+The **Creative Operations Hub** manages client intake, scoping, and booking logistics for production agencies and design studios:
+- **AI Scoping Wizard**: Translates unstructured client briefs into defined deliverables, roles, and milestones with estimated labor hours and target costs.
+- **Crew Matchmaker Engine**: Evaluates roster talent using a multi-dimensional Suitability Index (scoring skills, rates, and past performance) and dispatches instant SMS invites.
+- **Interactive Timeline Calendar**: Multi-row timeline calendars tracking personnel and facility status (Available, Hold, Booked) with automated collision flags.
+- **Turnaround Compliance Checker**: Checks check-in/out travel distances and call-times against safety rules.
+- **Work Package & Deliverable Workflows**: Categorizes task complexity (High, Medium, Low) and triggers status tracking for milestones, reviews, and invoice approvals.
+- **Asset Review Integration**: Syncs workspace folders with collaborative review platforms to pull feedback, comments, and version stacks.
+- **Capacity Sandboxes**: Simulates schedule and roster changes in "What-If" sandboxes without committing live holds.
 
-## Pricing Tiers & Feature Gating Matrix
+### 3. Creative Intelligence Suite
+The **Intelligence Suite** provides conversational interfaces and institutional memory for studio workspaces:
+- **Creative Copilot**: A conversational assistant that allows coordinators to query roster availability, filter candidates, modify variables, and dispatch invites using everyday language.
+- **Safety-First Action Plans**: Presents a human-in-the-loop authorization card checklist before committing mutations (sending invites, locking rates, booking calendars).
+- **Workspace Memory (Production Brain)**: Builds institutional memory across isolated Private User and Shared Company scopes.
+- **Smart Search Fallbacks**: Relax constraints intelligently (e.g., hybrid-work, adjacent roles) when search criteria are too narrow.
 
-| Plan Tier | Price | Seats | Storage | Monthly Credits | Scheduling | Budgeting |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Free** | $0 | 1 | 1 GB | 250 (One-Time) | Read-Only | Trial (Max 5 items / 5 expenses) |
-| **Solo Lite** | $19/mo | 1 | 3 GB | 300 / mo | Read-Only | Trial (Max 5 items / 5 expenses) |
-| **Solo Pro** | $34/mo | 1 | 10 GB | 600 / mo | Full Access | Full Access |
-| **Team** | $39/seat/mo | 2-5 | 10 GB | 500 / seat / mo | Full Access | Full Access |
-| **Studio** | $49/seat/mo | 6-20 | 15 GB | 1000 / seat / mo | Full Access | Full Access |
-| **Enterprise** | Custom | Custom | Custom | Custom | Full Access | Full Access |
+## Pricing Tiers & Feature Gating
+
+| Plan Tier | Price | Seats | Storage | Scheduling | Budgeting |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Free** | $0 | 1 | 1 GB | Read-Only | Trial (Max 5 items / 5 expenses) |
+| **Solo Lite** | $19/mo | 1 | 3 GB | Read-Only | Trial (Max 5 items / 5 expenses) |
+| **Solo Pro** | $34/mo | 1 | 10 GB | Full Access | Full Access |
+| **Team** | $39/seat/mo | 2-5 | 10 GB | Full Access | Full Access |
+| **Studio** | $49/seat/mo | 6-20 | 15 GB | Full Access | Full Access |
+| **Enterprise** | Custom | Custom | Custom | Full Access | Full Access |
 
 ---
 
-## Documentation Guides & References
+## Complete Guide & Documentation Index
+
+All pages are hosted canonical resources under https://abram.network/docs.
 
 ### Introduction & Concepts
-- [Navigation Guide](https://docs.abram.network/docs/user-guide/0.0-agent-and-human-navigation-guide): Status flows, AI Chatbot limits.
-- [Glossary & Acronyms](https://docs.abram.network/docs/user-guide/0.1-glossary-and-acronyms): Terminology reference.
-- [Order of Operations](https://docs.abram.network/docs/user-guide/0.2-order-of-operations): Project lifecycle steps.
-- [AI Capabilities](https://docs.abram.network/docs/user-guide/0.3-ai-capabilities-and-copilot): Brief Intelligence overview.
-- [Production Brain](https://docs.abram.network/docs/user-guide/0.4-production-brain-and-workspace-memory): Workspace memory rules.
+- [Navigation Guide](https://abram.network/docs/user-guide/0.0-agent-and-human-navigation-guide): Status flows, AI Chatbot limits, and system overview.
+- [Glossary & Acronyms](https://abram.network/docs/user-guide/0.1-glossary-and-acronyms): Platform terminology reference.
+- [Order of Operations](https://abram.network/docs/user-guide/0.2-order-of-operations): Step-by-step project lifecycle guide.
+- [AI Capabilities](https://abram.network/docs/user-guide/0.3-ai-capabilities-and-copilot): Brief analyzer and intelligence features.
+- [Production Brain](https://abram.network/docs/user-guide/0.4-production-brain-and-workspace-memory): Secure workspace memory and search logic.
 
 ### Project Intake & Scoping
-- [AI Brief Analyzer](https://docs.abram.network/docs/user-guide/2.1-ai-brief-analyzer): Scoping parameters.
-- [Manual Project Setup](https://docs.abram.network/docs/user-guide/2.2-manual-project-creation): Manual scoping.
-- [Custom Intake Forms](https://docs.abram.network/docs/user-guide/2.3-custom-intake-forms): Requests configurations.
-- [AI Script Breakdown](https://docs.abram.network/docs/user-guide/2.4-ai-script-breakdown): Script parsing details.
+- [AI Brief Analyzer](https://abram.network/docs/user-guide/2.1-ai-brief-analyzer): Parsing guidelines and confidence scoring.
+- [Manual Project Setup](https://abram.network/docs/user-guide/2.2-manual-project-creation): Direct scoping and project creation.
+- [Custom Intake Forms](https://abram.network/docs/user-guide/2.3-custom-intake-forms): Questionnaire mapping.
+- [AI Script Breakdown](https://abram.network/docs/user-guide/2.4-ai-script-breakdown): Ingestion formats, page limits, and element cataloging.
 
 ### Crewing & Payments
-- [Internal Talent Search](https://docs.abram.network/docs/user-guide/4.1-internal-talent-search): Roster search logic.
-- [AI Matchmaking](https://docs.abram.network/docs/user-guide/4.2-ai-matchmaking-suggestions): Suitability scores.
-- [RSVP & Invites](https://docs.abram.network/docs/user-guide/4.3-inviting-and-crew-rsvp): Inviting thresholds.
-- [Stripe Express Setup](https://docs.abram.network/docs/user-guide/5.1-freelancer-stripe-setup): Verification stages.
-- [Invoicing & Payouts](https://docs.abram.network/docs/user-guide/5.2-invoicing-and-payouts): 5% fees, holds.
-- [Ledger & AI Credits](https://docs.abram.network/docs/user-guide/5.3-billing-ledger-and-ai-credits): Balance checkpoints.
+- [Internal Talent Search](https://abram.network/docs/user-guide/4.1-internal-talent-search): Roster directories and keyword searching.
+- [AI Matchmaking](https://abram.network/docs/user-guide/4.2-ai-matchmaking-suggestions): Suitability index parameters and holds.
+- [RSVP & Invites](https://abram.network/docs/user-guide/4.3-inviting-and-crew-rsvp): Inviting thresholds and communication dispatch.
+- [Stripe Express Setup](https://abram.network/docs/user-guide/5.1-freelancer-stripe-setup): Escrow rules and onboard verification.
+- [Invoicing & Payouts](https://abram.network/docs/user-guide/5.2-invoicing-and-payouts): Flat processing fees, pre-auth holds, and milestones.
+- [Ledger & AI Credits](https://abram.network/docs/user-guide/5.3-billing-ledger-and-ai-credits): Ledger updates and top-up packs.
 
-### Links
-- [ABRAM App](https://app.abram.network)
-- [Pricing](https://docs.abram.network/pricing)
-- [Privacy Policy](https://docs.abram.network/privacy-policy)
-- [Terms of Use](https://docs.abram.network/terms-of-use)
+### Platform Resource Links
+- [ABRAM Web App](https://app.abram.network)
+- [Pricing & Plans](https://abram.network/pricing)
+- [Privacy Policy](https://abram.network/privacy-policy)
+- [Terms of Use](https://abram.network/terms-of-use)
+
+---
+
+## Disclaimer
+
+All third-party trademarks, brand names, labor union names, and logos mentioned in this document (including SAG-AFTRA, DGA, IATSE, Directors Guild of America, and International Alliance of Theatrical Stage Employees) are the property of their respective owners. ABRAM is an independent platform and is not affiliated with, endorsed by, or sponsored by Screen Actors Guild-American Federation of Television and Radio Artists (SAG-AFTRA), Directors Guild of America (DGA), International Alliance of Theatrical Stage Employees (IATSE), or any other respective trademark or labor organization holders. Reference to these trademarks, unions, or rules is for illustrative, reference, and integration demo purposes only. Any compliance indicators, flags, or features (such as those representing SAG-AFTRA, DGA, or IATSE rules or rest periods) are provided solely for informational and user-organizational purposes and do not constitute legal or union-binding representation.
 `;
 
   return new Response(markdown, {
@@ -80,3 +96,5 @@ export async function GET() {
     },
   });
 }
+
+

@@ -325,7 +325,7 @@ export default function CrewSection() {
                   </h4>
                   {/* Body Paragraph: text-sm font-normal text-white/80 */}
                   <p className="text-sm font-normal text-white/80 leading-relaxed">
-                    Instantly links candidate skills, automatically equating related proficiencies (like "Premiere Pro" and "Adobe Premiere").
+                    Instantly links candidate skills, automatically equating related proficiencies (like "Sensa Cut" and "Sensa Editor").
                   </p>
                 </div>
               </div>
