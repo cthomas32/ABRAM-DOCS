@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Menu, PanelLeft, Search, X, ChevronDown, LayoutGrid, Calendar, ClipboardList, Sparkles } from "lucide-react";
+import { ArrowUpRight, Menu, PanelLeft, Search, X, ChevronDown, LayoutGrid, Calendar, ClipboardList, Sparkles, Users, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
@@ -18,23 +18,37 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
   const pathname = usePathname();
   const isMarketingPage = pathname === "/" || pathname === "/landing";
   const [isVisible, setIsVisible] = useState(!isMarketingPage);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [filmDropdownOpen, setFilmDropdownOpen] = useState(false);
+  const [agencyDropdownOpen, setAgencyDropdownOpen] = useState(false);
+  const filmTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const agencyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setDropdownOpen(true);
+  const handleFilmMouseEnter = () => {
+    if (filmTimeoutRef.current) clearTimeout(filmTimeoutRef.current);
+    setFilmDropdownOpen(true);
   };
 
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setDropdownOpen(false);
+  const handleFilmMouseLeave = () => {
+    filmTimeoutRef.current = setTimeout(() => {
+      setFilmDropdownOpen(false);
+    }, 150);
+  };
+
+  const handleAgencyMouseEnter = () => {
+    if (agencyTimeoutRef.current) clearTimeout(agencyTimeoutRef.current);
+    setAgencyDropdownOpen(true);
+  };
+
+  const handleAgencyMouseLeave = () => {
+    agencyTimeoutRef.current = setTimeout(() => {
+      setAgencyDropdownOpen(false);
     }, 150);
   };
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (filmTimeoutRef.current) clearTimeout(filmTimeoutRef.current);
+      if (agencyTimeoutRef.current) clearTimeout(agencyTimeoutRef.current);
     };
   }, []);
 
@@ -110,8 +124,8 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
         <div className="flex items-center gap-1 sm:gap-4">
           <div 
             className="relative"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleFilmMouseEnter}
+            onMouseLeave={handleFilmMouseLeave}
           >
             <Link
               href="/film-production"
@@ -122,10 +136,10 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
               }`}
             >
               Film Production
-              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${filmDropdownOpen ? 'rotate-180' : ''}`} />
             </Link>
             <AnimatePresence>
-              {dropdownOpen && (
+              {filmDropdownOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: 6, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -135,7 +149,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                 >
                   <Link
                     href="/film-production"
-                    onClick={() => setDropdownOpen(false)}
+                    onClick={() => setFilmDropdownOpen(false)}
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -149,7 +163,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
 
                   <Link
                     href="/film-production/script-breakdown"
-                    onClick={() => setDropdownOpen(false)}
+                    onClick={() => setFilmDropdownOpen(false)}
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -163,7 +177,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
 
                   <Link
                     href="/film-production/scheduling-budgeting"
-                    onClick={() => setDropdownOpen(false)}
+                    onClick={() => setFilmDropdownOpen(false)}
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -177,7 +191,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
 
                   <Link
                     href="/film-production/call-sheets"
-                    onClick={() => setDropdownOpen(false)}
+                    onClick={() => setFilmDropdownOpen(false)}
                     className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
@@ -186,6 +200,91 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                     <div className="flex-1 min-w-0">
                       <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Digital Call Sheets</h4>
                       <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Daily schedule, weather & crew call times</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div 
+            className="relative"
+            onMouseEnter={handleAgencyMouseEnter}
+            onMouseLeave={handleAgencyMouseLeave}
+          >
+            <Link
+              href="/agency"
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 border border-transparent ${
+                pathname.startsWith("/agency")
+                  ? "bg-white/10 text-white border-white/10"
+                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              }`}
+            >
+              Creative Ops
+              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${agencyDropdownOpen ? 'rotate-180' : ''}`} />
+            </Link>
+            <AnimatePresence>
+              {agencyDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute top-full left-0 mt-2 w-64 rounded-2xl border border-white/8 bg-zinc-950/95 backdrop-blur-[20px] p-2 shadow-2xl flex flex-col gap-1 z-50 pointer-events-auto"
+                >
+                  <Link
+                    href="/agency"
+                    onClick={() => setAgencyDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <LayoutGrid className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Overview Hub</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Suite control cockpit & client dashboard</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/agency/client-intake"
+                    onClick={() => setAgencyDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <FileText className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Client Intake</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Intake forms, briefs & requirements</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/agency/crew-roster"
+                    onClick={() => setAgencyDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <Users className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Crew Roster</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Contractor directory & availability</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/agency/smart-scheduling"
+                    onClick={() => setAgencyDropdownOpen(false)}
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <Calendar className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Smart Scheduling</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">AI-driven matching & booking board</p>
                     </div>
                   </Link>
                 </motion.div>

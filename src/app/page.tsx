@@ -9,6 +9,7 @@ import RosterROISection from "@/components/home/RosterROISection";
 import FinalCTASection from "@/components/home/FinalCTASection";
 import BrainSection from "@/components/home/BrainSection";
 import FilmProductionSection from "@/components/home/FilmProductionSection";
+import CreativeOpsSection from "@/components/home/CreativeOpsSection";
 import CollaborationSection from "@/components/home/CollaborationSection";
 
 
@@ -83,6 +84,7 @@ export default function LandingPage() {
         {/* <OutcomeSection /> */}
         <ResourcesCalendarSection />
         <FilmProductionSection />
+        <CreativeOpsSection />
         <CollaborationSection />
         <RosterROISection />
         <BrainSection />

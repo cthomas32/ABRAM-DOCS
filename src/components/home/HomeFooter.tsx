@@ -4,9 +4,9 @@ import Image from "next/image";
 export default function HomeFooter() {
   return (
     <footer className="w-full bg-[#0A0A0A] border-t border-white/[0.08] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-8xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-sm text-zinc-400">
+      <div className="max-w-8xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 md:gap-12 text-sm text-zinc-400">
         {/* Column 1: Logo, description & Copyright */}
-        <div className="flex flex-col justify-between space-y-4 col-span-2 sm:col-span-1">
+        <div className="flex flex-col justify-between space-y-4 col-span-2 sm:col-span-3 md:col-span-1">
           <div className="space-y-3">
             <Link href="/" className="inline-block">
               <Image
@@ -44,7 +44,24 @@ export default function HomeFooter() {
           </Link>
         </div>
 
-        {/* Column 3: Platform */}
+        {/* Column 3: Creative Operations */}
+        <div className="flex flex-col space-y-2 col-span-1">
+          <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Creative Ops</h4>
+          <Link href="/agency" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Overview Hub
+          </Link>
+          <Link href="/agency/client-intake" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Client Intake
+          </Link>
+          <Link href="/agency/crew-roster" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Crew Roster
+          </Link>
+          <Link href="/agency/smart-scheduling" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Smart Scheduling
+          </Link>
+        </div>
+
+        {/* Column 4: Platform */}
         <div className="flex flex-col space-y-2 col-span-1">
           <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Platform</h4>
           <Link href="/" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
@@ -66,7 +83,7 @@ export default function HomeFooter() {
           </a>
         </div>
 
-        {/* Column 4: Resources & Legal */}
+        {/* Column 5: Resources & Legal */}
         <div className="flex flex-col space-y-2 col-span-2 sm:col-span-1">
           <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Resources & Legal</h4>
           <Link href="/docs" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
