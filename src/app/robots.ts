@@ -21,7 +21,27 @@ export default function robots(): MetadataRoute.Robots {
         disallow: commonDisallows,
       },
       {
+        userAgent: 'Claude-User',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'Claude-SearchBot',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
         userAgent: 'Google-Extended',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'GoogleOther',
         allow: '/',
         disallow: commonDisallows,
       },
