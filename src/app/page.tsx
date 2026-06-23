@@ -80,11 +80,11 @@ export default function LandingPage() {
         <HeroSection />
         <PillarsSection />
         <BridgeSection />
-        <ArtifactsSection />
         {/* <OutcomeSection /> */}
-        <ResourcesCalendarSection />
         <FilmProductionSection />
+        <ResourcesCalendarSection />
         <CreativeOpsSection />
+        <ArtifactsSection />
         <CollaborationSection />
         <RosterROISection />
         <BrainSection />
