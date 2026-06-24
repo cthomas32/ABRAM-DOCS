@@ -129,6 +129,9 @@ function validate() {
           // If it links to /user-guide/..., resolve it relative to project root
           if (cleanHref.startsWith('/user-guide/')) {
             resolvedPath = path.join(projectDir, cleanHref);
+          } else if (fs.existsSync(path.join(projectDir, 'src/app', cleanHref.replace(/^\//, '')))) {
+            // Valid app route in Next.js
+            continue;
           } else {
             console.warn(`  [UNKNOWN ROOT PATH] Link starts with / in ${relativeFilename}: ${href}`);
             brokenLinksCount++;

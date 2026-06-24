@@ -139,14 +139,14 @@ The AI Assistant recognizes the following phases as your project progresses:
 
 | Feature | Visual Stage | Status Meaning | Relevant Docs |
 | :--- | :--- | :--- | :--- |
-| **Project Status** | Planning | The project is being scoped and budgeted. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | In Progress | Active work is currently underway. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Completed | All deliverables are completed and approved. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Cancelled | The project has been aborted. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| **Work Package Status**| Scoping | Initial planning and requirement gathering. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Matching | Finding the best team candidates. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Staffed | Team is confirmed and invitations are accepted. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Complete | All package deliverables are signed off. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
+| **Project Status** | Planning | The project is being scoped and budgeted. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | In Progress | Active work is currently underway. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Completed | All deliverables are completed and approved. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Cancelled | The project has been aborted. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| **Work Package Status**| Scoping | Initial planning and requirement gathering. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Matching | Finding the best team candidates. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Staffed | Team is confirmed and invitations are accepted. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Complete | All package deliverables are signed off. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
 
 #### 2. Stripe Payout Statuses
 The platform determines the freelancer payout status based on Stripe Connect verification:
@@ -622,7 +622,7 @@ Before any transactional changes—such as dispatching an invite email or bookin
 
 The **Production Brain** is the centralized, secure knowledge engine of your organization. Rather than acting as a static database, it acts as a dynamic repository of all historical, operational, and creative intelligence generated across your workspace.
 
-For a full breakdown of the features, search queries, historical memory benefits, and security permissions, see the standalone **[0.4 Production Brain & Workspace Memory Guide](./0.4-production-brain-and-workspace-memory.md)**.
+For a full breakdown of the features, search queries, historical memory benefits, and security permissions, see the standalone **[0.4 Production Brain & Workspace Memory Guide](./0.4-production-brain-and-workspace-memory.mdx)**.
 
 ---
 

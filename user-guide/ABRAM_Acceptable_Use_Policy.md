@@ -34,7 +34,7 @@ You may not scrape, crawl, harvest, or extract data from the Platform using auto
 
 ### 3.2 No Circumventing Platform Fees
 
-You may not use information or contacts obtained through the Platform to engage a Contractor or Client outside the Platform for the purpose of avoiding ABRAM's processing fees or the obligations set out in the Terms of Use. This applies regardless of whether the relationship was originally formed through the Platform's matching tools, internal talent search, or any invitation flow.
+You may not deliberately move a relationship formed through the Platform off-Platform for the purpose of avoiding ABRAM's processing fees, within 12 months of that relationship being formed or last engaged through the Platform. This rule exists to keep fees fair for everyone, not to prevent you from working together — if a Contractor and Client mutually decide to continue their relationship outside the Platform for reasons unrelated to fee avoidance, that is not a violation of this Policy.
 
 ### 3.3 No Misrepresentation
 

@@ -834,7 +834,7 @@ export default function CallSheetMockup() {
 
                       <div className="border border-white/5 rounded-xl bg-zinc-900/20 p-4 font-mono text-[9px] text-zinc-500 space-y-1 select-text">
                         <span className="text-[10px] text-zinc-400 font-semibold block border-b border-white/5 pb-1">@media print stylesheet details</span>
-                        <p className="text-zinc-600">// Strip glass backgrounds for ink savings</p>
+                        <p className="text-zinc-600">{"//"} Strip glass backgrounds for ink savings</p>
                         <p className="text-zinc-300">.glass-panel {"{"} background: white !important; color: black !important; border: none !important; {"}"}</p>
                         <p className="text-zinc-300">.btn-glass, .btn-primary, button {"{"} display: none !important; {"}"}</p>
                         <p className="text-zinc-300">table {"{"} width: 100% !important; border: 1px solid #ddd !important; {"}"}</p>

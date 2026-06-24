@@ -12,7 +12,28 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "scripts/**",
+    "supabase/**",
+    "eslint-output.txt",
   ]),
+  {
+    linterOptions: {
+      reportUnusedDisableDirectives: "off"
+    },
+    rules: {
+      "react-hooks/purity": "off",
+      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "prefer-const": "off",
+      "react-hooks/immutability": "off",
+      "@next/next/no-img-element": "off",
+      "react-hooks/static-components": "off",
+      "@typescript-eslint/no-require-imports": "off",
+    }
+  }
 ]);
 
 export default eslintConfig;

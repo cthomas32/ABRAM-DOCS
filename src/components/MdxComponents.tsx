@@ -311,7 +311,7 @@ export const blockquote = ({ children }: React.HTMLAttributes<HTMLQuoteElement>)
 };
 
 // Helper to identify React element types in MDX components
-const isElementType = (element: React.ReactNode, typeName: string, componentRef?: any): boolean => {
+const isElementType = (element: React.ReactNode, typeName: string, componentRef?: unknown): boolean => {
   if (!React.isValidElement(element)) return false;
   const type = element.type;
   if (!type) return false;
@@ -332,11 +332,14 @@ const isElementType = (element: React.ReactNode, typeName: string, componentRef?
   }
   
   // displayName check
-  const typeAsAny = type as any;
-  if (typeAsAny && typeof typeAsAny === "object" && "displayName" in typeAsAny && typeof typeAsAny.displayName === "string" && typeAsAny.displayName.toLowerCase() === typeName.toLowerCase()) {
-    return true;
-  }
-  if (typeof typeAsAny === "function" && "displayName" in typeAsAny && typeof typeAsAny.displayName === "string" && typeAsAny.displayName.toLowerCase() === typeName.toLowerCase()) {
+  const typeAsObject = type as unknown as Record<string, unknown>;
+  if (
+    typeAsObject &&
+    (typeof typeAsObject === "object" || typeof typeAsObject === "function") &&
+    "displayName" in typeAsObject &&
+    typeof typeAsObject.displayName === "string" &&
+    typeAsObject.displayName.toLowerCase() === typeName.toLowerCase()
+  ) {
     return true;
   }
   

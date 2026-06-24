@@ -137,14 +137,14 @@ The AI Assistant recognizes the following phases as your project progresses:
 
 | Feature | Visual Stage | Status Meaning | Relevant Docs |
 | :--- | :--- | :--- | :--- |
-| **Project Status** | Planning | The project is being scoped and budgeted. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | In Progress | Active work is currently underway. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Completed | All deliverables are completed and approved. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Cancelled | The project has been aborted. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| **Work Package Status**| Scoping | Initial planning and requirement gathering. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Matching | Finding the best team candidates. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Staffed | Team is confirmed and invitations are accepted. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
-| | Complete | All package deliverables are signed off. | [Section 3.2](./3.2-work-packages-and-milestones.md) |
+| **Project Status** | Planning | The project is being scoped and budgeted. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | In Progress | Active work is currently underway. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Completed | All deliverables are completed and approved. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Cancelled | The project has been aborted. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| **Work Package Status**| Scoping | Initial planning and requirement gathering. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Matching | Finding the best team candidates. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Staffed | Team is confirmed and invitations are accepted. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
+| | Complete | All package deliverables are signed off. | [Section 3.2](./3.2-work-packages-and-milestones.mdx) |
 
 #### 2. Stripe Payout Statuses
 The platform determines the freelancer payout status based on Stripe Connect verification:
@@ -617,7 +617,7 @@ Before any transactional changes—such as dispatching an invite email or bookin
 
 The **Production Brain** is the centralized, secure knowledge engine of your organization. Rather than acting as a static database, it acts as a dynamic repository of all historical, operational, and creative intelligence generated across your workspace.
 
-For a full breakdown of the features, search queries, historical memory benefits, and security permissions, see the standalone **[0.4 Production Brain & Workspace Memory Guide](./0.4-production-brain-and-workspace-memory.md)**.
+For a full breakdown of the features, search queries, historical memory benefits, and security permissions, see the standalone **[0.4 Production Brain & Workspace Memory Guide](./0.4-production-brain-and-workspace-memory.mdx)**.
 
 ---
 
@@ -1735,6 +1735,120 @@ When you decide to proceed with a request, click **Approve & Convert** to launch
 
       INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
+        'user-guide/2.4-ai-script-breakdown',
+        'Section 2.4: AI Script Breakdown',
+        'AI Script Breakdown',
+        'Learn how the screenplay parser processes script uploads, reconstructs formatting layouts, extracts production elements, and manages scene updates.',
+        '{"ABRAM","AI Script Breakdown","Screenplay Parser","Ingestion","Layout Reconstruction","Element Extraction","Conflict Resolution","Merging Scenes"}'::text[],
+        '---
+title: "Section 2.4: AI Script Breakdown"
+sidebarTitle: "AI Script Breakdown"
+description: "Learn how the screenplay parser processes script uploads, reconstructs formatting layouts, extracts production elements, and manages scene updates."
+keywords:
+  - ABRAM
+  - AI Script Breakdown
+  - Screenplay Parser
+  - Ingestion
+  - Layout Reconstruction
+  - Element Extraction
+  - Conflict Resolution
+  - Merging Scenes
+---
+
+# Section 2.4: AI Script Breakdown
+
+The screenplay parser is a core tool in the project scoping suite. It automates the process of breaking down a script, dividing it into scenes, extracting standard production elements (such as characters, locations, props, and visual requirements), and preparing it for scheduling and budgeting.
+
+By automating this workflow, producers and coordinators can transition from a raw creative document to a structured, tag-based production schedule in minutes instead of days.
+
+---
+
+## 1. Stage 1: Ingestion
+
+The ingestion phase handles the initial file upload and preparation. Producers can upload their scripts to begin the automated breakdown.
+
+### File Formats and Uploading
+* **Supported File Types**: Screenplays in PDF (`.pdf`), industry-standard script files (`.fdx`), and plain text (`.txt`) files are supported.
+* **Upload Mechanism**: Drag-and-drop your file directly onto the upload area of the project dashboard, or select the file from your local device.
+* **Stream Processing**: The system performs a file integrity check, verifies encoding compatibility, and initiates a secure text extraction pipeline.
+
+---
+
+## 2. Stage 2: Layout Reconstruction
+
+Standard screenplays follow strict physical layouts. The system uses a parser to analyze the visual formatting, indentation, margins, and spacings of the ingested text.
+
+This layout analysis reconstructs the document''s script structure:
+* **Scene Headings (Sluglines)**: Detects the interior/exterior setting (e.g., INT. or EXT.), location name, and time of day (e.g., DAY or NIGHT).
+* **Action Blocks**: Identifies description paragraphs detailing physical movement, environmental details, and scene setups.
+* **Character Cues**: Identifies uppercase names centered on the page indicating a speaker.
+* **Dialogue Blocks**: Identifies centered text directly below a character cue that contains spoken dialogue.
+* **Parentheticals**: Identifies delivery cues or action beats enclosed in parentheses within dialogue blocks.
+
+By reconstructing the visual layout, the system ensures that elements and dialogues are correctly mapped to their respective scenes, even if the source document has minor margin offsets.
+
+---
+
+## 3. Stage 3: Element Extraction
+
+Once the script structure has been reconstructed into individual scenes, the system processes the text of each scene to extract and categorize key production elements.
+
+The system automatically tags these elements and populates them into the scene''s digital breakdown sheet:
+* **Cast and Characters**: Speaking roles, non-speaking characters, and background extras mentioned in dialogue or action.
+* **Locations**: Filming sites, staging grounds, or studio sets matching the scene headings.
+* **Props**: Objects, weapons, or tools that characters handle or interact with in action blocks.
+* **Wardrobe and Costumes**: Specific clothing items, uniforms, or outfit changes described in the scene description.
+* **Visual Effects (VFX)**: Mentions of digital enhancements, green screen, CGI elements, or digital replacements.
+* **Special Effects (SFX)**: Physical effects like pyrotechnics, fire, smoke, mechanical rigs, or stunt work.
+* **Vehicles and Animals**: Cars, aircraft, horses, or other complex transit or creature requirements.
+* **Sound Cues**: Key sound effects, voiceovers, or off-screen audio indicators.
+
+---
+
+## 4. Stage 4: Conflict Resolution and Merging
+
+Scripts are dynamic documents that undergo revisions throughout the production lifecycle (such as updated colored drafts). When you upload a revised script or merge scenes, managing differences is crucial.
+
+### Script Version Tracking
+When you upload a new version of a script to an active project, the parser compares the newly parsed scenes with the current production data and flags any changes.
+
+### Scene-by-Scene Choices
+The interface presents side-by-side comparisons of changes (such as added dialogue, modified props, or new characters) and lets you choose how to apply updates:
+* **Merge**: Blends the new script changes with the existing workspace data. This option preserves your manual customizations, assigned crew roles, and custom props while incorporating newly detected characters or elements.
+* **Overwrite**: Discards the existing workspace data for that scene and completely replaces it with the newly parsed elements from the uploaded draft.
+* **Skip**: Ignores the newly uploaded version for that scene, keeping your current workspace data exactly as it is.
+
+---
+
+<AgentOnly>
+
+## 🤖 Agent Operations & System Rules
+
+ABRAM''s screenplay parser and script breakdown modules are metered and optimized for automated agent operations. If you are an AI agent scoping projects, scheduling shoots, or generating work packages, adhere to these technical processing thresholds and credit rules.
+
+### Credit Metering Details
+* **Per-Page Metering**: Processing a script costs 2 credits per page. These credits are deducted from the workspace''s active credit ledger.
+* **Hashing and Caching**: The platform computes a cryptographic SHA-256 hash of the uploaded script file. If a file with an identical hash is re-parsed within 24 hours, the system serves the analysis from the cache, resulting in a charge of 0 credits.
+* **Draft Auto-Save**: During ingestion, if processing is interrupted, the draft is saved to the workspace''s draft cache. Re-running the parser on a saved draft does not consume additional credits.
+
+### AI Parsing Thresholds & Limits
+* **Maximum Page Count**: The script parser enforces a hard limit of 150 pages per single document upload to prevent token context overflow.
+* **Scene Token Window**: Each scene chunk is parsed with a maximum token window of 4,000 tokens for element extraction. If a scene exceeds this window, the extraction fallback processes the scene in sequential 3,000-token blocks, flagging the scene as High Density in the output log.
+* **Timeout Threshold**: A maximum processing timeout of 45 seconds is enforced per script upload. If the layout reconstruction takes longer, the platform aborts the process and rolls back all database insertions to maintain a clean workspace state.
+
+</AgentOnly>
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
         'user-guide/3.1-master-project-detail-overview',
         'Master Project Detail Page: Tools and Tabs Overview',
         'Master Project Detail Page Overview',
@@ -2197,7 +2311,7 @@ Project Managers can click **Add Task** or select the edit pencil icon on any it
 * Toggle the payment release percentage.
 
 ### Work Order Settings
-* Configure schedule dates, times, crew members, and equipment lists. (See [Section 3.3](./3.3-work-orders-and-agreements.md) for details).
+* Configure schedule dates, times, crew members, and equipment lists. (See [Section 3.3](./3.3-work-orders-and-agreements.mdx) for details).
 
 ---
 
@@ -2256,7 +2370,7 @@ The **Inventory** tab is the primary directory of all physical resources owned b
 To add a new asset:
 1. Click the **Add Resource** button.
 2. Provide details:
-   * **Name**: The identifier of the gear (e.g., "Sony FX6 - Body #1").
+   * **Name**: The identifier of the gear (e.g., "Sensa FX6 - Body #1").
    * **Category**: Choose from Camera, Lighting, Audio, Grip, Vehicle, Studio Space, or Custom.
    * **Location**: Select where the asset is stored (managed under Organization Settings).
    * **Day Rate / Hourly Rate**: The replacement or internal billing cost, used for project budget estimation.
@@ -2266,7 +2380,7 @@ To add a new asset:
 ### Folder Organization
 To prevent clutter, resources can be nested in folders:
 * **Creating Folders**: Click **New Folder**, name the folder, and select the category.
-* **Moving Assets**: Use the folder selection menu on any asset card to move it into a specific folder (e.g., nesting "Sony 24-70mm GM Lens" inside a "Lenses" folder).
+* **Moving Assets**: Use the folder selection menu on any asset card to move it into a specific folder (e.g., nesting "Sensa 24-70mm GM Lens" inside a "Lenses" folder).
 
 ### Bulk Actions
 For large studios and rental houses, ABRAM supports bulk operations:
@@ -2550,7 +2664,7 @@ Upon invitation acceptance:
 Candidates are ranked using a comprehensive matchmaking algorithm that calculates a suitability percentage based on four major factors:
 
 ### 1. Technical Skill & Expertise Fit
-* **Skill Matching**: The AI compares the required project skills against the skills listed on the candidate''s profile. It uses synonym mapping (for example, if a project requires "Premiere Pro" and the freelancer listed "Adobe Premiere", the AI automatically recognizes this match).
+* **Skill Matching**: The AI compares the required project skills against the skills listed on the candidate''s profile. It uses synonym mapping (for example, if a project requires "Sensa Cut" and the freelancer listed "Sensa Editor", the AI automatically recognizes this match).
 * **Software Proficiency**: Checks familiarity with required production software tools.
 * **Role Alignment**: Confirms whether the freelancer''s primary declared roles match the slot.
 * **Equipment Matching**: Checks if the freelancer owns or operates specific technical equipment required for the shoot.
@@ -3560,7 +3674,27 @@ If a network disconnect or timeout occurs during an analysis, the platform ensur
 
 ---
 
-## 6. Upgrading Plans and Buying Credits
+## 6. Budgeting & Scheduling Feature Gating
+
+To provide flexibility while encouraging tier upgrades, ABRAM gates advanced scheduling and budgeting features based on subscription level. This allows users on Free and Solo Lite tiers to test budgeting capabilities prior to upgrading.
+
+| Tier | Scheduling Access | Budgeting Access |
+| :--- | :--- | :--- |
+| **Free** | **Read-Only**: Can view the stripboard and calendar. Editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create and edit up to **5 budget line items** and **5 expenses**. Saving or adding items beyond that limit is locked. |
+| **Solo Lite** | **Read-Only**: Can view the stripboard and calendar. Editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create and edit up to **5 budget line items** and **5 expenses**. Saving or adding items beyond that limit is locked. |
+| **Solo Pro** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Team** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Studio** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Enterprise** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
+
+### Gating Indicators & Upgrade Paths
+* **Locked Controls**: In read-only scheduling mode, action buttons (such as "Add Production Day", "Sync Crew to Schedule", and "AI Sort Board") render as locked, and drag-and-drop interactions are disabled.
+* **Trial Restrictions**: When the limit of 5 budget line items or 5 expenses is reached on Free or Solo Lite plans, the system blocks the insertion of new items and displays a notification inviting the user to upgrade.
+* **Banners**: Persistent upgrade prompts are displayed at the top of the scheduling stripboard and financial overview frames for users on trial or restricted tiers, pointing to subscription settings for self-service upgrading.
+
+---
+
+## 7. Upgrading Plans and Buying Credits
 
 Owners and Admins can purchase additional credits or upgrade plan tiers in **Settings** -> **Billing**:
 
@@ -3956,99 +4090,6 @@ This creates a single, complete timeline of both human conversations and automat
 
       INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
-        'user-guide/6.4-resend-email-integration',
-        'Section 6.4: Resend Email Integration',
-        'Resend Email Integration',
-        'Sync subscribers, manage audiences, and broadcast newsletter updates directly from the CMS admin dashboard.',
-        '{"ABRAM","Email Newsletter","Resend","Sync Contacts","Broadcast Campaign"}'::text[],
-        '---
-title: "Section 6.4: Resend Email Integration"
-sidebarTitle: "Resend Email Integration"
-description: "Sync subscribers, manage audiences, and broadcast newsletter updates directly from the CMS admin dashboard."
-keywords:
-  - ABRAM
-  - Email Newsletter
-  - Resend
-  - Sync Contacts
-  - Broadcast Campaign
----
-
-# Resend Email Integration
-
-The platform includes a built-in integration with the email delivery service to help you manage mailing lists and broadcast announcements directly from your administration dashboard.
-
-## Overview of Features
-
-The email integration streamlines marketing and release communications:
-- **Automatic Subscriber Collection**: Collects public newsletter signups and synchronizes them with your central contact directory.
-- **Manual Contact Additions**: Admins can manually register subscribers from the administration interface.
-- **Automated Broadcasts**: Trigger email newsletter notifications to your general segment whenever a new article or release note is marked as Published.
-- **Delivery Status & Safety**: Monitors email delivery status and handles bounces to preserve your domain’s sending reputation.
-
----
-
-## Managing Subscribers
-
-Subscriber management is centralized to keep your mailing list accurate:
-
-### 1. Public Signup Form
-Visitors can subscribe to your updates by submitting their email address and name through the public newsletter form on the site.
-
-### 2. Manual Administration Entries
-If you need to add a contact manually:
-1. Navigate to the **Administration Dashboard**.
-2. Select the **Subscribers** view.
-3. Click **Add Subscriber**, enter the contact’s email address, and save.
-
----
-
-## Broadcasting Newsletter Campaigns
-
-When publishing content, you can easily notify your audience:
-
-### Blog Post Announcements
-Publishing a new article triggers a clean, editorial email to all active contacts. The email layout showcases the title, the summary, and a direct link to read the full post.
-
-### Release Note Changelogs
-Publishing release notes automatically triggers a formatted changelog broadcast containing the version number, update list, and links to the documentation center.
-
----
-
-<AgentOnly>
-
-## 🤖 Agent Operations, Technical Architecture, and API Keys
-
-This section provides technical specs, database mapping, and integration details for LLM web-crawlers and agents.
-
-### API Key Security Configuration
-The service requires the `RESEND_API_KEY` configuration. To safeguard this key:
-- It is stored server-side only in `.env.local` as `RESEND_API_KEY` and is never exposed to client-side bundles (no `NEXT_PUBLIC_` prefix).
-- A safe client retrieval function `getResendClient` in [resend.ts](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/utils/resend.ts) ensures that missing credentials do not crash page rendering or static builds.
-
-### Database Tables Schema
-The system maps tracking logs and subscriber profiles using the following relational tables in the platform:
-- `public.subscribers`: Stores subscriber profiles, status values (`subscribed`, `unsubscribed`, `bounced`), and references the ID from the email service.
-- `public.campaigns`: Logs campaign status (`draft`, `sending`, `sent`, `failed`) and stores campaign statistics.
-- `public.campaign_logs`: Logs transactional events (`email.delivered`, `email.bounced`, `email.opened`, `email.clicked`) returned via webhook callbacks.
-
-### Resend Webhook Callbacks
-Webhook notifications are routed to `/api/webhooks/resend`. This endpoint parses events:
-- **Bounce/Complaint**: Catches `email.bounced` and updates the contact''s database status to `bounced` to preserve domain reputation.
-- **Success/Delivery**: Tracks deliveries and opens to measure campaign performance.
-
-</AgentOnly>
-'
-      ) ON CONFLICT (slug) DO UPDATE SET
-        title = EXCLUDED.title,
-        sidebar_title = EXCLUDED.sidebar_title,
-        description = EXCLUDED.description,
-        keywords = EXCLUDED.keywords,
-        content = EXCLUDED.content,
-        updated_at = now();
-    
-
-      INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
-      VALUES (
         'user-guide/7.1-faqs-and-troubleshooting',
         'ABRAM FAQs and Troubleshooting Guide',
         'FAQs & Troubleshooting Guide',
@@ -4167,6 +4208,197 @@ This guide compiles answers to the most common questions and provides step-by-st
 
       INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
+        'user-guide/7.2-cookie-consent-and-tag-behavior',
+        'Section 7.2: Cookie Consent and Tag Behavior',
+        'Cookie Consent & Tag Behavior',
+        'A clear explanation of cookie settings, Google Consent Mode v2, and cookieless pings on the ABRAM platform.',
+        '{"ABRAM","cookie consent","consent mode","cookieless pings","ad_storage","analytics_storage","privacy"}'::text[],
+        '---
+title: ''Section 7.2: Cookie Consent and Tag Behavior''
+sidebarTitle: Cookie Consent & Tag Behavior
+description: A clear explanation of cookie settings, Google Consent Mode v2, and cookieless pings on the ABRAM platform.
+keywords:
+  - ABRAM
+  - cookie consent
+  - consent mode
+  - cookieless pings
+  - ad_storage
+  - analytics_storage
+  - privacy
+---
+
+# Section 7.2: Cookie Consent and Tag Behavior
+
+This article outlines how the ABRAM platform handles cookie consent, manages user preferences, integrates Google Consent Mode v2, and utilizes cookieless pings to balance accurate analytics with user privacy compliance.
+
+---
+
+## 1. Consent State and Tag Behavior
+
+The platform utilizes a dynamic consent framework that respects user privacy preferences by adjusting the behavior of measurement tags in real time. Rather than blocking tags from loading entirely, the platform loads tags in all cases and manages their capabilities via two primary consent states:
+
+*   **`ad_storage`**: Controls the storage (such as cookies) related to advertising.
+*   **`analytics_storage`**: Controls the storage (such as cookies) related to analytics and site usage.
+
+Depending on the consent state, tag behavior adjusts as follows:
+
+| Consent Parameter | State | Tag Behavior & Data Collection |
+| :--- | :--- | :--- |
+| **`ad_storage`** | `granted` | Advertising cookies are read and written. Full conversion tracking, audience building, and remarketing capabilities are enabled. |
+| | `denied` | Advertising cookies are blocked. Tags do not read or write advertising-related cookies. Instead, cookieless pings are sent to report basic ad performance and conversion metrics. |
+| **`analytics_storage`** | `granted` | Analytics cookies are read and written. Full session tracking, page-view journeys, and user behavior analytics are recorded. |
+| | `denied` | Analytics cookies are blocked. Tags do not read or write analytics cookies. The system sends cookieless pings containing basic operational parameters. |
+
+---
+
+## 2. Ad Storage Denied: Redaction vs. Redaction Disabled
+
+When a user denies consent for advertising cookies (`ad_storage=''denied''`), the platform can handle data transmission in two distinct modes depending on compliance settings:
+
+### Redaction Disabled (`ads_data_redaction=''false''`)
+When ad data redaction is disabled and `ad_storage` is `denied`:
+*   The system blocks the creation and reading of advertising cookies.
+*   The tag continues to send cookieless pings to measure conversions.
+*   Ad click identifiers (such as query parameters in URLs) are still sent to help attribute the click event to a campaign.
+
+### Redaction Enabled (`ads_data_redaction=''true''`)
+When ad data redaction is enabled and `ad_storage` is `denied`:
+*   The system blocks all advertising cookies.
+*   All ad click identifiers (such as ad-click query parameters) are stripped or redacted from the URL and payload before sending.
+*   The cookieless pings sent to the server contain no identifiers that could link the interaction to a specific ad click, ensuring maximum privacy compliance under strict regional laws.
+
+---
+
+## 3. Cookieless Pings and Data Collection
+
+Cookieless pings are secure, stateless network requests sent to measurement servers when a user has denied cookie consent. They do not store, access, or read any cookies or local identifiers on the user''s browser, preventing the creation of a persistent profile.
+
+These pings carry essential, coarse-level metadata to ensure basic reporting remains functional:
+
+*   **Functional Information**: User agent (browser type, OS version, device type) and screen resolution.
+*   **Timestamp**: The exact time of the event.
+*   **Coarse Location Info**: Regional/country data derived from the user''s IP address (the IP address itself is processed in memory and discarded; it is never written to disk or stored).
+*   **Referrer**: The page URL that led the user to the current page.
+*   **Random Page-Navigation ID**: A temporary, random ID generated for each page view. This links events occurring within the same page load (e.g., a page view and a button click) but cannot track the user across different pages or sessions.
+*   **Consent State**: Verification metadata detailing that consent was explicitly denied.
+
+---
+
+## 4. Regional Defaults and Measurement Strategy
+
+To preserve analytical integrity without violating privacy regulations, the platform dynamically configures consent defaults based on the visitor’s geographic region:
+
+*   **Strict Opt-In Regions (EEA, UK, Switzerland)**: By default, `ad_storage` and `analytics_storage` are set to `denied` before any tag executes. Tags only activate fully when the user explicitly grants permission through the consent banner.
+*   **Opt-Out Regions (Rest of the World)**: By default, `ad_storage` and `analytics_storage` are set to `granted`. Users can opt out or modify their preferences at any time via their cookie settings.
+
+> [!NOTE]
+> Setting defaults dynamically by region allows the platform to maintain compliant tracking workflows globally without sacrificing measurement accuracy in regions with opt-out regulations.
+
+---
+
+## 5. Implementation Best Practices
+
+To ensure correct consent management across your workspace pages, adhere to the following best practices:
+
+1.  **Load Tags in All Cases**: Do not use conditional logic to prevent tag scripts from loading. Instead, load the tag scripts on all page views. The tags themselves will read the consent state and dynamically adjust their behavior.
+2.  **Define Defaults Early**: Set default consent states (such as `denied` for EEA visitors) at the very top of the page header, before any Google Analytics or advertising scripts are parsed or loaded.
+3.  **Update State Instantly**: When a user selects their preferences in the consent banner, update the consent state immediately using the update API. Tags will immediately adjust and process any queued events according to the new consent values.
+4.  **Understand Advanced vs. Basic Consent**:
+    *   **Advanced Consent (Recommended)**: Loads scripts immediately with `denied` defaults. When users deny consent, tags adapt to send cookieless pings, enabling conversion modeling and basic metrics.
+    *   **Basic Consent**: Blocks tag scripts from loading until the user explicitly clicks "Accept". This prevents any data transmission, including cookieless pings, resulting in a complete loss of measurement for non-consenting users.
+
+---
+
+<AgentOnly>
+
+## 🤖 Agent Operations & System Rules
+
+This technical section defines the programmatic script configuration, initialization sequences, and consent state updates for LLM-based crawlers and automated verification systems.
+
+### 1. Default Script Configuration (Gtag.js Syntax)
+
+The platform implements Google Consent Mode v2 via the following script sequence in the document `<head>`:
+
+```html
+<!-- Initialize the data layer -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+
+  // 1. Set default consent state (e.g., for EEA/UK regions)
+  gtag(''consent'', ''default'', {
+    ''ad_storage'': ''denied'',
+    ''analytics_storage'': ''denied'',
+    ''ad_user_data'': ''denied'',
+    ''ad_personalization'': ''denied'',
+    ''wait_for_update'': 500
+  });
+  
+  // 2. Set ads data redaction behavior
+  gtag(''set'', ''ads_data_redaction'', true);
+</script>
+
+<!-- Load Google Tag Manager / Global Site Tag -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  gtag(''js'', new Date());
+  gtag(''config'', ''G-XXXXXXXXXX'');
+</script>
+```
+
+### 2. User Consent Update Workflow
+
+When a user interacts with the UI consent banner and selects their choices, the application dispatches an update command:
+
+```javascript
+// Example: User grants analytics consent but denies ad consent
+gtag(''consent'', ''update'', {
+  ''ad_storage'': ''denied'',
+  ''analytics_storage'': ''granted'',
+  ''ad_user_data'': ''denied'',
+  ''ad_personalization'': ''denied''
+});
+```
+
+### 3. Event Execution Order
+
+To prevent race conditions, the platform enforces the following lifecycle steps:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Browser
+    participant Consent API
+    participant Google Tags
+    participant Servers
+    
+    Browser->>Consent API: Load page & execute default consent (denied)
+    Browser->>Google Tags: Load async tag script
+    Google Tags->>Consent API: Query current consent state
+    Google Tags->>Servers: Dispatch cookieless pings (state metadata only)
+    Browser->>Consent API: User clicks "Accept Analytics"
+    Consent API->>Google Tags: Dispatch update event (''analytics_storage'': ''granted'')
+    Google Tags->>Servers: Write analytics cookies & dispatch full session data
+```
+
+### 4. Technical Validation Checklist
+*   Verify that `gtag(''consent'', ''default'', ...)` is executed before the main tracking script tag loads.
+*   Confirm that the `wait_for_update` parameter is defined, allowing custom scripts up to 500ms to resolve initial consent state before firing tags.
+*   Ensure that no local storage items or cookies are created under domains when consent is in a `denied` state.
+
+</AgentOnly>
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
         'user-guide/ABRAM_Acceptable_Use_Policy',
         'Acceptable Use Policy',
         '',
@@ -4208,7 +4440,7 @@ You may not scrape, crawl, harvest, or extract data from the Platform using auto
 
 ### 3.2 No Circumventing Platform Fees
 
-You may not use information or contacts obtained through the Platform to engage a Contractor or Client outside the Platform for the purpose of avoiding ABRAM''s processing fees or the obligations set out in the Terms of Use. This applies regardless of whether the relationship was originally formed through the Platform''s matching tools, internal talent search, or any invitation flow.
+You may not deliberately move a relationship formed through the Platform off-Platform for the purpose of avoiding ABRAM''s processing fees, within 12 months of that relationship being formed or last engaged through the Platform. This rule exists to keep fees fair for everyone, not to prevent you from working together — if a Contractor and Client mutually decide to continue their relationship outside the Platform for reasons unrelated to fee avoidance, that is not a violation of this Policy.
 
 ### 3.3 No Misrepresentation
 
@@ -4405,10 +4637,11 @@ We share your data with the following categories of third parties. ABRAM has exe
 | Google/Microsoft | Calendar events, availability | Calendar sync |
 | Resend | Email address, email content | Transactional email delivery |
 | Anthropic, PBC | User inputs and context passed through AI features | AI inference for Platform features |
+| Google Analytics | Usage data, page views, device & browser metadata | Platform traffic measurement & analytics |
 
 Data shared with Anthropic, PBC is processed securely via their developer API. In accordance with Anthropic''s commercial terms, data sent via the API is not used to train or improve their models, is stored securely, and is deleted in accordance with their data retention policies.
 
-Sentry''s privacy policy is available at sentry.io/privacy. Anthropic''s privacy policy is available at anthropic.com/privacy. Stripe''s privacy policy is available at stripe.com/privacy.
+Sentry''s privacy policy is available at sentry.io/privacy. Anthropic''s privacy policy is available at anthropic.com/privacy. Stripe''s privacy policy is available at stripe.com/privacy. Adobe/Frame.io''s privacy policy is available at adobe.com/privacy. Slack''s privacy policy is available at slack.com/trust/privacy/policy. Use of these integrations is subject to the respective third parties'' privacy policies and terms of service, and we encourage you to review them before connecting your accounts.
 
 ### 5.2 Between Users
 
@@ -4426,15 +4659,15 @@ If ABRAM is acquired by or merged with another company, your data may be transfe
 
 ## 6. Cookies & Tracking
 
-We use a Consent Management Platform (CMP) to manage cookie preferences. Cookies are categorized as:
+We use Google Analytics to understand Platform usage and measure traffic. To manage cookie preferences in compliance with Google Consent Mode v2, we utilize a Consent Management Platform (CMP). Cookies are categorized as:
 
 - **Strictly Necessary Cookies:** Required for the Platform to function (authentication, session management, security). Cannot be disabled without preventing core functionality.
-- **Analytics & Performance Cookies:** Used to understand Platform usage. Require opt-in consent.
-- **Third-Party / Integration Cookies:** Set by integrated tools such as Sentry. Require opt-in consent.
+- **Analytics & Performance Cookies (including Google Analytics):** Used to measure and analyze Platform traffic and usage. Require opt-in consent.
+- **Third-Party / Integration Cookies (including Sentry):** Set by integrated tools such as telemetry and diagnostic providers. Require opt-in consent.
 
 We do not use advertising cookies or behavioral tracking cookies for marketing purposes.
 
-Upon your first visit, a cookie consent banner will be displayed. You may Accept All, Reject All, or manage preferences by category. Accept and Reject options are presented with equal visual prominence. No optional categories are pre-selected. You may update your preferences at any time through the Cookie Settings link in the Platform footer.
+Under our Google Consent Mode v2 configuration, all optional consent parameters (`ad_storage`, `ad_user_data`, `ad_personalization`, and `analytics_storage`) default to a ''denied'' state unless the user explicitly grants consent in the cookie banner. These optional categories are only activated if you choose to opt in. Upon your first visit, a cookie consent banner will be displayed. You may Accept All, Reject All, or manage and customize preferences by category. Accept and Reject options are presented with equal visual prominence, and no optional categories are pre-selected. Your consent preferences are saved in your browser''s local storage (`localStorage`) and can be updated or revoked at any time via the ''Cookie Settings'' button in the footer.
 
 ---
 
@@ -4581,7 +4814,7 @@ description: Terms of Use for the ABRAM creative intelligence platform.
 
 # Terms of Use
 
-**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
+**Effective Date:** June 19, 2026 | **Last Updated:** June 23, 2026
 Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
 
 ---
@@ -4660,7 +4893,7 @@ As a Client, you agree to:
 
 - Provide accurate and complete project briefs and requirements;
 - Honor payment obligations for completed work orders and invoices issued through the Platform;
-- Not engage Contractors discovered through ABRAM outside the Platform for the purpose of circumventing fees or agreements;
+- Not engage Contractors discovered through ABRAM outside the Platform for the purpose of circumventing fees or agreements, subject to the time limit and terms in Section 8.5;
 - Comply with all applicable employment, labor, and tax laws when engaging Contractors;
 - Ensure your organization''s use of the Platform complies with these Terms.
 
@@ -4791,6 +5024,10 @@ Contractors must connect a valid Stripe Connect account to receive payouts throu
 
 You are responsible for all applicable taxes arising from your use of the Platform and any transactions you enter into through it. ABRAM may collect and remit certain taxes where required by law.
 
+### 8.5 No Circumventing Platform Fees
+
+You may not deliberately move a relationship formed through the Platform off-Platform for the purpose of avoiding ABRAM''s processing fees, within 12 months of that relationship being formed or last engaged through the Platform. This rule exists to keep fees fair for everyone, not to prevent you from working together — if a Contractor and Client mutually decide to continue their relationship outside the Platform for reasons unrelated to fee avoidance, that is not a violation of this Policy.
+
 ---
 
 ## 9. Organization & Team Management
@@ -4817,6 +5054,10 @@ The Platform integrates with third-party services. When you connect a third-part
 - **Resend** (transactional email)
 
 Use of these services is subject to their respective Terms and Privacy Policies. ABRAM has executed Data Processing Agreements with each of these service providers where required by applicable law.
+
+### 10.1 Third-Party Trademarks & Affiliation Disclaimer
+
+All third-party trademarks, service marks, logos, brand names, and labor union names (including but not limited to SAG-AFTRA, Frame.io, Adobe, Slack, Salesforce, and others) are the property of their respective owners. The integration with, compliance tracking for, or mention of these services, unions, or rules does not imply any affiliation with, endorsement by, or sponsorship from their respective owners or organizations (such as Screen Actors Guild-American Federation of Television and Radio Artists for SAG-AFTRA, Adobe Inc. for Frame.io, or Slack Technologies, LLC / Salesforce, Inc. for Slack). These integrations and indicators are provided "as-is" and "as-available" without warranties of any kind. You acknowledge that we are not responsible for the performance, reliability, availability, or security of any third-party services, and your use of them is subject to their respective terms and policies.
 
 ---
 
@@ -4894,6 +5135,8 @@ Nothing in this Section limits ABRAM''s liability for: (i) fraud or fraudulent m
 ### 15.1 Union & Guild Compliance
 
 The Platform is used by professionals covered by union or guild agreements (e.g., SAG-AFTRA, IATSE, DGA, WGA, Teamsters). It is your sole responsibility to ensure that engagements made through the Platform comply with applicable union, guild, or collective bargaining agreements. ABRAM does not manage, verify, or guarantee union compliance for any project or engagement.
+
+Without limiting the generality of the foregoing, any feature, setting, label, tag, badge, status, toggle, or visual indicator within the Platform designated or described as "SAG-AFTRA compliant" (or referring to compliance with any other union, guild, or regulatory standard) is provided solely for informational and user-organizational purposes. Such indicators represent a user-configured or system-suggested status flag based on user inputs and generic settings, and do NOT constitute legal verification, certification, or a guarantee of compliance with SAG-AFTRA or other union rules, rates, or agreements. You agree that you will not rely solely on any such indicator, and you assume all liability for verifying actual compliance with applicable guild or union rules. ABRAM shall have no liability whatsoever for any reliance on, or errors, omissions, or inaccuracies in, any such compliance indicators, flags, or features.
 
 ### 15.2 Production Permits & Insurance
 
@@ -4973,53 +5216,53 @@ This guide is structured around active workflows in the **Management Phase** of 
 
 * **[0.0 User & AI Assistant Navigation Guide](./0.0-agent-and-human-navigation-guide.md)**: Introduction to reading these guides as a human user or parsing them as an AI agent/chatbot.
 * **[0.1 Glossary & Acronym Reference](./0.1-glossary-and-acronyms.md)**: Quick definitions of industry terms, payment jargon, and technical integration acronyms.
-* **[0.2 Order of Operations Guide](./0.2-order-of-operations.md)**: Chronological step-by-step workflow tracing a project from intake to final freelancer payouts.
+* **[0.2 Order of Operations Guide](./0.2-order-of-operations.mdx)**: Chronological step-by-step workflow tracing a project from intake to final freelancer payouts.
 * **[0.3 AI Capabilities & Platform Co-pilot](./0.3-ai-capabilities-and-copilot.md)**: Details of ABRAM''s AI features, including Brief Intelligence, Crew suggestions, the AI Resume Importer, and the Chatbot Co-pilot.
-* **[0.4 Production Brain & Workspace Memory](./0.4-production-brain-and-workspace-memory.md)**: Overview of the organization''s central knowledge engine, dynamic memory benefits, search queries, and permission security rules.
-
+* **[0.4 Production Brain & Workspace Memory](./0.4-production-brain-and-workspace-memory.mdx)**: Overview of the organization''s central knowledge engine, dynamic memory benefits, search queries, and permission security rules.
+ 
 ### 🚪 [Section 1: Getting Started, Organizations & Team Setup](./1.1-signing-in-and-onboarding.md)
 Learn how to create your account, configure organization settings, and manage your team roster.
 * **[1.1 Signing In and Onboarding](./1.1-signing-in-and-onboarding.md)**: Authenticating, completing the onboarding wizard, and selecting workspace roles.
 * **[1.2 Setting Up Your Profile](./1.2-setting-up-your-profile.md)**: Completing bio details, skill lists, rates, and setting profile visibility.
 * **[1.3 Organization Setup & Custom Forms](./1.3-organization-setup-and-custom-forms.md)**: Upgrading to an organization, managing workspace settings, and building custom producer intake forms.
 * **[1.4 Team Management & Permissions](./1.4-team-management-and-permissions.md)**: Managing team roles (Owner, Admin, Member), setting team capacity, and configuring permissions.
-
+ 
 ---
-
+ 
 ### 📝 [Section 2: Project Intake & Scoping](./2.1-ai-brief-analyzer.md)
 Discover how to initiate and configure projects using AI brief analysis or manual builders.
 * **[2.1 AI Brief Analyzer (Brief Intelligence)](./2.1-ai-brief-analyzer.md)**: Initializing projects from text/documents, managing the AI confidence gate, and reviewing extracted parameters.
 * **[2.2 Manual Project Creation](./2.2-manual-project-creation.md)**: Using the manual setup wizard, selecting project archetypes, and managing budget splits.
 * **[2.3 Custom Intake Forms](./2.3-custom-intake-forms.md)**: Designing request forms, configuring public request links, and managing producer submission pipelines.
-
+ 
 ---
-
-### 🎛️ [Section 3: Master Project Detail, Work Packages & Work Orders](./3.1-master-project-detail-overview.md)
+ 
+### 🎛️ [Section 3: Master Project Detail, Work Packages & Work Orders](./3.1-master-project-detail-overview.mdx)
 Understand how to manage active projects, deliverables, checklists, and freelancer agreements.
-* **[3.1 Master Project Detail Overview](./3.1-master-project-detail-overview.md)**: Navigating the central command center, the Compact Header, and URL parameter synchronization.
-* **[3.2 Work Packages & Milestones](./3.2-work-packages-and-milestones.md)**: Creating work packages, setting scopes, and defining milestone-based payment schedules.
-* **[3.3 Work Orders & Agreements](./3.3-work-orders-and-agreements.md)**: Generating work orders for freelancers and equipment, configuring rates, and managing invitation holds.
+* **[3.1 Master Project Detail Overview](./3.1-master-project-detail-overview.mdx)**: Navigating the central command center, the Compact Header, and URL parameter synchronization.
+* **[3.2 Work Packages & Milestones](./3.2-work-packages-and-milestones.mdx)**: Creating work packages, setting scopes, and defining milestone-based payment schedules.
+* **[3.3 Work Orders & Agreements](./3.3-work-orders-and-agreements.mdx)**: Generating work orders for freelancers and equipment, configuring rates, and managing invitation holds.
 * **[3.4 Task Lists & Tracking](./3.4-task-lists-and-tracking.md)**: Creating checklists, assigning tasks, and tracking automated progress calculations.
 * **[3.5 Equipment & Resource Management](./3.5-equipment-and-resource-management.mdx)**: Inventory tracking, kit building, calendar scheduling, storage locations, and bulk importing.
-
+ 
 ---
-
+ 
 ### 📅 [Section 4: Crewing, Matchmaking & Utilization Scheduling](./4.1-internal-talent-search.md)
 Learn how to find talent, receive AI recommendations, and schedule freelancer calendars.
 * **[4.1 Internal Talent Search](./4.1-internal-talent-search.md)**: Searching and filtering the internal team roster by skill, availability, and rating.
-* **[4.2 AI Matchmaking Suggestions](./4.2-ai-matchmaking-suggestions.md)**: Utilizing AI suggestions to find freelancers based on role suitability and budget.
-* **[4.3 Inviting & Crew RSVP](./4.3-inviting-and-crew-rsvp.md)**: Managing direct project invites, sending chatbot invitations, and tracking freelancer RSVPs.
+* **[4.2 AI Matchmaking Suggestions](./4.2-ai-matchmaking-suggestions.mdx)**: Utilizing AI suggestions to find freelancers based on role suitability and budget.
+* **[4.3 Inviting & Crew RSVP](./4.3-inviting-and-crew-rsvp.mdx)**: Managing direct project invites, sending chatbot invitations, and tracking freelancer RSVPs.
 * **[4.4 Managing Your Utilization Calendar](./4.4-managing-your-utilization-calendar.md)**: Freelancer utilization views, managing blockouts, and setting scheduling holds.
 * **[4.5 Syncing External Calendars](./4.5-syncing-external-calendars.md)**: Integrating Google Calendar and Microsoft Outlook for real-time availability updates.
 * **[4.6 Team Management Dashboard](./4.6-team-management-dashboard.md)**: Workspace utilization overview, scheduling calendar, capacity planning tool, conflict detection panel, team templates, and hours verification roster.
-
+ 
 ---
-
+ 
 ### 💳 [Section 5: Payments, Billing & Financials](./5.1-freelancer-stripe-setup.md)
 Manage your payment methods, producer checkout sessions, billing, and AI credits.
 * **[5.1 Freelancer Stripe Express Setup](./5.1-freelancer-stripe-setup.md)**: Step-by-step Stripe Express onboarding, bank setup, and verification troubleshooting.
-* **[5.2 Invoicing & Payouts](./5.2-invoicing-and-payouts.md)**: Building PDF invoices, submitting invoices for approval, and tracking Stripe checkout payout flows.
-* **[5.3 Billing Ledger & AI Credits](./5.3-billing-ledger-and-ai-credits.md)**: Monitoring the organization''s credit balance, consuming credits for AI tasks, and ledger transactions.
+* **[5.2 Invoicing & Payouts](./5.2-invoicing-and-payouts.mdx)**: Building PDF invoices, submitting invoices for approval, and tracking Stripe checkout payout flows.
+* **[5.3 Billing Ledger & AI Credits](./5.3-billing-ledger-and-ai-credits.mdx)**: Monitoring the organization''s credit balance, consuming credits for AI tasks, and ledger transactions.
 * **[5.4 Billing & Payments](./5.4-billing-and-payments.md)**: Configuring payment cards, ACH transfers, and managing automated re-authorizations for Stripe holds.
 
 ---
@@ -5371,6 +5614,19 @@ ABRAM offers plans tailored to solo creators, production teams, and studios:
 | **Enterprise** | Custom | Custom | Unlimited | Custom | Custom | Corporate directory sync, SSO, dedicated support |
 
 *Note: Team and Studio plans require a minimum of 2 and 6 seats respectively.*
+
+### Advanced Scheduling & Budgeting Gating
+
+To provide basic trial access to freelancers and solo creators on lower tiers, advanced scheduling and budgeting features are gated by plan level:
+
+| Tier | Scheduling Access | Budgeting Access |
+| :--- | :--- | :--- |
+| **Free** | **Read-Only**: Can view the stripboard / calendar, but editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create/edit up to **5 budget line items** and **5 expenses**. Editing/adding beyond that is locked. |
+| **Solo Lite** | **Read-Only**: Can view the stripboard / calendar, but editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create/edit up to **5 budget line items** and **5 expenses**. Editing/adding beyond that is locked. |
+| **Solo Pro** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Team** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Studio** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Enterprise** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
 
 ---
 

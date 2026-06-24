@@ -1,5 +1,148 @@
 INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
+        'user-guide/4.3-inviting-and-crew-rsvp',
+        'Inviting Freelancers and Managing Crew RSVPs',
+        'Inviting & Crew RSVP',
+        'Compare ABRAM invitation flows for internal and external freelancers, the AI Chatbot intake path, and the RSVP interface crew use to accept or decline.',
+        '{"ABRAM","ABRAM Network","freelancer","producer","calendar","ai","work package","workflow","crew","onboarding","copilot","matchmaking","rsvp","inviting"}'::text[],
+        '---
+title: ''Inviting Freelancers and Managing Crew RSVPs''
+sidebarTitle: Inviting & Crew RSVP
+description: >-
+  Compare ABRAM invitation flows for internal and external freelancers, the AI
+  Chatbot intake path, and the RSVP interface crew use to accept or decline.
+keywords:
+  - ABRAM
+  - ABRAM Network
+  - freelancer
+  - producer
+  - calendar
+  - ai
+  - work package
+  - workflow
+  - crew
+  - onboarding
+  - copilot
+  - matchmaking
+  - rsvp
+  - inviting
+---
+# Section 4.3: Inviting & Crew RSVP
+
+ABRAM provides flexible invitation workflows designed to bring freelancers onto projects quickly. This section outlines the different invitation flows, how the AI Chatbot handles external invites, and the RSVP interface freelancers use to respond.
+
+---
+
+## 1. Direct Project & Matchmaking Invites
+
+Within the producer platform, there are two primary methods to invite existing roster members to projects:
+
+### Direct Project Invites
+1. Open the project and navigate to the **Crew** or **Team** tab.
+2. Click **Invite Crew Member**.
+3. Choose a contact from your Crew Roster, specify their role slot and proposed rate, and send the invitation.
+
+### AI Matchmaking Invites
+1. Under the **Project Matching** dashboard, select the checkboxes next to the AI-recommended candidates.
+2. Click **Invite All Selected** to dispatch invitations in bulk, or click **Invite Candidate** next to individual listings.
+
+---
+
+## 2. External Invites via Chatbot
+
+In the current **Management Phase**, the chatbot is the primary mechanism for finding and onboarding external talent who are not yet on the platform.
+
+<ProgressFlow steps={[
+  { title: "1. Producer Chat", description: "Producers prompt the copilot to locate external talent.", icon: "MessageSquare", status: "completed" },
+  { title: "2. Web Search", description: "AI queries external websites, portfolios, and catalogs.", icon: "Search", status: "completed" },
+  { title: "3. Draft Invite", description: "AI extracts contacts and prepares custom invitations.", icon: "FilePlus", status: "completed" },
+  { title: "4. Action Plan", description: "Producer reviews a structured hold and invitation plan.", icon: "FileCheck", status: "active" },
+  { title: "5. Sent", description: "Emails dispatched securely following final approval.", icon: "Send", status: "pending" }
+]} />
+
+### The Chatbot Workflow
+1. **User Prompt**: You ask the chatbot, *"Find food photographers in Chicago and invite them to Project X."*
+2. **Search**: The chatbot uses its web search tool to find agencies, studios, or freelancers.
+3. **Drafting Invites**: Once the chatbot collects the contact details, it drafts the invitation.
+4. **Action Plan**: The chatbot compiles a structured **Action Plan** detailing who is being invited, their target roles, rates, and projects.
+5. **Approval**: You must click **Approve** in the chat panel. The system *never* sends emails automatically without your confirmation.
+6. **Execution**: The platform sends a secure, personalized email invitation to the recipient.
+
+### Rules & Gating Logic
+* **Required Data**: An email, first name, and last name are mandatory.
+* **Rate Limits**: Users are limited to **10 external invitations per day** to prevent spam.
+* **Duplicate Detection**: The tool checks for pending project or platform invitations to the same email and blocks duplicate requests.
+* **Existing User Check**: If the email is already associated with an account on ABRAM, the chatbot will suggest using the standard internal project invitation process.
+
+### Invitational Paths
+Depending on your requirements, invitations take one of two paths:
+* **Project Invite**: Links the invite to a project, creating a secure invitation link and triggering a project invite email.
+* **Platform Invite**: Sends a general network invite to join the platform.
+
+---
+
+## 3. Freelancer RSVP Screen
+
+When an external freelancer receives an invitation email and clicks the secure link, they are directed to the secure **Public RSVP Screen**.
+
+This is a clean, responsive web interface that does not require logging in to view:
+* **Host Info**: Displays the name of the organizer and organization inviting them.
+* **Project Details**: Includes the project title, dates, hours, daily/hourly rates, location details, and any custom notes from the producer.
+* **Response Options**: The freelancer can click:
+  * **Accept**: Confirms they will take the project slot.
+  * **Decline**: Declines the offer.
+  * **Tentative**: Flags that they are interested but need clarification.
+
+### Automated Capacity Sync on Acceptance
+When a freelancer accepts the invite:
+1. An account is created/linked (if external).
+2. The role slot is marked as **Filled**.
+3. A booking is automatically written to the freelancer''s schedule as project work, matching the slot''s date range and hours.
+4. The booking registers as a **planned capacity hold banner** on their utilization calendar, blocking out those hours from their availability pool.
+
+---
+
+## 4. Crew Assembly & Re-staffing (Producer)
+
+The **Crew Assembly** interface (accessible directly from your project''s crew settings) is the management center for assembling your crew for a specific work package, monitoring RSVP statuses, and resolving declines.
+
+* **Crew Builder**: The builder allows you to assign specific team members or approved roster freelancers to unfilled role slots required by the work package.
+* **Acceptance Status Tracking**: Displays a list of all invited crew members with color-coded status badges:
+  * **Accepted (Green)**: Crew member has accepted the invite.
+  * **Pending (Amber)**: Invitation is sent, awaiting response.
+  * **Declined (Red)**: Crew member has declined the assignment.
+* **Replacement Finder**: If a crew member declines or a role slot remains unfilled, click **Find Replacement**. The replacement finder scans your roster and recommends alternative candidates matching the role''s required skills and budget, allowing you to dispatch a new invite instantly.
+
+---
+
+## 5. Freelancer Proposal Inbox (Freelancer Companies)
+
+For freelancers operating as **Production Companies**, project invitations do not just receive a simple RSVP button; they require scoping and formal bids.
+
+### Reviewing Invites
+* Navigate to the **Proposals** tab in the freelancer sidebar.
+* The **Proposal Inbox** lists all incoming project invitations, displaying the producer name, project details, required roles, skills, and budget.
+
+### Proposal Builder
+* Click on any invitation to open the **Proposal Builder**.
+* Build a structured proposal defining:
+  * **Personnel slots**: Assign specific staff from your internal team to the requested roles.
+  * **Equipment packages**: Add resource kits required for the shoot.
+  * **Proposed rates**: Specify hourly/daily rates for personnel and gear.
+* Submit the proposal. The producer is notified and can review, negotiate, or approve your proposal to finalize the project contract.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
         'user-guide/4.4-managing-your-utilization-calendar',
         'Managing Your Freelancer Utilization Calendar',
         'Managing Your Utilization Calendar',
@@ -810,7 +953,27 @@ If a network disconnect or timeout occurs during an analysis, the platform ensur
 
 ---
 
-## 6. Upgrading Plans and Buying Credits
+## 6. Budgeting & Scheduling Feature Gating
+
+To provide flexibility while encouraging tier upgrades, ABRAM gates advanced scheduling and budgeting features based on subscription level. This allows users on Free and Solo Lite tiers to test budgeting capabilities prior to upgrading.
+
+| Tier | Scheduling Access | Budgeting Access |
+| :--- | :--- | :--- |
+| **Free** | **Read-Only**: Can view the stripboard and calendar. Editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create and edit up to **5 budget line items** and **5 expenses**. Saving or adding items beyond that limit is locked. |
+| **Solo Lite** | **Read-Only**: Can view the stripboard and calendar. Editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create and edit up to **5 budget line items** and **5 expenses**. Saving or adding items beyond that limit is locked. |
+| **Solo Pro** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Team** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Studio** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Enterprise** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
+
+### Gating Indicators & Upgrade Paths
+* **Locked Controls**: In read-only scheduling mode, action buttons (such as "Add Production Day", "Sync Crew to Schedule", and "AI Sort Board") render as locked, and drag-and-drop interactions are disabled.
+* **Trial Restrictions**: When the limit of 5 budget line items or 5 expenses is reached on Free or Solo Lite plans, the system blocks the insertion of new items and displays a notification inviting the user to upgrade.
+* **Banners**: Persistent upgrade prompts are displayed at the top of the scheduling stripboard and financial overview frames for users on trial or restricted tiers, pointing to subscription settings for self-service upgrading.
+
+---
+
+## 7. Upgrading Plans and Buying Credits
 
 Owners and Admins can purchase additional credits or upgrade plan tiers in **Settings** -> **Billing**:
 
@@ -1198,100 +1361,6 @@ In addition to individual deliverable comments, each project features a unified 
   * Project team changes (adding or removing crew members).
   * System updates.
 This creates a single, complete timeline of both human conversations and automated project events.
-'
-      ) ON CONFLICT (slug) DO UPDATE SET
-        title = EXCLUDED.title,
-        sidebar_title = EXCLUDED.sidebar_title,
-        description = EXCLUDED.description,
-        keywords = EXCLUDED.keywords,
-        content = EXCLUDED.content,
-        updated_at = now();
-    
-
-      
-INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
-      VALUES (
-        'user-guide/6.4-resend-email-integration',
-        'Section 6.4: Resend Email Integration',
-        'Resend Email Integration',
-        'Sync subscribers, manage audiences, and broadcast newsletter updates directly from the CMS admin dashboard.',
-        '{"ABRAM","Email Newsletter","Resend","Sync Contacts","Broadcast Campaign"}'::text[],
-        '---
-title: "Section 6.4: Resend Email Integration"
-sidebarTitle: "Resend Email Integration"
-description: "Sync subscribers, manage audiences, and broadcast newsletter updates directly from the CMS admin dashboard."
-keywords:
-  - ABRAM
-  - Email Newsletter
-  - Resend
-  - Sync Contacts
-  - Broadcast Campaign
----
-
-# Resend Email Integration
-
-The platform includes a built-in integration with the email delivery service to help you manage mailing lists and broadcast announcements directly from your administration dashboard.
-
-## Overview of Features
-
-The email integration streamlines marketing and release communications:
-- **Automatic Subscriber Collection**: Collects public newsletter signups and synchronizes them with your central contact directory.
-- **Manual Contact Additions**: Admins can manually register subscribers from the administration interface.
-- **Automated Broadcasts**: Trigger email newsletter notifications to your general segment whenever a new article or release note is marked as Published.
-- **Delivery Status & Safety**: Monitors email delivery status and handles bounces to preserve your domain’s sending reputation.
-
----
-
-## Managing Subscribers
-
-Subscriber management is centralized to keep your mailing list accurate:
-
-### 1. Public Signup Form
-Visitors can subscribe to your updates by submitting their email address and name through the public newsletter form on the site.
-
-### 2. Manual Administration Entries
-If you need to add a contact manually:
-1. Navigate to the **Administration Dashboard**.
-2. Select the **Subscribers** view.
-3. Click **Add Subscriber**, enter the contact’s email address, and save.
-
----
-
-## Broadcasting Newsletter Campaigns
-
-When publishing content, you can easily notify your audience:
-
-### Blog Post Announcements
-Publishing a new article triggers a clean, editorial email to all active contacts. The email layout showcases the title, the summary, and a direct link to read the full post.
-
-### Release Note Changelogs
-Publishing release notes automatically triggers a formatted changelog broadcast containing the version number, update list, and links to the documentation center.
-
----
-
-<AgentOnly>
-
-## 🤖 Agent Operations, Technical Architecture, and API Keys
-
-This section provides technical specs, database mapping, and integration details for LLM web-crawlers and agents.
-
-### API Key Security Configuration
-The service requires the `RESEND_API_KEY` configuration. To safeguard this key:
-- It is stored server-side only in `.env.local` as `RESEND_API_KEY` and is never exposed to client-side bundles (no `NEXT_PUBLIC_` prefix).
-- A safe client retrieval function `getResendClient` in [resend.ts](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/utils/resend.ts) ensures that missing credentials do not crash page rendering or static builds.
-
-### Database Tables Schema
-The system maps tracking logs and subscriber profiles using the following relational tables in the platform:
-- `public.subscribers`: Stores subscriber profiles, status values (`subscribed`, `unsubscribed`, `bounced`), and references the ID from the email service.
-- `public.campaigns`: Logs campaign status (`draft`, `sending`, `sent`, `failed`) and stores campaign statistics.
-- `public.campaign_logs`: Logs transactional events (`email.delivered`, `email.bounced`, `email.opened`, `email.clicked`) returned via webhook callbacks.
-
-### Resend Webhook Callbacks
-Webhook notifications are routed to `/api/webhooks/resend`. This endpoint parses events:
-- **Bounce/Complaint**: Catches `email.bounced` and updates the contact''s database status to `bounced` to preserve domain reputation.
-- **Success/Delivery**: Tracks deliveries and opens to measure campaign performance.
-
-</AgentOnly>
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,

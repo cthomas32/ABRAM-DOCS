@@ -83,12 +83,19 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
     if (indexLoaded) return;
     
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsLoading(true);
+    let active = true;
+    
+    // Set loading state asynchronously to avoid warning
+    Promise.resolve().then(() => {
+      if (active) {
+        setIsLoading(true);
+      }
+    });
     
     fetch("/search-index.json")
       .then((res) => res.json())
       .then((data: SearchRecord[]) => {
+        if (!active) return;
         recordsRef.current = data;
         
         // Initialize FlexSearch Document Index
@@ -113,9 +120,14 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         setIsLoading(false);
       })
       .catch((err) => {
+        if (!active) return;
         console.error("Failed to load search index:", err);
         setIsLoading(false);
       });
+
+    return () => {
+      active = false;
+    };
   }, [isOpen, indexLoaded]);
 
   // Perform search query

@@ -119,6 +119,198 @@ This guide compiles answers to the most common questions and provides step-by-st
       
 INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
+        'user-guide/7.2-cookie-consent-and-tag-behavior',
+        'Section 7.2: Cookie Consent and Tag Behavior',
+        'Cookie Consent & Tag Behavior',
+        'A clear explanation of cookie settings, Google Consent Mode v2, and cookieless pings on the ABRAM platform.',
+        '{"ABRAM","cookie consent","consent mode","cookieless pings","ad_storage","analytics_storage","privacy"}'::text[],
+        '---
+title: ''Section 7.2: Cookie Consent and Tag Behavior''
+sidebarTitle: Cookie Consent & Tag Behavior
+description: A clear explanation of cookie settings, Google Consent Mode v2, and cookieless pings on the ABRAM platform.
+keywords:
+  - ABRAM
+  - cookie consent
+  - consent mode
+  - cookieless pings
+  - ad_storage
+  - analytics_storage
+  - privacy
+---
+
+# Section 7.2: Cookie Consent and Tag Behavior
+
+This article outlines how the ABRAM platform handles cookie consent, manages user preferences, integrates Google Consent Mode v2, and utilizes cookieless pings to balance accurate analytics with user privacy compliance.
+
+---
+
+## 1. Consent State and Tag Behavior
+
+The platform utilizes a dynamic consent framework that respects user privacy preferences by adjusting the behavior of measurement tags in real time. Rather than blocking tags from loading entirely, the platform loads tags in all cases and manages their capabilities via two primary consent states:
+
+*   **`ad_storage`**: Controls the storage (such as cookies) related to advertising.
+*   **`analytics_storage`**: Controls the storage (such as cookies) related to analytics and site usage.
+
+Depending on the consent state, tag behavior adjusts as follows:
+
+| Consent Parameter | State | Tag Behavior & Data Collection |
+| :--- | :--- | :--- |
+| **`ad_storage`** | `granted` | Advertising cookies are read and written. Full conversion tracking, audience building, and remarketing capabilities are enabled. |
+| | `denied` | Advertising cookies are blocked. Tags do not read or write advertising-related cookies. Instead, cookieless pings are sent to report basic ad performance and conversion metrics. |
+| **`analytics_storage`** | `granted` | Analytics cookies are read and written. Full session tracking, page-view journeys, and user behavior analytics are recorded. |
+| | `denied` | Analytics cookies are blocked. Tags do not read or write analytics cookies. The system sends cookieless pings containing basic operational parameters. |
+
+---
+
+## 2. Ad Storage Denied: Redaction vs. Redaction Disabled
+
+When a user denies consent for advertising cookies (`ad_storage=''denied''`), the platform can handle data transmission in two distinct modes depending on compliance settings:
+
+### Redaction Disabled (`ads_data_redaction=''false''`)
+When ad data redaction is disabled and `ad_storage` is `denied`:
+*   The system blocks the creation and reading of advertising cookies.
+*   The tag continues to send cookieless pings to measure conversions.
+*   Ad click identifiers (such as query parameters in URLs) are still sent to help attribute the click event to a campaign.
+
+### Redaction Enabled (`ads_data_redaction=''true''`)
+When ad data redaction is enabled and `ad_storage` is `denied`:
+*   The system blocks all advertising cookies.
+*   All ad click identifiers (such as ad-click query parameters) are stripped or redacted from the URL and payload before sending.
+*   The cookieless pings sent to the server contain no identifiers that could link the interaction to a specific ad click, ensuring maximum privacy compliance under strict regional laws.
+
+---
+
+## 3. Cookieless Pings and Data Collection
+
+Cookieless pings are secure, stateless network requests sent to measurement servers when a user has denied cookie consent. They do not store, access, or read any cookies or local identifiers on the user''s browser, preventing the creation of a persistent profile.
+
+These pings carry essential, coarse-level metadata to ensure basic reporting remains functional:
+
+*   **Functional Information**: User agent (browser type, OS version, device type) and screen resolution.
+*   **Timestamp**: The exact time of the event.
+*   **Coarse Location Info**: Regional/country data derived from the user''s IP address (the IP address itself is processed in memory and discarded; it is never written to disk or stored).
+*   **Referrer**: The page URL that led the user to the current page.
+*   **Random Page-Navigation ID**: A temporary, random ID generated for each page view. This links events occurring within the same page load (e.g., a page view and a button click) but cannot track the user across different pages or sessions.
+*   **Consent State**: Verification metadata detailing that consent was explicitly denied.
+
+---
+
+## 4. Regional Defaults and Measurement Strategy
+
+To preserve analytical integrity without violating privacy regulations, the platform dynamically configures consent defaults based on the visitor’s geographic region:
+
+*   **Strict Opt-In Regions (EEA, UK, Switzerland)**: By default, `ad_storage` and `analytics_storage` are set to `denied` before any tag executes. Tags only activate fully when the user explicitly grants permission through the consent banner.
+*   **Opt-Out Regions (Rest of the World)**: By default, `ad_storage` and `analytics_storage` are set to `granted`. Users can opt out or modify their preferences at any time via their cookie settings.
+
+> [!NOTE]
+> Setting defaults dynamically by region allows the platform to maintain compliant tracking workflows globally without sacrificing measurement accuracy in regions with opt-out regulations.
+
+---
+
+## 5. Implementation Best Practices
+
+To ensure correct consent management across your workspace pages, adhere to the following best practices:
+
+1.  **Load Tags in All Cases**: Do not use conditional logic to prevent tag scripts from loading. Instead, load the tag scripts on all page views. The tags themselves will read the consent state and dynamically adjust their behavior.
+2.  **Define Defaults Early**: Set default consent states (such as `denied` for EEA visitors) at the very top of the page header, before any Google Analytics or advertising scripts are parsed or loaded.
+3.  **Update State Instantly**: When a user selects their preferences in the consent banner, update the consent state immediately using the update API. Tags will immediately adjust and process any queued events according to the new consent values.
+4.  **Understand Advanced vs. Basic Consent**:
+    *   **Advanced Consent (Recommended)**: Loads scripts immediately with `denied` defaults. When users deny consent, tags adapt to send cookieless pings, enabling conversion modeling and basic metrics.
+    *   **Basic Consent**: Blocks tag scripts from loading until the user explicitly clicks "Accept". This prevents any data transmission, including cookieless pings, resulting in a complete loss of measurement for non-consenting users.
+
+---
+
+<AgentOnly>
+
+## 🤖 Agent Operations & System Rules
+
+This technical section defines the programmatic script configuration, initialization sequences, and consent state updates for LLM-based crawlers and automated verification systems.
+
+### 1. Default Script Configuration (Gtag.js Syntax)
+
+The platform implements Google Consent Mode v2 via the following script sequence in the document `<head>`:
+
+```html
+<!-- Initialize the data layer -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+
+  // 1. Set default consent state (e.g., for EEA/UK regions)
+  gtag(''consent'', ''default'', {
+    ''ad_storage'': ''denied'',
+    ''analytics_storage'': ''denied'',
+    ''ad_user_data'': ''denied'',
+    ''ad_personalization'': ''denied'',
+    ''wait_for_update'': 500
+  });
+  
+  // 2. Set ads data redaction behavior
+  gtag(''set'', ''ads_data_redaction'', true);
+</script>
+
+<!-- Load Google Tag Manager / Global Site Tag -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  gtag(''js'', new Date());
+  gtag(''config'', ''G-XXXXXXXXXX'');
+</script>
+```
+
+### 2. User Consent Update Workflow
+
+When a user interacts with the UI consent banner and selects their choices, the application dispatches an update command:
+
+```javascript
+// Example: User grants analytics consent but denies ad consent
+gtag(''consent'', ''update'', {
+  ''ad_storage'': ''denied'',
+  ''analytics_storage'': ''granted'',
+  ''ad_user_data'': ''denied'',
+  ''ad_personalization'': ''denied''
+});
+```
+
+### 3. Event Execution Order
+
+To prevent race conditions, the platform enforces the following lifecycle steps:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Browser
+    participant Consent API
+    participant Google Tags
+    participant Servers
+    
+    Browser->>Consent API: Load page & execute default consent (denied)
+    Browser->>Google Tags: Load async tag script
+    Google Tags->>Consent API: Query current consent state
+    Google Tags->>Servers: Dispatch cookieless pings (state metadata only)
+    Browser->>Consent API: User clicks "Accept Analytics"
+    Consent API->>Google Tags: Dispatch update event (''analytics_storage'': ''granted'')
+    Google Tags->>Servers: Write analytics cookies & dispatch full session data
+```
+
+### 4. Technical Validation Checklist
+*   Verify that `gtag(''consent'', ''default'', ...)` is executed before the main tracking script tag loads.
+*   Confirm that the `wait_for_update` parameter is defined, allowing custom scripts up to 500ms to resolve initial consent state before firing tags.
+*   Ensure that no local storage items or cookies are created under domains when consent is in a `denied` state.
+
+</AgentOnly>
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
         'user-guide/ABRAM_Acceptable_Use_Policy',
         'Acceptable Use Policy',
         '',
@@ -160,7 +352,7 @@ You may not scrape, crawl, harvest, or extract data from the Platform using auto
 
 ### 3.2 No Circumventing Platform Fees
 
-You may not use information or contacts obtained through the Platform to engage a Contractor or Client outside the Platform for the purpose of avoiding ABRAM''s processing fees or the obligations set out in the Terms of Use. This applies regardless of whether the relationship was originally formed through the Platform''s matching tools, internal talent search, or any invitation flow.
+You may not deliberately move a relationship formed through the Platform off-Platform for the purpose of avoiding ABRAM''s processing fees, within 12 months of that relationship being formed or last engaged through the Platform. This rule exists to keep fees fair for everyone, not to prevent you from working together — if a Contractor and Client mutually decide to continue their relationship outside the Platform for reasons unrelated to fee avoidance, that is not a violation of this Policy.
 
 ### 3.3 No Misrepresentation
 
@@ -358,10 +550,11 @@ We share your data with the following categories of third parties. ABRAM has exe
 | Google/Microsoft | Calendar events, availability | Calendar sync |
 | Resend | Email address, email content | Transactional email delivery |
 | Anthropic, PBC | User inputs and context passed through AI features | AI inference for Platform features |
+| Google Analytics | Usage data, page views, device & browser metadata | Platform traffic measurement & analytics |
 
 Data shared with Anthropic, PBC is processed securely via their developer API. In accordance with Anthropic''s commercial terms, data sent via the API is not used to train or improve their models, is stored securely, and is deleted in accordance with their data retention policies.
 
-Sentry''s privacy policy is available at sentry.io/privacy. Anthropic''s privacy policy is available at anthropic.com/privacy. Stripe''s privacy policy is available at stripe.com/privacy.
+Sentry''s privacy policy is available at sentry.io/privacy. Anthropic''s privacy policy is available at anthropic.com/privacy. Stripe''s privacy policy is available at stripe.com/privacy. Adobe/Frame.io''s privacy policy is available at adobe.com/privacy. Slack''s privacy policy is available at slack.com/trust/privacy/policy. Use of these integrations is subject to the respective third parties'' privacy policies and terms of service, and we encourage you to review them before connecting your accounts.
 
 ### 5.2 Between Users
 
@@ -379,15 +572,15 @@ If ABRAM is acquired by or merged with another company, your data may be transfe
 
 ## 6. Cookies & Tracking
 
-We use a Consent Management Platform (CMP) to manage cookie preferences. Cookies are categorized as:
+We use Google Analytics to understand Platform usage and measure traffic. To manage cookie preferences in compliance with Google Consent Mode v2, we utilize a Consent Management Platform (CMP). Cookies are categorized as:
 
 - **Strictly Necessary Cookies:** Required for the Platform to function (authentication, session management, security). Cannot be disabled without preventing core functionality.
-- **Analytics & Performance Cookies:** Used to understand Platform usage. Require opt-in consent.
-- **Third-Party / Integration Cookies:** Set by integrated tools such as Sentry. Require opt-in consent.
+- **Analytics & Performance Cookies (including Google Analytics):** Used to measure and analyze Platform traffic and usage. Require opt-in consent.
+- **Third-Party / Integration Cookies (including Sentry):** Set by integrated tools such as telemetry and diagnostic providers. Require opt-in consent.
 
 We do not use advertising cookies or behavioral tracking cookies for marketing purposes.
 
-Upon your first visit, a cookie consent banner will be displayed. You may Accept All, Reject All, or manage preferences by category. Accept and Reject options are presented with equal visual prominence. No optional categories are pre-selected. You may update your preferences at any time through the Cookie Settings link in the Platform footer.
+Under our Google Consent Mode v2 configuration, all optional consent parameters (`ad_storage`, `ad_user_data`, `ad_personalization`, and `analytics_storage`) default to a ''denied'' state unless the user explicitly grants consent in the cookie banner. These optional categories are only activated if you choose to opt in. Upon your first visit, a cookie consent banner will be displayed. You may Accept All, Reject All, or manage and customize preferences by category. Accept and Reject options are presented with equal visual prominence, and no optional categories are pre-selected. Your consent preferences are saved in your browser''s local storage (`localStorage`) and can be updated or revoked at any time via the ''Cookie Settings'' button in the footer.
 
 ---
 
@@ -535,7 +728,7 @@ description: Terms of Use for the ABRAM creative intelligence platform.
 
 # Terms of Use
 
-**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
+**Effective Date:** June 19, 2026 | **Last Updated:** June 23, 2026
 Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
 
 ---
@@ -614,7 +807,7 @@ As a Client, you agree to:
 
 - Provide accurate and complete project briefs and requirements;
 - Honor payment obligations for completed work orders and invoices issued through the Platform;
-- Not engage Contractors discovered through ABRAM outside the Platform for the purpose of circumventing fees or agreements;
+- Not engage Contractors discovered through ABRAM outside the Platform for the purpose of circumventing fees or agreements, subject to the time limit and terms in Section 8.5;
 - Comply with all applicable employment, labor, and tax laws when engaging Contractors;
 - Ensure your organization''s use of the Platform complies with these Terms.
 
@@ -745,6 +938,10 @@ Contractors must connect a valid Stripe Connect account to receive payouts throu
 
 You are responsible for all applicable taxes arising from your use of the Platform and any transactions you enter into through it. ABRAM may collect and remit certain taxes where required by law.
 
+### 8.5 No Circumventing Platform Fees
+
+You may not deliberately move a relationship formed through the Platform off-Platform for the purpose of avoiding ABRAM''s processing fees, within 12 months of that relationship being formed or last engaged through the Platform. This rule exists to keep fees fair for everyone, not to prevent you from working together — if a Contractor and Client mutually decide to continue their relationship outside the Platform for reasons unrelated to fee avoidance, that is not a violation of this Policy.
+
 ---
 
 ## 9. Organization & Team Management
@@ -771,6 +968,10 @@ The Platform integrates with third-party services. When you connect a third-part
 - **Resend** (transactional email)
 
 Use of these services is subject to their respective Terms and Privacy Policies. ABRAM has executed Data Processing Agreements with each of these service providers where required by applicable law.
+
+### 10.1 Third-Party Trademarks & Affiliation Disclaimer
+
+All third-party trademarks, service marks, logos, brand names, and labor union names (including but not limited to SAG-AFTRA, Frame.io, Adobe, Slack, Salesforce, and others) are the property of their respective owners. The integration with, compliance tracking for, or mention of these services, unions, or rules does not imply any affiliation with, endorsement by, or sponsorship from their respective owners or organizations (such as Screen Actors Guild-American Federation of Television and Radio Artists for SAG-AFTRA, Adobe Inc. for Frame.io, or Slack Technologies, LLC / Salesforce, Inc. for Slack). These integrations and indicators are provided "as-is" and "as-available" without warranties of any kind. You acknowledge that we are not responsible for the performance, reliability, availability, or security of any third-party services, and your use of them is subject to their respective terms and policies.
 
 ---
 
@@ -848,6 +1049,8 @@ Nothing in this Section limits ABRAM''s liability for: (i) fraud or fraudulent m
 ### 15.1 Union & Guild Compliance
 
 The Platform is used by professionals covered by union or guild agreements (e.g., SAG-AFTRA, IATSE, DGA, WGA, Teamsters). It is your sole responsibility to ensure that engagements made through the Platform comply with applicable union, guild, or collective bargaining agreements. ABRAM does not manage, verify, or guarantee union compliance for any project or engagement.
+
+Without limiting the generality of the foregoing, any feature, setting, label, tag, badge, status, toggle, or visual indicator within the Platform designated or described as "SAG-AFTRA compliant" (or referring to compliance with any other union, guild, or regulatory standard) is provided solely for informational and user-organizational purposes. Such indicators represent a user-configured or system-suggested status flag based on user inputs and generic settings, and do NOT constitute legal verification, certification, or a guarantee of compliance with SAG-AFTRA or other union rules, rates, or agreements. You agree that you will not rely solely on any such indicator, and you assume all liability for verifying actual compliance with applicable guild or union rules. ABRAM shall have no liability whatsoever for any reliance on, or errors, omissions, or inaccuracies in, any such compliance indicators, flags, or features.
 
 ### 15.2 Production Permits & Insurance
 
@@ -928,53 +1131,53 @@ This guide is structured around active workflows in the **Management Phase** of 
 
 * **[0.0 User & AI Assistant Navigation Guide](./0.0-agent-and-human-navigation-guide.md)**: Introduction to reading these guides as a human user or parsing them as an AI agent/chatbot.
 * **[0.1 Glossary & Acronym Reference](./0.1-glossary-and-acronyms.md)**: Quick definitions of industry terms, payment jargon, and technical integration acronyms.
-* **[0.2 Order of Operations Guide](./0.2-order-of-operations.md)**: Chronological step-by-step workflow tracing a project from intake to final freelancer payouts.
+* **[0.2 Order of Operations Guide](./0.2-order-of-operations.mdx)**: Chronological step-by-step workflow tracing a project from intake to final freelancer payouts.
 * **[0.3 AI Capabilities & Platform Co-pilot](./0.3-ai-capabilities-and-copilot.md)**: Details of ABRAM''s AI features, including Brief Intelligence, Crew suggestions, the AI Resume Importer, and the Chatbot Co-pilot.
-* **[0.4 Production Brain & Workspace Memory](./0.4-production-brain-and-workspace-memory.md)**: Overview of the organization''s central knowledge engine, dynamic memory benefits, search queries, and permission security rules.
-
+* **[0.4 Production Brain & Workspace Memory](./0.4-production-brain-and-workspace-memory.mdx)**: Overview of the organization''s central knowledge engine, dynamic memory benefits, search queries, and permission security rules.
+ 
 ### 🚪 [Section 1: Getting Started, Organizations & Team Setup](./1.1-signing-in-and-onboarding.md)
 Learn how to create your account, configure organization settings, and manage your team roster.
 * **[1.1 Signing In and Onboarding](./1.1-signing-in-and-onboarding.md)**: Authenticating, completing the onboarding wizard, and selecting workspace roles.
 * **[1.2 Setting Up Your Profile](./1.2-setting-up-your-profile.md)**: Completing bio details, skill lists, rates, and setting profile visibility.
 * **[1.3 Organization Setup & Custom Forms](./1.3-organization-setup-and-custom-forms.md)**: Upgrading to an organization, managing workspace settings, and building custom producer intake forms.
 * **[1.4 Team Management & Permissions](./1.4-team-management-and-permissions.md)**: Managing team roles (Owner, Admin, Member), setting team capacity, and configuring permissions.
-
+ 
 ---
-
+ 
 ### 📝 [Section 2: Project Intake & Scoping](./2.1-ai-brief-analyzer.md)
 Discover how to initiate and configure projects using AI brief analysis or manual builders.
 * **[2.1 AI Brief Analyzer (Brief Intelligence)](./2.1-ai-brief-analyzer.md)**: Initializing projects from text/documents, managing the AI confidence gate, and reviewing extracted parameters.
 * **[2.2 Manual Project Creation](./2.2-manual-project-creation.md)**: Using the manual setup wizard, selecting project archetypes, and managing budget splits.
 * **[2.3 Custom Intake Forms](./2.3-custom-intake-forms.md)**: Designing request forms, configuring public request links, and managing producer submission pipelines.
-
+ 
 ---
-
-### 🎛️ [Section 3: Master Project Detail, Work Packages & Work Orders](./3.1-master-project-detail-overview.md)
+ 
+### 🎛️ [Section 3: Master Project Detail, Work Packages & Work Orders](./3.1-master-project-detail-overview.mdx)
 Understand how to manage active projects, deliverables, checklists, and freelancer agreements.
-* **[3.1 Master Project Detail Overview](./3.1-master-project-detail-overview.md)**: Navigating the central command center, the Compact Header, and URL parameter synchronization.
-* **[3.2 Work Packages & Milestones](./3.2-work-packages-and-milestones.md)**: Creating work packages, setting scopes, and defining milestone-based payment schedules.
-* **[3.3 Work Orders & Agreements](./3.3-work-orders-and-agreements.md)**: Generating work orders for freelancers and equipment, configuring rates, and managing invitation holds.
+* **[3.1 Master Project Detail Overview](./3.1-master-project-detail-overview.mdx)**: Navigating the central command center, the Compact Header, and URL parameter synchronization.
+* **[3.2 Work Packages & Milestones](./3.2-work-packages-and-milestones.mdx)**: Creating work packages, setting scopes, and defining milestone-based payment schedules.
+* **[3.3 Work Orders & Agreements](./3.3-work-orders-and-agreements.mdx)**: Generating work orders for freelancers and equipment, configuring rates, and managing invitation holds.
 * **[3.4 Task Lists & Tracking](./3.4-task-lists-and-tracking.md)**: Creating checklists, assigning tasks, and tracking automated progress calculations.
 * **[3.5 Equipment & Resource Management](./3.5-equipment-and-resource-management.mdx)**: Inventory tracking, kit building, calendar scheduling, storage locations, and bulk importing.
-
+ 
 ---
-
+ 
 ### 📅 [Section 4: Crewing, Matchmaking & Utilization Scheduling](./4.1-internal-talent-search.md)
 Learn how to find talent, receive AI recommendations, and schedule freelancer calendars.
 * **[4.1 Internal Talent Search](./4.1-internal-talent-search.md)**: Searching and filtering the internal team roster by skill, availability, and rating.
-* **[4.2 AI Matchmaking Suggestions](./4.2-ai-matchmaking-suggestions.md)**: Utilizing AI suggestions to find freelancers based on role suitability and budget.
-* **[4.3 Inviting & Crew RSVP](./4.3-inviting-and-crew-rsvp.md)**: Managing direct project invites, sending chatbot invitations, and tracking freelancer RSVPs.
+* **[4.2 AI Matchmaking Suggestions](./4.2-ai-matchmaking-suggestions.mdx)**: Utilizing AI suggestions to find freelancers based on role suitability and budget.
+* **[4.3 Inviting & Crew RSVP](./4.3-inviting-and-crew-rsvp.mdx)**: Managing direct project invites, sending chatbot invitations, and tracking freelancer RSVPs.
 * **[4.4 Managing Your Utilization Calendar](./4.4-managing-your-utilization-calendar.md)**: Freelancer utilization views, managing blockouts, and setting scheduling holds.
 * **[4.5 Syncing External Calendars](./4.5-syncing-external-calendars.md)**: Integrating Google Calendar and Microsoft Outlook for real-time availability updates.
 * **[4.6 Team Management Dashboard](./4.6-team-management-dashboard.md)**: Workspace utilization overview, scheduling calendar, capacity planning tool, conflict detection panel, team templates, and hours verification roster.
-
+ 
 ---
-
+ 
 ### 💳 [Section 5: Payments, Billing & Financials](./5.1-freelancer-stripe-setup.md)
 Manage your payment methods, producer checkout sessions, billing, and AI credits.
 * **[5.1 Freelancer Stripe Express Setup](./5.1-freelancer-stripe-setup.md)**: Step-by-step Stripe Express onboarding, bank setup, and verification troubleshooting.
-* **[5.2 Invoicing & Payouts](./5.2-invoicing-and-payouts.md)**: Building PDF invoices, submitting invoices for approval, and tracking Stripe checkout payout flows.
-* **[5.3 Billing Ledger & AI Credits](./5.3-billing-ledger-and-ai-credits.md)**: Monitoring the organization''s credit balance, consuming credits for AI tasks, and ledger transactions.
+* **[5.2 Invoicing & Payouts](./5.2-invoicing-and-payouts.mdx)**: Building PDF invoices, submitting invoices for approval, and tracking Stripe checkout payout flows.
+* **[5.3 Billing Ledger & AI Credits](./5.3-billing-ledger-and-ai-credits.mdx)**: Monitoring the organization''s credit balance, consuming credits for AI tasks, and ledger transactions.
 * **[5.4 Billing & Payments](./5.4-billing-and-payments.md)**: Configuring payment cards, ACH transfers, and managing automated re-authorizations for Stripe holds.
 
 ---
@@ -1329,6 +1532,19 @@ ABRAM offers plans tailored to solo creators, production teams, and studios:
 | **Enterprise** | Custom | Custom | Unlimited | Custom | Custom | Corporate directory sync, SSO, dedicated support |
 
 *Note: Team and Studio plans require a minimum of 2 and 6 seats respectively.*
+
+### Advanced Scheduling & Budgeting Gating
+
+To provide basic trial access to freelancers and solo creators on lower tiers, advanced scheduling and budgeting features are gated by plan level:
+
+| Tier | Scheduling Access | Budgeting Access |
+| :--- | :--- | :--- |
+| **Free** | **Read-Only**: Can view the stripboard / calendar, but editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create/edit up to **5 budget line items** and **5 expenses**. Editing/adding beyond that is locked. |
+| **Solo Lite** | **Read-Only**: Can view the stripboard / calendar, but editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create/edit up to **5 budget line items** and **5 expenses**. Editing/adding beyond that is locked. |
+| **Solo Pro** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Team** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Studio** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
+| **Enterprise** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
 
 ---
 

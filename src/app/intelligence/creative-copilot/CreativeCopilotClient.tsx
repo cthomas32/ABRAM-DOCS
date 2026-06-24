@@ -267,7 +267,7 @@ export default function CreativeCopilotClient() {
                                   </h4>
                                   {feature.tag && (
                                     <span className="text-[9px] font-mono tracking-wide text-zinc-500 select-none">
-                                      // {feature.tag}
+                                      {"// "} {feature.tag}
                                     </span>
                                   )}
                                 </div>

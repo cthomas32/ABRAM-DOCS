@@ -405,6 +405,121 @@ When you decide to proceed with a request, click **Approve & Convert** to launch
       
 INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
+        'user-guide/2.4-ai-script-breakdown',
+        'Section 2.4: AI Script Breakdown',
+        'AI Script Breakdown',
+        'Learn how the screenplay parser processes script uploads, reconstructs formatting layouts, extracts production elements, and manages scene updates.',
+        '{"ABRAM","AI Script Breakdown","Screenplay Parser","Ingestion","Layout Reconstruction","Element Extraction","Conflict Resolution","Merging Scenes"}'::text[],
+        '---
+title: "Section 2.4: AI Script Breakdown"
+sidebarTitle: "AI Script Breakdown"
+description: "Learn how the screenplay parser processes script uploads, reconstructs formatting layouts, extracts production elements, and manages scene updates."
+keywords:
+  - ABRAM
+  - AI Script Breakdown
+  - Screenplay Parser
+  - Ingestion
+  - Layout Reconstruction
+  - Element Extraction
+  - Conflict Resolution
+  - Merging Scenes
+---
+
+# Section 2.4: AI Script Breakdown
+
+The screenplay parser is a core tool in the project scoping suite. It automates the process of breaking down a script, dividing it into scenes, extracting standard production elements (such as characters, locations, props, and visual requirements), and preparing it for scheduling and budgeting.
+
+By automating this workflow, producers and coordinators can transition from a raw creative document to a structured, tag-based production schedule in minutes instead of days.
+
+---
+
+## 1. Stage 1: Ingestion
+
+The ingestion phase handles the initial file upload and preparation. Producers can upload their scripts to begin the automated breakdown.
+
+### File Formats and Uploading
+* **Supported File Types**: Screenplays in PDF (`.pdf`), industry-standard script files (`.fdx`), and plain text (`.txt`) files are supported.
+* **Upload Mechanism**: Drag-and-drop your file directly onto the upload area of the project dashboard, or select the file from your local device.
+* **Stream Processing**: The system performs a file integrity check, verifies encoding compatibility, and initiates a secure text extraction pipeline.
+
+---
+
+## 2. Stage 2: Layout Reconstruction
+
+Standard screenplays follow strict physical layouts. The system uses a parser to analyze the visual formatting, indentation, margins, and spacings of the ingested text.
+
+This layout analysis reconstructs the document''s script structure:
+* **Scene Headings (Sluglines)**: Detects the interior/exterior setting (e.g., INT. or EXT.), location name, and time of day (e.g., DAY or NIGHT).
+* **Action Blocks**: Identifies description paragraphs detailing physical movement, environmental details, and scene setups.
+* **Character Cues**: Identifies uppercase names centered on the page indicating a speaker.
+* **Dialogue Blocks**: Identifies centered text directly below a character cue that contains spoken dialogue.
+* **Parentheticals**: Identifies delivery cues or action beats enclosed in parentheses within dialogue blocks.
+
+By reconstructing the visual layout, the system ensures that elements and dialogues are correctly mapped to their respective scenes, even if the source document has minor margin offsets.
+
+---
+
+## 3. Stage 3: Element Extraction
+
+Once the script structure has been reconstructed into individual scenes, the system processes the text of each scene to extract and categorize key production elements.
+
+The system automatically tags these elements and populates them into the scene''s digital breakdown sheet:
+* **Cast and Characters**: Speaking roles, non-speaking characters, and background extras mentioned in dialogue or action.
+* **Locations**: Filming sites, staging grounds, or studio sets matching the scene headings.
+* **Props**: Objects, weapons, or tools that characters handle or interact with in action blocks.
+* **Wardrobe and Costumes**: Specific clothing items, uniforms, or outfit changes described in the scene description.
+* **Visual Effects (VFX)**: Mentions of digital enhancements, green screen, CGI elements, or digital replacements.
+* **Special Effects (SFX)**: Physical effects like pyrotechnics, fire, smoke, mechanical rigs, or stunt work.
+* **Vehicles and Animals**: Cars, aircraft, horses, or other complex transit or creature requirements.
+* **Sound Cues**: Key sound effects, voiceovers, or off-screen audio indicators.
+
+---
+
+## 4. Stage 4: Conflict Resolution and Merging
+
+Scripts are dynamic documents that undergo revisions throughout the production lifecycle (such as updated colored drafts). When you upload a revised script or merge scenes, managing differences is crucial.
+
+### Script Version Tracking
+When you upload a new version of a script to an active project, the parser compares the newly parsed scenes with the current production data and flags any changes.
+
+### Scene-by-Scene Choices
+The interface presents side-by-side comparisons of changes (such as added dialogue, modified props, or new characters) and lets you choose how to apply updates:
+* **Merge**: Blends the new script changes with the existing workspace data. This option preserves your manual customizations, assigned crew roles, and custom props while incorporating newly detected characters or elements.
+* **Overwrite**: Discards the existing workspace data for that scene and completely replaces it with the newly parsed elements from the uploaded draft.
+* **Skip**: Ignores the newly uploaded version for that scene, keeping your current workspace data exactly as it is.
+
+---
+
+<AgentOnly>
+
+## 🤖 Agent Operations & System Rules
+
+ABRAM''s screenplay parser and script breakdown modules are metered and optimized for automated agent operations. If you are an AI agent scoping projects, scheduling shoots, or generating work packages, adhere to these technical processing thresholds and credit rules.
+
+### Credit Metering Details
+* **Per-Page Metering**: Processing a script costs 2 credits per page. These credits are deducted from the workspace''s active credit ledger.
+* **Hashing and Caching**: The platform computes a cryptographic SHA-256 hash of the uploaded script file. If a file with an identical hash is re-parsed within 24 hours, the system serves the analysis from the cache, resulting in a charge of 0 credits.
+* **Draft Auto-Save**: During ingestion, if processing is interrupted, the draft is saved to the workspace''s draft cache. Re-running the parser on a saved draft does not consume additional credits.
+
+### AI Parsing Thresholds & Limits
+* **Maximum Page Count**: The script parser enforces a hard limit of 150 pages per single document upload to prevent token context overflow.
+* **Scene Token Window**: Each scene chunk is parsed with a maximum token window of 4,000 tokens for element extraction. If a scene exceeds this window, the extraction fallback processes the scene in sequential 3,000-token blocks, flagging the scene as High Density in the output log.
+* **Timeout Threshold**: A maximum processing timeout of 45 seconds is enforced per script upload. If the layout reconstruction takes longer, the platform aborts the process and rolls back all database insertions to maintain a clean workspace state.
+
+</AgentOnly>
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
         'user-guide/3.1-master-project-detail-overview',
         'Master Project Detail Page: Tools and Tabs Overview',
         'Master Project Detail Page Overview',
@@ -870,7 +985,7 @@ Project Managers can click **Add Task** or select the edit pencil icon on any it
 * Toggle the payment release percentage.
 
 ### Work Order Settings
-* Configure schedule dates, times, crew members, and equipment lists. (See [Section 3.3](./3.3-work-orders-and-agreements.md) for details).
+* Configure schedule dates, times, crew members, and equipment lists. (See [Section 3.3](./3.3-work-orders-and-agreements.mdx) for details).
 
 ---
 
@@ -930,7 +1045,7 @@ The **Inventory** tab is the primary directory of all physical resources owned b
 To add a new asset:
 1. Click the **Add Resource** button.
 2. Provide details:
-   * **Name**: The identifier of the gear (e.g., "Sony FX6 - Body #1").
+   * **Name**: The identifier of the gear (e.g., "Sensa FX6 - Body #1").
    * **Category**: Choose from Camera, Lighting, Audio, Grip, Vehicle, Studio Space, or Custom.
    * **Location**: Select where the asset is stored (managed under Organization Settings).
    * **Day Rate / Hourly Rate**: The replacement or internal billing cost, used for project budget estimation.
@@ -940,7 +1055,7 @@ To add a new asset:
 ### Folder Organization
 To prevent clutter, resources can be nested in folders:
 * **Creating Folders**: Click **New Folder**, name the folder, and select the category.
-* **Moving Assets**: Use the folder selection menu on any asset card to move it into a specific folder (e.g., nesting "Sony 24-70mm GM Lens" inside a "Lenses" folder).
+* **Moving Assets**: Use the folder selection menu on any asset card to move it into a specific folder (e.g., nesting "Sensa 24-70mm GM Lens" inside a "Lenses" folder).
 
 ### Bulk Actions
 For large studios and rental houses, ABRAM supports bulk operations:
@@ -1226,7 +1341,7 @@ Upon invitation acceptance:
 Candidates are ranked using a comprehensive matchmaking algorithm that calculates a suitability percentage based on four major factors:
 
 ### 1. Technical Skill & Expertise Fit
-* **Skill Matching**: The AI compares the required project skills against the skills listed on the candidate''s profile. It uses synonym mapping (for example, if a project requires "Premiere Pro" and the freelancer listed "Adobe Premiere", the AI automatically recognizes this match).
+* **Skill Matching**: The AI compares the required project skills against the skills listed on the candidate''s profile. It uses synonym mapping (for example, if a project requires "Sensa Cut" and the freelancer listed "Sensa Editor", the AI automatically recognizes this match).
 * **Software Proficiency**: Checks familiarity with required production software tools.
 * **Role Alignment**: Confirms whether the freelancer''s primary declared roles match the slot.
 * **Equipment Matching**: Checks if the freelancer owns or operates specific technical equipment required for the shoot.
@@ -1277,149 +1392,6 @@ Running the AI matchmaking engine to analyze suitability, calculate scores, and 
 To protect your workspace budget from redundant credit charges:
 * **Saved Role Estimates**: Once the AI estimates hours for a work package, the results are saved directly to the project''s deliverables. Reloading the dashboard or reviewing the saved estimates does not consume additional credits.
 * **Match Reasoning Cache**: The detailed match reasonings and concerns are cached for your session. Opening a candidate''s profile preview or reloading the matching grid does not trigger a new credit charge. You only consume credits when you explicitly trigger a new search or re-evaluate matchmaking after changing the project''s dates, roles, or deliverables.
-'
-      ) ON CONFLICT (slug) DO UPDATE SET
-        title = EXCLUDED.title,
-        sidebar_title = EXCLUDED.sidebar_title,
-        description = EXCLUDED.description,
-        keywords = EXCLUDED.keywords,
-        content = EXCLUDED.content,
-        updated_at = now();
-    
-
-      
-INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
-      VALUES (
-        'user-guide/4.3-inviting-and-crew-rsvp',
-        'Inviting Freelancers and Managing Crew RSVPs',
-        'Inviting & Crew RSVP',
-        'Compare ABRAM invitation flows for internal and external freelancers, the AI Chatbot intake path, and the RSVP interface crew use to accept or decline.',
-        '{"ABRAM","ABRAM Network","freelancer","producer","calendar","ai","work package","workflow","crew","onboarding","copilot","matchmaking","rsvp","inviting"}'::text[],
-        '---
-title: ''Inviting Freelancers and Managing Crew RSVPs''
-sidebarTitle: Inviting & Crew RSVP
-description: >-
-  Compare ABRAM invitation flows for internal and external freelancers, the AI
-  Chatbot intake path, and the RSVP interface crew use to accept or decline.
-keywords:
-  - ABRAM
-  - ABRAM Network
-  - freelancer
-  - producer
-  - calendar
-  - ai
-  - work package
-  - workflow
-  - crew
-  - onboarding
-  - copilot
-  - matchmaking
-  - rsvp
-  - inviting
----
-# Section 4.3: Inviting & Crew RSVP
-
-ABRAM provides flexible invitation workflows designed to bring freelancers onto projects quickly. This section outlines the different invitation flows, how the AI Chatbot handles external invites, and the RSVP interface freelancers use to respond.
-
----
-
-## 1. Direct Project & Matchmaking Invites
-
-Within the producer platform, there are two primary methods to invite existing roster members to projects:
-
-### Direct Project Invites
-1. Open the project and navigate to the **Crew** or **Team** tab.
-2. Click **Invite Crew Member**.
-3. Choose a contact from your Crew Roster, specify their role slot and proposed rate, and send the invitation.
-
-### AI Matchmaking Invites
-1. Under the **Project Matching** dashboard, select the checkboxes next to the AI-recommended candidates.
-2. Click **Invite All Selected** to dispatch invitations in bulk, or click **Invite Candidate** next to individual listings.
-
----
-
-## 2. External Invites via Chatbot
-
-In the current **Management Phase**, the chatbot is the primary mechanism for finding and onboarding external talent who are not yet on the platform.
-
-<ProgressFlow steps={[
-  { title: "1. Producer Chat", description: "Producers prompt the copilot to locate external talent.", icon: "MessageSquare", status: "completed" },
-  { title: "2. Web Search", description: "AI queries external websites, portfolios, and catalogs.", icon: "Search", status: "completed" },
-  { title: "3. Draft Invite", description: "AI extracts contacts and prepares custom invitations.", icon: "FilePlus", status: "completed" },
-  { title: "4. Action Plan", description: "Producer reviews a structured hold and invitation plan.", icon: "FileCheck", status: "active" },
-  { title: "5. Sent", description: "Emails dispatched securely following final approval.", icon: "Send", status: "pending" }
-]} />
-
-### The Chatbot Workflow
-1. **User Prompt**: You ask the chatbot, *"Find food photographers in Chicago and invite them to Project X."*
-2. **Search**: The chatbot uses its web search tool to find agencies, studios, or freelancers.
-3. **Drafting Invites**: Once the chatbot collects the contact details, it drafts the invitation.
-4. **Action Plan**: The chatbot compiles a structured **Action Plan** detailing who is being invited, their target roles, rates, and projects.
-5. **Approval**: You must click **Approve** in the chat panel. The system *never* sends emails automatically without your confirmation.
-6. **Execution**: The platform sends a secure, personalized email invitation to the recipient.
-
-### Rules & Gating Logic
-* **Required Data**: An email, first name, and last name are mandatory.
-* **Rate Limits**: Users are limited to **10 external invitations per day** to prevent spam.
-* **Duplicate Detection**: The tool checks for pending project or platform invitations to the same email and blocks duplicate requests.
-* **Existing User Check**: If the email is already associated with an account on ABRAM, the chatbot will suggest using the standard internal project invitation process.
-
-### Invitational Paths
-Depending on your requirements, invitations take one of two paths:
-* **Project Invite**: Links the invite to a project, creating a secure invitation link and triggering a project invite email.
-* **Platform Invite**: Sends a general network invite to join the platform.
-
----
-
-## 3. Freelancer RSVP Screen
-
-When an external freelancer receives an invitation email and clicks the secure link, they are directed to the secure **Public RSVP Screen**.
-
-This is a clean, responsive web interface that does not require logging in to view:
-* **Host Info**: Displays the name of the organizer and organization inviting them.
-* **Project Details**: Includes the project title, dates, hours, daily/hourly rates, location details, and any custom notes from the producer.
-* **Response Options**: The freelancer can click:
-  * **Accept**: Confirms they will take the project slot.
-  * **Decline**: Declines the offer.
-  * **Tentative**: Flags that they are interested but need clarification.
-
-### Automated Capacity Sync on Acceptance
-When a freelancer accepts the invite:
-1. An account is created/linked (if external).
-2. The role slot is marked as **Filled**.
-3. A booking is automatically written to the freelancer''s schedule as project work, matching the slot''s date range and hours.
-4. The booking registers as a **planned capacity hold banner** on their utilization calendar, blocking out those hours from their availability pool.
-
----
-
-## 4. Crew Assembly & Re-staffing (Producer)
-
-The **Crew Assembly** interface (accessible directly from your project''s crew settings) is the management center for assembling your crew for a specific work package, monitoring RSVP statuses, and resolving declines.
-
-* **Crew Builder**: The builder allows you to assign specific team members or approved roster freelancers to unfilled role slots required by the work package.
-* **Acceptance Status Tracking**: Displays a list of all invited crew members with color-coded status badges:
-  * **Accepted (Green)**: Crew member has accepted the invite.
-  * **Pending (Amber)**: Invitation is sent, awaiting response.
-  * **Declined (Red)**: Crew member has declined the assignment.
-* **Replacement Finder**: If a crew member declines or a role slot remains unfilled, click **Find Replacement**. The replacement finder scans your roster and recommends alternative candidates matching the role''s required skills and budget, allowing you to dispatch a new invite instantly.
-
----
-
-## 5. Freelancer Proposal Inbox (Freelancer Companies)
-
-For freelancers operating as **Production Companies**, project invitations do not just receive a simple RSVP button; they require scoping and formal bids.
-
-### Reviewing Invites
-* Navigate to the **Proposals** tab in the freelancer sidebar.
-* The **Proposal Inbox** lists all incoming project invitations, displaying the producer name, project details, required roles, skills, and budget.
-
-### Proposal Builder
-* Click on any invitation to open the **Proposal Builder**.
-* Build a structured proposal defining:
-  * **Personnel slots**: Assign specific staff from your internal team to the requested roles.
-  * **Equipment packages**: Add resource kits required for the shoot.
-  * **Proposed rates**: Specify hourly/daily rates for personnel and gear.
-* Submit the proposal. The producer is notified and can review, negotiate, or approve your proposal to finalize the project contract.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,

@@ -158,36 +158,49 @@ export default function WorkfrontClient() {
           </p>
         </div>
 
+        {/* Mobile swipe indicator */}
+        <div className="md:hidden text-[10px] text-zinc-500 text-center mb-2 font-sans tracking-wide">
+          Swipe to view →
+        </div>
+
         {/* Comparison Table */}
-        <div className="glass-panel rounded-2xl border border-white/5 overflow-hidden max-w-4xl mx-auto">
-          <div className="grid grid-cols-3 bg-white/[0.02] border-b border-white/5 p-4 text-xs font-semibold tracking-wider text-zinc-400 uppercase">
-            <div>Feature</div>
-            <div className="text-white font-bold">ABRAM</div>
-            <div>Adobe Workfront</div>
-          </div>
-          <div className="divide-y divide-white/5">
-            {comparisonFeatures.map((item, idx) => (
-              <div key={idx} className="grid grid-cols-3 p-4 items-center gap-4 text-xs sm:text-sm">
-                <div className="font-semibold text-zinc-300">{item.feature}</div>
-                <div className="text-zinc-100 flex items-start gap-2">
-                  {item.abramCheck ? (
-                    <Check className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
-                  ) : (
-                    <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />
-                  )}
-                  <span>{item.abram}</span>
-                </div>
-                <div className="text-zinc-500 flex items-start gap-2 col-start-3">
-                  {item.workfrontCheck ? (
-                    <Check className="h-4 w-4 text-green-500/60 shrink-0 mt-0.5" />
-                  ) : (
-                    <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />
-                  )}
-                  <span>{item.workfront}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="overflow-x-auto rounded-xl border border-white/5 bg-zinc-950/40">
+          <table className="w-full text-left border-collapse min-w-[600px] font-sans">
+            <thead>
+              <tr className="border-b border-white/5 bg-zinc-900/30">
+                <th className="p-4 text-xs font-semibold uppercase tracking-wider text-zinc-400">Feature</th>
+                <th className="p-4 text-xs font-semibold uppercase tracking-wider text-zinc-200">ABRAM</th>
+                <th className="p-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">Adobe Workfront</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {comparisonFeatures.map((row, idx) => (
+                <tr key={idx} className="hover:bg-white/[0.01] transition-colors">
+                  <td className="p-4 text-xs font-semibold text-zinc-100">{row.feature}</td>
+                  <td className="p-4 text-xs text-zinc-300">
+                    <div className="flex items-center gap-2">
+                      {row.abramCheck ? (
+                        <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      ) : (
+                        <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />
+                      )}
+                      <span>{row.abram}</span>
+                    </div>
+                  </td>
+                  <td className="p-4 text-xs text-zinc-500">
+                    <div className="flex items-center gap-2">
+                      {row.workfrontCheck ? (
+                        <Check className="w-4 h-4 text-emerald-400/60 shrink-0" />
+                      ) : (
+                        <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />
+                      )}
+                      <span>{row.workfront}</span>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 

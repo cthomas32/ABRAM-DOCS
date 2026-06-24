@@ -84,7 +84,7 @@ As a Client, you agree to:
 
 - Provide accurate and complete project briefs and requirements;
 - Honor payment obligations for completed work orders and invoices issued through the Platform;
-- Not engage Contractors discovered through ABRAM outside the Platform for the purpose of circumventing fees or agreements;
+- Not engage Contractors discovered through ABRAM outside the Platform for the purpose of circumventing fees or agreements, subject to the time limit and terms in Section 8.5;
 - Comply with all applicable employment, labor, and tax laws when engaging Contractors;
 - Ensure your organization's use of the Platform complies with these Terms.
 
@@ -214,6 +214,10 @@ Contractors must connect a valid Stripe Connect account to receive payouts throu
 ### 8.4 Taxes
 
 You are responsible for all applicable taxes arising from your use of the Platform and any transactions you enter into through it. ABRAM may collect and remit certain taxes where required by law.
+
+### 8.5 No Circumventing Platform Fees
+
+You may not deliberately move a relationship formed through the Platform off-Platform for the purpose of avoiding ABRAM's processing fees, within 12 months of that relationship being formed or last engaged through the Platform. This rule exists to keep fees fair for everyone, not to prevent you from working together — if a Contractor and Client mutually decide to continue their relationship outside the Platform for reasons unrelated to fee avoidance, that is not a violation of this Policy.
 
 ---
 
