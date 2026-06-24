@@ -1,0 +1,6 @@
+- `[x]` Update template: `scripts/email-template.html`
+- `[x]` Update compiler script: `scripts/create-campaign-draft.js`
+- `[x]` Update admin actions: `src/app/admin/resend-actions.ts`
+- `[x]` Update admin dashboard broadcast page: `src/app/admin/dashboard/broadcasts/page.tsx`
+- `[x]` Update preview page: `public/email-previews.html`
+- `[x]` Verify previews in browser at `http://localhost:3001/email-previews.html`

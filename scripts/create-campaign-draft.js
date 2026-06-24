@@ -68,7 +68,7 @@ function markdownToHtml(markdown) {
   let text = markdown.replace(/\r\n/g, '\n').trim();
   
   // Parse Blockquotes: > quote
-  text = text.replace(/^>\s+(.*?)$/gm, '<blockquote style="margin: 0 0 16px 0; padding-left: 16px; border-left: 2px solid #CE1C1C; color: #D4D4D8; font-style: italic;">$1</blockquote>');
+  text = text.replace(/^>\s+(.*?)$/gm, '<blockquote style="margin: 0 0 16px 0; padding-left: 16px; border-left: 2px solid #3B82F6; color: #D4D4D8; font-style: italic;">$1</blockquote>');
   
   // Parse Headings: ### title, ## title
   text = text.replace(/^###\s+(.*?)$/gm, '<h3 style="font-size: 16px; font-weight: 600; color: #FAFAF9; margin-top: 20px; margin-bottom: 8px;">$1</h3>');
@@ -120,7 +120,7 @@ function inlineStyles(text) {
   // Inline Code: `code`
   clean = clean.replace(/`(.*?)`/g, '<code style="font-family: Menlo, Monaco, Consolas, \'Courier New\', monospace; font-size: 13px; background-color: #1F1F23; padding: 2px 6px; border-radius: 4px; color: #FAFAF9;">$1</code>');
   // Links: [text](url)
-  clean = clean.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="color: #CE1C1C; text-decoration: underline;">$1</a>');
+  clean = clean.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="color: #3B82F6; text-decoration: underline;">$1</a>');
   return clean;
 }
 
@@ -156,59 +156,108 @@ function compileTemplate(data) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{{EMAIL_SUBJECT}}</title>
     <style type="text/css">
-      body { margin: 0; padding: 0; min-width: 100% !important; width: 100% !important; background-color: #0A0A0A; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-      table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse !important; }
-      img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
-      .btn-primary:hover { background-color: #E4E4E7 !important; }
-      .btn-accent:hover { background-color: #A31616 !important; }
-      .link-hover:hover { color: #FAFAF9 !important; text-decoration: underline !important; }
+      body {
+        margin: 0;
+        padding: 0;
+        min-width: 100% !important;
+        width: 100% !important;
+        background-color: #0A0A0A;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+      table, td {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        border-collapse: collapse !important;
+      }
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+      }
+      .btn-primary:hover {
+        background-color: #E4E4E7 !important;
+      }
+      .btn-glass:hover {
+        background-color: #27272A !important;
+        border-color: #52525B !important;
+      }
+      .link-hover:hover {
+        color: #FAFAF9 !important;
+        text-decoration: underline !important;
+      }
       @media screen and (max-width: 620px) {
-        .container-table { width: 100% !important; max-width: 100% !important; border-radius: 0px !important; border-left: none !important; border-right: none !important; }
-        .content-padding { padding: 32px 20px !important; }
+        .container-table {
+          width: 100% !important;
+          max-width: 100% !important;
+          border-radius: 0px !important;
+          border-left: none !important;
+          border-right: none !important;
+        }
+        .content-padding {
+          padding: 32px 24px !important;
+        }
       }
     </style>
   </head>
-  <body style="margin: 0; padding: 0; background-color: #0A0A0A; font-family: -apple-system, BlinkMacSystemFont, 'Geist Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #FAFAF9;">
+  <body style="margin: 0; padding: 0; background-color: #0A0A0A; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #FAFAF9;">
+    
+    <!-- Hidden Preheader for Inbox Preview -->
     <div style="display: none; max-height: 0px; overflow: hidden; font-size: 1px; line-height: 1px; color: #FAF9F6; opacity: 0;">
       {{PREHEADER_TEXT}}
     </div>
+    
     <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0A0A0A" style="table-layout: fixed;">
       <tr>
         <td align="center" style="padding: 40px 10px;">
-          <table width="600" cellpadding="0" cellspacing="0" border="0" class="container-table" bgcolor="#0F0F11" style="width: 600px; border-radius: 16px; border: 1px solid #1F1F23; overflow: hidden;">
+          <!-- Simulated Glass Card -->
+          <table width="600" cellpadding="0" cellspacing="0" border="0" class="container-table" bgcolor="#0F0F12" style="width: 600px; border-radius: 16px; border: 1px solid #27272A; border-top: 1px solid #3F3F46; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.6);">
+            
+            <!-- Floating Logo Header (Unified spacing, no harsh border line) -->
             <tr>
-              <td align="center" style="padding: 32px 20px 24px; border-bottom: 1px solid #1F1F23;">
-                <span style="font-size: 18px; font-weight: 700; color: #FAFAF9; letter-spacing: 2px; text-transform: uppercase;">ABRAM</span>
+              <td align="center" style="padding: 44px 32px 16px;">
+                <img src="https://abram.network/abram-logo-lockup-cream.png" alt="ABRAM" width="110" height="22" style="border: 0; display: block; outline: none; text-decoration: none;" />
               </td>
             </tr>
+            
+            <!-- Main Content -->
             <tr>
-              <td class="content-padding" style="padding: 40px 32px;">
+              <td class="content-padding" style="padding: 16px 32px 32px;">
                 {{BADGE_SECTION}}
-                <h1 style="font-size: 24px; font-weight: 700; color: #FAFAF9; margin-top: 0; margin-bottom: 16px; line-height: 1.35; letter-spacing: -0.015em;">
+                
+                <h1 style="font-size: 24px; font-weight: 600; color: #FAFAF9; margin-top: 0; margin-bottom: 16px; line-height: 1.35; letter-spacing: -0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
                   {{HEADLINE}}
                 </h1>
-                <div style="font-size: 15px; color: #A1A1AA; line-height: 1.6; margin-bottom: 32px;">
+                
+                <div style="font-size: 14px; color: #A1A1AA; line-height: 1.6; margin-bottom: 28px; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
                   {{{BODY_CONTENT}}}
                 </div>
+                
                 {{CTA_SECTION}}
               </td>
             </tr>
+            
+            <!-- Footer -->
             <tr>
               <td style="padding: 0 32px 40px;">
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top: 1px solid #1F1F23; padding-top: 24px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top: 1px solid #27272A; padding-top: 24px;">
                   <tr>
                     <td align="left">
-                      <p style="font-size: 12px; color: #71717A; line-height: 1.6; margin: 0;">
+                      <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 0; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
                         You are receiving this because you subscribed to updates from ABRAM.
                       </p>
-                      <p style="font-size: 12px; color: #71717A; line-height: 1.6; margin: 6px 0 0 0;">
-                        ABRAM Inc. &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" class="link-hover" style="color: #CE1C1C; text-decoration: underline;">Unsubscribe</a> from this list.
+                      <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 6px 0 0 0; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                        Thomas Abram, Inc. &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
                       </p>
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
+            
           </table>
         </td>
       </tr>
@@ -218,12 +267,12 @@ function compileTemplate(data) {
 `;
   }
 
-  // Compile Badge section
+  // Compile Badge section with inline border-collapse fix
   const badgeSection = data.badge
-    ? `<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px;">
+    ? `<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px; border-collapse: separate !important;">
         <tr>
-          <td align="center" style="border: 1px solid #CE1C1C; border-radius: 9999px; padding: 4px 12px; background-color: rgba(206, 28, 28, 0.08);">
-            <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #CE1C1C;">
+          <td align="center" style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 4px 12px; background-color: rgba(255, 255, 255, 0.04); border-collapse: separate !important; vertical-align: middle;">
+            <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8ECAFF; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1;">
               ${data.badge}
             </span>
           </td>
@@ -231,12 +280,12 @@ function compileTemplate(data) {
       </table>`
     : '';
 
-  // Compile CTA section
+  // Compile CTA section with inline border-collapse fix and compact button size
   const ctaSection = data.ctaUrl
-    ? `<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 8px;">
+    ? `<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 8px; border-collapse: separate !important;">
         <tr>
-          <td bgcolor="${data.ctaBg}" class="${data.ctaClass}" style="border-radius: 9999px; overflow: hidden;">
-            <a href="${data.ctaUrl}" target="_blank" style="display: block; padding: 12px 28px; font-size: 13px; font-weight: 600; color: ${data.ctaColor}; text-decoration: none; text-align: center;">
+          <td bgcolor="${data.ctaBg}" class="${data.ctaClass}" style="border-radius: 9999px; overflow: hidden; border-collapse: separate !important;">
+            <a href="${data.ctaUrl}" target="_blank" style="display: block; padding: 10px 24px; font-size: 12px; font-weight: 600; color: ${data.ctaColor}; text-decoration: none; text-align: center; letter-spacing: 0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
               ${data.ctaText}
             </a>
           </td>
@@ -306,9 +355,9 @@ async function main() {
     bodyHtml: bodyHtml,
     ctaText: args['cta-text'] || 'Read More',
     ctaUrl: args['cta-url'] || '',
-    ctaBg: args['cta-bg'] || '#CE1C1C',
-    ctaColor: args['cta-color'] || '#FAFAF9',
-    ctaClass: args['cta-bg'] ? 'btn-custom' : 'btn-accent'
+    ctaBg: args['cta-bg'] || '#FAFAF9',
+    ctaColor: args['cta-color'] || '#0A0A0A',
+    ctaClass: args['cta-bg'] ? 'btn-custom' : 'btn-primary'
   };
 
   const htmlContent = compileTemplate(campaignData);

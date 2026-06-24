@@ -11,14 +11,9 @@ Use this skill when you need to write, design, or insert email newsletter campai
 
 ## 🛠️ Available Automation Tools
 
-Instead of writing custom SQL or database clients, you should execute the built-in campaign creator script. This script handles:
-1. Reading markdown files or raw strings.
-2. Converting markdown structures into email-safe inline HTML (e.g., `<p>`, `<ul>`, `<a>` tags with hex styles).
-3. Compiling the final body into the official table-based brand template.
-4. Calculating plain-text fallback copy.
-5. Securely inserting the record as a `'draft'` into the `public.campaigns` table.
+### Option A: Local Script Execution (Preferred in Local Shell)
+If you have terminal access, execute the built-in campaign creator script. This script handles converting markdown to inline HTML, compiling it into the brand layout, generating plain-text copies, and inserting it into the database:
 
-### CLI Usage Example:
 ```bash
 node scripts/create-campaign-draft.js \
   --title "Weekly Update - June 2026" \
@@ -30,30 +25,74 @@ node scripts/create-campaign-draft.js \
   --cta-url "https://abram.network/changelog"
 ```
 
-### Script Arguments:
-* `--title` (Required): Internal reference title.
-* `--subject` (Required): Email subject line.
-* `--headline` (Required): Card heading inside the email.
-* `--markdown` (Either this or --markdown-file is required): Markdown content of the email body.
-* `--markdown-file`: Path to a markdown file (useful for importing blog posts or release notes).
-* `--badge` (Optional): Small red uppercase tag above the headline (e.g., `CHANGELOG`, `ANNOUNCEMENT`).
-* `--cta-text` (Optional): Text on the action button (default: `Read More`).
-* `--cta-url` (Optional): Destination URL for the button.
-* `--cta-bg` (Optional): Hex background color for the button (default: `#CE1C1C`).
-* `--cta-color` (Optional): Hex text color for the button (default: `#FAFAF9`).
-* `--segment` (Optional): Target segment ID. Defaults to the general Marketing segment.
+### Option B: Database-Only Insertion (For Mobile Claude App)
+If you do not have terminal/shell access (e.g. running inside the mobile Claude App), you must compile the HTML content locally in your context and perform a direct SQL `INSERT` statement into the Supabase database.
+
+#### SQL Insert Statement
+```sql
+INSERT INTO public.campaigns (
+  title,
+  subject,
+  segment_id,
+  status,
+  html_content,
+  text_content,
+  recipients_count,
+  metadata
+) VALUES (
+  'Changelog Update - June 2026',
+  'Release Notes: v1.5.0 Update 🚀',
+  '42a3da82-ad27-475f-b2ad-113c9c8fa6b8', -- Segment ID (default marketing)
+  'draft', -- MUST always be inserted as 'draft'
+  '<!DOCTYPE html>...', -- Compiled HTML campaign body
+  'Plain text fallback text...', -- Plain text body
+  36, -- Recipient estimate count
+  '{
+    "created_via": "claude_app_database_agent",
+    "badge": "CHANGELOG",
+    "headline": "Say Hello to Smarter Scheduling",
+    "cta": {
+      "text": "View the Release Notes",
+      "url": "https://abram.network/changelog"
+    }
+  }'::jsonb
+);
+```
 
 ---
 
 ## 🎨 Design and Layout Compliance
 
-If writing or editing email copy, all formats must align with `DESIGN.md`. Ensure that:
-* **Brand Accent**: Use `#CE1C1C` for buttons, badge borders, and links.
-* **Neutral Palette**: Dark backgrounds are `#0A0A0A` (canvas) and `#0F0F11` (inner card), text is `#FAFAF9` (primary) and `#A1A1AA` (paragraphs).
-* **Button Shape**: Pill-shaped (`rounded-full`).
+All email layouts must align with `DESIGN.md` and the website's dark glass branding.
+- **canvas background**: Pure dark `#0A0A0A`.
+- **Card Background**: Deep black-zinc glass shade `#0F0F12`.
+- **Card Borders**: `1px solid #27272A` (zinc-800) with a top catch highlight of `1px solid #3F3F46` (zinc-700) to simulate a glass edge.
+- **Accents**:
+  - **No Red Accents**: Never use brand red (`#CE1C1C` / `#ef4444`).
+  - **Standard Blue**: Use `#3B82F6` for links.
+  - **Light Blue**: Use `#8ECAFF` for version/badge labels.
+- **Fonts**: Geist Sans font stack: `'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`.
+- **Primary CTA Buttons**: Solid cream background (`#FAFAF9`), dark text (`#0A0A0A`), compact sizing (`padding: 10px 24px`, `font-size: 12px`, pill shape `border-radius: 9999px;`).
+
+### ⚠️ Crucial Compatibility Fix: Pill Borders
+To prevent email clients from overriding the pill borders (`border-radius: 9999px`) to sharp rectangular shapes, you **must** declare `border-collapse: separate !important;` inline on the parent `<table>` and `<td>` elements of the badge and CTA buttons:
+```html
+<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px; border-collapse: separate !important;">
+  <tr>
+    <td align="center" style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 4px 12px; background-color: rgba(255, 255, 255, 0.04); border-collapse: separate !important; vertical-align: middle;">
+      <span style="font-size: 10px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; color: #8ECAFF; font-family: 'Geist Sans', sans-serif; line-height: 1;">
+        VERSION 1.5.0
+      </span>
+    </td>
+  </tr>
+</table>
+```
 
 ---
 
-## 🔒 Security Constraints & RLS
-* **No Direct Send**: Campaigns must **always** be inserted with `status: 'draft'`. Under no circumstances should an agent attempt to bypass the draft status or trigger direct sends. Sending requires manual admin authorization on the CMS dashboard.
-* **RLS Protection**: All operations are protected by RLS. The script automatically reads `SUPABASE_SERVICE_ROLE_KEY` from `.env.local` to securely insert the draft. Ensure `.env.local` is never committed to Git.
+## 🔒 Personalization & Security Constraints
+- **Personalization tags**:
+  - First Name: `{{{contact.first_name|there}}}` (resolved at delivery time).
+  - Unsubscribe Link: `{{{RESEND_UNSUBSCRIBE_URL}}}`.
+- **Legal Footer Requirement**: Every footer **must** include: **Thomas Abram, Inc. • Washington, DC**.
+- **No Direct Send**: Campaigns must **always** be inserted with `status: 'draft'`. Bypassing this or triggering sends directly is prohibited.

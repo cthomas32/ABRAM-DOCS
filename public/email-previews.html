@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABRAM - Email Template Previews</title>
+  <!-- Google Fonts: Geist & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Sleek Dark Theme matching DESIGN.md */
+    :root {
+      --bg-color: #0A0A0A;
+      --card-bg: #121214;
+      --border-color: #27272a;
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent-color: #CE1C1C;
+      --accent-hover: #E52E2E;
+      --glass-panel: rgba(18, 18, 20, 0.8);
+      --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: 320px;
+      background-color: #0c0c0e;
+      border-right: 1px solid var(--border-color);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-badge {
+      width: 24px;
+      height: 24px;
+      background-color: var(--accent-color);
+      border-radius: 6px;
+    }
+
+    .logo-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+
+    /* Template Cards selectors */
+    .template-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: left;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .template-btn:hover {
+      border-color: var(--text-muted);
+      color: var(--text-primary);
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .template-btn.active {
+      border-color: var(--accent-color);
+      color: var(--text-primary);
+      background-color: rgba(206, 28, 28, 0.04);
+      box-shadow: 0 0 20px rgba(206, 28, 28, 0.1);
+    }
+
+    .template-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .template-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Interactive Switchers */
+    .toggle-container {
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      padding: 3px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-sans);
+    }
+
+    .toggle-btn.active {
+      background-color: var(--border-color);
+      color: var(--text-primary);
+    }
+
+    /* Main Preview Window */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #060607;
+    }
+
+    .top-bar {
+      height: 64px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background-color: #0c0c0e;
+    }
+
+    .bar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .preview-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .preview-badge {
+      font-size: 10px;
+      background-color: rgba(255, 255, 255, 0.08);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: var(--text-secondary);
+    }
+
+    .viewport-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .viewport-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .viewport-btn:hover {
+      border-color: var(--text-muted);
+      color: var(--text-primary);
+    }
+
+    .viewport-btn.active {
+      border-color: var(--accent-color);
+      color: var(--text-primary);
+      background-color: rgba(206, 28, 28, 0.04);
+    }
+
+    /* Viewport Area */
+    .viewport-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      overflow: auto;
+    }
+
+    .preview-frame-container {
+      background-color: #000000;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 600px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-frame-container.mobile {
+      width: 360px;
+    }
+
+    .preview-frame-header {
+      background-color: #121214;
+      height: 36px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+
+    .frame-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .frame-dot:nth-child(1) { background-color: #ef4444; opacity: 1; }
+    .frame-dot:nth-child(2) { background-color: #f59e0b; opacity: 1; }
+    .frame-dot:nth-child(3) { background-color: #10b981; opacity: 1; }
+
+    .frame-address {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      background-color: rgba(0,0,0,0.3);
+      padding: 4px;
+      border-radius: 6px;
+      max-width: 300px;
+      margin: 0 auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: #0A0A0A;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo-container">
+      <div class="logo-badge"></div>
+      <div class="logo-text">ABRAM EMAIL</div>
+    </div>
+
+    <!-- Select Template Section -->
+    <div class="sidebar-section">
+      <h3 class="section-title">Select Template</h3>
+      
+      <button class="template-btn active" id="btn-editorial" onclick="selectTemplate('editorial')">
+        <span class="template-name">Brand Editorial</span>
+        <span class="template-desc">Classic ABRAM styling with header logo image, solid cream CTA button, and standard blue links.</span>
+      </button>
+
+      <button class="template-btn" id="btn-changelog" onclick="selectTemplate('changelog')">
+        <span class="template-name">Release Changelog</span>
+        <span class="template-desc">Bordered light-blue version pill badge, styled list items, and solid cream CTA button.</span>
+      </button>
+
+      <button class="template-btn" id="btn-minimal" onclick="selectTemplate('minimal')">
+        <span class="template-name">Minimalist Light</span>
+        <span class="template-desc">High readability dark-on-white baseline structure for simple direct messaging.</span>
+      </button>
+    </div>
+
+    <!-- Variable Mode -->
+    <div class="sidebar-section">
+      <h3 class="section-title">Personalization View</h3>
+      <div class="toggle-container">
+        <button class="toggle-btn active" id="btn-render" onclick="setViewMode('rendered')">Rendered Preview</button>
+        <button class="toggle-btn" id="btn-tags" onclick="setViewMode('tags')">Raw Merge Tags</button>
+      </div>
+    </div>
+    
+    <!-- Info Footer -->
+    <div class="sidebar-section" style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-color);">
+      <span class="section-title">Personalization Tokens</span>
+      <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.6; display: flex; flex-direction: column; gap: 4px;">
+        <div>Name: <code>{{{contact.first_name|there}}}</code></div>
+        <div>Email: <code>{{{contact.email}}}</code></div>
+        <div>Opt-Out: <code>{{{RESEND_UNSUBSCRIBE_URL}}}</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main View Area -->
+  <div class="main-content">
+    <div class="top-bar">
+      <div class="bar-left">
+        <div class="preview-title" id="bar-template-name">Brand Editorial</div>
+        <div class="preview-badge" id="bar-view-mode">Rendered</div>
+      </div>
+
+      <div class="viewport-controls">
+        <button class="viewport-btn active" id="btn-desktop" onclick="setViewport('desktop')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Desktop (600px)
+        </button>
+        <button class="viewport-btn" id="btn-mobile" onclick="setViewport('mobile')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+          Mobile (360px)
+        </button>
+      </div>
+    </div>
+
+    <!-- Viewport Screen -->
+    <div class="viewport-area">
+      <div class="preview-frame-container" id="preview-container">
+        <div class="preview-frame-header">
+          <div class="frame-dot"></div>
+          <div class="frame-dot"></div>
+          <div class="frame-dot"></div>
+          <div class="frame-address" id="preview-url-bar">http://abram.network/campaign/preview</div>
+        </div>
+        <iframe id="preview-iframe"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Templates Code
+    const templates = {
+      editorial: {
+        name: "Brand Editorial",
+        subject: "Introducing Creative Workflows inside ABRAM",
+        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Update: New Release & Insights from ABRAM</title>
+    <style type="text/css">
+      body { margin: 0; padding: 0; min-width: 100% !important; width: 100% !important; background-color: #0A0A0A; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+      table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse !important; }
+      img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+      .link-hover:hover { color: #FAFAF9 !important; text-decoration: underline !important; }
+      @media screen and (max-width: 620px) {
+        .container-table { width: 100% !important; max-width: 100% !important; border-radius: 0px !important; border-left: none !important; border-right: none !important; }
+        .content-padding { padding: 32px 24px !important; }
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #0A0A0A; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #FAFAF9;">
+    <div style="display: none; max-height: 0px; overflow: hidden; font-size: 1px; line-height: 1px; color: #FAF9F6; opacity: 0;">
+      Discover how the new shared asset system unlocks real-time collaboration for production teams.
+    </div>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0A0A0A" style="table-layout: fixed;">
+      <tr>
+        <td align="center" style="padding: 40px 10px;">
+          <!-- Simulated Glass Card -->
+          <table width="600" cellpadding="0" cellspacing="0" border="0" class="container-table" bgcolor="#0F0F12" style="width: 600px; border-radius: 16px; border: 1px solid #27272A; border-top: 1px solid #3F3F46; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.6);">
+            <!-- Floating Logo Header (Unified spacing, no harsh border line) -->
+            <tr>
+              <td align="center" style="padding: 44px 32px 16px;">
+                <img src="https://abram.network/abram-logo-lockup-cream.png" alt="ABRAM" width="110" height="22" style="border: 0; display: block; outline: none; text-decoration: none;" />
+              </td>
+            </tr>
+            <!-- Main Content -->
+            <tr>
+              <td class="content-padding" style="padding: 16px 32px 32px;">
+                <!-- Version Pill Badge with inline border-collapse separate fix -->
+                <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px; border-collapse: separate !important;">
+                  <tr>
+                    <td align="center" style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 4px 12px; background-color: rgba(255, 255, 255, 0.04); border-collapse: separate !important; vertical-align: middle;">
+                      <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8ECAFF; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1;">ANNOUNCEMENT</span>
+                    </td>
+                  </tr>
+                </table>
+                <h1 style="font-size: 24px; font-weight: 600; color: #FAFAF9; margin-top: 0; margin-bottom: 16px; line-height: 1.35; letter-spacing: -0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                  Designing Collaborative Creative Workflows
+                </h1>
+                <div style="font-size: 14px; color: #A1A1AA; line-height: 1.6; margin-bottom: 28px; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                  <p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #A1A1AA; font-size: 14px; font-family: 'Geist Sans', sans-serif;">Hello {{NAME}},</p>
+                  <p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #A1A1AA; font-size: 14px; font-family: 'Geist Sans', sans-serif;">We are excited to share our latest product deep dive. As modern production budgets tighten, finding efficiencies inside crew allocation and day-to-day operations is paramount.</p>
+                  <p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #A1A1AA; font-size: 14px; font-family: 'Geist Sans', sans-serif;">In this breakdown, we examine how centralizing team scheduling and automation reduces operational overhead by up to 25%. We cover:</p>
+                  <ul style="margin: 0 0 16px 0; padding-left: 20px; color: #A1A1AA; font-family: 'Geist Sans', sans-serif;">
+                    <li style="margin-bottom: 8px; line-height: 1.6; font-size: 14px; color: #A1A1AA;">Visual timeline planning and team rosters</li>
+                    <li style="margin-bottom: 8px; line-height: 1.6; font-size: 14px; color: #A1A1AA;">Secure scheduling alerts and automated RSVPs</li>
+                    <li style="margin-bottom: 8px; line-height: 1.6; font-size: 14px; color: #A1A1AA;">Real-time contract status trackers</li>
+                  </ul>
+                </div>
+                <!-- Compact Primary CTA Button with inline border-collapse separate fix -->
+                <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; border-collapse: separate !important;">
+                  <tr>
+                    <td bgcolor="#FAFAF9" style="border-radius: 9999px; overflow: hidden; border-collapse: separate !important;">
+                      <a href="https://abram.network/blog/collaborative-creative-workflows" target="_blank" style="display: block; padding: 10px 24px; font-size: 12px; font-weight: 600; color: #0A0A0A; text-decoration: none; text-align: center; letter-spacing: 0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">Read Full Article</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- Footer -->
+            <tr>
+              <td style="padding: 0 32px 40px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top: 1px solid #27272A; padding-top: 24px;">
+                  <tr>
+                    <td align="left">
+                      <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 0; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                        You are receiving this because you subscribed to updates from ABRAM.
+                      </p>
+                      <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 6px 0 0 0; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                        Thomas Abram, Inc. &bull; Washington, DC &bull; <a href="{{UNSUBSCRIBE_URL}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`
+      },
+      changelog: {
+        name: "Release Changelog",
+        subject: "Release Notes: ABRAM Network v1.5.0",
+        html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Release Notes: ABRAM Network v1.5.0 Update</title>
+    <style type="text/css">
+      body { margin: 0; padding: 0; min-width: 100% !important; width: 100% !important; background-color: #0A0A0A; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+      table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse !important; }
+      img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+      .link-hover:hover { color: #FAFAF9 !important; text-decoration: underline !important; }
+      @media screen and (max-width: 620px) {
+        .container-table { width: 100% !important; max-width: 100% !important; border-radius: 0px !important; border-left: none !important; border-right: none !important; }
+        .content-padding { padding: 32px 24px !important; }
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #0A0A0A; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #FAFAF9;">
+    <div style="display: none; max-height: 0px; overflow: hidden; font-size: 1px; line-height: 1px; color: #FAF9F6; opacity: 0;">
+      Version 1.5.0 features major updates to scheduling timelines, auto-notifications, and budget summary reports.
+    </div>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0A0A0A" style="table-layout: fixed;">
+      <tr>
+        <td align="center" style="padding: 40px 10px;">
+          <!-- Simulated Glass Card -->
+          <table width="600" cellpadding="0" cellspacing="0" border="0" class="container-table" bgcolor="#0F0F12" style="width: 600px; border-radius: 16px; border: 1px solid #27272A; border-top: 1px solid #3F3F46; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.6);">
+            <!-- Floating Logo Header (Unified spacing, no harsh border line) -->
+            <tr>
+              <td align="center" style="padding: 44px 32px 16px;">
+                <img src="https://abram.network/abram-logo-lockup-cream.png" alt="ABRAM" width="110" height="22" style="border: 0; display: block; outline: none; text-decoration: none;" />
+              </td>
+            </tr>
+            <!-- Main Content -->
+            <tr>
+              <td class="content-padding" style="padding: 16px 32px 32px;">
+                <!-- Version Pill Badge with inline border-collapse separate fix -->
+                <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px; border-collapse: separate !important;">
+                  <tr>
+                    <td align="center" style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 4px 12px; background-color: rgba(255, 255, 255, 0.04); border-collapse: separate !important; vertical-align: middle;">
+                      <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8ECAFF; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1;">VERSION 1.5.0</span>
+                    </td>
+                  </tr>
+                </table>
+                <h1 style="font-size: 24px; font-weight: 600; color: #FAFAF9; margin-top: 0; margin-bottom: 16px; line-height: 1.35; letter-spacing: -0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                  Say Hello to Smarter Scheduling
+                </h1>
+                <div style="font-size: 14px; color: #A1A1AA; line-height: 1.6; margin-bottom: 28px; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                  <p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #A1A1AA; font-size: 14px; font-family: 'Geist Sans', sans-serif;">Hey {{NAME}},</p>
+                  <p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #A1A1AA; font-size: 14px; font-family: 'Geist Sans', sans-serif;">We just deployed version 1.5.0. This release concentrates on enhancing our mobile roster scheduling and team communications. Here is what is new:</p>
+                  <ul style="margin: 0 0 16px 0; padding-left: 20px; color: #A1A1AA; font-family: 'Geist Sans', sans-serif;">
+                    <li style="margin-bottom: 8px; line-height: 1.6; font-size: 14px; color: #A1A1AA;"><strong style="font-weight: 600; color: #FAFAF9;">Multi-Shift Rostering</strong>: Drag and drop shifts on your calendar seamlessly from any screen.</li>
+                    <li style="margin-bottom: 8px; line-height: 1.6; font-size: 14px; color: #A1A1AA;"><strong style="font-weight: 600; color: #FAFAF9;">Instant RSVP Statuses</strong>: Crew members can now accept or decline shifts directly in their notification inbox without opening the app.</li>
+                    <li style="margin-bottom: 8px; line-height: 1.6; font-size: 14px; color: #A1A1AA;"><strong style="font-weight: 600; color: #FAFAF9;">Weekly Budget Summaries</strong>: Secure reports detailing active budget burn and crew metrics are sent to admins every Friday.</li>
+                  </ul>
+                </div>
+                <!-- Compact Primary CTA Button with inline border-collapse separate fix -->
+                <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; border-collapse: separate !important;">
+                  <tr>
+                    <td bgcolor="#FAFAF9" style="border-radius: 9999px; overflow: hidden; border-collapse: separate !important;">
+                      <a href="https://abram.network/changelog" target="_blank" style="display: block; padding: 10px 24px; font-size: 12px; font-weight: 600; color: #0A0A0A; text-decoration: none; text-align: center; letter-spacing: 0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">View the Release Notes</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- Footer -->
+            <tr>
+              <td style="padding: 0 32px 40px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top: 1px solid #27272A; padding-top: 24px;">
+                  <tr>
+                    <td align="left">
+                      <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 0; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                        You are receiving this because you subscribed to updates from ABRAM.
+                      </p>
+                      <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 6px 0 0 0; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+                        Thomas Abram, Inc. &bull; Washington, DC &bull; <a href="{{UNSUBSCRIBE_URL}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`
+      },
+      minimal: {
+        name: "Minimalist Dark",
+        subject: "Quick platform status notification",
+        html: `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body style="font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; color: #FAFAF9; padding: 24px; background-color: #0A0A0A;">
+    <div style="max-width: 600px; margin: 0 auto; padding-top: 20px;">
+      <h2 style="font-size: 18px; font-weight: 600; color: #FAFAF9; margin-bottom: 16px; border-bottom: 1px solid #27272A; padding-bottom: 8px; letter-spacing: -0.01em;">ABRAM News</h2>
+      <p style="font-size: 14px; color: #A1A1AA; margin-bottom: 16px;">Hello {{NAME}},</p>
+      <p style="font-size: 14px; color: #A1A1AA; margin-bottom: 16px;">
+        We wanted to provide a quick note to let you know that our scheduled server optimization will take place this Sunday at 04:00 UTC. 
+      </p>
+      <p style="font-size: 14px; color: #A1A1AA; margin-bottom: 16px;">
+        No active workflows or scheduled timelines will be impacted, but you may experience brief login delays under 10 seconds.
+      </p>
+      <p style="font-size: 14px; color: #A1A1AA; margin-bottom: 24px;">
+        Best regards,<br/>
+        The ABRAM Team
+      </p>
+      <hr style="border: none; border-top: 1px solid #27272A; margin: 24px 0;" />
+      <p style="font-size: 11px; color: #71717A;">
+        You received this email at {{EMAIL}}. If you no longer wish to receive updates, you can <a href="{{UNSUBSCRIBE_URL}}" style="color: #3B82F6; text-decoration: underline;">unsubscribe here</a>.
+      </p>
+    </div>
+  </body>
+</html>`
+      }
+    };
+
+    let currentTemplate = 'editorial';
+    let viewMode = 'rendered'; // 'rendered' | 'tags'
+
+    function updatePreview() {
+      const template = templates[currentTemplate];
+      let html = template.html;
+
+      if (viewMode === 'rendered') {
+        // Substitute example values
+        html = html.replace(/\{\{NAME\}\}/g, 'John');
+        html = html.replace(/\{\{EMAIL\}\}/g, 'john@example.com');
+        html = html.replace(/\{\{UNSUBSCRIBE_URL\}\}/g, 'https://abram.network/unsubscribe?id=123');
+      } else {
+        // Substitute raw merge tags
+        html = html.replace(/\{\{NAME\}\}/g, '{{{contact.first_name|there}}}');
+        html = html.replace(/\{\{EMAIL\}\}/g, '{{{contact.email}}}');
+        html = html.replace(/\{\{UNSUBSCRIBE_URL\}\}/g, '{{{RESEND_UNSUBSCRIBE_URL}}}');
+      }
+
+      // Inject HTML into iframe
+      const iframe = document.getElementById('preview-iframe');
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(html);
+      doc.close();
+
+      // Update Top Bar titles
+      document.getElementById('bar-template-name').textContent = template.name;
+      document.getElementById('bar-view-mode').textContent = viewMode === 'rendered' ? 'Rendered View' : 'Raw Tag Mode';
+      document.getElementById('preview-url-bar').textContent = `http://abram.network/campaign/preview?template=${currentTemplate}&mode=${viewMode}`;
+    }
+
+    function selectTemplate(id) {
+      // Manage Active State
+      document.querySelectorAll('.template-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`btn-${id}`).classList.add('active');
+
+      currentTemplate = id;
+      updatePreview();
+    }
+
+    function setViewMode(mode) {
+      document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`btn-${mode === 'rendered' ? 'render' : 'tags'}`).classList.add('active');
+
+      viewMode = mode;
+      updatePreview();
+    }
+
+    function setViewport(size) {
+      document.querySelectorAll('.viewport-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`btn-${size}`).classList.add('active');
+
+      const container = document.getElementById('preview-container');
+      if (size === 'mobile') {
+        container.classList.add('mobile');
+      } else {
+        container.classList.remove('mobile');
+      }
+    }
+
+    // Initial Load
+    window.onload = function() {
+      // Delay slightly to let iframe register
+      setTimeout(updatePreview, 100);
+    };
+  </script>
+</body>
+</html>

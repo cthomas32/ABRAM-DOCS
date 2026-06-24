@@ -364,17 +364,6 @@
   {
     "slug": [
       "user-guide",
-      "6.4-resend-email-integration"
-    ],
-    "path": "user-guide/6.4-resend-email-integration",
-    "title": "Resend Email Integration",
-    "group": "Integrations & Collaboration",
-    "groupIcon": "plug",
-    "product": "Help Center"
-  },
-  {
-    "slug": [
-      "user-guide",
       "7.1-faqs-and-troubleshooting"
     ],
     "path": "user-guide/7.1-faqs-and-troubleshooting",
