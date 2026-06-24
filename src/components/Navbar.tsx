@@ -428,14 +428,14 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
 
           <Link
             href="/blog"
-            title="ABRAM Network Blog & Insights"
+            title="Subscribe to ABRAM Intelligence"
             className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
               pathname.startsWith("/blog")
                 ? "bg-white/10 text-white border border-white/10"
                 : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
             }`}
           >
-            Blog
+            Subscribe to ABRAM Intelligence
           </Link>
           <Link
             href="/pricing"

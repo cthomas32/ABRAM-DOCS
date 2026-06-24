@@ -128,8 +128,8 @@ export default function HomeFooter({
           <Link href="/docs" title="ABRAM Help Guides & Documentation" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Help Guides
           </Link>
-          <Link href="/blog" title="ABRAM Network Blog & Insights" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-            Blog
+          <Link href="/blog" title="Subscribe to ABRAM Intelligence" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Subscribe to ABRAM Intelligence
           </Link>
           <Link href="/changelog" title="Product Changelog & System Updates" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Changelog

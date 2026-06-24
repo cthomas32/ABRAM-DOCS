@@ -111,7 +111,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Crew Matchmaking", href: "/intelligence/crew-matchmaking", desc: "100-pt crew suitability index", title: "Crew Suitability Matchmaking Index" },
       ]
     },
-    { name: "Blog", href: "/blog", title: "ABRAM Network Blog & Insights" },
+    { name: "Subscribe to ABRAM Intelligence", href: "/blog", title: "Subscribe to ABRAM Intelligence" },
     { name: "Pricing", href: "/pricing", title: "ABRAM Platform Pricing Plans" },
   ];
 

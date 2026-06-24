@@ -18,6 +18,7 @@ export default function NewsletterSignup({
   const [subscribedEmail, setSubscribedEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
 
   // Profile Modal State
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -52,10 +53,17 @@ export default function NewsletterSignup({
         throw new Error(data.error || "Failed to subscribe. Please try again.");
       }
 
-      setSubscribedEmail(email);
-      setEmail("");
-      setStatus("idle"); // Clear loading state but keep successful email reference
-      setShowProfileModal(true); // Open details popup modal
+      if (data.alreadySubscribed) {
+        setIsAlreadySubscribed(true);
+        setStatus("success");
+        setEmail("");
+      } else {
+        setIsAlreadySubscribed(false);
+        setSubscribedEmail(email);
+        setEmail("");
+        setStatus("idle"); // Clear loading state but keep successful email reference
+        setShowProfileModal(true); // Open details popup modal
+      }
     } catch (err: any) {
       setStatus("error");
       setErrorMessage(err.message || "An unexpected error occurred.");
@@ -141,10 +149,12 @@ export default function NewsletterSignup({
               <Check className="w-5 h-5" />
             </motion.div>
             <h3 className="text-lg font-semibold tracking-tight text-white font-sans">
-              Successfully Subscribed
+              {isAlreadySubscribed ? "Already Subscribed" : "Successfully Subscribed"}
             </h3>
             <p className="mt-2 text-xs sm:text-sm text-zinc-400 max-w-sm leading-relaxed font-sans">
-              You've been added to our network updates. Keep an eye on your inbox for our latest system releases and articles.
+              {isAlreadySubscribed
+                ? "You are already subscribed to our newsletter updates. Thank you for your continued support!"
+                : "You've been added to our network updates. Keep an eye on your inbox for our latest system releases and articles."}
             </p>
           </motion.div>
         ) : (
@@ -193,6 +203,7 @@ export default function NewsletterSignup({
                       onChange={(e) => {
                         setEmail(e.target.value);
                         if (status === "error") setStatus("idle");
+                        setIsAlreadySubscribed(false);
                       }}
                       disabled={status === "loading"}
                       className={`w-full h-11 px-4 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/40 rounded-full border transition-all duration-200 outline-none disabled:opacity-50 ${

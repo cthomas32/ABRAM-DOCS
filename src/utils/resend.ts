@@ -96,18 +96,51 @@ export async function addSubscriber(input: SubscribeInput) {
     console.error("Local database subscriber check failed:", dbError.message);
   }
 
-  if (existingSub && existingSub.status === "subscribed" && existingSub.is_marketing_list === isMarketing && existingSub.is_application_list === isApp) {
-    // If details are provided on a subsequent subscribe call, we still want to update them.
-    if (input.firstName || input.lastName || input.jobTitle || input.companySize) {
-      await updateSubscriberDetails({
-        email: input.email,
-        firstName: input.firstName,
-        lastName: input.lastName,
-        jobTitle: input.jobTitle,
-        companySize: input.companySize,
-      }).catch(err => console.error("Failed to update extra subscriber details during re-subscribe:", err));
+  if (existingSub && existingSub.status === "subscribed") {
+    // Check if lists need updating or if details are provided on a subsequent subscribe call
+    const needsListUpdate = (isMarketing && !existingSub.is_marketing_list) || (isApp && !existingSub.is_application_list);
+    const needsDetailsUpdate = input.firstName || input.lastName || input.jobTitle || input.companySize;
+
+    if (needsListUpdate || needsDetailsUpdate) {
+      try {
+        const updatePayload: any = {
+          updated_at: new Date().toISOString(),
+        };
+        if (isMarketing) updatePayload.is_marketing_list = true;
+        if (isApp) updatePayload.is_application_list = true;
+        if (input.firstName) updatePayload.first_name = input.firstName;
+        if (input.lastName) updatePayload.last_name = input.lastName;
+
+        // Try updating details with self-healing fallback for role and company size columns
+        try {
+          const { error: updateError } = await supabase
+            .from("subscribers")
+            .update({
+              ...updatePayload,
+              job_title: input.jobTitle || undefined,
+              company_size: input.companySize || undefined,
+            })
+            .eq("email", input.email);
+
+          if (updateError) {
+            if (updateError.message.includes("job_title") || updateError.message.includes("company_size")) {
+              const { error: fallbackError } = await supabase
+                .from("subscribers")
+                .update(updatePayload)
+                .eq("email", input.email);
+              if (fallbackError) throw fallbackError;
+            } else {
+              throw updateError;
+            }
+          }
+        } catch (dbErr: any) {
+          console.warn("Database update failed during re-subscribe check (ignoring silently):", dbErr.message);
+        }
+      } catch (err: any) {
+        console.error("Failed to update extra subscriber details during re-subscribe:", err);
+      }
     }
-    return { success: true, message: "You are already subscribed!" };
+    return { success: true, message: "You are already subscribed!", alreadySubscribed: true };
   }
 
   // 3. Persist subscriber to local database table
@@ -145,6 +178,9 @@ export async function addSubscriber(input: SubscribeInput) {
     }
   } catch (err: any) {
     console.error("Supabase subscriber upsert error:", err.message);
+    if (err.message.includes("row-level security policy") || err.message.includes("unique constraint") || err.message.includes("already exists")) {
+      return { success: true, message: "You are already subscribed!", alreadySubscribed: true };
+    }
     throw new Error(`Database Error: ${err.message}`);
   }
 

@@ -45,6 +45,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: result.message || "Successfully subscribed!",
+      alreadySubscribed: !!(result as any).alreadySubscribed,
     });
   } catch (error: unknown) {
     console.error("Newsletter subscription API error:", error);
