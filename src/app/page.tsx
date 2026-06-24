@@ -217,7 +217,6 @@ export default function LandingPage() {
           <ul>
             <li><strong>Crew Verification:</strong> Solo professionals onboard as Individuals, while agencies or studios register as Companies. Funds are routed directly to bank accounts or debit cards.</li>
             <li><strong>Onboarding Safety Net:</strong> Project payments are processed securely even if a contractor has not completed Stripe setup. Funds are held in a platform account and automatically released to the contractor once onboarding is complete.</li>
-            <li><strong>Platform Fee Splitting:</strong> The system automatically deducts a 5% payment processing fee from the invoice subtotal, transferring the remaining amount immediately to the contractor's payout destination.</li>
           </ul>
 
           <h3>3. Modern Alternative to Legacy Systems</h3>
