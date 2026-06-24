@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { id, email, first_name, last_name, is_marketing_list, is_application_list, status, resend_contact_id } = record;
+    const { id, email, first_name, last_name, is_marketing_list, is_application_list, status, resend_contact_id, job_title = null, company_size = null } = record;
 
     // 1. Initialize Resend Key (prefers RESEND_MARKETING_API_KEY as requested)
     const resendKey = Deno.env.get("RESEND_MARKETING_API_KEY") || Deno.env.get("RESEND_API_KEY");
@@ -60,6 +60,10 @@ Deno.serve(async (req) => {
           firstName: first_name || "",
           lastName: last_name || "",
           unsubscribed,
+          properties: {
+            jobTitle: job_title || "",
+            companySize: company_size || ""
+          },
           ...(segments.length > 0 ? { segments } : {})
         })
       });
@@ -84,7 +88,11 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           firstName: first_name || undefined,
           lastName: last_name || undefined,
-          unsubscribed
+          unsubscribed,
+          properties: {
+            jobTitle: job_title || "",
+            companySize: company_size || ""
+          }
         })
       });
 

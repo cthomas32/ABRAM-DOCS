@@ -96,6 +96,13 @@ export async function syncResendContacts(): Promise<{ success: boolean; count?: 
 
     const supabase = await createClient();
 
+    // Check if job_title and company_size columns exist in the database (self-healing DDL safety)
+    const { error: colCheckError } = await supabase
+      .from("subscribers")
+      .select("job_title, company_size")
+      .limit(1);
+    const hasMarketingFields = !colCheckError;
+
     const marketingSegmentId = process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
     const applicationSegmentId = process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8";
 
@@ -116,18 +123,29 @@ export async function syncResendContacts(): Promise<{ success: boolean; count?: 
       const email = contact.email?.trim().toLowerCase();
       if (!email || syncedEmails.has(email)) continue;
 
+      const resendProps = contact.properties || contact.custom_properties || {};
+      const jobTitleVal = resendProps.jobTitle || null;
+      const companySizeVal = resendProps.companySize || null;
+
+      const upsertData: any = {
+        email,
+        first_name: contact.firstName || contact.first_name || null,
+        last_name: contact.lastName || contact.last_name || null,
+        resend_contact_id: contact.id,
+        status: contact.unsubscribed ? "unsubscribed" : "subscribed",
+        is_marketing_list: true,
+        is_application_list: true,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (hasMarketingFields) {
+        upsertData.job_title = jobTitleVal;
+        upsertData.company_size = companySizeVal;
+      }
+
       const { error: upsertError } = await supabase
         .from("subscribers")
-        .upsert({
-          email,
-          first_name: contact.firstName || contact.first_name || null,
-          last_name: contact.lastName || contact.last_name || null,
-          resend_contact_id: contact.id,
-          status: contact.unsubscribed ? "unsubscribed" : "subscribed",
-          is_marketing_list: true,
-          is_application_list: true,
-          updated_at: new Date().toISOString(),
-        }, { onConflict: "email" });
+        .upsert(upsertData, { onConflict: "email" });
 
       if (upsertError) {
         console.error(`Failed to sync application contact ${email}:`, upsertError.message);
@@ -142,18 +160,29 @@ export async function syncResendContacts(): Promise<{ success: boolean; count?: 
       const email = contact.email?.trim().toLowerCase();
       if (!email || syncedEmails.has(email)) continue;
 
+      const resendProps = contact.properties || contact.custom_properties || {};
+      const jobTitleVal = resendProps.jobTitle || null;
+      const companySizeVal = resendProps.companySize || null;
+
+      const upsertData: any = {
+        email,
+        first_name: contact.firstName || contact.first_name || null,
+        last_name: contact.lastName || contact.last_name || null,
+        resend_contact_id: contact.id,
+        status: contact.unsubscribed ? "unsubscribed" : "subscribed",
+        is_marketing_list: true,
+        is_application_list: false,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (hasMarketingFields) {
+        upsertData.job_title = jobTitleVal;
+        upsertData.company_size = companySizeVal;
+      }
+
       const { error: upsertError } = await supabase
         .from("subscribers")
-        .upsert({
-          email,
-          first_name: contact.firstName || contact.first_name || null,
-          last_name: contact.lastName || contact.last_name || null,
-          resend_contact_id: contact.id,
-          status: contact.unsubscribed ? "unsubscribed" : "subscribed",
-          is_marketing_list: true,
-          is_application_list: false,
-          updated_at: new Date().toISOString(),
-        }, { onConflict: "email" });
+        .upsert(upsertData, { onConflict: "email" });
 
       if (upsertError) {
         console.error(`Failed to sync marketing contact ${email}:`, upsertError.message);
@@ -178,6 +207,8 @@ export async function manualAddSubscriber(
   email: string,
   firstName?: string,
   lastName?: string,
+  jobTitle?: string,
+  companySize?: string,
   isMarketingList?: boolean,
   isApplicationList?: boolean
 ): Promise<{ success: boolean; message?: string; error?: string }> {
@@ -186,6 +217,8 @@ export async function manualAddSubscriber(
       email,
       firstName,
       lastName,
+      jobTitle,
+      companySize,
       isMarketingList,
       isApplicationList,
     });

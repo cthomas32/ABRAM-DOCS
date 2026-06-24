@@ -310,6 +310,39 @@ export const blockquote = ({ children }: React.HTMLAttributes<HTMLQuoteElement>)
   );
 };
 
+// Helper to identify React element types in MDX components
+const isElementType = (element: React.ReactNode, typeName: string, componentRef?: any): boolean => {
+  if (!React.isValidElement(element)) return false;
+  const type = element.type;
+  if (!type) return false;
+  
+  // Direct tag name check
+  if (typeof type === "string" && type.toLowerCase() === typeName.toLowerCase()) {
+    return true;
+  }
+  
+  // Direct reference check
+  if (componentRef && type === componentRef) {
+    return true;
+  }
+  
+  // Function / Class name check
+  if (typeof type === "function" && type.name && type.name.toLowerCase() === typeName.toLowerCase()) {
+    return true;
+  }
+  
+  // displayName check
+  const typeAsAny = type as any;
+  if (typeAsAny && typeof typeAsAny === "object" && "displayName" in typeAsAny && typeof typeAsAny.displayName === "string" && typeAsAny.displayName.toLowerCase() === typeName.toLowerCase()) {
+    return true;
+  }
+  if (typeof typeAsAny === "function" && "displayName" in typeAsAny && typeof typeAsAny.displayName === "string" && typeAsAny.displayName.toLowerCase() === typeName.toLowerCase()) {
+    return true;
+  }
+  
+  return false;
+};
+
 // Custom Tables
 export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTableElement>) => {
   const childrenArray = React.Children.toArray(children);
@@ -317,12 +350,9 @@ export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTabl
   // Check if there is already a thead, tbody, or tfoot container in the children
   const hasTheadOrTbody = childrenArray.some(
     (child) =>
-      React.isValidElement(child) &&
-      (child.type === "thead" ||
-        child.type === "tbody" ||
-        child.type === "tfoot" ||
-        (typeof child.type === "string" && ["thead", "tbody", "tfoot"].includes(child.type.toLowerCase())) ||
-        (typeof child.type === "function" && ["thead", "tbody", "tfoot"].includes(child.type.name)))
+      isElementType(child, "thead", thead) ||
+      isElementType(child, "tbody", tbody) ||
+      isElementType(child, "tfoot")
   );
 
   let processedChildren = children;
@@ -332,12 +362,7 @@ export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTabl
     const otherElements: React.ReactNode[] = [];
 
     childrenArray.forEach((child) => {
-      if (
-        React.isValidElement(child) &&
-        (child.type === "tr" ||
-          (typeof child.type === "string" && child.type.toLowerCase() === "tr") ||
-          (typeof child.type === "function" && child.type.name === "tr"))
-      ) {
+      if (isElementType(child, "tr", tr)) {
         trElements.push(child);
       } else {
         otherElements.push(child);
@@ -352,13 +377,7 @@ export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTabl
         if (React.isValidElement(trNode)) {
           const trElement = trNode as React.ReactElement<{ children?: React.ReactNode }>;
           const trChildren = React.Children.toArray(trElement.props.children);
-          const hasTh = trChildren.some(
-            (c) =>
-              React.isValidElement(c) &&
-              (c.type === "th" ||
-                (typeof c.type === "string" && c.type.toLowerCase() === "th") ||
-                (typeof c.type === "function" && c.type.name === "th"))
-          );
+          const hasTh = trChildren.some((c) => isElementType(c, "th", th));
           if (hasTh) {
             headerTrs.push(trNode);
           } else {
@@ -395,36 +414,42 @@ export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTabl
     </div>
   );
 };
+table.displayName = "table";
 
 export const thead = ({ children, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => (
   <thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800" {...props}>
     {children}
   </thead>
 );
+thead.displayName = "thead";
 
 export const tbody = ({ children, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => (
   <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800" {...props}>
     {children}
   </tbody>
 );
+tbody.displayName = "tbody";
 
 export const tr = ({ children, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
   <tr className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors" {...props}>
     {children}
   </tr>
 );
+tr.displayName = "tr";
 
 export const th = ({ children, ...props }: React.HTMLAttributes<HTMLTableHeaderCellElement>) => (
   <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100" {...props}>
     {children}
   </th>
 );
+th.displayName = "th";
 
 export const td = ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
   <td className="px-4 py-3 text-zinc-700 dark:text-zinc-300 text-sm" {...props}>
     {children}
   </td>
 );
+td.displayName = "td";
 
 // Code pre override
 export const pre = ({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) => {

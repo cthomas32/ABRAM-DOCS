@@ -1,5 +1,24 @@
 import { Resend } from "resend";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "./supabase/server";
+
+/**
+ * Creates a service-role Supabase client to execute database operations
+ * that bypass Row-Level Security (RLS) constraints.
+ */
+export function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error("Missing Supabase URL or Service Role Key in environment variables.");
+  }
+  return createSupabaseClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
 
 /**
  * Retrieves the Resend client instance safely.
@@ -49,16 +68,18 @@ interface SubscribeInput {
   email: string;
   firstName?: string;
   lastName?: string;
+  jobTitle?: string;
+  companySize?: string;
   isMarketingList?: boolean;
   isApplicationList?: boolean;
 }
 
 /**
  * Subscribes a user to the mailing list (persists to Supabase database).
- * The database trigger/webhook will asynchronously sync the contact to Resend via Edge Functions.
+ * Runs using the service-role client to ensure correct permission level.
  */
 export async function addSubscriber(input: SubscribeInput) {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   // 1. Resolve logical lists (ensure App signup forces Marketing list)
   const isApp = input.isApplicationList || false;
@@ -76,11 +97,21 @@ export async function addSubscriber(input: SubscribeInput) {
   }
 
   if (existingSub && existingSub.status === "subscribed" && existingSub.is_marketing_list === isMarketing && existingSub.is_application_list === isApp) {
+    // If details are provided on a subsequent subscribe call, we still want to update them.
+    if (input.firstName || input.lastName || input.jobTitle || input.companySize) {
+      await updateSubscriberDetails({
+        email: input.email,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        jobTitle: input.jobTitle,
+        companySize: input.companySize,
+      }).catch(err => console.error("Failed to update extra subscriber details during re-subscribe:", err));
+    }
     return { success: true, message: "You are already subscribed!" };
   }
 
   // 3. Persist subscriber to local database table
-  const subscriberData = {
+  const subscriberData: any = {
     email: input.email.trim().toLowerCase(),
     first_name: input.firstName || null,
     last_name: input.lastName || null,
@@ -90,16 +121,85 @@ export async function addSubscriber(input: SubscribeInput) {
     updated_at: new Date().toISOString(),
   };
 
-  const { error: upsertError } = await supabase
-    .from("subscribers")
-    .upsert(subscriberData, { onConflict: "email" });
+  // 4. Upsert with self-healing fallback for role and company size columns
+  try {
+    const { error: upsertError } = await supabase
+      .from("subscribers")
+      .upsert({
+        ...subscriberData,
+        job_title: input.jobTitle || null,
+        company_size: input.companySize || null,
+      }, { onConflict: "email" });
 
-  if (upsertError) {
-    console.error("Supabase subscriber upsert error:", upsertError.message);
-    throw new Error(`Database Error: ${upsertError.message}`);
+    if (upsertError) {
+      if (upsertError.message.includes("job_title") || upsertError.message.includes("company_size")) {
+        console.warn("Falling back to standard upsert (missing job_title/company_size columns in DB)...");
+        const { error: fallbackError } = await supabase
+          .from("subscribers")
+          .upsert(subscriberData, { onConflict: "email" });
+        
+        if (fallbackError) throw fallbackError;
+      } else {
+        throw upsertError;
+      }
+    }
+  } catch (err: any) {
+    console.error("Supabase subscriber upsert error:", err.message);
+    throw new Error(`Database Error: ${err.message}`);
   }
 
   return { success: true, message: "Successfully subscribed!" };
+}
+
+/**
+ * Updates an existing subscriber's profile details.
+ * Self-healing: handles missing job_title and company_size columns gracefully.
+ */
+export async function updateSubscriberDetails(input: {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  jobTitle?: string;
+  companySize?: string;
+}) {
+  const supabase = createServiceClient();
+  const email = input.email.trim().toLowerCase();
+
+  const updateData: any = {
+    first_name: input.firstName || null,
+    last_name: input.lastName || null,
+    updated_at: new Date().toISOString(),
+  };
+
+  try {
+    const { error } = await supabase
+      .from("subscribers")
+      .update({
+        ...updateData,
+        job_title: input.jobTitle || null,
+        company_size: input.companySize || null,
+      })
+      .eq("email", email);
+
+    if (error) {
+      if (error.message.includes("job_title") || error.message.includes("company_size")) {
+        console.warn("Falling back to standard update (missing job_title/company_size columns in DB)...");
+        const { error: fallbackError } = await supabase
+          .from("subscribers")
+          .update(updateData)
+          .eq("email", email);
+
+        if (fallbackError) throw fallbackError;
+        return { success: true, message: "Details updated! (Role/Company columns missing in DB)" };
+      }
+      throw error;
+    }
+  } catch (err: any) {
+    console.error("Supabase subscriber update error:", err.message);
+    throw new Error(`Database Error: ${err.message}`);
+  }
+
+  return { success: true, message: "Details updated successfully!" };
 }
 
 interface CreateDraftCampaignInput {

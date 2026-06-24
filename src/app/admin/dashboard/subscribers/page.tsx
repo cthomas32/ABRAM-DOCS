@@ -29,6 +29,8 @@ interface Subscriber {
   email: string;
   first_name: string | null;
   last_name: string | null;
+  job_title: string | null;
+  company_size: string | null;
   created_at: string;
   updated_at: string;
   resend_contact_id: string | null;
@@ -47,6 +49,8 @@ type SortField =
   | "email" 
   | "first_name" 
   | "last_name" 
+  | "job_title"
+  | "company_size"
   | "status" 
   | "created_at" 
   | "updated_at" 
@@ -70,6 +74,8 @@ export default function SubscribersPage() {
   const [emailInput, setEmailInput] = useState("");
   const [firstNameInput, setFirstNameInput] = useState("");
   const [lastNameInput, setLastNameInput] = useState("");
+  const [jobTitleInput, setJobTitleInput] = useState("");
+  const [companySizeInput, setCompanySizeInput] = useState("");
   const [isMarketingInput, setIsMarketingInput] = useState(true);
   const [isApplicationInput, setIsApplicationInput] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -139,8 +145,10 @@ export default function SubscribersPage() {
     setSubmitting(true);
     const result = await manualAddSubscriber(
       emailInput,
-      firstNameInput,
-      lastNameInput,
+      firstNameInput || undefined,
+      lastNameInput || undefined,
+      jobTitleInput || undefined,
+      companySizeInput || undefined,
       isMarketingInput,
       isApplicationInput
     );
@@ -150,6 +158,8 @@ export default function SubscribersPage() {
       setEmailInput("");
       setFirstNameInput("");
       setLastNameInput("");
+      setJobTitleInput("");
+      setCompanySizeInput("");
       setIsMarketingInput(true);
       setIsApplicationInput(false);
       fetchData();
@@ -187,13 +197,17 @@ export default function SubscribersPage() {
     const fullName = `${firstName} ${lastName}`.trim();
     const email = sub.email.toLowerCase();
     const resendId = (sub.resend_contact_id || "").toLowerCase();
+    const jobTitle = (sub.job_title || "").toLowerCase();
+    const companySize = (sub.company_size || "").toLowerCase();
 
     return (
       firstName.includes(query) ||
       lastName.includes(query) ||
       fullName.includes(query) ||
       email.includes(query) ||
-      resendId.includes(query)
+      resendId.includes(query) ||
+      jobTitle.includes(query) ||
+      companySize.includes(query)
     );
   });
 
@@ -483,12 +497,14 @@ export default function SubscribersPage() {
           <div className="space-y-4">
             <div className="glass-panel border border-white/5 rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse min-w-[1000px]">
+                <table className="w-full text-left border-collapse min-w-[1200px]">
                   <thead>
                     <tr className="border-b border-white/5 text-[9px] uppercase tracking-widest text-zinc-500 bg-zinc-950/40">
                       {renderHeader("Email Address", "email")}
                       {renderHeader("First Name", "first_name")}
                       {renderHeader("Last Name", "last_name")}
+                      {renderHeader("Job Title", "job_title")}
+                      {renderHeader("Company Size", "company_size")}
                       {renderHeader("Status", "status")}
                       {renderHeader("Membership", "membership")}
                       {renderHeader("Joined Date", "created_at")}
@@ -504,6 +520,8 @@ export default function SubscribersPage() {
                         </td>
                         <td className="py-3.5 px-5 truncate max-w-[120px]">{sub.first_name || "—"}</td>
                         <td className="py-3.5 px-5 truncate max-w-[120px]">{sub.last_name || "—"}</td>
+                        <td className="py-3.5 px-5 truncate max-w-[150px]" title={sub.job_title || ""}>{sub.job_title || "—"}</td>
+                        <td className="py-3.5 px-5 truncate max-w-[120px]">{sub.company_size || "—"}</td>
                         <td className="py-3.5 px-5">
                           {sub.status === "subscribed" ? (
                             <span className="text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 font-sans">
@@ -704,6 +722,35 @@ export default function SubscribersPage() {
                         placeholder="e.g. Doe"
                         className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10 font-sans"
                       />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Job Title</label>
+                      <input
+                        type="text"
+                        value={jobTitleInput}
+                        onChange={(e) => setJobTitleInput(e.target.value)}
+                        placeholder="e.g. Producer"
+                        className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10 font-sans"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Company Size</label>
+                      <select
+                        value={companySizeInput}
+                        onChange={(e) => setCompanySizeInput(e.target.value)}
+                        className="w-full bg-zinc-950 border border-white/8 rounded-full px-4 text-xs text-white focus:outline-none focus:border-white/20 h-10 font-sans cursor-pointer"
+                      >
+                        <option value="" className="text-zinc-500">Select...</option>
+                        <option value="1">1 (Solo)</option>
+                        <option value="2-10">2-10</option>
+                        <option value="11-50">11-50</option>
+                        <option value="51-200">51-200</option>
+                        <option value="201-500">201-500</option>
+                        <option value="500+">500+</option>
+                      </select>
                     </div>
                   </div>
                   
