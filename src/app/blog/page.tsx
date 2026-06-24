@@ -7,7 +7,7 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
 export const metadata: Metadata = {
-  title: "Subscribe to ABRAM Intelligence",
+  title: "Blog",
   description: "The latest announcements, updates, and insights from ABRAM — the leading creative operations platform and AI creative production software.",
   keywords: [
     "creative production software", "creative production tools", "creative operations platform",
@@ -17,14 +17,14 @@ export const metadata: Metadata = {
     canonical: "https://abram.network/blog",
   },
   openGraph: {
-    title: "Subscribe to ABRAM Intelligence",
+    title: "Blog | ABRAM Blog",
     description: "The latest announcements, updates, and insights from ABRAM — the leading creative operations platform and AI creative production software.",
     type: "website",
     url: "https://abram.network/blog",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Subscribe to ABRAM Intelligence",
+    title: "Blog | ABRAM Blog",
     description: "The latest announcements, updates, and insights from ABRAM — the leading creative operations platform and AI creative production software.",
   },
 };
@@ -54,7 +54,7 @@ export default async function BlogListingPage() {
         "@type": "CollectionPage",
         "@id": "https://abram.network/blog#collectionpage",
         "url": "https://abram.network/blog",
-        "name": "Subscribe to ABRAM Intelligence",
+        "name": "ABRAM Network Blog",
         "description": "The latest announcements, updates, and articles from the ABRAM Network team.",
         "isPartOf": {
           "@type": "WebSite",
@@ -88,7 +88,7 @@ export default async function BlogListingPage() {
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "Subscribe to ABRAM Intelligence",
+            "name": "Blog",
             "item": "https://abram.network/blog"
           }
         ]
@@ -107,7 +107,7 @@ export default async function BlogListingPage() {
           NETWORK UPDATES
         </span>
         <h1 className="text-3xl font-bold tracking-tight text-zinc-50 font-sans mt-1">
-          Subscribe to ABRAM Intelligence
+          Blog
         </h1>
         <p className="text-base font-normal leading-7 text-zinc-400 mt-2 font-sans">
           The latest announcements, updates, and articles from the ABRAM Network team.

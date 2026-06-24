@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Subscribe to ABRAM Intelligence',
-    template: '%s | Subscribe to ABRAM Intelligence',
+    default: 'ABRAM Blog',
+    template: '%s | ABRAM Blog',
   },
 };
 

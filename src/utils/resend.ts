@@ -350,7 +350,7 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
     // 4. Create the Broadcast in Resend
     const broadcastResponse = await resend.broadcasts.create({
       name: campaign.title,
-      from: process.env.RESEND_FROM_EMAIL || "ABRAM Team <team@abram.network>",
+      from: process.env.RESEND_FROM_EMAIL || "ABRAM <updates@abram.network>",
       subject: campaign.subject,
       text: campaign.text_content || "",
       html: campaign.html_content || "",

@@ -1,5 +1,27 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.42.0";
 
+/**
+ * Resolves a clean, friendly first name to be used in email greetings.
+ * If the name is blank or matches email prefix, it returns "there".
+ */
+function getFriendlyFirstName(firstName: string | null | undefined, email: string): string {
+  if (!firstName) return "there";
+  const name = firstName.trim();
+  if (!name || name.includes("@")) return "there";
+  
+  const emailPrefix = email.split("@")[0].toLowerCase();
+  const cleanName = name.toLowerCase();
+  if (cleanName === emailPrefix || cleanName.replace(/[._-]/g, " ") === emailPrefix.replace(/[._-]/g, " ")) {
+    return "there";
+  }
+  
+  if (/[@._\-\d]/.test(name) || name.length <= 1) {
+    return "there";
+  }
+  
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
 Deno.serve(async (req) => {
   // Check authorization header
   const authHeader = req.headers.get("Authorization");
@@ -151,22 +173,70 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 4. Update the DB record with resend_contact_id if it changed/new
+    // 4. Send programmatic welcome email if this is a new signup
+    let welcomeEmailSentAt: string | null = record.welcome_email_sent_at || null;
+
+    if (event === "INSERT" && newResendContactId && !welcomeEmailSentAt) {
+      console.log(`Sending newsletter welcome email to ${email}...`);
+      try {
+        const welcomeEmailPayload = {
+          from: "ABRAM <updates@abram.network>",
+          to: [email.trim().toLowerCase()],
+          template: {
+            id: "1fbd393f-4b52-4aa5-bd25-9a0eda46ccc5",
+            variables: {
+              first_name: getFriendlyFirstName(first_name, email)
+            }
+          }
+        };
+
+        const emailRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+            "User-Agent": "abram-supabase-edge/1.0"
+          },
+          body: JSON.stringify(welcomeEmailPayload)
+        });
+
+        if (!emailRes.ok) {
+          const emailErrText = await emailRes.text();
+          console.error(`Failed to send welcome email to ${email}:`, emailErrText);
+        } else {
+          const emailData = await emailRes.json().catch(() => ({}));
+          console.log(`Welcome email successfully sent to ${email}. Message ID: ${emailData.id || "unknown"}`);
+          welcomeEmailSentAt = new Date().toISOString();
+        }
+      } catch (emailErr: any) {
+        console.error(`Error sending welcome email to ${email}:`, emailErr.message);
+      }
+    }
+
+    // 5. Update the DB record with resend_contact_id and welcome_email_sent_at if changed
+    const dbUpdates: any = {};
     if (newResendContactId && newResendContactId !== resend_contact_id) {
+      dbUpdates.resend_contact_id = newResendContactId;
+    }
+    if (welcomeEmailSentAt && welcomeEmailSentAt !== record.welcome_email_sent_at) {
+      dbUpdates.welcome_email_sent_at = welcomeEmailSentAt;
+    }
+
+    if (Object.keys(dbUpdates).length > 0) {
       const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
       const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
       const supabase = createClient(supabaseUrl, supabaseKey);
 
       const { error: dbError } = await supabase
         .from("subscribers")
-        .update({ resend_contact_id: newResendContactId })
+        .update(dbUpdates)
         .eq("id", id);
 
       if (dbError) {
-        console.error("Failed to update subscriber resend_contact_id in database:", dbError);
+        console.error("Failed to update subscriber record in database:", dbError);
         throw dbError;
       }
-      console.log(`Database updated with contact ID: ${newResendContactId}`);
+      console.log(`Database updated successfully with fields: ${Object.keys(dbUpdates).join(", ")}`);
     }
 
     return new Response(JSON.stringify({ success: true, resendContactId: newResendContactId }), {

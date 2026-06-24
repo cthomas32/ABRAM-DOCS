@@ -64,163 +64,224 @@ const TEMPLATES = [
   {
     id: "editorial",
     name: "Editorial / Blog Post Announcement",
-    description: "Classic ABRAM styling with header logo image, title, description body, compact cream CTA button, and standard blue links.",
+    description: "Classic ABRAM styling with header logo image, title, description body, compact cream CTA button, and standard gray links.",
     subject: "Update: New Release & Insights from ABRAM",
     html: `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABRAM Update</title>
-  </head>
-  <body style="margin: 0; padding: 0; background-color: #0A0A0A; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #FAFAF9;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0A0A0A" style="table-layout: fixed;">
-      <tr>
-        <td align="center" style="padding: 40px 10px;">
-          <!-- Simulated Glass Card -->
-          <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#0F0F12" style="width: 600px; border-radius: 16px; border: 1px solid #27272A; border-top: 1px solid #3F3F46; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.6);">
-            <!-- Floating Logo Header (Unified spacing, no harsh border line) -->
-            <tr>
-              <td align="center" style="padding: 44px 32px 16px;">
-                <img src="https://abram.network/abram-logo-lockup-cream.png" alt="ABRAM" width="110" height="22" style="border: 0; display: block; outline: none; text-decoration: none;" />
-              </td>
-            </tr>
-            <!-- Main Content -->
-            <tr>
-              <td style="padding: 16px 32px 32px;">
-                <h1 style="font-size: 24px; font-weight: 600; color: #FAFAF9; margin-top: 0; margin-bottom: 16px; line-height: 1.35; letter-spacing: -0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
-                  Our Latest Update
-                </h1>
-                <p style="font-size: 14px; color: #A1A1AA; line-height: 1.6; margin-bottom: 28px; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
-                  Write your announcement body here. Customize this layout to share news, insights, or blog updates with your subscribers.
-                </p>
-                <!-- Compact Primary CTA Button with inline border-collapse separate fix -->
-                <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; border-collapse: separate !important;">
-                  <tr>
-                    <td bgcolor="#FAFAF9" style="border-radius: 9999px; border-collapse: separate !important;">
-                      <a href="https://abram.network" target="_blank" style="display: inline-block; padding: 10px 24px; font-size: 12px; font-weight: 600; color: #0A0A0A; text-decoration: none; letter-spacing: 0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
-                        Read Full Story
-                      </a>
-                    </td>
-                  </tr>
-                </table>
-                <p style="font-size: 11px; color: #71717A; border-top: 1px solid #27272A; padding-top: 24px; margin-top: 24px; line-height: 1.6; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
-                  You are receiving this because you subscribed to updates from ABRAM. <br />
-                  Thomas Abram, Inc. &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
-                </p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABRAM Update</title>
+</head>
+<body style="margin:0;padding:0;background-color:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
+    <tr>
+      <td align="center" style="padding:48px 24px;">
+        <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding:0 0 40px;">
+              <img src="https://pgcsqnmegfinpzzeftug.supabase.co/storage/v1/object/public/organization-logos/ABRAM_Lockup_Cream@300x.png" alt="ABRAM" width="130" style="display:block;height:auto;border:0;" />
+            </td>
+          </tr>
+          <!-- Headline -->
+          <tr>
+            <td align="center" style="padding:0 0 16px;">
+              <h1 style="margin:0;font-size:28px;font-weight:400;color:#ffffff;line-height:1.3;letter-spacing:-0.3px;">
+                Our Latest Update
+              </h1>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="padding:0 0 32px;">
+              <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#888888; text-align:left;">
+                Write your announcement body here. Customize this layout to share news, insights, or blog updates with your subscribers.
+              </p>
+            </td>
+          </tr>
+          <!-- CTA Button -->
+          <tr>
+            <td align="center" style="padding:0 0 32px;">
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="background-color:#ffffff;border-radius:9999px;">
+                    <a href="https://abram.network" target="_blank" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#000000;text-decoration:none;letter-spacing:0.2px;">
+                      Read Full Story
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
+              <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
+                You are receiving this because you subscribed to updates from ABRAM.<br>
+                Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
 </html>`,
     text: `ABRAM Update\n\nOur Latest Update\n\nWrite your announcement body here.\n\nRead full story: https://abram.network\n\nUnsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}`
   },
   {
     id: "changelog",
     name: "Release Updates / Changelog",
-    description: "Bordered light-blue version pill badge, styled list items, solid cream CTA button, and premium dark card layout.",
+    description: "Bordered light-blue version pill badge, styled list items, solid white CTA button, and flat deep-black layout.",
     subject: "Release Notes: ABRAM Network v1.0.0 Update",
     html: `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Changelog Update</title>
-  </head>
-  <body style="margin: 0; padding: 0; background-color: #0A0A0A; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #FAFAF9;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0A0A0A" style="table-layout: fixed;">
-      <tr>
-        <td align="center" style="padding: 40px 10px;">
-          <!-- Simulated Glass Card -->
-          <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#0F0F12" style="width: 600px; border-radius: 16px; border: 1px solid #27272A; border-top: 1px solid #3F3F46; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.6);">
-            <!-- Floating Logo Header (Unified spacing, no harsh border line) -->
-            <tr>
-              <td align="center" style="padding: 44px 32px 16px;">
-                <img src="https://abram.network/abram-logo-lockup-cream.png" alt="ABRAM" width="110" height="22" style="border: 0; display: block; outline: none; text-decoration: none;" />
-              </td>
-            </tr>
-            <!-- Content -->
-            <tr>
-              <td style="padding: 16px 32px 32px;">
-                <!-- Version Pill Badge with inline border-collapse separate fix -->
-                <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px; border-collapse: separate !important;">
-                  <tr>
-                    <td align="center" style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 4px 12px; background-color: rgba(255, 255, 255, 0.04); border-collapse: separate !important; vertical-align: middle;">
-                      <span style="font-size: 10px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; color: #8ECAFF; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1;">
-                        Version 1.0.0
-                      </span>
-                    </td>
-                  </tr>
-                </table>
-                <h1 style="font-size: 24px; font-weight: 600; color: #FAFAF9; margin-top: 0; margin-bottom: 16px; line-height: 1.35; letter-spacing: -0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
-                  Changelog: What's New
-                </h1>
-                <div style="font-size: 14px; color: #A1A1AA; line-height: 1.6; margin-bottom: 28px; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
-                  <p style="margin-bottom: 12px;">Here are the updates pushed in our latest deployment:</p>
-                  <ul style="padding-left: 20px; margin: 12px 0; color: #A1A1AA;">
-                    <li style="margin-bottom: 8px;"><strong>New Feature</strong>: Write feature explanation here.</li>
-                    <li style="margin-bottom: 8px;"><strong>Performance Boost</strong>: Outline optimization improvements.</li>
-                    <li style="margin-bottom: 8px;"><strong>Bug Fixes</strong>: Resolve minor layout bugs.</li>
-                  </ul>
-                </div>
-                <!-- Compact Primary CTA Button with inline border-collapse separate fix -->
-                <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; border-collapse: separate !important;">
-                  <tr>
-                    <td bgcolor="#FAFAF9" style="border-radius: 9999px; border-collapse: separate !important;">
-                      <a href="https://abram.network/changelog" target="_blank" style="display: inline-block; padding: 10px 24px; font-size: 12px; font-weight: 600; color: #0A0A0A; text-decoration: none; letter-spacing: 0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
-                        View Full Changelog
-                      </a>
-                    </td>
-                  </tr>
-                </table>
-                <p style="font-size: 11px; color: #71717A; border-top: 1px solid #27272A; padding-top: 24px; margin-top: 24px; line-height: 1.6; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
-                  You are receiving this because you subscribed to updates from ABRAM. <br />
-                  Thomas Abram, Inc. &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
-                </p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog Update</title>
+</head>
+<body style="margin:0;padding:0;background-color:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
+    <tr>
+      <td align="center" style="padding:48px 24px;">
+        <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding:0 0 40px;">
+              <img src="https://pgcsqnmegfinpzzeftug.supabase.co/storage/v1/object/public/organization-logos/ABRAM_Lockup_Cream@300x.png" alt="ABRAM" width="130" style="display:block;height:auto;border:0;" />
+            </td>
+          </tr>
+          <!-- Version Badge -->
+          <tr>
+            <td align="center" style="padding:0 0 16px;">
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="border:1px solid rgba(255,255,255,0.15);border-radius:9999px;padding:4px 12px;background-color:rgba(255,255,255,0.04);vertical-align:middle;text-align:center;line-height:12px;">
+                    <span style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8ECAFF;line-height:12px;display:inline-block;vertical-align:middle;">
+                      Version 1.0.0
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Headline -->
+          <tr>
+            <td align="center" style="padding:0 0 16px;">
+              <h1 style="margin:0;font-size:28px;font-weight:400;color:#ffffff;line-height:1.3;letter-spacing:-0.3px;">
+                Changelog: What's New
+              </h1>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="padding:0 0 32px;">
+              <div style="font-size:15px;line-height:1.6;color:#888888;text-align:left;">
+                <p style="margin:0 0 12px;">Here are the updates pushed in our latest deployment:</p>
+                <ul style="padding-left:20px;margin:12px 0;color:#888888;">
+                  <li style="margin-bottom:8px;"><strong style="color:#ffffff;font-weight:600;">New Feature</strong>: Write feature explanation here.</li>
+                  <li style="margin-bottom:8px;"><strong style="color:#ffffff;font-weight:600;">Performance Boost</strong>: Outline optimization improvements.</li>
+                  <li style="margin-bottom:8px;"><strong style="color:#ffffff;font-weight:600;">Bug Fixes</strong>: Resolve minor layout bugs.</li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+          <!-- CTA Button -->
+          <tr>
+            <td align="center" style="padding:0 0 32px;">
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="background-color:#ffffff;border-radius:9999px;">
+                    <a href="https://abram.network/changelog" target="_blank" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#000000;text-decoration:none;letter-spacing:0.2px;">
+                      View Full Changelog
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
+              <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
+                You are receiving this because you subscribed to updates from ABRAM.<br>
+                Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
 </html>`,
     text: `ABRAM Release Notes\n\nVersion 1.0.0 - Changelog: What's New\n\n- New Feature: Write feature explanation.\n- Performance Boost: Outline optimizations.\n- Bug Fixes: Minor fixes.\n\nView Full Changelog: https://abram.network/changelog\n\nUnsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}`
   },
   {
     id: "minimal",
     name: "Minimal Text / Standard Update",
-    description: "Simple, content-focused template aligned to ABRAM's dark brand aesthetics.",
+    description: "Simple, content-focused template aligned to ABRAM's flat deep-black brand aesthetics.",
     subject: "Quick Update from ABRAM Team",
     html: `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-  </head>
-  <body style="font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; color: #FAFAF9; padding: 24px; background-color: #0A0A0A;">
-    <div style="max-width: 600px; margin: 0 auto; padding-top: 20px;">
-      <h2 style="font-size: 18px; font-weight: 600; color: #FAFAF9; margin-bottom: 16px; border-bottom: 1px solid #27272A; padding-bottom: 8px; letter-spacing: -0.01em;">ABRAM News</h2>
-      <p style="font-size: 14px; color: #A1A1AA; margin-bottom: 16px;">
-        Hello,
-      </p>
-      <p style="font-size: 14px; color: #A1A1AA; margin-bottom: 24px;">
-        Write your message here. This template uses a brand-aligned dark background and light text optimized for readability and compliance with the ABRAM brand system.
-      </p>
-      <p style="font-size: 14px; color: #A1A1AA; margin-bottom: 24px;">
-        Best regards,<br/>
-        The ABRAM Team
-      </p>
-      <hr style="border: none; border-top: 1px solid #27272A; margin: 24px 0;" />
-      <p style="font-size: 11px; color: #71717A;">
-        Unsubscribe: <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color: #3B82F6; text-decoration: underline;">Unsubscribe here</a>
-      </p>
-    </div>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Update</title>
+</head>
+<body style="margin:0;padding:0;background-color:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
+    <tr>
+      <td align="center" style="padding:48px 24px;">
+        <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding:0 0 40px;">
+              <img src="https://pgcsqnmegfinpzzeftug.supabase.co/storage/v1/object/public/organization-logos/ABRAM_Lockup_Cream@300x.png" alt="ABRAM" width="130" style="display:block;height:auto;border:0;" />
+            </td>
+          </tr>
+          <!-- Headline -->
+          <tr>
+            <td align="center" style="padding:0 0 16px;">
+              <h1 style="margin:0;font-size:28px;font-weight:400;color:#ffffff;line-height:1.3;letter-spacing:-0.3px;">
+                ABRAM News
+              </h1>
+            </td>
+          </tr>
+          <!-- Body Content -->
+          <tr>
+            <td style="padding:0 0 32px;">
+              <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#888888; text-align:left;">
+                Hello {{{first_name}}},
+              </p>
+              <p style="margin:0 0 24px; font-size:15px; line-height:1.6; color:#888888; text-align:left;">
+                Write your message here. This template uses a brand-aligned dark background and light text optimized for readability and compliance with the ABRAM brand system.
+              </p>
+              <p style="margin:0; font-size:15px; line-height:1.6; color:#888888; text-align:left;">
+                Best regards,<br>
+                The ABRAM Team
+              </p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
+              <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
+                You are receiving this because you subscribed to updates from ABRAM.<br>
+                Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
 </html>`,
-    text: `Quick Update from ABRAM Team\n\nHello,\n\nWrite your message here.\n\nBest regards,\nThe ABRAM Team\n\nUnsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}`
+    text: `Quick Update from ABRAM Team\n\nHello {{{first_name}}},\n\nWrite your message here.\n\nBest regards,\nThe ABRAM Team\n\nUnsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}`
   }
 ];
 

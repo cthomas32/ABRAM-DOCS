@@ -168,7 +168,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "Subscribe to ABRAM Intelligence",
+        "name": "Blog",
         "item": "https://abram.network/blog"
       },
       {
@@ -198,7 +198,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           href="/blog"
           className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group font-sans py-3 -my-3 min-h-[44px]"
         >
-          <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span> Back to Subscribe to ABRAM Intelligence
+          <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span> Back to Blog
         </Link>
       </div>
 
