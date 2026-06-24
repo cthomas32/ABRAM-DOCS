@@ -274,9 +274,9 @@ function DocsEditorContent() {
               <span className="text-xs">Loading document...</span>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col h-full overflow-hidden">
               {/* Form Metadata Fields */}
-              <div className="p-5 border-b border-white/5 bg-zinc-950/20 space-y-4 shrink-0">
+              <div className="p-5 border-b border-white/5 bg-zinc-950/20 space-y-4 shrink-0 overflow-y-auto max-h-[60%]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Document Title</label>

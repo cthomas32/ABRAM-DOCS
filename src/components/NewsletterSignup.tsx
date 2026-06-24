@@ -1,0 +1,256 @@
+"use client";
+
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, Loader2, AlertCircle, ArrowRight } from "lucide-react";
+import Link from "next/link";
+
+interface NewsletterSignupProps {
+  variant?: "card" | "inline";
+  className?: string;
+}
+
+export default function NewsletterSignup({
+  variant = "card",
+  className = "",
+}: NewsletterSignupProps) {
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setStatus("loading");
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          firstName: firstName.trim() || undefined,
+          lastName: lastName.trim() || undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Failed to subscribe. Please try again.");
+      }
+
+      setStatus("success");
+      setEmail("");
+      setFirstName("");
+      setLastName("");
+    } catch (err: any) {
+      setStatus("error");
+      setErrorMessage(err.message || "An unexpected error occurred.");
+    }
+  };
+
+  const isCard = variant === "card";
+
+  return (
+    <div
+      className={`relative z-10 w-full transition-all duration-300 ${
+        isCard
+          ? "rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-6 sm:p-8 md:p-10 hover:border-white/10 hover:bg-zinc-900/30 shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
+          : "bg-transparent border-0 p-0"
+      } ${className}`}
+    >
+      {/* Decorative Viewfinder Brackets for Premium Card Variant */}
+      {isCard && (
+        <>
+          <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/5 group-hover:border-white/15 transition-colors duration-300" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-white/5 group-hover:border-white/15 transition-colors duration-300" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-white/5 group-hover:border-white/15 transition-colors duration-300" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-white/5 group-hover:border-white/15 transition-colors duration-300" />
+        </>
+      )}
+
+      <AnimatePresence mode="wait">
+        {status === "success" ? (
+          <motion.div
+            key="success-state"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center justify-center text-center py-6 min-h-[180px]"
+          >
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+              className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+            >
+              <Check className="w-5 h-5" />
+            </motion.div>
+            <h3 className="text-lg font-semibold tracking-tight text-white font-sans">
+              Successfully Subscribed
+            </h3>
+            <p className="mt-2 text-xs sm:text-sm text-zinc-400 max-w-sm leading-relaxed font-sans">
+              You've been added to our network updates. Keep an eye on your inbox for our latest system releases and articles.
+            </p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="form-state"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {isCard && (
+              <div className="mb-6 sm:mb-8 text-center sm:text-left">
+                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans block mb-1.5">
+                  ABRAM JOURNAL
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-50 font-sans">
+                  Subscribe to Network Intelligence
+                </h3>
+                <p className="mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl font-sans">
+                  Join our list to receive release logs, workflow optimization blueprints, and expert perspectives on AI-assisted creative production.
+                </p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4 font-sans">
+              {/* Flex Grid for Name Inputs - Responsive Stacking */}
+              {isCard && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    <label
+                      htmlFor="firstName"
+                      className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase font-sans"
+                    >
+                      First Name
+                    </label>
+                    <input
+                      id="firstName"
+                      type="text"
+                      placeholder="e.g. Alexis"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      disabled={status === "loading"}
+                      className="w-full h-11 px-4 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/40 rounded-full border border-white/5 hover:border-white/10 focus:border-white/20 focus:ring-1 focus:ring-white/20 transition-all duration-200 outline-none disabled:opacity-50"
+                    />
+                  </div>
+
+                  <div className="flex flex-col space-y-1.5">
+                    <label
+                      htmlFor="lastName"
+                      className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase font-sans"
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      id="lastName"
+                      type="text"
+                      placeholder="e.g. Vesper"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      disabled={status === "loading"}
+                      className="w-full h-11 px-4 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/40 rounded-full border border-white/5 hover:border-white/10 focus:border-white/20 focus:ring-1 focus:ring-white/20 transition-all duration-200 outline-none disabled:opacity-50"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Email & Submit Input Group */}
+              <div className="flex flex-col space-y-1.5">
+                <label
+                  htmlFor="email"
+                  className={isCard ? "text-[10px] font-semibold tracking-wider text-zinc-500 uppercase font-sans" : "sr-only"}
+                >
+                  Email Address <span className="text-[#CE1C1C]">*</span>
+                </label>
+                
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                  <div className="relative flex-grow">
+                    <input
+                      id="email"
+                      type="email"
+                      required
+                      aria-required="true"
+                      aria-invalid={status === "error" ? "true" : "false"}
+                      aria-describedby={status === "error" ? "email-error-msg" : undefined}
+                      placeholder="alexis@vesper.studio"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (status === "error") setStatus("idle");
+                      }}
+                      disabled={status === "loading"}
+                      className={`w-full h-11 px-4 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/40 rounded-full border transition-all duration-200 outline-none disabled:opacity-50 ${
+                        status === "error"
+                          ? "border-red-500/30 focus:border-red-500/50 focus:ring-red-500/20"
+                          : "border-white/5 hover:border-white/10 focus:border-white/20 focus:ring-white/20"
+                      }`}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={status === "loading" || !email}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white text-black text-xs font-semibold px-6 h-11 hover:bg-zinc-200 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                  >
+                    {status === "loading" ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
+                        Subscribing...
+                      </>
+                    ) : (
+                      <>
+                        Join List
+                        <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Graceful Validation Error Display */}
+              <AnimatePresence>
+                {status === "error" && errorMessage && (
+                  <motion.div
+                    id="email-error-msg"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="flex items-center gap-2 text-xs text-red-400 bg-red-500/5 border border-red-500/10 rounded-lg p-3 mt-2 font-medium"
+                  >
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{errorMessage}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Spam/Privacy Notice */}
+              {isCard && (
+                <p className="text-[10px] text-zinc-500 leading-relaxed font-light text-center sm:text-left mt-2">
+                  We value your attention. Unsubscribe at any time. Read our{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="underline hover:text-zinc-300 transition-colors"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
+              )}
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

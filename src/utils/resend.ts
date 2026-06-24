@@ -7,10 +7,10 @@ import { createClient } from "./supabase/server";
  * preventing server-side or build-time crashes when environment variables are missing.
  */
 export function getResendClient(): Resend | null {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.RESEND_MARKETING_API_KEY || process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.warn(
-      "Resend API integration is disabled: RESEND_API_KEY is not defined in environment variables."
+      "Resend API integration is disabled: RESEND_MARKETING_API_KEY or RESEND_API_KEY is not defined in environment variables."
     );
     return null;
   }
@@ -49,21 +49,22 @@ interface SubscribeInput {
   email: string;
   firstName?: string;
   lastName?: string;
+  isMarketingList?: boolean;
+  isApplicationList?: boolean;
 }
 
 /**
- * Subscribes a user to the mailing list (adds contact in Resend & logs to Supabase database).
- * This runs entirely on the server side via Server Actions.
+ * Subscribes a user to the mailing list (persists to Supabase database).
+ * The database trigger/webhook will asynchronously sync the contact to Resend via Edge Functions.
  */
 export async function addSubscriber(input: SubscribeInput) {
-  const resend = getResendClient();
-  if (!resend) {
-    throw new Error("Resend integration is not configured on the server.");
-  }
-
   const supabase = await createClient();
 
-  // 1. Check if the contact already exists locally or in Resend
+  // 1. Resolve logical lists (ensure App signup forces Marketing list)
+  const isApp = input.isApplicationList || false;
+  const isMarketing = isApp ? true : (input.isMarketingList !== undefined ? input.isMarketingList : true);
+
+  // 2. Check if the contact already exists locally
   const { data: existingSub, error: dbError } = await supabase
     .from("subscribers")
     .select("*")
@@ -74,52 +75,18 @@ export async function addSubscriber(input: SubscribeInput) {
     console.error("Local database subscriber check failed:", dbError.message);
   }
 
-  if (existingSub && existingSub.status === "subscribed") {
+  if (existingSub && existingSub.status === "subscribed" && existingSub.is_marketing_list === isMarketing && existingSub.is_application_list === isApp) {
     return { success: true, message: "You are already subscribed!" };
-  }
-
-  // 2. Call Resend API to create contact
-  // Default to assigning the contact to a "General" segment (ID should be configured in env)
-  const generalSegmentId = process.env.RESEND_GENERAL_SEGMENT_ID;
-
-  let resendContactId = existingSub?.resend_contact_id || null;
-
-  try {
-    if (!resendContactId) {
-      const contactResponse = await resend.contacts.create({
-        email: input.email,
-        firstName: input.firstName || "",
-        lastName: input.lastName || "",
-        unsubscribed: false,
-        audienceId: process.env.RESEND_AUDIENCE_ID || "", // Required in Resend API v1
-        ...(generalSegmentId ? { segmentIds: [generalSegmentId] } : {}),
-      });
-
-      if (contactResponse.error) {
-        throw new Error(contactResponse.error.message);
-      }
-      resendContactId = contactResponse.data?.id || null;
-    } else {
-      // Re-subscribe if unsubscribed
-      await resend.contacts.update({
-        id: resendContactId,
-        unsubscribed: false,
-        audienceId: process.env.RESEND_AUDIENCE_ID || "",
-      });
-    }
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error("Resend API contact creation error:", err);
-    throw new Error(`Resend Error: ${message || "Failed to add subscriber contact."}`);
   }
 
   // 3. Persist subscriber to local database table
   const subscriberData = {
-    email: input.email,
+    email: input.email.trim().toLowerCase(),
     first_name: input.firstName || null,
     last_name: input.lastName || null,
-    resend_contact_id: resendContactId,
     status: "subscribed",
+    is_marketing_list: isMarketing,
+    is_application_list: isApp,
     updated_at: new Date().toISOString(),
   };
 
@@ -129,63 +96,129 @@ export async function addSubscriber(input: SubscribeInput) {
 
   if (upsertError) {
     console.error("Supabase subscriber upsert error:", upsertError.message);
-    // Return success since the subscriber was successfully registered in Resend
+    throw new Error(`Database Error: ${upsertError.message}`);
   }
 
   return { success: true, message: "Successfully subscribed!" };
 }
 
-interface CreateBroadcastInput {
+interface CreateDraftCampaignInput {
   title: string;
   subject: string;
   htmlContent: string;
   textContent: string;
-  segmentId?: string; // Optional segment ID (falls back to General segment)
+  segmentId?: string; // Optional segment ID (falls back to General/Marketing segment)
+}
+
+interface ApprovalDetails {
+  approvedBy: string;
+  ipAddress: string;
+  userAgent: string;
+  confirmationPhrase: string;
 }
 
 /**
- * Creates and sends a Resend Broadcast to all contacts in a segment.
- * Logs the campaign execution in Supabase.
+ * Creates and logs a Campaign Draft in the local database.
+ * NEVER connects to Resend or dispatches any emails.
  */
-export async function triggerBroadcastCampaign(input: CreateBroadcastInput) {
-  const resend = getResendClient();
-  if (!resend) {
-    throw new Error("Resend integration is not configured on the server.");
-  }
-
+export async function createDraftCampaign(input: CreateDraftCampaignInput) {
   const supabase = await createClient();
-  const segmentId = input.segmentId || process.env.RESEND_GENERAL_SEGMENT_ID;
+  const segmentId = input.segmentId || process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
 
-  if (!segmentId) {
-    throw new Error("A valid Resend segment ID must be specified for broadcasts.");
+  // Get recipient count estimate from database
+  let recipientsCount = 0;
+  if (segmentId === (process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8")) {
+    const { count } = await supabase
+      .from("subscribers")
+      .select("*", { count: "exact", head: true })
+      .eq("is_application_list", true)
+      .eq("status", "subscribed");
+    recipientsCount = count || 0;
+  } else {
+    const { count } = await supabase
+      .from("subscribers")
+      .select("*", { count: "exact", head: true })
+      .eq("is_marketing_list", true)
+      .eq("status", "subscribed");
+    recipientsCount = count || 0;
   }
 
-  // 1. Log campaign initiation in database as "draft/initiating"
   const { data: campaign, error: campaignError } = await supabase
     .from("campaigns")
     .insert({
       title: input.title,
       subject: input.subject,
       segment_id: segmentId,
-      status: "sending",
-      sent_at: new Date().toISOString(),
+      status: "draft",
+      html_content: input.htmlContent,
+      text_content: input.textContent,
+      recipients_count: recipientsCount,
     })
     .select()
     .single();
 
   if (campaignError) {
-    console.error("Failed to log campaign startup in database:", campaignError.message);
+    console.error("Failed to save campaign draft in database:", campaignError.message);
+    throw new Error(`Database Error: ${campaignError.message}`);
+  }
+
+  return {
+    success: true,
+    campaignId: campaign.id,
+    message: "Campaign draft created successfully. Manual review and approval are required to send.",
+  };
+}
+
+/**
+ * Executes a manual approval and dispatches the email campaign via Resend.
+ * Enforces strict "draft" status validation, optimistic locking, and logs audit data.
+ */
+export async function approveAndSendCampaign(campaignId: string, approval: ApprovalDetails) {
+  const resend = getResendClient();
+  if (!resend) {
+    throw new Error("Resend integration is not configured on the server.");
+  }
+
+  const supabase = await createClient();
+
+  // 1. Fetch draft campaign
+  const { data: campaign, error: fetchError } = await supabase
+    .from("campaigns")
+    .select("*")
+    .eq("id", campaignId)
+    .single();
+
+  if (fetchError || !campaign) {
+    throw new Error("Campaign not found.");
+  }
+
+  // 2. Validate status: Must be in "draft"
+  if (campaign.status !== "draft") {
+    throw new Error(`Campaign cannot be sent because it is in '${campaign.status}' status.`);
+  }
+
+  // 3. Optimistic locking: update status to "sending" to prevent double-sends
+  const { data: lockedCampaign, error: lockError } = await supabase
+    .from("campaigns")
+    .update({ status: "sending" })
+    .eq("id", campaignId)
+    .eq("status", "draft")
+    .select()
+    .single();
+
+  if (lockError || !lockedCampaign) {
+    throw new Error("Failed to acquire send lock. Campaign may already be dispatching.");
   }
 
   try {
-    // 2. Create the Broadcast in Resend
+    // 4. Create the Broadcast in Resend
     const broadcastResponse = await resend.broadcasts.create({
-      name: input.title,
+      name: campaign.title,
       from: process.env.RESEND_FROM_EMAIL || "ABRAM Team <team@abram.network>",
-      subject: input.subject,
-      text: input.textContent,
-      html: input.htmlContent,
-      segmentId: segmentId,
+      subject: campaign.subject,
+      text: campaign.text_content || "",
+      html: campaign.html_content || "",
+      segmentId: campaign.segment_id,
     });
 
     if (broadcastResponse.error) {
@@ -197,43 +230,56 @@ export async function triggerBroadcastCampaign(input: CreateBroadcastInput) {
       throw new Error("Resend API failed to return a valid Broadcast ID.");
     }
 
-    // 3. Send the Broadcast immediately
+    // 5. Send the Broadcast immediately
     const sendResponse = await resend.broadcasts.send(resendBroadcastId);
 
     if (sendResponse.error) {
       throw new Error(sendResponse.error.message);
     }
 
-    // 4. Update local campaign log with Resend Broadcast ID and success status
-    if (campaign) {
-      await supabase
-        .from("campaigns")
-        .update({
-          resend_broadcast_id: resendBroadcastId,
-          status: "sent",
-        })
-        .eq("id", campaign.id);
-    }
+    // 6. Complete campaign log and approval audit details
+    await supabase
+      .from("campaigns")
+      .update({
+        resend_broadcast_id: resendBroadcastId,
+        status: "sent",
+        sent_at: new Date().toISOString(),
+        approved_by: approval.approvedBy,
+        approved_at: new Date().toISOString(),
+        approval_ip: approval.ipAddress,
+        approval_user_agent: approval.userAgent,
+        approval_metadata: {
+          confirmation_phrase: approval.confirmationPhrase,
+          dispatch_mechanism: "manual_approval_dashboard",
+        },
+      })
+      .eq("id", campaignId);
 
     return {
       success: true,
       broadcastId: resendBroadcastId,
-      message: "Broadcast sent successfully to segment subscribers.",
+      message: "Campaign approved and successfully dispatched.",
     };
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Broadcast transmission error:", error);
-    
-    // Log failure status
-    if (campaign) {
-      await supabase
-        .from("campaigns")
-        .update({
-          status: "failed",
-          metadata: { error: message },
-        })
-        .eq("id", campaign.id);
-    }
+
+    // Rollback to failed and store error details
+    await supabase
+      .from("campaigns")
+      .update({
+        status: "failed",
+        metadata: {
+          error: message,
+          approval_attempt: {
+            approved_by: approval.approvedBy,
+            approved_at: new Date().toISOString(),
+            approval_ip: approval.ipAddress,
+            approval_user_agent: approval.userAgent,
+          },
+        },
+      })
+      .eq("id", campaignId);
 
     return {
       success: false,

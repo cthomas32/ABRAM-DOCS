@@ -19,6 +19,9 @@ import {
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/utils/supabase/client";
+import { MDXRemote } from "next-mdx-remote";
+import { mdxComponents } from "@/components/MdxComponents";
+import { compileMdxAction } from "@/app/admin/mdx-actions";
 
 function renderFormattedText(text: string): React.ReactNode {
   let tokens: { type: 'text' | 'bold' | 'code' | 'link'; content: string; url?: string }[] = [];
@@ -119,6 +122,39 @@ function ChangelogEditorContent() {
   const [lintWarnings, setLintWarnings] = useState<LintWarning[]>([]);
   const [versionExists, setVersionExists] = useState(false);
   const [slugExists, setSlugExists] = useState(false);
+
+  // MDX Live Preview States
+  const [previewSource, setPreviewSource] = useState<any>(null);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const [isCompiling, setIsCompiling] = useState<boolean>(false);
+
+  // MDX Live Preview compiler effect
+  useEffect(() => {
+    if (!content.trim()) {
+      setPreviewSource(null);
+      setPreviewError(null);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsCompiling(true);
+      try {
+        const res = await compileMdxAction(content);
+        if (res.success) {
+          setPreviewSource(res.mdxSource);
+          setPreviewError(null);
+        } else {
+          setPreviewError(res.error || "Failed to compile preview");
+        }
+      } catch (err: any) {
+        setPreviewError(err.message || "Failed to compile preview");
+      } finally {
+        setIsCompiling(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [content]);
 
   useEffect(() => {
     fetchReleaseDetails();
@@ -390,47 +426,39 @@ function ChangelogEditorContent() {
       return <p className="text-zinc-600 italic font-sans">Start writing content in the markdown editor...</p>;
     }
 
-    return content.split("\n").map((line, idx) => {
-      if (line.includes("<AgentOnly>")) {
-        return (
-          <div key={idx} className="bg-red-500/5 border border-red-500/10 rounded-xl p-3 my-3 text-[10px] text-zinc-400 font-mono flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-red-500 animate-pulse shrink-0" />
-            <span>AGENT-ONLY COMPONENT (Visually hidden on client pages, read by LLM-crawlers)</span>
+    if (previewError) {
+      return (
+        <div className="bg-red-500/5 border border-red-500/10 rounded-xl p-4 my-3 text-xs text-red-400 font-mono space-y-2">
+          <div className="flex items-center gap-2 font-bold text-red-500">
+            <AlertTriangle className="w-4 h-4" />
+            <span>MDX Syntax Error</span>
           </div>
-        );
-      }
-      if (line.includes("</AgentOnly>")) {
-        return (
-          <div key={idx} className="bg-red-500/5 border border-red-500/10 rounded-xl p-3 my-3 text-[10px] text-zinc-400 font-mono flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-zinc-600 shrink-0" />
-            <span>END AGENT-ONLY COMPONENT</span>
-          </div>
-        );
-      }
+          <pre className="whitespace-pre-wrap">{previewError}</pre>
+        </div>
+      );
+    }
 
-      if (line.startsWith("```")) {
-        return <div key={idx} className="h-0.5 bg-zinc-800 my-3 rounded" />;
-      }
-      if (line.startsWith("# ")) {
-        return <h1 key={idx} className="text-sm font-bold text-white mt-5 mb-2 font-sans tracking-tight">{renderFormattedText(line.substring(2))}</h1>;
-      }
-      if (line.startsWith("## ")) {
-        return <h2 key={idx} className="text-xs font-bold text-white mt-4 mb-1.5 font-sans tracking-tight">{renderFormattedText(line.substring(3))}</h2>;
-      }
-      if (line.startsWith("### ")) {
-        return <h3 key={idx} className="text-[11px] font-semibold text-zinc-200 mt-3 mb-1 font-sans tracking-tight">{renderFormattedText(line.substring(4))}</h3>;
-      }
-      if (line.startsWith("- ")) {
-        return <li key={idx} className="ml-4 list-disc text-zinc-400 text-xs font-sans leading-relaxed">{renderFormattedText(line.substring(2))}</li>;
-      }
-      if (line.startsWith("1. ")) {
-        return <li key={idx} className="ml-4 list-decimal text-zinc-400 text-xs font-sans leading-relaxed">{renderFormattedText(line.substring(3))}</li>;
-      }
-      if (line.trim() === "") {
-        return <div key={idx} className="h-2" />;
-      }
-      return <p key={idx} className="text-zinc-400 text-xs leading-relaxed font-sans mb-2 break-words">{renderFormattedText(line)}</p>;
-    });
+    return (
+      <div className="relative">
+        {isCompiling && (
+          <div className="absolute top-2 right-2 flex items-center gap-1.5 text-[10px] text-zinc-500 bg-zinc-950/60 backdrop-blur border border-white/5 rounded-full px-2 py-0.5 animate-pulse z-10">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            <span>Compiling...</span>
+          </div>
+        )}
+        
+        <div className="text-zinc-300 font-sans select-text release-notes-content">
+          {previewSource ? (
+            <MDXRemote {...previewSource} components={mdxComponents} />
+          ) : (
+            <div className="flex items-center justify-center py-12 text-zinc-500 gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span className="text-xs">Preparing preview...</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -495,9 +523,9 @@ function ChangelogEditorContent() {
               <span className="text-xs">Loading database records...</span>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col h-full overflow-hidden">
               {/* Form Metadata Section */}
-              <div className="p-5 border-b border-white/5 bg-zinc-950/20 space-y-4 shrink-0">
+              <div className="p-5 border-b border-white/5 bg-zinc-950/20 space-y-4 shrink-0 overflow-y-auto max-h-[60%]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Version Number</label>
@@ -576,11 +604,13 @@ function ChangelogEditorContent() {
         </div>
 
         {/* Right Side: Quality Audits & Live Preview */}
-        <div className={`w-full md:w-[400px] xl:w-[500px] border-t md:border-t-0 md:border-l border-white/5 bg-zinc-950/30 flex flex-col h-full overflow-hidden shrink-0 ${
+        <div className={`border-t md:border-t-0 md:border-l border-white/5 bg-zinc-950/30 flex flex-col h-full overflow-hidden ${
+          previewMode === "preview" ? "flex-1" : "w-full md:w-[400px] xl:w-[500px] shrink-0"
+        } ${
           previewMode === "edit" ? "hidden" : ""
         } ${previewMode === "split" ? "hidden md:flex" : ""}`}>
           {/* Audit panel */}
-          <div className="p-5 border-b border-white/8 space-y-4 shrink-0 bg-black/20">
+          <div className={`p-5 border-b border-white/8 space-y-4 shrink-0 bg-black/20 ${previewMode === "preview" ? "hidden" : ""}`}>
             <h3 className="text-xs font-semibold tracking-wider text-zinc-300 uppercase flex items-center gap-1.5 select-none font-sans">
               <Tag className="w-3.5 h-3.5 text-white animate-pulse" />
               Release Syntax Checker
@@ -616,8 +646,10 @@ function ChangelogEditorContent() {
 
           {/* Live Preview Panel */}
           <div className="flex-1 p-5 overflow-y-auto space-y-4 max-w-none bg-black/10">
-            <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest block mb-2 select-none font-sans">Live Release Preview</span>
-            <div className="border border-white/5 bg-[#0E0E0E] p-6 rounded-2xl space-y-4 leading-relaxed text-zinc-300 text-xs min-h-[300px] break-words">
+            <span className={`text-[9px] uppercase font-bold text-zinc-500 tracking-widest block mb-2 select-none font-sans ${previewMode === "preview" ? "max-w-3xl mx-auto px-1" : ""}`}>Live Release Preview</span>
+            <div className={`border border-white/5 bg-[#0E0E0E] rounded-2xl space-y-4 leading-relaxed text-zinc-300 text-xs min-h-[300px] break-words transition-all duration-300 ${
+              previewMode === "preview" ? "max-w-3xl w-full mx-auto my-4 p-8 sm:p-10 border-white/10" : "w-full p-6"
+            }`}>
               <div className="flex flex-wrap items-center gap-3 border-b border-white/5 pb-3 mb-2 select-none">
                 <span className="inline-flex items-center rounded bg-white/10 px-2 py-0.5 text-[10px] font-bold text-white border border-white/10 font-mono">
                   v{version ? version.replace(/^v/i, "") : "1.0.0"}

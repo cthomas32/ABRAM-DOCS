@@ -1,7 +1,8 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { addSubscriber, triggerBroadcastCampaign, getResendClient } from "@/utils/resend";
+import { addSubscriber, createDraftCampaign, approveAndSendCampaign, getResendClient } from "@/utils/resend";
+import { headers } from "next/headers";
 
 /**
  * Server Action: Validates Resend client integration status.
@@ -57,11 +58,137 @@ export async function getSubscribers(): Promise<{ success: boolean; subscribers?
 }
 
 /**
+ * Helper to fetch contacts for a specific segment directly via Resend REST API
+ */
+async function fetchContactsForSegment(apiKey: string, segmentId: string): Promise<any[]> {
+  try {
+    const res = await fetch(`https://api.resend.com/segments/${segmentId}/contacts`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "User-Agent": "abram-next/1.0",
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      console.warn(`Resend API returned status ${res.status} for segment ${segmentId}:`, errorData);
+      return [];
+    }
+
+    const payload = await res.json();
+    return Array.isArray(payload) ? payload : (payload.data || []);
+  } catch (err) {
+    console.error(`Network error fetching segment ${segmentId}:`, err);
+    return [];
+  }
+}
+
+/**
+ * Server Action: Synchronizes all contacts from Resend into the local Supabase database.
+ */
+export async function syncResendContacts(): Promise<{ success: boolean; count?: number; error?: string }> {
+  try {
+    const apiKey = process.env.RESEND_MARKETING_API_KEY || process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error("Resend API key is not configured.");
+    }
+
+    const supabase = await createClient();
+
+    const marketingSegmentId = process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
+    const applicationSegmentId = process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8";
+
+    // 1. Fetch contacts from both segments asynchronously
+    const [marketingContacts, applicationContacts] = await Promise.all([
+      fetchContactsForSegment(apiKey, marketingSegmentId),
+      fetchContactsForSegment(apiKey, applicationSegmentId)
+    ]);
+
+    console.log(`Fetched Resend contacts: Marketing: ${marketingContacts.length}, Application: ${applicationContacts.length}`);
+
+    // Map to keep track of processed emails to avoid duplicate upsert operations in this loop
+    const syncedEmails = new Set<string>();
+    let syncCount = 0;
+
+    // 2. Sync Application Contacts (Application = true, Marketing = true)
+    for (const contact of applicationContacts) {
+      const email = contact.email?.trim().toLowerCase();
+      if (!email || syncedEmails.has(email)) continue;
+
+      const { error: upsertError } = await supabase
+        .from("subscribers")
+        .upsert({
+          email,
+          first_name: contact.firstName || contact.first_name || null,
+          last_name: contact.lastName || contact.last_name || null,
+          resend_contact_id: contact.id,
+          status: contact.unsubscribed ? "unsubscribed" : "subscribed",
+          is_marketing_list: true,
+          is_application_list: true,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: "email" });
+
+      if (upsertError) {
+        console.error(`Failed to sync application contact ${email}:`, upsertError.message);
+      } else {
+        syncedEmails.add(email);
+        syncCount++;
+      }
+    }
+
+    // 3. Sync Marketing Contacts (Marketing = true, Application = false unless already synced as App)
+    for (const contact of marketingContacts) {
+      const email = contact.email?.trim().toLowerCase();
+      if (!email || syncedEmails.has(email)) continue;
+
+      const { error: upsertError } = await supabase
+        .from("subscribers")
+        .upsert({
+          email,
+          first_name: contact.firstName || contact.first_name || null,
+          last_name: contact.lastName || contact.last_name || null,
+          resend_contact_id: contact.id,
+          status: contact.unsubscribed ? "unsubscribed" : "subscribed",
+          is_marketing_list: true,
+          is_application_list: false,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: "email" });
+
+      if (upsertError) {
+        console.error(`Failed to sync marketing contact ${email}:`, upsertError.message);
+      } else {
+        syncedEmails.add(email);
+        syncCount++;
+      }
+    }
+
+    return { success: true, count: syncCount };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Sync Resend contacts error:", err);
+    return { success: false, error: message || "Failed to synchronize contacts." };
+  }
+}
+
+/**
  * Server Action: Manually adds a subscriber from the CMS dashboard.
  */
-export async function manualAddSubscriber(email: string, firstName?: string, lastName?: string): Promise<{ success: boolean; message?: string; error?: string }> {
+export async function manualAddSubscriber(
+  email: string,
+  firstName?: string,
+  lastName?: string,
+  isMarketingList?: boolean,
+  isApplicationList?: boolean
+): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
-    const result = await addSubscriber({ email, firstName, lastName });
+    const result = await addSubscriber({
+      email,
+      firstName,
+      lastName,
+      isMarketingList,
+      isApplicationList,
+    });
     return result;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
@@ -72,7 +199,7 @@ export async function manualAddSubscriber(email: string, firstName?: string, las
 /**
  * Server Action: Broadcasts a published Blog Post or Release Note to the General subscriber list.
  */
-export async function broadcastPublishedEntry(entryId: string, type: "blog" | "changelog"): Promise<{ success: boolean; broadcastId?: string; message?: string; error?: string }> {
+export async function broadcastPublishedEntry(entryId: string, type: "blog" | "changelog"): Promise<{ success: boolean; broadcastId?: string; campaignId?: string; message?: string; error?: string }> {
   try {
     const supabase = await createClient();
 
@@ -218,17 +345,21 @@ export async function broadcastPublishedEntry(entryId: string, type: "blog" | "c
       textContent = `New Release v${note.version} Published: ${note.title}\n\nRead the release notes at: https://abram.network/changelog\n\nUnsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}`;
     }
 
-    const result = await triggerBroadcastCampaign({
+    const result = await createDraftCampaign({
       title,
       subject,
       htmlContent,
       textContent,
     });
 
-    return result;
+    return {
+      success: true,
+      campaignId: result.campaignId,
+      message: "Campaign queued as Draft. Manual approval is required."
+    };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    return { success: false, error: message || "Failed to trigger broadcast." };
+    return { success: false, error: message || "Failed to create campaign draft." };
   }
 }
 
@@ -252,9 +383,9 @@ export async function getCampaigns(): Promise<{ success: boolean; campaigns?: an
 }
 
 /**
- * Server Action: Manually triggers a broadcast from raw input.
+ * Server Action: Manually creates a campaign draft from raw input.
  */
-export async function triggerManualBroadcast(
+export async function createManualDraftCampaign(
   title: string,
   subject: string,
   textContent: string,
@@ -262,7 +393,7 @@ export async function triggerManualBroadcast(
   segmentId?: string
 ) {
   try {
-    const result = await triggerBroadcastCampaign({
+    const result = await createDraftCampaign({
       title,
       subject,
       textContent,
@@ -272,9 +403,42 @@ export async function triggerManualBroadcast(
     return result;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    return { success: false, error: message || "Failed to trigger manual broadcast." };
+    return { success: false, error: message || "Failed to create manual campaign draft." };
   }
 }
+
+/**
+ * Server Action: Securely approves and sends a draft campaign.
+ * Captures user identity, IP address, and browser agent string for the database log.
+ */
+export async function approveAndSendCampaignAction(campaignId: string, confirmationPhrase: string) {
+  try {
+    const supabase = await createClient();
+
+    // Authenticate user session
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error("Unauthorized. Admin privileges are required to send campaigns.");
+    }
+
+    // Capture request audit details
+    const reqHeaders = await headers();
+    const ipAddress = reqHeaders.get("x-forwarded-for") || reqHeaders.get("x-real-ip") || "unknown-ip";
+    const userAgent = reqHeaders.get("user-agent") || "unknown-user-agent";
+
+    const result = await approveAndSendCampaign(campaignId, {
+      approvedBy: user.id,
+      ipAddress,
+      userAgent,
+      confirmationPhrase,
+    });
+    return result;
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { success: false, error: message || "Failed to approve and send campaign." };
+  }
+}
+
 
 /**
  * Server Action: Fetches all logs for a specific campaign or all campaigns.

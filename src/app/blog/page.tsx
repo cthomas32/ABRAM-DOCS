@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import React from "react";
 import { supabase } from "@/utils/supabase/static";
 import BlogListClient from "@/components/blog/BlogListClient";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
@@ -114,6 +115,10 @@ export default async function BlogListingPage() {
       </div>
 
       <BlogListClient posts={posts} />
+
+      <div className="pt-10 border-t border-white/5">
+        <NewsletterSignup variant="card" className="max-w-3xl mx-auto" />
+      </div>
     </div>
   );
 }

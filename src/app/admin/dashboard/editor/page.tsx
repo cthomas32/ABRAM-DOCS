@@ -252,9 +252,9 @@ function EditorContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-zinc-100 font-sans flex flex-col relative overflow-hidden">
+    <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Top Navbar */}
-      <nav className="fixed top-0 z-40 w-full bg-black/50 backdrop-blur-[20px] border-b border-white/8 px-6 py-4 flex items-center justify-between">
+      <div className="bg-[#0C0C0C] border-b border-white/5 px-6 py-4 flex items-center justify-between shrink-0 z-10">
         <div className="flex items-center gap-3">
           <Link href="/admin/dashboard" className="btn-glass px-3.5 py-1.5 flex items-center gap-1.5 text-xs font-semibold rounded-full">
             <ArrowLeft className="w-3.5 h-3.5" />
@@ -309,12 +309,12 @@ function EditorContent() {
             </button>
           )}
         </div>
-      </nav>
+      </div>
 
       {/* Main Workspace */}
-      <div className="flex-1 flex pt-[73px] h-screen overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar: Documents List */}
-        <aside className="w-64 border-r border-white/5 bg-zinc-950/20 flex flex-col h-full overflow-hidden shrink-0">
+        <aside className="hidden md:flex w-64 border-r border-white/5 bg-zinc-950/20 flex-col h-full overflow-hidden shrink-0">
           <div className="p-4 border-b border-white/5 flex items-center gap-2">
             <FileText className="w-4 h-4 text-zinc-500" />
             <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">Documents</span>
@@ -358,9 +358,9 @@ function EditorContent() {
                   <span className="text-xs">Loading content...</span>
                 </div>
               ) : (
-                <div className="flex-1 flex flex-col overflow-hidden">
+                <div className="flex-1 flex flex-col h-full overflow-hidden">
                   {/* Frontmatter Metadata Panel */}
-                  <div className="p-5 border-b border-white/5 bg-zinc-950/30 space-y-4 shrink-0">
+                  <div className="p-5 border-b border-white/5 bg-zinc-950/30 space-y-4 shrink-0 overflow-y-auto max-h-[60%]">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest block mb-1">Page Title</label>

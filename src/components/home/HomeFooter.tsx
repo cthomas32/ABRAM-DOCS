@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import NewsletterSignup from "../NewsletterSignup";
 
 export default function HomeFooter({
   onCookieSettingsClick,
@@ -7,7 +8,20 @@ export default function HomeFooter({
   onCookieSettingsClick?: () => void;
 }) {
   return (
-    <footer className="w-full bg-[#0A0A0A] border-t border-white/[0.08] py-8 px-4 sm:px-6 lg:px-8">
+    <footer className="w-full bg-[#0A0A0A] border-t border-white/[0.08] py-12 px-4 sm:px-6 lg:px-8">
+      {/* Newsletter Signup Row */}
+      <div className="max-w-8xl mx-auto mb-10 pb-10 border-b border-white/[0.06] grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div>
+          <h3 className="text-xs font-semibold tracking-wider text-white uppercase font-sans">Subscribe to updates</h3>
+          <p className="text-xs text-zinc-500 mt-1.5 leading-relaxed max-w-sm font-sans">
+            Receive release logs, workflow templates, and creative intelligence announcements.
+          </p>
+        </div>
+        <div className="w-full">
+          <NewsletterSignup variant="inline" className="max-w-md md:ml-auto" />
+        </div>
+      </div>
+
       <div className="max-w-8xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 md:gap-12 text-sm text-zinc-400">
         {/* Column 1: Logo, description & Copyright */}
         <div className="flex flex-col justify-between space-y-4 col-span-2 sm:col-span-3 md:col-span-1">

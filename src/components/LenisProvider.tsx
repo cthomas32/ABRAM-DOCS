@@ -33,6 +33,13 @@ const LENIS_OPTIONS = {
 };
 
 export default function LenisProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
+
+  if (isAdmin) {
+    return <>{children}</>;
+  }
+
   return (
     <ReactLenis 
       root 
