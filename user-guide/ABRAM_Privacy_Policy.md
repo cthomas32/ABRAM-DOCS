@@ -227,7 +227,7 @@ You may request information about our international transfer safeguards by conta
 
 In the event of a personal data breach, ABRAM will notify the relevant supervisory authority within 72 hours where required by GDPR Article 33 or applicable US state law, and will notify affected individuals without undue delay where the breach is likely to result in high risk to their rights and freedoms. All breaches are documented in ABRAM's internal breach register.
 
-Report a potential breach: security@abram.network
+Report a potential breach: legal@abram.network
 
 ---
 
@@ -251,7 +251,7 @@ We will notify you of material changes via email and/or in-app notification at l
 |---|---|
 | Legal & Terms | legal@abram.network |
 | Privacy Inquiries | privacy@abram.network |
-| Security / Breach Reports | security@abram.network |
+| Security / Breach Reports | legal@abram.network |
 
 **Address:** Washington, DC
 

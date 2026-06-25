@@ -389,7 +389,7 @@ You may not use Platform messaging to direct another user to communicate, contra
 
 ## 6. Security Research and Responsible Disclosure
 
-If you believe you have found a security vulnerability in the Platform, please report it to [security@abram.network](mailto:security@abram.network) before taking any further action. Good-faith security research conducted under a written authorization from ABRAM is not a violation of this Policy. Unauthorized penetration testing, vulnerability scanning, or attempts to access non-public systems or other users'' data are violations of this Policy regardless of intent.
+If you believe you have found a security vulnerability in the Platform, please report it to [legal@abram.network](mailto:legal@abram.network) before taking any further action. Good-faith security research conducted under a written authorization from ABRAM is not a violation of this Policy. Unauthorized penetration testing, vulnerability scanning, or attempts to access non-public systems or other users'' data are violations of this Policy regardless of intent.
 
 ---
 
@@ -668,7 +668,7 @@ You may request information about our international transfer safeguards by conta
 
 In the event of a personal data breach, ABRAM will notify the relevant supervisory authority within 72 hours where required by GDPR Article 33 or applicable US state law, and will notify affected individuals without undue delay where the breach is likely to result in high risk to their rights and freedoms. All breaches are documented in ABRAM''s internal breach register.
 
-Report a potential breach: security@abram.network
+Report a potential breach: legal@abram.network
 
 ---
 
@@ -692,7 +692,7 @@ We will notify you of material changes via email and/or in-app notification at l
 |---|---|
 | Legal & Terms | legal@abram.network |
 | Privacy Inquiries | privacy@abram.network |
-| Security / Breach Reports | security@abram.network |
+| Security / Breach Reports | legal@abram.network |
 
 **Address:** Washington, DC
 
@@ -1066,7 +1066,7 @@ Clients are solely responsible for correctly classifying workers under applicabl
 
 In the event of a personal data breach, ABRAM will notify relevant supervisory authorities within 72 hours of becoming aware of the breach where required by applicable law (including GDPR Article 33). Where a breach is likely to result in high risk to affected individuals, ABRAM will also notify affected users without undue delay. All breaches are documented in an internal breach register.
 
-Report suspected breaches to security@abram.network.
+Report suspected breaches to legal@abram.network.
 
 ---
 
@@ -1529,7 +1529,7 @@ ABRAM offers plans tailored to solo creators, production teams, and studios:
 | **Solo Pro** | $34/mo | 1 seat | Unlimited | 600 / mo | 10 GB | Brief parser, calendar sync, PDF exports |
 | **Team** | $39/seat/mo | 2 - 5 seats | Unlimited | 500 / seat / mo | 10 GB | Custom request forms, team collaboration |
 | **Studio** | $49/seat/mo | 6 - 20 seats | Unlimited | 1,000 / seat / mo | 15 GB | Barcode scanning, custom intake workflows |
-| **Enterprise** | Custom | Custom | Unlimited | Custom | Custom | Corporate directory sync, SSO, dedicated support |
+| **SMB / Enterprise** | Custom | Starts at 21 seats + | Unlimited | Custom | Custom | Custom app flavors & bespoke builds, custom AI models (BYOK), SSO/SCIM |
 
 *Note: Team and Studio plans require a minimum of 2 and 6 seats respectively.*
 
@@ -1544,7 +1544,7 @@ To provide basic trial access to freelancers and solo creators on lower tiers, a
 | **Solo Pro** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
 | **Team** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
 | **Studio** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
-| **Enterprise** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
+| **SMB / Enterprise** | **Full Access**: Drag-and-drop, AI Sort, Sync Crew, and adding breaks are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
 
 ---
 

@@ -78,7 +78,7 @@ const SCENARIOS: ScenarioConfig[] = [
   },
   {
     id: "enterprise",
-    name: "Enterprise",
+    name: "SMB / Enterprise",
     revenue: "$50M",
     minProjects: 50,
     maxProjects: 1000,

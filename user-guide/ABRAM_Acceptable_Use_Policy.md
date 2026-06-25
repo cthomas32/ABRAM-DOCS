@@ -71,7 +71,7 @@ You may not use Platform messaging to direct another user to communicate, contra
 
 ## 6. Security Research and Responsible Disclosure
 
-If you believe you have found a security vulnerability in the Platform, please report it to [security@abram.network](mailto:security@abram.network) before taking any further action. Good-faith security research conducted under a written authorization from ABRAM is not a violation of this Policy. Unauthorized penetration testing, vulnerability scanning, or attempts to access non-public systems or other users' data are violations of this Policy regardless of intent.
+If you believe you have found a security vulnerability in the Platform, please report it to [legal@abram.network](mailto:legal@abram.network) before taking any further action. Good-faith security research conducted under a written authorization from ABRAM is not a violation of this Policy. Unauthorized penetration testing, vulnerability scanning, or attempts to access non-public systems or other users' data are violations of this Policy regardless of intent.
 
 ---
 

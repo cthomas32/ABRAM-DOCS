@@ -47,7 +47,7 @@ The **Intelligence Suite** provides conversational interfaces and institutional 
 | **Solo Pro** | $34/mo | 1 | 10 GB | Full Access | Full Access |
 | **Team** | $39/seat/mo | 2-5 | 10 GB | Full Access | Full Access |
 | **Studio** | $49/seat/mo | 6-20 | 15 GB | Full Access | Full Access |
-| **Enterprise** | Custom | Custom | Custom | Full Access | Full Access |
+| **SMB / Enterprise** | Custom | Custom | Custom | Full Access | Full Access |
 
 ---
 

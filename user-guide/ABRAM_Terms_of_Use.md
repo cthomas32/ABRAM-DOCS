@@ -343,7 +343,7 @@ Clients are solely responsible for correctly classifying workers under applicabl
 
 In the event of a personal data breach, ABRAM will notify relevant supervisory authorities within 72 hours of becoming aware of the breach where required by applicable law (including GDPR Article 33). Where a breach is likely to result in high risk to affected individuals, ABRAM will also notify affected users without undue delay. All breaches are documented in an internal breach register.
 
-Report suspected breaches to security@abram.network.
+Report suspected breaches to legal@abram.network.
 
 ---
 

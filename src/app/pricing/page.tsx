@@ -221,12 +221,12 @@ export default function PricingPage() {
               <td>15 GB</td>
             </tr>
             <tr>
-              <td><strong>Enterprise</strong></td>
+              <td><strong>SMB / Enterprise</strong></td>
               <td>Custom pricing</td>
               <td>Full Access</td>
               <td>Full Access</td>
-              <td>Custom allocation</td>
-              <td>Custom allocation</td>
+              <td>Custom allocation (BYOK / custom LLM option)</td>
+              <td>Custom allocation (Bespoke app flavors)</td>
             </tr>
           </tbody>
         </table>

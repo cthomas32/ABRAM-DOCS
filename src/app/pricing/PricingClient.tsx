@@ -66,7 +66,8 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "transit_buffers", name: "Transit Buffer Days" },
       { id: "return_inspections", name: "Equipment Return Inspections" },
       { id: "repair_lockouts", name: "Needs Repair Lockouts" },
-      { id: "sso_scim", name: "SSO & Directory Sync (SAML/SCIM)" }
+      { id: "sso_scim", name: "SSO & Directory Sync (SAML/SCIM)" },
+      { id: "custom_flavors", name: "Bespoke App Flavors & Branding" }
     ]
   },
   {
@@ -76,7 +77,8 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "brief_analyzer", name: "Brief Intelligence (AI Brief Analyzer)" },
       { id: "intake_forms", name: "Custom Intake Forms" },
       { id: "form_mapping", name: "Intake Form Skill/Gear Mapping" },
-      { id: "domain_gating", name: "Email Domain Gating" }
+      { id: "domain_gating", name: "Email Domain Gating" },
+      { id: "custom_ai_models", name: "Custom AI & LLM Models (BYOK)" }
     ]
   },
   {
@@ -137,11 +139,13 @@ const PLANS: Plan[] = [
       return_inspections: false,
       repair_lockouts: false,
       sso_scim: false,
+      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: false,
       intake_forms: false,
       form_mapping: false,
       domain_gating: false,
+      custom_ai_models: false,
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: false,
@@ -190,11 +194,13 @@ const PLANS: Plan[] = [
       return_inspections: false,
       repair_lockouts: false,
       sso_scim: false,
+      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: false,
       intake_forms: false,
       form_mapping: false,
       domain_gating: false,
+      custom_ai_models: false,
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: false,
@@ -244,11 +250,13 @@ const PLANS: Plan[] = [
       return_inspections: false,
       repair_lockouts: false,
       sso_scim: false,
+      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: true,
       intake_forms: false,
       form_mapping: false,
       domain_gating: false,
+      custom_ai_models: false,
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: true,
@@ -302,11 +310,13 @@ const PLANS: Plan[] = [
       return_inspections: true,
       repair_lockouts: true,
       sso_scim: false,
+      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: true,
       intake_forms: "1 Active Form",
       form_mapping: true,
       domain_gating: true,
+      custom_ai_models: false,
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: true,
@@ -363,11 +373,13 @@ const PLANS: Plan[] = [
       return_inspections: true,
       repair_lockouts: true,
       sso_scim: false,
+      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: true,
       intake_forms: "Unlimited Forms",
       form_mapping: true,
       domain_gating: true,
+      custom_ai_models: false,
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: true,
@@ -405,13 +417,13 @@ const PLANS: Plan[] = [
   },
   {
     id: "enterprise",
-    name: "Enterprise",
+    name: "SMB / Enterprise",
     price_monthly: null,
     price_type: "custom",
     billing_cycle: "monthly",
     seats: { min: 21, max: null, included: 21 },
     ai_credits: { monthly_quota: -2, is_per_seat: false, custom: true },
-    audience: "Enterprise agencies, media networks, and large studio facilities.",
+    audience: "For growing SMBs, large studios, and enterprise media networks requiring bespoke app flavors and custom AI integrations.",
     features: {
       workspace_storage: "Custom (100 GB base)",
       active_projects: "Unlimited",
@@ -424,11 +436,13 @@ const PLANS: Plan[] = [
       return_inspections: true,
       repair_lockouts: true,
       sso_scim: true,
+      custom_flavors: "Bespoke Branding",
       manual_projects: true,
       brief_analyzer: true,
       intake_forms: "Unlimited Forms",
       form_mapping: true,
       domain_gating: true,
+      custom_ai_models: "BYOK & Private LLM",
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: true,
@@ -450,16 +464,14 @@ const PLANS: Plan[] = [
       budgeting_access: "Full Access"
     },
     marketingFeatures: [
-      "Unlimited team seats",
+      "Starts at 21 seats +",
       "Dedicated corporate workspace",
       "Unlimited active projects",
-      "Custom storage limits (100 GB base)",
-      "Custom AI credits",
-      "Advanced Logistics & Operations settings",
-      "Barcode Equipment Scanning",
-      "Frame.io & Slack integrations",
-      "Compliance Audit Logs & Viewer",
-      "SSO & Directory Sync (SAML/SCIM)"
+      "Custom branded instances & app flavors (tailored to your company)",
+      "Custom AI & LLM integration (BYOK, private LLM deployments, fine-tuning)",
+      "Custom system builds & features (tuned to your workflow)",
+      "Custom storage limits & custom AI credits",
+      "SSO & Directory Sync (SAML/SCIM) & Compliance Audit Logs"
     ]
   }
 ];
@@ -477,6 +489,7 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   return_inspections: "Structured check-in checklists and digital sign-offs to assess equipment health immediately upon return.",
   repair_lockouts: "Automated system that locks damaged gear out of future bookings until a repair status is resolved.",
   sso_scim: "Enterprise identity management supporting Single Sign-On and automated user provisioning via SAML and SCIM.",
+  custom_flavors: "Custom-branded instances and tailored application interfaces designed for your organization's specific workflow.",
   ai_credits: "Monthly quota of AI credits to power Brief Intelligence parsing and co-pilot matchmaking recommendations.",
 
   // Intake & Project Setup
@@ -485,6 +498,7 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   intake_forms: "Tailored request forms to collect project requirements, client needs, and timeline details directly.",
   form_mapping: "Automatically translate incoming intake responses into matching roster skills and gear requirements.",
   domain_gating: "Restrict workspace entry or form submissions to specific authorized corporate email domains.",
+  custom_ai_models: "Integrations for proprietary or custom LLMs, including Bring Your Own Keys (BYOK), private deployments, and model fine-tuning.",
 
   // Crewing & Utilization
   personal_calendar: "A dedicated dashboard for individual team members to track assignments, availability, and off-days.",
@@ -784,7 +798,7 @@ export default function PricingClient() {
                         )}
                         {isCustom && (
                           <div className="text-xs lg:text-[10px] xl:text-xs text-zinc-400 font-sans mt-1.5">
-                            Requires 21+ seats scale
+                            Starts at 21 seats +
                           </div>
                         )}
                       </div>
@@ -894,14 +908,25 @@ export default function PricingClient() {
                     </div>
 
                     {/* Actions */}
-                    <div className="mt-auto">
-                      <button 
-                        className={`w-full min-h-[44px] lg:min-h-0 py-3 lg:py-1.5 text-xs font-semibold ${
-                          isPrimaryCard ? "btn-primary" : "btn-glass"
-                        }`}
-                      >
-                        {plan.id === "enterprise" ? "Contact Sales" : "Get Started"}
-                      </button>
+                    <div className="mt-auto w-full">
+                      {plan.id === "enterprise" ? (
+                        <a 
+                          href="mailto:sales@abram.network?subject=ABRAM%20SMB%20/%20Enterprise%20Inquiry"
+                          className={`w-full text-center block rounded-full py-2.5 lg:py-1.5 text-xs font-semibold cursor-pointer transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-white/50 ${
+                            isPrimaryCard ? "btn-primary" : "btn-glass"
+                          }`}
+                        >
+                          Contact Sales
+                        </a>
+                      ) : (
+                        <button 
+                          className={`w-full min-h-[44px] lg:min-h-0 py-3 lg:py-1.5 text-xs font-semibold ${
+                            isPrimaryCard ? "btn-primary" : "btn-glass"
+                          }`}
+                        >
+                          Get Started
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
