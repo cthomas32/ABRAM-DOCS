@@ -62,7 +62,7 @@ export default function MovieMagicClient() {
     },
     {
       feature: "Call Sheets Integration",
-      abram: "Call sheets sync with stripboards and auto-notify crew via Slack/SMS",
+      abram: "Call sheets sync with stripboards and auto-notify crew via Slack/Email",
       moviemagic: "Downstream document export; call sheets managed separately",
       abramCheck: true,
       moviemagicCheck: false

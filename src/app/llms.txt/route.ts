@@ -19,12 +19,12 @@ The **Film Production Hub** automates scheduling and logistical workflows:
 - **Connected Stripboard**: An interactive drag-and-drop timeline color-coding scenes by type (Interior/Exterior) and time of day (Day/Night/Dawn/Dusk).
 - **Day Out of Days (DOOD) Matrix**: Compiles cast scheduling views, tracking actor booking states (Start, Work, Hold, Finish, and SWF) to calculate total days.
 - **Safety & Labor Compliance Telemetry**: Tracks wrap-to-call rest windows, proactively flagging DGA, SAG-AFTRA, or IATSE turnaround violations before schedules are distributed.
-- **Digital Call Sheets**: Builds daily agendas with mixed scene/non-scene blocks, location routing coordinates (Basecamp, Sets, Parking), and SMS/email crew dispatch logs with mobile-friendly check-in and public RSVPs.
+- **Digital Call Sheets**: Builds daily agendas with mixed scene/non-scene blocks, location routing coordinates (Basecamp, Sets, Parking), and email/Slack crew dispatch logs with mobile-friendly check-in and public RSVPs.
 
 ### 2. Creative Operations (Agency) Hub
 The **Creative Operations Hub** manages client intake, scoping, and booking logistics for production agencies and design studios:
 - **AI Scoping Wizard**: Translates unstructured client briefs into defined deliverables, roles, and milestones with estimated labor hours and target costs.
-- **Crew Matchmaker Engine**: Evaluates roster talent using a multi-dimensional Suitability Index (scoring skills, rates, and past performance) and dispatches instant SMS invites.
+- **Crew Matchmaker Engine**: Evaluates roster talent using a multi-dimensional Suitability Index (scoring skills, rates, and past performance) and dispatches instant invites.
 - **Interactive Timeline Calendar**: Multi-row timeline calendars tracking personnel and facility status (Available, Hold, Booked) with automated collision flags.
 - **Turnaround Compliance Checker**: Checks check-in/out travel distances and call-times against safety rules.
 - **Work Package & Deliverable Workflows**: Categorizes task complexity (High, Medium, Low) and triggers status tracking for milestones, reviews, and invoice approvals.

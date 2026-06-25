@@ -27,7 +27,7 @@ export default function StudioBinderClient() {
   const comparisonFeatures = [
     {
       feature: "Digital Call Sheets",
-      abram: "Dynamic, live call sheets with active SMS & Slack broadcasts",
+      abram: "Dynamic, live call sheets with active Email & Slack broadcasts",
       studiobinder: "Visually elegant, templated call sheets with manual email distribution",
       abramCheck: true,
       studiobinderCheck: true
@@ -80,7 +80,7 @@ export default function StudioBinderClient() {
     },
     {
       q: "How does ABRAM handle call sheet updates compared to StudioBinder?",
-      a: "StudioBinder generates beautiful static call sheets that can be emailed or sent as PDFs. ABRAM links call sheets dynamically to the live schedule stripboard. If a producer updates shoot times on the stripboard, call sheets update instantly, and crew members are notified of the changes via SMS or Slack with one-click RSVP confirmation."
+      a: "StudioBinder generates beautiful static call sheets that can be emailed or sent as PDFs. ABRAM links call sheets dynamically to the live schedule stripboard. If a producer updates shoot times on the stripboard, call sheets update instantly, and crew members are notified of the changes via Slack or Email with one-click RSVP confirmation."
     }
   ];
 
@@ -235,7 +235,7 @@ export default function StudioBinderClient() {
                   </h3>
                 </div>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">
-                  StudioBinder is renowned for generating visually stunning call sheets. ABRAM builds on this by keeping call sheets dynamically linked to the live schedule. If scheduling times update, call sheets sync automatically, and notifications (via SMS or Slack) alert the crew instantly.
+                  StudioBinder is renowned for generating visually stunning call sheets. ABRAM builds on this by keeping call sheets dynamically linked to the live schedule. If scheduling times update, call sheets sync automatically, and notifications (via Slack or Email) alert the crew instantly.
                 </p>
                 <ul className="text-xs text-zinc-500 space-y-2 mb-6 font-sans">
                   <li className="flex items-start gap-2">

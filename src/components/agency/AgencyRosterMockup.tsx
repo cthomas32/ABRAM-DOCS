@@ -318,7 +318,7 @@ export default function AgencyRosterMockup() {
             <div className="pt-6 border-t border-white/5 mt-6">
               <button
                 onClick={() => {
-                  alert("Roster shortlist locked! Invites dispatched to the 4 shortlisted contractors via SMS & Portal.");
+                  alert("Roster shortlist locked! Invites dispatched to the 4 shortlisted contractors via Email & Portal.");
                 }}
                 className="btn-glass w-full min-h-[44px] text-xs flex items-center justify-center gap-1.5 cursor-pointer font-sans"
               >

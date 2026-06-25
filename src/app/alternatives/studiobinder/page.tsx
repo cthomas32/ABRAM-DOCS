@@ -113,7 +113,7 @@ export default function StudioBinderPage() {
 
         <h3>4. Digital Call Sheets and Logistics Core</h3>
         <p>
-          ABRAM call sheets sync with the live schedule and budget. Change a time on the stripboard, and the call sheet updates instantly for the entire crew via Slack or SMS broadcasts.
+          ABRAM call sheets sync with the live schedule and budget. Change a time on the stripboard, and the call sheet updates instantly for the entire crew via Slack or Email broadcasts.
         </p>
       </AgentOnly>
       <StudioBinderClient />

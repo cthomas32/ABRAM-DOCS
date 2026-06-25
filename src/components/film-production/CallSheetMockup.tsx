@@ -58,13 +58,13 @@ export default function CallSheetMockup() {
 
   // 2. Cast & Crew Roster State (with Activity Statuses W/H/T/R and Character mapping)
   const [roster, setRoster] = useState([
-    { id: "DIR", name: "Jane Smith", role: "Director", character: "N/A", call: "07:30 AM", status: "W", dept: "Creative", smsStatus: "Pending" },
-    { id: "DP", name: "John Doe", role: "Director of Photography", character: "N/A", call: "07:30 AM", status: "W", dept: "Camera", smsStatus: "Pending" },
-    { id: "A-01", name: "Leo Vance", role: "Ethan (Cast)", character: "Ethan (ID #1)", call: "08:30 AM", status: "W", dept: "Cast", smsStatus: "Pending" },
-    { id: "A-02", name: "Selene Apex", role: "Clara (Cast)", character: "Clara (ID #2)", call: "07:30 AM", status: "W", dept: "Cast", smsStatus: "Pending" },
-    { id: "A-03", name: "Marcus Aurelius", role: "Actor 3 (Guard)", character: "Guard (ID #9)", call: "10:00 AM", status: "H", dept: "Cast", smsStatus: "Pending" },
-    { id: "PD", name: "Sarah Connor", role: "Production Designer", character: "N/A", call: "07:00 AM", status: "W", dept: "Art", smsStatus: "Pending" },
-    { id: "SND", name: "Vesper Lin", role: "Sound Mixer", character: "N/A", call: "07:30 AM", status: "W", dept: "Sound", smsStatus: "Pending" }
+    { id: "DIR", name: "Jane Smith", role: "Director", character: "N/A", call: "07:30 AM", status: "W", dept: "Creative", dispatchStatus: "Pending" },
+    { id: "DP", name: "John Doe", role: "Director of Photography", character: "N/A", call: "07:30 AM", status: "W", dept: "Camera", dispatchStatus: "Pending" },
+    { id: "A-01", name: "Leo Vance", role: "Ethan (Cast)", character: "Ethan (ID #1)", call: "08:30 AM", status: "W", dept: "Cast", dispatchStatus: "Pending" },
+    { id: "A-02", name: "Selene Apex", role: "Clara (Cast)", character: "Clara (ID #2)", call: "07:30 AM", status: "W", dept: "Cast", dispatchStatus: "Pending" },
+    { id: "A-03", name: "Marcus Aurelius", role: "Actor 3 (Guard)", character: "Guard (ID #9)", call: "10:00 AM", status: "H", dept: "Cast", dispatchStatus: "Pending" },
+    { id: "PD", name: "Sarah Connor", role: "Production Designer", character: "N/A", call: "07:00 AM", status: "W", dept: "Art", dispatchStatus: "Pending" },
+    { id: "SND", name: "Vesper Lin", role: "Sound Mixer", character: "N/A", call: "07:30 AM", status: "W", dept: "Sound", dispatchStatus: "Pending" }
   ]);
 
   // 3. Smart & AI Autofill State
@@ -191,7 +191,7 @@ export default function CallSheetMockup() {
     if (dispatchState === "sending") return;
     setDispatchState("sending");
     setDispatchProgress(0);
-    setRoster(prev => prev.map(m => ({ ...m, smsStatus: "Pending" })));
+    setRoster(prev => prev.map(m => ({ ...m, dispatchStatus: "Pending" })));
 
     let current = 0;
     const interval = setInterval(() => {
@@ -200,8 +200,8 @@ export default function CallSheetMockup() {
       
       setRoster(prevRoster => 
         prevRoster.map((member, idx) => {
-          if (idx < current) return { ...member, smsStatus: "Sent" };
-          if (idx === current) return { ...member, smsStatus: "Sending" };
+          if (idx < current) return { ...member, dispatchStatus: "Sent" };
+          if (idx === current) return { ...member, dispatchStatus: "Sending" };
           return member;
         })
       );
@@ -763,15 +763,15 @@ export default function CallSheetMockup() {
                       <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block">
                         Roster Notification Dispatch
                       </span>
-                      <h3 className="text-base font-bold text-white">Portal & SMS Distribution</h3>
+                      <h3 className="text-base font-bold text-white">Portal & Email Distribution</h3>
                       <p className="text-xs text-zinc-400 leading-relaxed">
-                        Dispatch direct links, map files, and personalized call times to the entire team via text and email.
+                        Dispatch direct links, map files, and personalized call times to the entire team via email and portal.
                       </p>
                     </div>
 
                     <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40 space-y-3">
                       <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 block border-b border-white/5 pb-1">
-                        SMS & Email Broadcast Preview
+                        Email & Portal Broadcast Preview
                       </span>
                       <div className="font-mono text-[10px] text-zinc-500 space-y-1 bg-zinc-950/60 p-2.5 rounded select-text">
                         <p className="text-zinc-300 font-semibold">To: [Roster Crew Members]</p>
@@ -790,7 +790,7 @@ export default function CallSheetMockup() {
                         className="btn-primary w-full py-2.5 text-xs flex items-center justify-center gap-2"
                       >
                         <Send className="w-3.5 h-3.5 text-black" />
-                        {dispatchState === "sending" ? "Dispatching Broadcast..." : "Send to Crew Portal & Dispatch SMS"}
+                        {dispatchState === "sending" ? "Dispatching Broadcast..." : "Send to Crew Portal & Dispatch Emails"}
                       </button>
 
                       {dispatchState === "sending" && (
@@ -872,13 +872,13 @@ export default function CallSheetMockup() {
                             <span className="text-[9px] text-zinc-500 font-mono block">{row.role}</span>
                           </div>
                           <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${
-                            row.smsStatus === "Sent" 
+                            row.dispatchStatus === "Sent" 
                               ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                              : row.smsStatus === "Sending"
+                              : row.dispatchStatus === "Sending"
                               ? "bg-blue-500/10 text-blue-400 border border-blue-500/20 animate-pulse"
                               : "bg-white/5 text-zinc-500 border border-white/5"
                           }`}>
-                            {row.smsStatus}
+                            {row.dispatchStatus}
                           </span>
                         </div>
                       ))}

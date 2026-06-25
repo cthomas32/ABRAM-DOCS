@@ -34,7 +34,7 @@ export default function CrewRosterClient() {
             "Weighted Contractor Suitability Indexing",
             "Unified Gear & Personnel Asset Directory",
             "Automated Shortlist Selection Optimizer",
-            "One-Click Portal SMS Broadcast Dispatch"
+            "One-Click Portal Broadcast Dispatch"
           ]
         }
       },
