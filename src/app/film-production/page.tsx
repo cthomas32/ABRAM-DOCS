@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import FilmProductionHubClient from './FilmProductionHubClient';
 
 export const metadata: Metadata = {
-  title: 'Film Production Operations & Studio Management | ABRAM Network',
+  title: 'Film Production Operations & Studio Management',
   description: 'Streamline physical production with our advanced creative operations platform. Analyze daily burn rates, coordinate crew turnaround compliance, and break down screenplays in a unified system.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

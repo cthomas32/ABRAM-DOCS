@@ -4,7 +4,7 @@ import FeatureCatalogList from "@/components/film-production/FeatureCatalogList"
 import InteractivePlayground from "@/components/film-production/InteractivePlayground";
 
 export const metadata: Metadata = {
-  title: 'Film Production Scheduling & Budgeting | ABRAM Network',
+  title: 'Film Production Scheduling & Budgeting',
   description: 'Coordinate crew rosters, manage budgets, and resolve scheduling conflicts in a unified interactive timeline with advanced creative operations tools.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

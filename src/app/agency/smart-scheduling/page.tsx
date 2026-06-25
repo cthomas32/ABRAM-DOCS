@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import SmartSchedulingClient from './SmartSchedulingClient';
 
 export const metadata: Metadata = {
-  title: 'Smart Resource & Crew Scheduling | ABRAM Network',
+  title: 'Smart Resource & Crew Scheduling',
   description: 'Coordinate equipment resources, location calendars, and crew schedules in an interactive timeline. Resolve scheduling conflicts and compliance using smart creative operations tools.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

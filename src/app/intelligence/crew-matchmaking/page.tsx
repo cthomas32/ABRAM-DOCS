@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CrewMatchmakingClient from './CrewMatchmakingClient';
 
 export const metadata: Metadata = {
-  title: 'Crew Recommendations & Suitability Scoring | ABRAM Network',
+  title: 'Crew Recommendations & Suitability Scoring',
   description: 'Optimize crew allocations and resource slots using our Suitability Matrix. Verify availability and coordinate schedule holds in our creative operations platform.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

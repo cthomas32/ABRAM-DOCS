@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CallSheetsClient from './CallSheetsClient';
 
 export const metadata: Metadata = {
-  title: 'Digital Call Sheets & Crew Coordination | ABRAM Network',
+  title: 'Digital Call Sheets & Crew Coordination',
   description: 'Manage shooting schedules, basecamp contacts, and crew turnaround compliance in real-time with digital call sheets built on our creative operations platform.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

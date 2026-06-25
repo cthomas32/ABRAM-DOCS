@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import BriefIntelligenceClient from './BriefIntelligenceClient';
 
 export const metadata: Metadata = {
-  title: 'AI Brief Intelligence & Project Scoping | ABRAM Network',
+  title: 'AI Brief Intelligence & Project Scoping',
   description: 'Upload creative and operational briefs to generate Work Packages, extract tasks, and allocate resources using advanced AI creative operations tools.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

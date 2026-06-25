@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import MovieMagicClient from './MovieMagicClient';
 
 export const metadata: Metadata = {
-  title: 'ABRAM vs. Movie Magic | Cloud-Native Scheduling & Budgeting | ABRAM Network',
+  title: 'ABRAM vs. Movie Magic | Cloud-Native Scheduling & Budgeting',
   description: 'Swapping from Movie Magic Scheduling & Budgeting? Compare Movie Magic offline desktop software to ABRAM\'s real-time collaborative workspace, active union compliance checking, and automated payouts.',
   keywords: [
     'Movie Magic alternative', 'Movie Magic replacement', 'Movie Magic Scheduling',

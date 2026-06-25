@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import IntelligenceHubClient from '@/app/intelligence/IntelligenceHubClient';
 
 export const metadata: Metadata = {
-  title: 'Creative Operations Intelligence & ROI Modeler | ABRAM Network',
+  title: 'Creative Operations Intelligence & ROI Modeler',
   description: 'Measure the efficiency and financial yield of your creative operations. Quantify time and labor savings, prevent resource leakage, and model ROI on our creative operations platform.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

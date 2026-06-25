@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CrewRosterClient from './CrewRosterClient';
 
 export const metadata: Metadata = {
-  title: 'Crew & Resource Roster Management | ABRAM Network',
+  title: 'Crew & Resource Roster Management',
   description: 'Manage high-availability crew rosters and production assets. Use our creative operations platform to coordinate team members, track equipment, and optimize project allocations.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

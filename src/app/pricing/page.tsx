@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import PricingClient from './PricingClient';
 
 export const metadata: Metadata = {
-  title: 'ABRAM Pricing — Plans for Creative Teams & Agencies | ABRAM Network',
+  title: 'ABRAM Pricing — Plans for Creative Teams & Agencies',
   description: 'Explore pricing plans for our creative operations platform. Get started with advanced creative operations tools, crew scheduling, and production accounting.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import ScriptBreakdownClient from './ScriptBreakdownClient';
 
 export const metadata: Metadata = {
-  title: 'AI Script Breakdown & Screenplay Parsing | ABRAM Network',
+  title: 'AI Script Breakdown & Screenplay Parsing',
   description: 'Transform screenplays into production-ready stripboards. Discover AI script breakdown and screenplay parsing tools inside ABRAM\'s creative operations platform.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

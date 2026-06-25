@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import CreativeCopilotClient from "@/app/intelligence/creative-copilot/CreativeCopilotClient";
 
 export const metadata: Metadata = {
-  title: "Creative Co-pilot & Conversational Scoping | ABRAM Network",
+  title: "Creative Co-pilot & Conversational Scoping",
   description: "Experience ABRAM's conversational scoping engine. Parse screenplays, schedule crew resources, and coordinate project variables in real-time.",
   keywords: [
     "creative production software",

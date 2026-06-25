@@ -8,7 +8,7 @@ import UnderTheHood from '@/components/production-brain/UnderTheHood';
 import CollaborationIntegrations from '@/components/production-brain/CollaborationIntegrations';
 
 export const metadata: Metadata = {
-  title: 'Production Brain — Enterprise Workspace Memory | ABRAM Network',
+  title: 'Production Brain — Enterprise Workspace Memory',
   description: 'Discover ABRAM\'s Production Brain: a private, secure workspace memory engine built for creative operations and production management. Build institutional memory across resources, projects, and rosters.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import AgencyHubClient from '@/app/agency/AgencyHubClient';
 
 export const metadata: Metadata = {
-  title: 'Creative Agency Operations & Project Management | ABRAM Network',
+  title: 'Creative Agency Operations & Project Management',
   description: 'Scale agency and studio workflows in a unified creative operations platform. Parse project briefs and coordinate crew rosters with advanced production management tools.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
