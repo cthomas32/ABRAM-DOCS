@@ -27,6 +27,7 @@ const archivo = Archivo({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://abram.network'),
+  applicationName: 'ABRAM Network',
   title: {
     default: 'ABRAM Network — The AI Platform for Creative Intelligence',
     template: '%s | ABRAM Network',
@@ -210,6 +211,7 @@ export default function RootLayout({
                   '@type': 'WebSite',
                   '@id': 'https://abram.network/#website',
                   'name': 'ABRAM Network',
+                  'alternateName': 'ABRAM',
                   'url': 'https://abram.network',
                   'description': 'Official portal, documentation, and help center for the ABRAM platform.',
                   'publisher': { '@id': 'https://abram.network/#organization' },
