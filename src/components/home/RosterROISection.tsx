@@ -332,6 +332,7 @@ export default function RosterROISection() {
               value={Math.round(efficiency * 100)} 
               onChange={(e) => setEfficiency(Number(e.target.value) / 100)} 
               className="sr-only"
+              aria-label="Roster efficiency target percentage"
             />
           </div>
 

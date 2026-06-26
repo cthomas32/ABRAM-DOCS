@@ -1043,6 +1043,7 @@ export default function CreativeCopilotPlayground() {
                     }}
                     disabled={isAnimating}
                     className="p-1.5 hover:bg-[#27272a] rounded-md transition-colors text-[#a1a1aa] cursor-pointer disabled:opacity-30"
+                    aria-label="Attach files"
                   >
                     <Paperclip className="w-4 h-4" />
                   </button>
@@ -1052,6 +1053,7 @@ export default function CreativeCopilotPlayground() {
                     onClick={handleCustomSend}
                     disabled={!inputValue.trim() || isAnimating}
                     className="p-1.5 bg-[#27272a] rounded-md transition-colors text-[#e4e4e7] hover:bg-[#3f3f46] disabled:opacity-30 disabled:hover:bg-[#27272a] cursor-pointer"
+                    aria-label="Send message"
                   >
                     <ArrowUp className="w-4 h-4" />
                   </button>

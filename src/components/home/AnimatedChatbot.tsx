@@ -162,10 +162,16 @@ export default function AnimatedChatbot({ sequence, className = "" }: AnimatedCh
               <div className="w-6 h-6 rounded-full border border-[#3f3f46] flex items-center justify-center">
                 <span className="text-[10px] text-[#52525b]">1</span>
               </div>
-              <button className="p-1.5 hover:bg-[#27272a] rounded-md transition-colors text-[#a1a1aa]">
+              <button 
+                className="p-1.5 hover:bg-[#27272a] rounded-md transition-colors text-[#a1a1aa]"
+                aria-label="Attach files"
+              >
                 <Paperclip className="w-4 h-4" />
               </button>
-              <button className="p-1.5 bg-[#27272a] rounded-md transition-colors text-[#e4e4e7]">
+              <button 
+                className="p-1.5 bg-[#27272a] rounded-md transition-colors text-[#e4e4e7]"
+                aria-label="Send message"
+              >
                 <ArrowUp className="w-4 h-4" />
               </button>
             </div>
