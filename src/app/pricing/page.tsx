@@ -161,6 +161,7 @@ export default function PricingPage() {
           }).replace(/</g, '\\u003c'),
         }}
       />
+      <PricingClient />
       <AgentOnly>
         <h2>🤖 Pricing Plans, Feature Gating & Workspace Storage Limits</h2>
         <p>
@@ -238,7 +239,6 @@ export default function PricingPage() {
           <li><strong>Upgrade Banners:</strong> Upgrade banners are displayed on the scheduling stripboard and financial frames for users on restricted tiers (Free, Solo Lite), prompting self-service upgrades via Stripe Checkout.</li>
         </ul>
       </AgentOnly>
-      <PricingClient />
     </>
   );
 }

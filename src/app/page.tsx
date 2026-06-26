@@ -192,6 +192,20 @@ export default function LandingPage() {
         }}
       />
       <main id="landing-page-root">
+        <HeroSection />
+        <PillarsSection />
+        <BridgeSection />
+        {/* <OutcomeSection /> */}
+        <FilmProductionSection />
+        <ResourcesCalendarSection />
+        <CreativeOpsSection />
+        <ArtifactsSection />
+        <CollaborationSection />
+        <RosterROISection />
+        <BrainSection />
+        <FAQSection />
+        <FinalCTASection />
+
         <AgentOnly>
           <h2>🤖 ABRAM — System Architecture & Core Capabilities</h2>
           <p>
@@ -224,20 +238,6 @@ export default function LandingPage() {
             ABRAM serves as a modern, unified alternative to legacy creative production software and project management tools such as Movie Magic, StudioBinder, Adobe Workfront, and Jira. While legacy systems require creative teams to jump between separate tools for scheduling, resource allocation, and billing, ABRAM brings these workflows into a single platform. It offers automated brief parsing to build project structures instantly, unified scheduling calendars for conflict-free resource and crew booking, and integrated payouts via Stripe Connect to handle contractor invoicing automatically.
           </p>
         </AgentOnly>
-
-        <HeroSection />
-        <PillarsSection />
-        <BridgeSection />
-        {/* <OutcomeSection /> */}
-        <FilmProductionSection />
-        <ResourcesCalendarSection />
-        <CreativeOpsSection />
-        <ArtifactsSection />
-        <CollaborationSection />
-        <RosterROISection />
-        <BrainSection />
-        <FAQSection />
-        <FinalCTASection />
       </main>
     </>
   );

@@ -48,29 +48,34 @@ function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
+  const sizeRef = useRef({ width: 0, height: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const resize = () => {
-      const rect = container.getBoundingClientRect();
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (!entries || entries.length === 0) return;
+      const entry = entries[0];
+      const { width, height } = entry.contentRect;
+
+      sizeRef.current = { width, height };
+
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
 
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.scale(dpr, dpr);
       }
-    };
+    });
 
-    resize();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
   }, []);
 
   useEffect(() => {
@@ -194,10 +199,12 @@ function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
     };
 
     const renderLoop = () => {
-      const rect = canvas.getBoundingClientRect();
-      const time = Date.now() * 0.001;
-      const currentActiveCount = Math.floor(activeCountTransform.get());
-      draw(rect.width, rect.height, time, currentActiveCount);
+      const { width, height } = sizeRef.current;
+      if (width > 0 && height > 0) {
+        const time = Date.now() * 0.001;
+        const currentActiveCount = Math.floor(activeCountTransform.get());
+        draw(width, height, time, currentActiveCount);
+      }
       animationId = requestAnimationFrame(renderLoop);
     };
 
@@ -206,12 +213,9 @@ function NetworkCanvas({ activeCountTransform }: NetworkCanvasProps) {
   }, [activeCountTransform]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
     mouseRef.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY
     };
   };
 

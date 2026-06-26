@@ -2,7 +2,7 @@
 
 import { ReactLenis, useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function LenisWatcher() {
   const pathname = usePathname();
@@ -35,8 +35,20 @@ const LENIS_OPTIONS = {
 export default function LenisProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  if (isAdmin) {
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  if (isAdmin || (mounted && isMobile)) {
     return <>{children}</>;
   }
 
@@ -50,3 +62,4 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
     </ReactLenis>
   );
 }
+

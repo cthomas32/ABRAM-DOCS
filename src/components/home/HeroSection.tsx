@@ -90,24 +90,18 @@ export default function HeroSection() {
       {/* Grid container to align layout with the main website content grid */}
       <div className="w-full max-w-5xl mx-auto relative z-10">
         {/* Centered content container */}
-        <motion.div 
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="relative flex flex-col items-center justify-center text-center max-w-3xl mx-auto w-full"
-        >
+        <div className="relative flex flex-col items-center justify-center text-center max-w-3xl mx-auto w-full">
           {/* Headline */}
-          <motion.h1
-            variants={titleVariants}
-            className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 select-text max-w-2xl"
-          >
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 select-text max-w-2xl">
             A new standard
             <span className="block mt-[5px]">for creative production</span>
-          </motion.h1>
+          </h1>
 
           {/* Single Minimalist Capsule CTA */}
           <motion.div
             variants={ctaVariants}
+            initial="hidden"
+            animate="visible"
             className="flex justify-center w-full"
           >
             <a
@@ -120,7 +114,7 @@ export default function HeroSection() {
               <ArrowUpRight className="h-4 w-4 opacity-75 group-hover:opacity-100 transition-opacity" />
             </a>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Scroll to Explore Indicator */}

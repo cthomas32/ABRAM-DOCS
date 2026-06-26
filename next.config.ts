@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  productionBrowserSourceMaps: true,
   devIndicators: {
     appIsrStatus: false,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
