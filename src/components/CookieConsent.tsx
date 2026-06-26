@@ -28,19 +28,27 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
   // 1. Initial mounting check
   useEffect(() => {
     setMounted(true);
+    let timer: NodeJS.Timeout;
     try {
       const saved = localStorage.getItem("abram-consent-v2");
       if (!saved) {
-        // Show banner if no consent history is found
-        setIsVisible(true);
+        // Show banner with delay if no consent history is found to prevent LCP hijack
+        timer = setTimeout(() => {
+          setIsVisible(true);
+        }, 2000);
       } else {
         const parsed = JSON.parse(saved) as ConsentState;
         setAnalyticsConsent(!!parsed.analytics_storage);
         setMarketingConsent(!!parsed.ad_storage);
       }
     } catch (e) {
-      setIsVisible(true);
+      timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 2000);
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   // 2. React to parent force-open (e.g. from footer click)

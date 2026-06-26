@@ -40,6 +40,9 @@ export default function TableOfContents() {
   useEffect(() => {
     if (headings.length === 0) return;
 
+    const mediaQuery = window.matchMedia("(min-width: 1280px)");
+    let isDesktop = mediaQuery.matches;
+
     const handleScroll = () => {
       const headingElements = Array.from(document.querySelectorAll("article h2, article h3"))
         .filter((el) => !el.closest(".sr-only"));
@@ -79,10 +82,26 @@ export default function TableOfContents() {
       }
     };
 
-    window.addEventListener("scroll", onScroll);
-    handleScroll(); // initial check
+    const handleResize = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        window.addEventListener("scroll", onScroll);
+        handleScroll();
+      } else {
+        window.removeEventListener("scroll", onScroll);
+      }
+    };
 
-    return () => window.removeEventListener("scroll", onScroll);
+    if (isDesktop) {
+      window.addEventListener("scroll", onScroll);
+      handleScroll();
+    }
+
+    mediaQuery.addEventListener("change", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      mediaQuery.removeEventListener("change", handleResize);
+    };
   }, [headings]);
 
   const hasHeadings = headings.length > 0;

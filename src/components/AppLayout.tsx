@@ -11,8 +11,11 @@ import SearchModal from "./SearchModal";
 import HomeFooter from "./home/HomeFooter";
 import MobileMenu from "./MobileMenu";
 import BackgroundGlow from "./BackgroundGlow";
-import CookieConsent from "./CookieConsent";
+import dynamic from "next/dynamic";
 
+const CookieConsent = dynamic(() => import("./CookieConsent"), {
+  ssr: false,
+});
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

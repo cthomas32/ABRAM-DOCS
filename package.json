@@ -41,6 +41,12 @@
     "last 2 Safari versions",
     "last 2 Firefox versions",
     "last 2 Edge versions",
-    "not dead"
+    "Chrome >= 94",
+    "Safari >= 15.4",
+    "Firefox >= 93",
+    "Edge >= 94",
+    "ios_saf >= 15.4",
+    "not IE 11",
+    "not op_mini all"
   ]
 }

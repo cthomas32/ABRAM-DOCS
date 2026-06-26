@@ -82,8 +82,19 @@ export default function TelemetryTracker({ id, type }: TelemetryTrackerProps) {
       }
     };
 
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
     // Attach scroll listener with passive flag for performance
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     // Check immediately in case page is already scrolled or content fits in viewport
     handleScroll();
 
@@ -92,7 +103,7 @@ export default function TelemetryTracker({ id, type }: TelemetryTrackerProps) {
         clearTimeout(timerId);
         timerId = null;
       }
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", onScroll);
     };
 
     return cleanup;

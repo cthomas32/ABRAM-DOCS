@@ -48,7 +48,7 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  if (isAdmin || (mounted && isMobile)) {
+  if (!mounted || isAdmin || isMobile) {
     return <>{children}</>;
   }
 
