@@ -130,11 +130,6 @@ function MindMapVisualization() {
       aria-hidden="true"
     >
       <style>{`
-        @keyframes line-draw {
-          0% { stroke-dashoffset: 80; opacity: 0; }
-          30% { opacity: 0.3; }
-          100% { stroke-dashoffset: 0; opacity: 0.35; }
-        }
         @keyframes child-fade {
           0% { opacity: 0; }
           100% { opacity: 1; }
@@ -147,12 +142,23 @@ function MindMapVisualization() {
         }
         .mm-line {
           stroke-dasharray: 80;
-          stroke-dashoffset: 80;
-          animation: line-draw 2s ease-out forwards;
+          stroke-dashoffset: 0;
+          opacity: 0.35;
         }
         .mm-child {
           animation: child-fade 1.5s ease-out forwards;
           opacity: 0;
+        }
+        @media (min-width: 768px) {
+          @keyframes line-draw {
+            0% { stroke-dashoffset: 80; opacity: 0; }
+            30% { opacity: 0.3; }
+            100% { stroke-dashoffset: 0; opacity: 0.35; }
+          }
+          .mm-line {
+            stroke-dashoffset: 80;
+            animation: line-draw 2s ease-out forwards;
+          }
         }
       `}</style>
 
@@ -258,19 +264,14 @@ function BudgetTickerVisualization() {
       aria-hidden="true"
     >
       <style>{`
-        @keyframes ring-fill {
-          0% { stroke-dashoffset: ${circumference}; opacity: 0.25; }
-          60% { opacity: 0.65; }
-          100% { stroke-dashoffset: ${dashOffset}; opacity: 0.65; }
-        }
         @keyframes ticker-fade {
           0% { opacity: 0; }
           100% { opacity: 1; }
         }
         .ring-progress {
-          animation: ring-fill 2.5s ease-out forwards;
           transform: rotate(-90deg);
           transform-origin: 56px 64px;
+          stroke-dashoffset: ${dashOffset};
           opacity: 0.65;
         }
         .ticker-item {
@@ -279,6 +280,16 @@ function BudgetTickerVisualization() {
         }
         .status-dot {
           opacity: 0.6;
+        }
+        @media (min-width: 768px) {
+          @keyframes ring-fill {
+            0% { stroke-dashoffset: ${circumference}; opacity: 0.25; }
+            60% { opacity: 0.65; }
+            100% { stroke-dashoffset: ${dashOffset}; opacity: 0.65; }
+          }
+          .ring-progress {
+            animation: ring-fill 2.5s ease-out forwards;
+          }
         }
       `}</style>
 

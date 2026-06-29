@@ -269,6 +269,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               <button 
                 onClick={() => setQuery("")}
                 className="absolute right-4 top-4 p-0.5 rounded-md text-zinc-500 hover:text-zinc-300 hover:bg-white/5 transition-all cursor-pointer"
+                aria-label="Clear search query"
               >
                 <X className="h-4 w-4" />
               </button>

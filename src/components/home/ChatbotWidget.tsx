@@ -312,13 +312,24 @@ export default function ChatbotWidget() {
                 
                 {/* Control Action Buttons */}
                 <div className="flex items-center gap-3 text-zinc-400">
-                  <button className="hover:text-white transition cursor-pointer" onClick={() => setIsOpen(false)}>
+                  <button
+                    className="hover:text-white transition cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Minimize chat"
+                  >
                     <Minimize2 className="w-3.5 h-3.5" />
                   </button>
-                  <button className="hover:text-white transition cursor-pointer">
+                  <button
+                    className="hover:text-white transition cursor-pointer"
+                    aria-label="Maximize chat"
+                  >
                     <Maximize2 className="w-3.5 h-3.5" />
                   </button>
-                  <button className="hover:text-white transition cursor-pointer" onClick={() => setIsOpen(false)}>
+                  <button
+                    className="hover:text-white transition cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Close chat"
+                  >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -536,6 +547,7 @@ export default function ChatbotWidget() {
                         onClick={() => handleSend(inputVal)}
                         disabled={!inputVal.trim() || isGenerating || isStreaming}
                         className="w-6.5 h-6.5 rounded-full bg-white text-black hover:bg-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer transition"
+                        aria-label="Send message"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
                       </button>

@@ -38,7 +38,10 @@ export const MockArtifactCanvas: React.FC<MockArtifactCanvasProps> = ({
             <Download size={13} className="text-zinc-500" /><span className="hidden sm:inline"> PDF</span>
           </button>
           <div className="w-px h-3 bg-zinc-800/85 mx-1"></div>
-          <button className="p-1.5 text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors cursor-default">
+          <button
+            className="p-1.5 text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors cursor-default"
+            aria-label="Close"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>

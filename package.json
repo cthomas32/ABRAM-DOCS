@@ -37,15 +37,11 @@
     "typescript": "^5"
   },
   "browserslist": [
-    "last 2 Chrome versions",
-    "last 2 Safari versions",
-    "last 2 Firefox versions",
-    "last 2 Edge versions",
-    "Chrome >= 94",
-    "Safari >= 15.4",
-    "Firefox >= 93",
-    "Edge >= 94",
-    "ios_saf >= 15.4",
+    "Chrome >= 100",
+    "Safari >= 16",
+    "Firefox >= 100",
+    "Edge >= 100",
+    "ios_saf >= 16",
     "not IE 11",
     "not op_mini all"
   ]

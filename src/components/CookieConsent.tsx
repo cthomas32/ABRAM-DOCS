@@ -28,27 +28,53 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
   // 1. Initial mounting check
   useEffect(() => {
     setMounted(true);
-    let timer: NodeJS.Timeout;
+    let timer: NodeJS.Timeout | null = null;
+    let listenersRegistered = false;
+
+    const events = ["scroll", "click", "touchstart", "mousemove", "keydown"];
+
+    const showBanner = () => {
+      setIsVisible(true);
+      cleanup();
+    };
+
+    const cleanup = () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      if (listenersRegistered) {
+        events.forEach((event) => {
+          window.removeEventListener(event, showBanner);
+        });
+        listenersRegistered = false;
+      }
+    };
+
     try {
       const saved = localStorage.getItem("abram-consent-v2");
       if (!saved) {
-        // Show banner with delay if no consent history is found to prevent LCP hijack
-        timer = setTimeout(() => {
-          setIsVisible(true);
-        }, 2000);
+        // Show banner on user interaction or fallback timer to prevent LCP hijack
+        events.forEach((event) => {
+          window.addEventListener(event, showBanner, { passive: true });
+        });
+        listenersRegistered = true;
+        timer = setTimeout(showBanner, 5000);
       } else {
         const parsed = JSON.parse(saved) as ConsentState;
         setAnalyticsConsent(!!parsed.analytics_storage);
         setMarketingConsent(!!parsed.ad_storage);
       }
     } catch (e) {
-      timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 2000);
+      // Fallback in case of localStorage access/parsing failure
+      events.forEach((event) => {
+        window.addEventListener(event, showBanner, { passive: true });
+      });
+      listenersRegistered = true;
+      timer = setTimeout(showBanner, 5000);
     }
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
+
+    return cleanup;
   }, []);
 
   // 2. React to parent force-open (e.g. from footer click)
@@ -113,13 +139,18 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
     checked,
     onChange,
     disabled = false,
+    ariaLabel,
   }: {
     checked: boolean;
     onChange: () => void;
     disabled?: boolean;
+    ariaLabel: string;
   }) => (
     <button
       type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={ariaLabel}
       onClick={() => !disabled && onChange()}
       disabled={disabled}
       className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 ${
@@ -145,7 +176,7 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
           className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:bottom-6 sm:right-6 sm:left-auto w-full sm:max-w-md select-none"
         >
           {/* Main glassmorphic card container */}
-          <div className="glass-panel bg-[#0A0A0A]/85! backdrop-blur-[60px]! w-full rounded-2xl shadow-2xl border border-white/8 p-5 md:p-6 text-white flex flex-col gap-4 relative overflow-hidden">
+          <div className="glass-panel bg-[#0A0A0A]/85! backdrop-blur-[60px]! w-full rounded-2xl shadow-2xl border border-white/8 p-4 sm:p-5 md:p-6 text-white flex flex-col gap-3.5 sm:gap-4 relative overflow-hidden">
             {/* Subtle top red glow accent to match ABRAM layout */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-abram-accent/50 to-transparent" />
 
@@ -167,12 +198,13 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
                         onClose();
                       }}
                       className="p-1 text-zinc-500 hover:text-white rounded-full hover:bg-white/5 transition-colors cursor-pointer animate-none"
+                      aria-label="Close privacy preferences"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
                   )}
                 </div>
-                <p className="text-xs leading-relaxed text-zinc-400 font-light mt-1">
+                <p className="text-[11px] sm:text-xs leading-snug sm:leading-relaxed text-zinc-400 font-light mt-1">
                   We use cookies and telemetry metrics to optimize performance, measure visitor usage patterns, and improve platform AI features. You can adjust your consent choices below.
                 </p>
               </div>
@@ -203,7 +235,12 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
                         Required for secure login authentication, routing, and saving your preferences.
                       </p>
                     </div>
-                    <ToggleSwitch checked={true} onChange={() => {}} disabled={true} />
+                     <ToggleSwitch
+                      checked={true}
+                      onChange={() => {}}
+                      disabled={true}
+                      ariaLabel="Essential Cookies (Always Active)"
+                    />
                   </div>
 
                   {/* 2. Analytics Cookies */}
@@ -219,6 +256,7 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
                     <ToggleSwitch
                       checked={analyticsConsent}
                       onChange={() => setAnalyticsConsent(!analyticsConsent)}
+                      ariaLabel="Analytics and Performance Cookies"
                     />
                   </div>
 
@@ -235,6 +273,7 @@ export default function CookieConsent({ isOpen, onClose }: CookieConsentProps) {
                     <ToggleSwitch
                       checked={marketingConsent}
                       onChange={() => setMarketingConsent(!marketingConsent)}
+                      ariaLabel="Personalized Recommendations and Ads"
                     />
                   </div>
                 </motion.div>
