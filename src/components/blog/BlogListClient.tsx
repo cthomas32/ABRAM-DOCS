@@ -33,6 +33,12 @@ function parseCoverRows(content?: string) {
   }
 }
 
+function extractSvg(content?: string) {
+  if (!content) return null;
+  const match = content.match(/<svg[\s\S]*?<\/svg>/i);
+  return match ? match[0] : null;
+}
+
 interface BlogListClientProps {
   posts: Post[];
 }
@@ -73,6 +79,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
   const featuredPost = posts[0];
   const gridPosts = posts.slice(1);
   const coverRows = parseCoverRows(featuredPost.content);
+  const coverSvg = extractSvg(featuredPost.content);
 
   const formatPostDate = (dateStr: string | null) => {
     if (!dateStr) return "";
@@ -107,6 +114,11 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
                   <div className="absolute inset-0 p-4 flex items-center justify-center overflow-hidden scale-[0.8] sm:scale-[0.85] md:scale-[0.9]">
                     <Cover rows={coverRows} noMargin />
                   </div>
+                ) : coverSvg ? (
+                  <div 
+                    className="absolute inset-0 p-4 flex items-center justify-center overflow-hidden scale-[0.8] sm:scale-[0.85] md:scale-[0.9] [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-full"
+                    dangerouslySetInnerHTML={{ __html: coverSvg }}
+                  />
                 ) : (
                   <>
                     <div className="absolute inset-0 tech-grid-overlay opacity-[0.12] pointer-events-none" />
