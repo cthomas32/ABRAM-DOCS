@@ -5,7 +5,7 @@ description: Acceptable Use Policy for the ABRAM creative intelligence platform.
 
 # Acceptable Use Policy
 
-**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
+**Effective Date:** June 23, 2026 | **Last Updated:** June 23, 2026
 Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
 
 ---

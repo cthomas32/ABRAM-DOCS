@@ -5,7 +5,7 @@ description: Privacy Policy for the ABRAM creative intelligence platform.
 
 # Privacy Policy
 
-**Effective Date:** June 19, 2026 | **Last Updated:** June 19, 2026
+**Effective Date:** June 23, 2026 | **Last Updated:** June 23, 2026
 Thomas Abram, Inc. | [privacy@abram.network](mailto:privacy@abram.network)
 
 ---
