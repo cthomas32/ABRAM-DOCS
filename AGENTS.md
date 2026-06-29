@@ -161,6 +161,9 @@ All components and pages **must** be fully usable and visually correct on mobile
 - **Decorative elements**: Large decorative blurs, glows, and background shapes must scale down on mobile to prevent layout issues (e.g., `w-[400px] md:w-[800px]`).
 - **Sticky/scroll-driven sections**: Reduce scroll heights on mobile (e.g., `h-[200vh] md:h-[400vh]`). Ensure stacked content fits within viewport-height sticky containers.
 - **Test breakpoints**: Verify all new UI at **375px** (iPhone SE), **390px** (iPhone 14), **768px** (iPad), and **1024px** (laptop) before merging.
+- **LCP & Consent Banner Deferral**: Defer non-critical modal overlays, cookie consent banners, or other secondary UI widgets until user interaction (scroll, touch, click, keydown) or a 5-second fallback. This prevents these elements from overriding the page's actual hero element and hijacking the Largest Contentful Paint (LCP) metric.
+- **Modern Polyfill Target Boundaries**: Keep `browserslist` targets modern (e.g. `Chrome >= 100`, `Safari >= 16`, `Firefox >= 100`, `Edge >= 100`, `ios_saf >= 16`) to minimize transpiled bundle sizes and omit legacy polyfills (such as `Array.prototype.at` or `Object.hasOwn`) for baseline ES6+ environments.
+- **Non-Composited SVG Animations**: Limit SVG keyframe animations on layout-affecting properties (like `stroke-dashoffset` or `width`/`height`) to desktop viewports using `@media (min-width: 768px)`. On mobile viewports, keep these elements static in their final render state to prevent CPU main-thread render delays.
 
 ---
 
