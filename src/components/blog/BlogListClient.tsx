@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Cover } from "../mdx/Cover";
+import { AuthorAvatar } from "./AuthorAvatar";
 
 interface Post {
   id: string;
@@ -158,17 +159,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
                 {/* Action Row */}
                 <div className="flex items-center justify-between pt-4 border-t border-white/5">
                   <div className="flex items-center gap-2">
-                    {featuredPost.author_avatar ? (
-                      <img
-                        src={featuredPost.author_avatar}
-                        alt={featuredPost.author}
-                        className="w-5 h-5 rounded-full object-cover border border-white/10 shrink-0"
-                      />
-                    ) : (
-                      <div className="w-5 h-5 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[9px] text-zinc-500 shrink-0">
-                        {featuredPost.author.charAt(0)}
-                      </div>
-                    )}
+                    <AuthorAvatar src={featuredPost.author_avatar} name={featuredPost.author} size="sm" />
                     <span className="text-xs text-zinc-500 font-medium font-sans">
                       By {featuredPost.author}
                     </span>
@@ -208,17 +199,11 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
                       </time>
                       <span className="w-1 h-1 rounded-full bg-zinc-700" />
                       <div className="flex items-center gap-1.5">
-                        {post.author_avatar ? (
-                          <img
-                            src={post.author_avatar}
-                            alt={post.author}
-                            className="w-4 h-4 rounded-full object-cover border border-white/10 shrink-0"
-                          />
-                        ) : (
-                          <div className="w-4 h-4 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[8px] text-zinc-500 shrink-0">
-                            {post.author.charAt(0)}
-                          </div>
-                        )}
+                        <AuthorAvatar
+                          src={post.author_avatar}
+                          name={post.author}
+                          className="w-4 h-4 text-[8px]"
+                        />
                         <span>By {post.author}</span>
                       </div>
                     </div>

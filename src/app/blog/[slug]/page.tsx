@@ -6,6 +6,7 @@ import { mdxComponents } from "@/components/MdxComponents";
 import Link from "next/link";
 import { cache } from "react";
 import TelemetryTracker from "@/components/TelemetryTracker";
+import { AuthorAvatar } from "@/components/blog/AuthorAvatar";
 
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
@@ -208,17 +209,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <time dateTime={post.published_at || post.created_at}>{formattedDate}</time>
             <span className="w-1 h-1 rounded-full bg-zinc-700" />
             <div className="flex items-center gap-2">
-              {post.author_avatar ? (
-                <img
-                  src={post.author_avatar}
-                  alt={post.author}
-                  className="w-5 h-5 rounded-full object-cover border border-white/10 shrink-0"
-                />
-              ) : (
-                <div className="w-5 h-5 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[9px] text-zinc-500 shrink-0">
-                  {post.author?.charAt(0) || "A"}
-                </div>
-              )}
+              <AuthorAvatar src={post.author_avatar} name={post.author || "ABRAM Team"} size="sm" />
               <span>By {post.author || "ABRAM Team"}</span>
             </div>
           </div>
