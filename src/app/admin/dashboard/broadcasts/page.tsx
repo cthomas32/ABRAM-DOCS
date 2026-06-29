@@ -1746,9 +1746,47 @@ export default function BroadcastsPage() {
                           <span className="text-xs font-sans">Updating event feed...</span>
                         </div>
                       ) : logs.length === 0 ? (
-                        <div className="text-center py-16 text-zinc-500 text-xs font-sans leading-relaxed px-4">
-                          No transactional events registered for this campaign.<br />
-                          Webhooks updates are processed automatically at <code className="font-mono text-white bg-white/5 px-1 py-0.5 rounded">/api/webhooks/resend</code>.
+                        <div className="py-10 px-6 flex flex-col items-center gap-5 text-center">
+                          <div className="w-10 h-10 rounded-2xl bg-zinc-800/60 border border-white/8 flex items-center justify-center">
+                            <Globe className="w-5 h-5 text-zinc-400" />
+                          </div>
+                          <div>
+                            <p className="text-zinc-300 text-sm font-medium font-sans mb-1">No delivery events yet</p>
+                            <p className="text-zinc-500 text-xs font-sans max-w-sm">
+                              Events are received via webhook. Register your endpoint in the Resend dashboard so delivery data starts flowing in.
+                            </p>
+                          </div>
+
+                          {/* Setup steps */}
+                          <div className="w-full max-w-sm text-left border border-white/8 rounded-xl overflow-hidden bg-zinc-950/40">
+                            <div className="px-4 py-2.5 border-b border-white/5 bg-zinc-900/30">
+                              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500">Webhook Setup</span>
+                            </div>
+                            <ol className="divide-y divide-white/5">
+                              {[
+                                { step: "1", label: "Open", action: "resend.com/webhooks", href: "https://resend.com/webhooks" },
+                                { step: "2", label: "Add endpoint URL", action: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/webhooks/resend` },
+                                { step: "3", label: "Select events", action: "email.sent · email.delivered · email.opened · email.clicked · email.bounced" },
+                                { step: "4", label: "Save & send a test email", action: "Events will appear here automatically" },
+                              ].map(({ step, label, action, href }) => (
+                                <li key={step} className="flex items-start gap-3 px-4 py-3">
+                                  <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[9px] font-bold text-zinc-400">{step}</span>
+                                  <div className="min-w-0">
+                                    <p className="text-[11px] font-medium text-zinc-300 font-sans">{label}</p>
+                                    {href ? (
+                                      <a href={href} target="_blank" rel="noopener noreferrer" className="text-[10px] text-blue-400 hover:text-blue-300 font-mono break-all">{action}</a>
+                                    ) : (
+                                      <p className="text-[10px] text-zinc-500 font-mono break-all">{action}</p>
+                                    )}
+                                  </div>
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+
+                          <p className="text-[10px] text-zinc-600 font-sans">
+                            Already configured? Click <span className="text-zinc-400">Refresh</span> above to check for new events.
+                          </p>
                         </div>
                       ) : (
                         <div className="overflow-x-auto">
