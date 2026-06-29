@@ -76,6 +76,41 @@ export default function HeroSection() {
           />
         </div>
 
+        {/* Dynamic Flying Plane (Custom Sunset Blend) */}
+        <motion.div
+          initial={{ x: '-15vw', y: '0px', rotate: 0.5 }}
+          animate={{
+            x: '115vw',
+            y: ['0px', '-8px', '-4px'],
+            rotate: [0.5, 1.0, 0.5]
+          }}
+          transition={{
+            duration: 35,
+            repeat: Infinity,
+            ease: 'linear'
+          }}
+          className="absolute top-[15%] left-0 pointer-events-none select-none"
+          style={{ 
+            width: '51px', 
+            opacity: 0.49,
+            color: '#08080a' 
+          }}
+        >
+          <svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+            <path d="M 58,14 L 42,3 C 41,2.5 40,2.5 39,3 L 38,4 C 38,4.5 39,5 40,5.5 L 49,14 Z" opacity="0.45" fill="currentColor"/>
+            <path d="M 45,9 C 45,8.2 43.5,8 42,8.5 L 39,9.5 C 38.5,10 39,10.5 40.5,10.5 C 42,10.5 45,9.8 45,9 Z" opacity="0.45" fill="currentColor"/>
+            <path d="M 95,17 C 92,15 82,14 74,14 L 24,14 L 10,2 C 9,1 8,1.2 7.5,1.8 C 7,2.4 7.2,3.2 8,4.5 L 16.5,18 L 12,18 L 4,15 C 3,14.6 2.2,15 2,15.6 C 1.8,16.2 2.2,17 3.5,17.5 L 15,20 L 10,23.5 C 9,24.2 9.2,25 10,25.4 C 10.8,25.8 12,25.2 13.5,24 L 21.5,20.5 L 42,20.5 L 26,36 C 25.5,36.5 25.8,37.2 26.5,37.5 C 27.2,37.8 28,37.2 29,35.5 L 52,20.5 L 75,20.5 C 85,20.5 92,19 95,17 Z" fill="currentColor"/>
+            <path d="M 40,24.5 L 37,21.5 L 43,21.5 Z" fill="currentColor"/>
+            <path d="M 45,26.5 C 45,25.5 43.5,24.5 41.5,25 L 34.5,27.5 C 33.5,28 33.5,29 34.5,29.5 C 35.5,30 37,29.5 39,29 L 43.5,27.5 C 44.5,27.2 45,26.8 45,26.5 Z" fill="currentColor"/>
+          </svg>
+          <div 
+            className="absolute top-1/2 right-[90%] -translate-y-1/2 h-[1px] w-[160px] blur-[0.6px] pointer-events-none origin-right"
+            style={{
+              background: 'linear-gradient(to left, rgba(8, 8, 10, 0.35), rgba(8, 8, 10, 0.1) 40%, transparent)'
+            }}
+          />
+        </motion.div>
+
         {/* Smooth gradient overlays to blend edges and maintain typography contrast */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/90" />

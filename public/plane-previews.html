@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABRAM — Hero Plane Mockups Review</title>
+  <!-- Load Geist Sans Font -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/mono.css" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Geist Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['Geist Mono', 'monospace'],
+          },
+          colors: {
+            abramBlack: '#0A0A0A',
+            abramCream: '#FAFAF9',
+            abramAccent: '#CE1C1C',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0A0A0A;
+      color: #FAFAF9;
+      overflow-x: hidden;
+    }
+    
+    .glass-panel {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 
+        0 8px 32px -4px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      transition: all 0.2s ease;
+    }
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .btn-glass.active {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: white;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+    }
+
+    /* ─── Contrail Styles ─── */
+    .contrail {
+      position: absolute;
+      top: 50%;
+      right: 90%;
+      transform: translateY(-50%);
+      height: 1px;
+      width: 160px;
+      background: linear-gradient(to left, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06) 40%, transparent);
+      filter: blur(0.6px);
+      pointer-events: none;
+      transform-origin: right center;
+    }
+
+    /* ─── Simulated Grain ─── */
+    .grain-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Custom CSS animations matching subagent setups, parameterized dynamically by JS */
+    .animated-plane {
+      position: absolute;
+      top: var(--plane-y, 25%);
+      left: 0;
+      transform-origin: center;
+      will-change: transform;
+      z-index: 10;
+    }
+
+    /* ─── Plane Keyframe Animations (CSS fallbacks, overrides handled via Javascript) ─── */
+    @keyframes fly-commercial {
+      0% { transform: translate3d(-15vw, 0, 0) translateY(0) rotate(0.5deg); }
+      50% { transform: translate3d(50vw, 0, 0) translateY(-8px) rotate(1deg); }
+      100% { transform: translate3d(115vw, 0, 0) translateY(-4px) rotate(0.5deg); }
+    }
+    @keyframes fly-private {
+      0% { transform: translate3d(-15vw, 0, 0) translateY(0) rotate(0.8deg); }
+      30% { transform: translate3d(25vw, 0, 0) translateY(-15px) rotate(1.2deg); }
+      70% { transform: translate3d(75vw, 0, 0) translateY(5px) rotate(0.3deg); }
+      100% { transform: translate3d(115vw, 0, 0) translateY(0) rotate(0.8deg); }
+    }
+    @keyframes fly-cargo-slow {
+      0% { transform: translate3d(-15vw, 0, 0) scale(1) rotate(0deg); }
+      30% { transform: translate3d(26vw, -3px, 0) scale(1) rotate(-0.2deg); }
+      70% { transform: translate3d(74vw, 3px, 0) scale(1) rotate(0.2deg); }
+      100% { transform: translate3d(115vw, 0, 0) scale(1) rotate(0deg); }
+    }
+    @keyframes fly-biplane {
+      0% { transform: translate3d(-15vw, 5px, 0) rotate(1deg); }
+      15% { transform: translate3d(10vw, -10px, 0) rotate(-1.5deg); }
+      35% { transform: translate3d(35vw, 12px, 0) rotate(2deg); }
+      55% { transform: translate3d(60vw, -8px, 0) rotate(-1deg); }
+      80% { transform: translate3d(85vw, 6px, 0) rotate(1.5deg); }
+      100% { transform: translate3d(115vw, 0px, 0) rotate(0deg); }
+    }
+    @keyframes fly-abstract-jet {
+      0% { transform: translate3d(-15vw, 0, 0) scale(1) rotate(-1deg); }
+      50% { transform: translate3d(50vw, -15px, 0) scale(1) rotate(-0.5deg); }
+      100% { transform: translate3d(115vw, -30px, 0) scale(1) rotate(0deg); }
+    }
+
+    .animate-commercial { animation: fly-commercial var(--duration, 45s) linear infinite; }
+    .animate-private { animation: fly-private var(--duration, 35s) linear infinite; }
+    .animate-cargo { animation: fly-cargo-slow var(--duration, 48s) linear infinite; }
+    .animate-biplane { animation: fly-biplane var(--duration, 38s) linear infinite; }
+    .animate-abstract { animation: fly-abstract-jet var(--duration, 28s) linear infinite; }
+  </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col justify-between">
+
+  <!-- Header Navigation -->
+  <header class="fixed top-0 z-50 w-full bg-black/50 backdrop-blur-[20px] border-b border-white/8 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="abram-logo-lockup-cream.png" alt="ABRAM Logo" class="h-5 w-auto" onerror="this.src='/abram-logo-lockup-cream.png'; this.onerror=null;"/>
+      <span class="text-zinc-500 text-[10px] tracking-[0.2em] uppercase font-semibold border-l border-white/15 pl-3 mt-0.5">PLANE MOCKUPS REVIEW</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="toggleViewMode('simulator')" id="btn-mode-sim" class="btn-glass active rounded-full px-4 py-1.5 text-xs font-medium text-white cursor-pointer">Live Hero Simulator</button>
+      <button onclick="toggleViewMode('multiview')" id="btn-mode-multi" class="btn-glass rounded-full px-4 py-1.5 text-xs font-medium text-zinc-400 cursor-pointer">5-Lane Comparison</button>
+    </div>
+  </header>
+
+  <!-- Main Showcase Container -->
+  <main class="flex-grow pt-[72px] relative flex flex-col items-center justify-center min-h-[calc(100vh-72px)]">
+    
+    <!-- SUNSET SIMULATOR MODE -->
+    <div id="simulator-mode" class="absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-300 opacity-100 z-10">
+      
+      <!-- Live Sunset Render Frame -->
+      <div class="absolute inset-0 w-full h-full select-none pointer-events-none">
+        <!-- Dusk Base Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#181320] via-[#0E0C12] to-black"></div>
+        <!-- Sunset Mountain Asset -->
+        <div class="absolute inset-0 w-full h-full opacity-80 blur-[0.5px] scale-100">
+          <img src="images/sunset-placeholder" id="bg-sunset-image" class="w-full h-full object-cover object-center" alt="Sunset Mountains Background" onerror="this.src='images/cinematic-sunset-mountains.png'; this.onerror=null;"/>
+        </div>
+        <!-- Smooth layout gradients -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/90"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_15%,#000000_95%)]"></div>
+        <!-- Film grain -->
+        <div class="grain-overlay"></div>
+      </div>
+
+      <!-- Animated Plane Element Container -->
+      <div id="sim-plane-container" class="animated-plane animate-commercial" style="--plane-y: 20%; --duration: 45s;">
+        <!-- Injected dynamically with plane SVG -->
+        <div id="sim-plane-wrapper" class="relative text-[#b3957a]" style="width: 45px; opacity: 0.45;">
+          <svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto"><path d="M 58,14 L 42,3 C 41,2.5 40,2.5 39,3 L 38,4 C 38,4.5 39,5 40,5.5 L 49,14 Z" opacity="0.45" fill="currentColor"/><path d="M 45,9 C 45,8.2 43.5,8 42,8.5 L 39,9.5 C 38.5,10 39,10.5 40.5,10.5 C 42,10.5 45,9.8 45,9 Z" opacity="0.45" fill="currentColor"/><path d="M 95,17 C 92,15 82,14 74,14 L 24,14 L 10,2 C 9,1 8,1.2 7.5,1.8 C 7,2.4 7.2,3.2 8,4.5 L 16.5,18 L 12,18 L 4,15 C 3,14.6 2.2,15 2,15.6 C 1.8,16.2 2.2,17 3.5,17.5 L 15,20 L 10,23.5 C 9,24.2 9.2,25 10,25.4 C 10.8,25.8 12,25.2 13.5,24 L 21.5,20.5 L 42,20.5 L 26,36 C 25.5,36.5 25.8,37.2 26.5,37.5 C 27.2,37.8 28,37.2 29,35.5 L 52,20.5 L 75,20.5 C 85,20.5 92,19 95,17 Z" fill="currentColor"/><path d="M 40,24.5 L 37,21.5 L 43,21.5 Z" fill="currentColor"/><path d="M 45,26.5 C 45,25.5 43.5,24.5 41.5,25 L 34.5,27.5 C 33.5,28 33.5,29 34.5,29.5 C 35.5,30 37,29.5 39,29 L 43.5,27.5 C 44.5,27.2 45,26.8 45,26.5 Z" fill="currentColor"/></svg>
+          <div class="contrail" id="sim-contrail"></div>
+        </div>
+      </div>
+
+      <!-- Centered Hero Text Mockup -->
+      <div class="w-full max-w-5xl mx-auto relative z-20 px-6 text-center select-none pointer-events-none">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 max-w-2xl mx-auto opacity-95">
+          A new standard
+          <span class="block mt-1 font-light text-zinc-300">for creative production</span>
+        </h1>
+        <div class="flex justify-center w-full opacity-80 scale-90">
+          <a href="#" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.03] backdrop-blur-[8px] px-7 py-3 text-xs sm:text-sm font-medium text-white select-none">
+            Start Building
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Glassmorphic Control panel -->
+      <div class="glass-panel absolute bottom-6 left-6 right-6 md:left-auto md:right-6 md:w-[420px] p-6 rounded-2xl z-30 select-text max-h-[calc(100vh-140px)] overflow-y-auto">
+        <div class="mb-5">
+          <span class="text-zinc-500 text-[9px] tracking-widest uppercase font-semibold block mb-1">MOCKUP CHOOSER</span>
+          <h2 class="text-white text-lg font-semibold tracking-tight" id="plane-display-name">Commercial Airliner</h2>
+          <p class="text-zinc-400 text-xs leading-relaxed mt-1" id="plane-display-desc">A classic twin-engine commercial airliner with swept-back wings. Steady cruise with minor pitch adjustments.</p>
+        </div>
+
+        <!-- Mode Select Tabs -->
+        <div class="grid grid-cols-5 gap-1 bg-black/40 p-1 rounded-full border border-white/5 mb-5">
+          <button onclick="selectPlane(0)" class="btn-tab py-1.5 text-[10px] font-semibold text-center rounded-full text-white bg-white/10" id="tab-0">#1</button>
+          <button onclick="selectPlane(1)" class="btn-tab py-1.5 text-[10px] font-semibold text-center rounded-full text-zinc-400 hover:text-white" id="tab-1">#2</button>
+          <button onclick="selectPlane(2)" class="btn-tab py-1.5 text-[10px] font-semibold text-center rounded-full text-zinc-400 hover:text-white" id="tab-2">#3</button>
+          <button onclick="selectPlane(3)" class="btn-tab py-1.5 text-[10px] font-semibold text-center rounded-full text-zinc-400 hover:text-white" id="tab-3">#4</button>
+          <button onclick="selectPlane(4)" class="btn-tab py-1.5 text-[10px] font-semibold text-center rounded-full text-zinc-400 hover:text-white" id="tab-4">#5</button>
+        </div>
+
+        <!-- Customizers -->
+        <div class="space-y-4 border-t border-white/5 pt-4 mb-5">
+          <span class="text-zinc-500 text-[9px] tracking-widest uppercase font-semibold block">ADJUST PARAMETERS</span>
+          
+          <!-- Size Slider -->
+          <div class="flex items-center justify-between gap-4">
+            <span class="text-zinc-400 text-xs w-20">Size</span>
+            <input type="range" min="15" max="80" value="45" class="flex-grow accent-white" id="control-size" oninput="updatePlaneParameters()">
+            <span class="text-zinc-500 text-[10px] font-mono w-8 text-right" id="val-size">45px</span>
+          </div>
+
+          <!-- Speed Slider -->
+          <div class="flex items-center justify-between gap-4">
+            <span class="text-zinc-400 text-xs w-20">Flight Time</span>
+            <input type="range" min="10" max="100" value="45" class="flex-grow accent-white" id="control-speed" oninput="updatePlaneParameters()">
+            <span class="text-zinc-500 text-[10px] font-mono w-8 text-right" id="val-speed">45s</span>
+          </div>
+
+          <!-- Opacity Slider -->
+          <div class="flex items-center justify-between gap-4">
+            <span class="text-zinc-400 text-xs w-20">Opacity</span>
+            <input type="range" min="10" max="100" value="45" class="flex-grow accent-white" id="control-opacity" oninput="updatePlaneParameters()">
+            <span class="text-zinc-500 text-[10px] font-mono w-8 text-right" id="val-opacity">0.45</span>
+          </div>
+
+          <!-- Altitude Slider -->
+          <div class="flex items-center justify-between gap-4">
+            <span class="text-zinc-400 text-xs w-20">Altitude (Y)</span>
+            <input type="range" min="5" max="60" value="20" class="flex-grow accent-white" id="control-altitude" oninput="updatePlaneParameters()">
+            <span class="text-zinc-500 text-[10px] font-mono w-8 text-right" id="val-altitude">20%</span>
+          </div>
+
+          <!-- Color Blend Selector -->
+          <div class="flex items-center justify-between gap-4">
+            <span class="text-zinc-400 text-xs w-20">Color Blend</span>
+            <div class="flex items-center gap-1.5 flex-grow">
+              <button onclick="setPlaneColor('#b3957a', 'Sunset Gold')" class="w-4 h-4 rounded-full border border-white/20 bg-[#b3957a]" title="Sunset Gold"></button>
+              <button onclick="setPlaneColor('#1b1322', 'Warm Plum')" class="w-4 h-4 rounded-full border border-white/20 bg-[#1b1322]" title="Warm Plum"></button>
+              <button onclick="setPlaneColor('#08080a', 'Dusk Black')" class="w-4 h-4 rounded-full border border-white/20 bg-[#08080a]" title="Dusk Black"></button>
+              <button onclick="setPlaneColor('#ffffff', 'Clouds White')" class="w-4 h-4 rounded-full border border-white/20 bg-white" title="Clouds White"></button>
+            </div>
+            <span class="text-zinc-500 text-[10px] w-24 text-right truncate" id="val-color">Sunset Gold</span>
+          </div>
+
+          <!-- Contrail Toggle -->
+          <div class="flex items-center justify-between">
+            <span class="text-zinc-400 text-xs">Vapor Contrail</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer" id="control-contrail" onchange="updatePlaneParameters()">
+              <div class="w-8 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:height-3 after:h-3 after:w-3 after:transition-all peer-checked:bg-white/30 peer-checked:after:bg-white"></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-2 mb-4">
+          <button onclick="restartFlight()" class="btn-glass flex-1 rounded-lg py-2 text-xs font-medium text-zinc-300 hover:text-white cursor-pointer text-center">Restart Flight</button>
+          <button onclick="copyCode()" class="btn-glass flex-1 rounded-lg py-2 text-xs font-medium text-zinc-300 hover:text-white cursor-pointer text-center flex items-center justify-center gap-1.5">
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            Copy React Code
+          </button>
+        </div>
+
+        <!-- Code Block View -->
+        <div class="border-t border-white/5 pt-4">
+          <span class="text-zinc-500 text-[9px] tracking-widest uppercase font-semibold block mb-2">SVG CONFIGURATION</span>
+          <pre class="bg-black/50 border border-white/5 p-3 rounded-lg text-[10px] font-mono text-zinc-400 overflow-x-auto max-h-32" id="code-snippet"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- MULTI-LANE COMPARISON MODE -->
+    <div id="multiview-mode" class="w-full max-w-5xl mx-auto px-6 py-8 hidden transition-opacity duration-300 opacity-0 z-10 flex-col gap-6">
+      <div class="mb-2">
+        <span class="text-zinc-500 text-[10px] tracking-[0.2em] uppercase font-semibold block mb-1">SIDE-BY-SIDE EVALUATION</span>
+        <h2 class="text-white text-2xl font-semibold tracking-tight">Compare All 5 Mockups</h2>
+        <p class="text-zinc-400 text-sm mt-1">Review the silhouettes and flight motions stacked on separate sunset backdrop lanes.</p>
+      </div>
+
+      <!-- Comparison Lanes Grid -->
+      <div class="space-y-4" id="comparison-lanes-container">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full bg-[#0A0A0A] border-t border-white/[0.08] px-6 py-4 flex items-center justify-between text-[11px] text-zinc-500 relative z-30">
+    <div>ABRAM Docs Rebuild. All mockup rendering conforms to <a href="file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/DESIGN.md" class="text-zinc-400 hover:text-white underline">DESIGN.md</a>.</div>
+    <div>2026 ABRAM Network</div>
+  </footer>
+
+  <script>
+    const mockupsData = [
+      {
+        name: "Commercial Airliner",
+        description: "A classic twin-engine commercial airliner with swept-back wings and engine pods mounted underneath. It simulates a steady, heavy high-altitude cruise with a slight pitch adjustment as it drifts.",
+        svg: '<svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto"><path d="M 58,14 L 42,3 C 41,2.5 40,2.5 39,3 L 38,4 C 38,4.5 39,5 40,5.5 L 49,14 Z" opacity="0.45" fill="currentColor"/><path d="M 45,9 C 45,8.2 43.5,8 42,8.5 L 39,9.5 C 38.5,10 39,10.5 40.5,10.5 C 42,10.5 45,9.8 45,9 Z" opacity="0.45" fill="currentColor"/><path d="M 95,17 C 92,15 82,14 74,14 L 24,14 L 10,2 C 9,1 8,1.2 7.5,1.8 C 7,2.4 7.2,3.2 8,4.5 L 16.5,18 L 12,18 L 4,15 C 3,14.6 2.2,15 2,15.6 C 1.8,16.2 2.2,17 3.5,17.5 L 15,20 L 10,23.5 C 9,24.2 9.2,25 10,25.4 C 10.8,25.8 12,25.2 13.5,24 L 21.5,20.5 L 42,20.5 L 26,36 C 25.5,36.5 25.8,37.2 26.5,37.5 C 27.2,37.8 28,37.2 29,35.5 L 52,20.5 L 75,20.5 C 85,20.5 92,19 95,17 Z" fill="currentColor"/><path d="M 40,24.5 L 37,21.5 L 43,21.5 Z" fill="currentColor"/><path d="M 45,26.5 C 45,25.5 43.5,24.5 41.5,25 L 34.5,27.5 C 33.5,28 33.5,29 34.5,29.5 C 35.5,30 37,29.5 39,29 L 43.5,27.5 C 44.5,27.2 45,26.8 45,26.5 Z" fill="currentColor"/></svg>',
+        defaultWidth: "45px",
+        defaultOpacity: 0.45,
+        defaultDuration: "45s",
+        animationName: "commercial",
+        reactCode: `import React from 'react';
+import { motion } from 'framer-motion';
+
+export default function HeroPlane() {
+  return (
+    <motion.div
+      initial={{ x: '-15vw', y: '0px', rotate: 0.5 }}
+      animate={{
+        x: '115vw',
+        y: ['0px', '-8px', '-4px'],
+        rotate: [0.5, 1.0, 0.5]
+      }}
+      transition={{
+        duration: 45,
+        repeat: Infinity,
+        ease: 'linear'
+      }}
+      className="absolute top-[20%] left-0 text-[#b3957a] pointer-events-none select-none z-10"
+      style={{ width: '45px', opacity: 0.45 }}
+    >
+      {/* SVG Path code from review file */}
+    </motion.div>
+  );
+}`
+      },
+      {
+        name: "Private Jet",
+        description: "A sleek, narrow corporate private jet featuring rear-mounted engines and a T-tail configuration. It has a slightly faster, more dynamic flight animation reflecting its smaller size and higher cruise altitude.",
+        svg: '<svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto"><path d="M 50,13.5 L 36,6.5 C 35,6 34,6.2 34,6.8 L 34,7.5 L 43,13.5 Z" opacity="0.45" fill="currentColor"/><path d="M 96,16 C 93,14.5 84,13.5 76,13.5 L 22,13.5 L 14,2.5 C 13.5,1.5 12.5,1.5 11,2 C 9.5,2.5 9.5,3.5 10.5,5 L 15,12 L 5,12 C 4,12 3,12.5 3,13 C 3,13.5 4,14 5,14 L 17,14 L 18.5,17 L 44,17 L 26,35 C 25,36 25.5,36.5 26.5,36.5 C 27.5,36.5 28.5,35.5 29.5,34 L 54,17.5 L 78,17 C 87,17 93,15.5 96,16 Z" fill="currentColor"/><path d="M 23,10.5 C 23,9.5 21,9 19,9.5 L 15,10.5 C 14,11 14,12 15,12.5 L 20,12.5 C 21.5,12.5 23,11.8 23,10.5 Z" opacity="0.45" fill="currentColor"/><path d="M 25,15.5 C 25,14.2 23,13.5 21,14 L 16.5,15.5 C 15.5,16 15.5,17 16.5,17.5 L 22.5,17.5 C 24.5,17.5 25,16.8 25,15.5 Z" fill="currentColor"/></svg>',
+        defaultWidth: "35px",
+        defaultOpacity: 0.45,
+        defaultDuration: "35s",
+        animationName: "private",
+        reactCode: `import React from 'react';
+import { motion } from 'framer-motion';
+
+export default function HeroPlane() {
+  return (
+    <motion.div
+      initial={{ x: '-15vw', y: '0px', rotate: 0.8 }}
+      animate={{
+        x: '115vw',
+        y: ['0px', '-15px', '5px', '0px'],
+        rotate: [0.8, 1.2, 0.3, 0.8]
+      }}
+      transition={{
+        duration: 35,
+        repeat: Infinity,
+        ease: 'linear'
+      }}
+      className="absolute top-[20%] left-0 text-[#b3957a] pointer-events-none select-none z-10"
+      style={{ width: '35px', opacity: 0.45 }}
+    >
+      {/* SVG Path code from review file */}
+    </motion.div>
+  );
+}`
+      },
+      {
+        name: "Twin-Propeller Cargo Plane",
+        description: "High-wing transport plane silhouette with twin-propeller nacelles and clean lines, flying in a slow, steady horizontal route.",
+        svg: '<svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto"><path d="M 95 25 C 93 22 85 21 80 21 L 65 21 L 63 13.5 L 68 13.5 C 69 13.5 69 10.5 68 10.5 L 62.2 10.5 L 60 2 L 56 2 L 55.5 10.5 L 48 10.5 C 47 10.5 47 13.5 48 13.5 L 55.4 13.5 L 55 21 L 18 24 L 13 12 L 10 12 L 11 24.5 L 5 25 L 11 25.5 L 10 38 L 13 38 L 18 26 L 55 29 L 55.4 36.5 L 48 36.5 C 47 36.5 47 39.5 48 39.5 L 55.5 39.5 L 56 48 L 60 48 L 62.2 39.5 L 68 39.5 C 69 39.5 69 36.5 68 36.5 L 63 36.5 L 63 29 L 80 29 C 85 29 93 28 95 25 Z" fill="currentColor" /><line x1="68" y1="6" x2="68" y2="18" stroke="currentColor" stroke-width="0.8" opacity="0.8" /><line x1="68" y1="32" x2="68" y2="44" stroke="currentColor" stroke-width="0.8" opacity="0.8" /><line x1="62" y1="12" x2="74" y2="12" stroke="currentColor" stroke-width="0.8" opacity="0.8" /><line x1="62" y1="38" x2="74" y2="38" stroke="currentColor" stroke-width="0.8" opacity="0.8" /></svg>',
+        defaultWidth: "42px",
+        defaultOpacity: 0.50,
+        defaultDuration: "48s",
+        animationName: "cargo",
+        reactCode: `import React from 'react';
+import { motion } from 'framer-motion';
+
+export default function HeroPlane() {
+  return (
+    <motion.div
+      initial={{ x: '-15vw', y: '0px', rotate: 0 }}
+      animate={{
+        x: '115vw',
+        y: ['0px', '-3px', '3px', '0px'],
+        rotate: [0, -0.2, 0.2, 0]
+      }}
+      transition={{
+        duration: 48,
+        repeat: Infinity,
+        ease: 'linear'
+      }}
+      className="absolute top-[20%] left-0 text-[#b3957a] pointer-events-none select-none z-10"
+      style={{ width: '42px', opacity: 0.5 }}
+    >
+      {/* SVG Path code from review file */}
+    </motion.div>
+  );
+}`
+      },
+      {
+        name: "Retro Biplane",
+        description: "Classic vintage stunt and mail biplane showing dual wings, outer struts, landing gear, and propeller details, flying with subtle altitude wobbles.",
+        svg: '<svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto"><path d="M 50 12 C 50 11.2 52 11 54 11 L 74 11 C 76 11 77 11.5 77 12 C 77 12.5 76 13 74 13 L 54 13 C 52 13 50 12.8 50 12 Z" fill="currentColor" /><path d="M 53 31 C 53 30.2 55 30 57 30 L 71 30 C 72.5 30 73 30.5 73 31 C 73 31.5 72.5 32 71 32 L 57 32 C 55 32 53 31.8 53 31 Z" fill="currentColor" /><path d="M 82 23 L 82 31 L 35 31 L 16 29 L 15 30 L 11 29 L 11 18 C 11 15 13 14 14 14 L 18 26 L 56 26 C 57 24 59 24 60 26 L 64 26 L 74 23 L 82 23 Z" fill="currentColor" /><path d="M 16 27 L 10 27 L 10 28 L 16 28 Z" fill="currentColor" /><line x1="57" y1="13" x2="59" y2="30" stroke="currentColor" stroke-width="0.8" /><line x1="71" y1="13" x2="69" y2="30" stroke="currentColor" stroke-width="0.8" /><line x1="57" y1="13" x2="69" y2="30" stroke="currentColor" stroke-width="0.8" /><line x1="64" y1="13" x2="61" y2="26" stroke="currentColor" stroke-width="0.6" /><line x1="71" y1="13" x2="73" y2="23" stroke="currentColor" stroke-width="0.6" /><line x1="70" y1="31" x2="73" y2="40" stroke="currentColor" stroke-width="1" /><line x1="75" y1="31" x2="73" y2="40" stroke="currentColor" stroke-width="1" /><circle cx="73" cy="41.5" r="2.5" fill="currentColor" /><circle cx="15" cy="30.5" r="0.8" fill="currentColor" /><path d="M 82 25 C 83.5 25 84 26 84 27 C 84 28 83.5 29 82 29 Z" fill="currentColor" /><path d="M 82.5 27 C 82.5 24 83.5 16 83.5 16 C 83.5 16 82.5 16 81.5 22 C 81.2 24.5 81.8 26.5 82.5 27 Z" fill="currentColor" opacity="0.9" /><path d="M 82.5 27 C 82.5 30 81.5 38 81.5 38 C 81.5 38 82.5 38 83.5 32 C 83.8 29.5 83.2 27.5 82.5 27 Z" fill="currentColor" opacity="0.9" /></svg>',
+        defaultWidth: "35px",
+        defaultOpacity: 0.45,
+        defaultDuration: "38s",
+        animationName: "biplane",
+        reactCode: `import React from 'react';
+import { motion } from 'framer-motion';
+
+export default function HeroPlane() {
+  return (
+    <motion.div
+      initial={{ x: '-15vw', y: '5px', rotate: 1 }}
+      animate={{
+        x: '115vw',
+        y: ['5px', '-10px', '12px', '-8px', '6px', '0px'],
+        rotate: [1, -1.5, 2, -1, 1.5, 0]
+      }}
+      transition={{
+        duration: 38,
+        repeat: Infinity,
+        ease: 'linear'
+      }}
+      className="absolute top-[20%] left-0 text-[#b3957a] pointer-events-none select-none z-10"
+      style={{ width: '35px', opacity: 0.45 }}
+    >
+      {/* SVG Path code from review file */}
+    </motion.div>
+  );
+}`
+      },
+      {
+        name: "Minimalist Abstract Jet",
+        description: "Clean, faceted geometric origami style supersonic jet silhouette, flying in a smooth, straight high-altitude line.",
+        svg: '<svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto"><polygon points="95,25 65,25 55,15" fill="currentColor" opacity="0.9" /><polygon points="95,25 65,25 55,35" fill="currentColor" opacity="0.7" /><polygon points="65,25 40,25 55,15" fill="currentColor" opacity="0.8" /><polygon points="65,25 40,25 55,35" fill="currentColor" opacity="0.6" /><polygon points="55,15 40,25 15,6" fill="currentColor" opacity="0.75" /><polygon points="55,35 40,25 15,44" fill="currentColor" opacity="0.55" /><polygon points="40,25 25,25 15,6" fill="currentColor" opacity="0.85" /><polygon points="40,25 25,25 15,44" fill="currentColor" opacity="0.65" /><polygon points="25,25 18,21 5,17" fill="currentColor" opacity="0.9" /><polygon points="25,25 18,29 5,33" fill="currentColor" opacity="0.7" /></svg>',
+        defaultWidth: "38px",
+        defaultOpacity: 0.48,
+        defaultDuration: "28s",
+        animationName: "abstract",
+        reactCode: `import React from 'react';
+import { motion } from 'framer-motion';
+
+export default function HeroPlane() {
+  return (
+    <motion.div
+      initial={{ x: '-15vw', y: '0px', rotate: -1 }}
+      animate={{
+        x: '115vw',
+        y: ['0px', '-15px', '-30px'],
+        rotate: [-1, -0.5, 0]
+      }}
+      transition={{
+        duration: 28,
+        repeat: Infinity,
+        ease: 'linear'
+      }}
+      className="absolute top-[20%] left-0 text-[#b3957a] pointer-events-none select-none z-10"
+      style={{ width: '38px', opacity: 0.48 }}
+    >
+      {/* SVG Path code from review file */}
+    </motion.div>
+  );
+}`
+      }
+    ];
+
+    let currentPlaneIndex = 0;
+    let currentColorHex = '#b3957a';
+    let currentColorName = 'Sunset Gold';
+    let viewMode = 'simulator';
+
+    function init() {
+      selectPlane(0);
+      renderComparisonLanes();
+    }
+
+    function toggleViewMode(mode) {
+      viewMode = mode;
+      const simMode = document.getElementById('simulator-mode');
+      const multiMode = document.getElementById('multiview-mode');
+      const btnSim = document.getElementById('btn-mode-sim');
+      const btnMulti = document.getElementById('btn-mode-multi');
+
+      if (mode === 'simulator') {
+        simMode.classList.remove('hidden');
+        setTimeout(() => simMode.classList.replace('opacity-0', 'opacity-100'), 50);
+        multiMode.classList.replace('opacity-100', 'opacity-0');
+        setTimeout(() => multiMode.classList.add('hidden'), 300);
+
+        btnSim.classList.add('active');
+        btnSim.classList.replace('text-zinc-400', 'text-white');
+        btnMulti.classList.remove('active');
+        btnMulti.classList.replace('text-white', 'text-zinc-400');
+        
+        restartFlight();
+      } else {
+        multiMode.classList.remove('hidden');
+        setTimeout(() => multiMode.classList.replace('opacity-0', 'opacity-100'), 50);
+        simMode.classList.replace('opacity-100', 'opacity-0');
+        setTimeout(() => simMode.classList.add('hidden'), 300);
+
+        btnMulti.classList.add('active');
+        btnMulti.classList.replace('text-zinc-400', 'text-white');
+        btnSim.classList.remove('active');
+        btnSim.classList.replace('text-white', 'text-zinc-400');
+      }
+    }
+
+    function selectPlane(index) {
+      currentPlaneIndex = index;
+      const data = mockupsData[index];
+
+      document.getElementById('plane-display-name').innerText = data.name;
+      document.getElementById('plane-display-desc').innerText = data.description;
+      
+      document.getElementById('control-size').value = parseInt(data.defaultWidth);
+      document.getElementById('control-opacity').value = Math.round(data.defaultOpacity * 100);
+      document.getElementById('control-speed').value = parseInt(data.defaultDuration);
+
+      document.querySelectorAll('.btn-tab').forEach((tab, i) => {
+        if (i === index) {
+          tab.classList.add('bg-white/10', 'text-white');
+          tab.classList.remove('text-zinc-400');
+        } else {
+          tab.classList.remove('bg-white/10', 'text-white');
+          tab.classList.add('text-zinc-400');
+        }
+      });
+
+      document.getElementById('code-snippet').innerText = data.reactCode;
+
+      updatePlaneParameters();
+      restartFlight();
+    }
+
+    function updatePlaneParameters() {
+      const data = mockupsData[currentPlaneIndex];
+      const sizeVal = document.getElementById('control-size').value;
+      const speedVal = document.getElementById('control-speed').value;
+      const opacityVal = document.getElementById('control-opacity').value / 100;
+      const altitudeVal = document.getElementById('control-altitude').value;
+      const contrailCheck = document.getElementById('control-contrail').checked;
+
+      document.getElementById('val-size').innerText = sizeVal + 'px';
+      document.getElementById('val-speed').innerText = speedVal + 's';
+      document.getElementById('val-opacity').innerText = opacityVal.toFixed(2);
+      document.getElementById('val-altitude').innerText = altitudeVal + '%';
+
+      const container = document.getElementById('sim-plane-container');
+      const wrapper = document.getElementById('sim-plane-wrapper');
+
+      wrapper.innerHTML = data.svg + '<div class="contrail" id="sim-contrail"></div>';
+      
+      container.style.setProperty('--plane-y', altitudeVal + '%');
+      container.style.setProperty('--duration', speedVal + 's');
+      
+      container.className = "animated-plane animate-" + data.animationName;
+      
+      const newWrapper = document.getElementById('sim-plane-wrapper');
+      newWrapper.style.width = sizeVal + 'px';
+      newWrapper.style.opacity = opacityVal;
+      newWrapper.style.color = currentColorHex;
+
+      const newContrail = document.getElementById('sim-contrail');
+      if (newContrail) {
+        newContrail.style.display = contrailCheck ? 'block' : 'none';
+        newContrail.style.background = 'linear-gradient(to left, ' + hexToRgba(currentColorHex, 0.35) + ', ' + hexToRgba(currentColorHex, 0.1) + ' 40%, transparent)';
+      }
+
+      // Live update the code snippet box
+      generateDynamicCode();
+    }
+
+    function generateDynamicCode() {
+      const data = mockupsData[currentPlaneIndex];
+      const sizeVal = document.getElementById('control-size').value;
+      const speedVal = document.getElementById('control-speed').value;
+      const opacityVal = (document.getElementById('control-opacity').value / 100).toFixed(2);
+      const altitudeVal = document.getElementById('control-altitude').value;
+      const contrailCheck = document.getElementById('control-contrail').checked;
+
+      let svgReact = data.svg
+        .replace(/stroke-width/g, 'strokeWidth')
+        .replace(/stroke-opacity/g, 'strokeOpacity')
+        .replace(/fill-opacity/g, 'fillOpacity');
+
+      let contrailReact = '';
+      if (contrailCheck) {
+        contrailReact = `\n      <div 
+        className="absolute top-1/2 right-[90%] -translate-y-1/2 h-[1px] w-[160px] blur-[0.6px] pointer-events-none origin-right"
+        style={{
+          background: 'linear-gradient(to left, ${hexToRgba(currentColorHex, 0.35)}, ${hexToRgba(currentColorHex, 0.1)} 40%, transparent)'
+        }}
+      />`;
+      }
+
+      let animateAttr = '';
+      let initialAttr = '';
+      if (data.animationName === 'commercial') {
+        initialAttr = `{{ x: '-15vw', y: '0px', rotate: 0.5 }}`;
+        animateAttr = `{{
+        x: '115vw',
+        y: ['0px', '-8px', '-4px'],
+        rotate: [0.5, 1.0, 0.5]
+      }}`;
+      } else if (data.animationName === 'private') {
+        initialAttr = `{{ x: '-15vw', y: '0px', rotate: 0.8 }}`;
+        animateAttr = `{{
+        x: '115vw',
+        y: ['0px', '-15px', '5px', '0px'],
+        rotate: [0.8, 1.2, 0.3, 0.8]
+      }}`;
+      } else if (data.animationName === 'cargo') {
+        initialAttr = `{{ x: '-15vw', y: '0px', rotate: 0 }}`;
+        animateAttr = `{{
+        x: '115vw',
+        y: ['0px', '-3px', '3px', '0px'],
+        rotate: [0, -0.2, 0.2, 0]
+      }}`;
+      } else if (data.animationName === 'biplane') {
+        initialAttr = `{{ x: '-15vw', y: '5px', rotate: 1 }}`;
+        animateAttr = `{{
+        x: '115vw',
+        y: ['5px', '-10px', '12px', '-8px', '6px', '0px'],
+        rotate: [1, -1.5, 2, -1, 1.5, 0]
+      }}`;
+      } else if (data.animationName === 'abstract') {
+        initialAttr = `{{ x: '-15vw', y: '0px', rotate: -1 }}`;
+        animateAttr = `{{
+        x: '115vw',
+        y: ['0px', '-15px', '-30px'],
+        rotate: [-1, -0.5, 0]
+      }}`;
+      }
+
+      const code = `import React from 'react';
+import { motion } from 'framer-motion';
+
+export default function HeroPlane() {
+  return (
+    <motion.div
+      initial=${initialAttr}
+      animate=${animateAttr}
+      transition={{
+        duration: ${speedVal},
+        repeat: Infinity,
+        ease: 'linear'
+      }}
+      className="absolute top-[${altitudeVal}%] left-0 pointer-events-none select-none z-10"
+      style={{ 
+        width: '${sizeVal}px', 
+        opacity: ${opacityVal},
+        color: '${currentColorHex}' 
+      }}
+    >
+      ${svgReact.replace(/\n/g, '\n      ')}${contrailReact.replace(/\n/g, '\n      ')}
+    </motion.div>
+  );
+}`;
+
+      document.getElementById('code-snippet').innerText = code;
+    }
+
+    function setPlaneColor(hex, name) {
+      currentColorHex = hex;
+      currentColorName = name;
+      document.getElementById('val-color').innerText = name;
+      updatePlaneParameters();
+    }
+
+    function restartFlight() {
+      const container = document.getElementById('sim-plane-container');
+      const savedClassName = container.className;
+      container.className = 'animated-plane';
+      void container.offsetWidth;
+      container.className = savedClassName;
+    }
+
+    function copyCode() {
+      const code = document.getElementById('code-snippet').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        alert('React code copied to clipboard!');
+      });
+    }
+
+    function hexToRgba(hex, alpha) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+    }
+
+    function renderComparisonLanes() {
+      const container = document.getElementById('comparison-lanes-container');
+      container.innerHTML = '';
+
+      mockupsData.forEach((data, index) => {
+        const lane = document.createElement('div');
+        lane.className = 'relative h-44 rounded-xl overflow-hidden glass-panel border border-white/10 flex items-center justify-between px-6 select-none';
+        
+        lane.innerHTML = `
+          <div class="absolute inset-0 w-full h-full pointer-events-none select-none z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-[#181320] via-[#0E0C12] to-black"></div>
+            <div class="absolute inset-0 w-full h-full opacity-60 blur-[1px]">
+              <img src="images/cinematic-sunset-mountains.png" class="w-full h-full object-cover object-center" alt="" onerror="this.src='/images/cinematic-sunset-mountains.png'; this.onerror=null;"/>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40"></div>
+          </div>
+
+          <div class="absolute inset-x-0 top-0 h-full pointer-events-none">
+            <div class="animated-plane animate-` + data.animationName + `" style="--plane-y: 35%; --duration: ` + data.defaultDuration + `;">
+              <div class="relative text-[#b3957a]" style="width: ` + data.defaultWidth + `; opacity: ` + data.defaultOpacity + `;">
+                ` + data.svg + `
+                <div class="contrail" style="background: linear-gradient(to left, rgba(179, 149, 122, 0.35), rgba(179, 149, 122, 0.1) 40%, transparent);"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative z-10 max-w-sm bg-black/70 backdrop-blur-md p-3 rounded-lg border border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="bg-white/10 text-white font-mono text-[9px] px-1.5 py-0.5 rounded">Mockup #` + (index + 1) + `</span>
+              <span class="text-white text-xs font-semibold">` + data.name + `</span>
+            </div>
+            <p class="text-zinc-400 text-[10px] leading-relaxed mt-1.5">` + data.description + `</p>
+          </div>
+
+          <div class="relative z-10 text-right bg-black/70 backdrop-blur-md p-3 rounded-lg border border-white/5 font-mono text-[9px] text-zinc-400 space-y-1">
+            <div>Size: <span class="text-zinc-200">` + data.defaultWidth + `</span></div>
+            <div>Opacity: <span class="text-zinc-200">` + data.defaultOpacity + `</span></div>
+            <div>Base Speed: <span class="text-zinc-200">` + data.defaultDuration + `</span></div>
+          </div>
+        `;
+
+        container.appendChild(lane);
+      });
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
