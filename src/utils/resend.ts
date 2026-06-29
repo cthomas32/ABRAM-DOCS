@@ -496,6 +496,9 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
             subject: lockedCampaign.subject,
             text: lockedCampaign.text_content || "",
             html: lockedCampaign.html_content || "",
+            tags: [
+              { name: "campaign_id", value: campaignId }
+            ]
           }));
 
           const batchResponse = await resend.batch.send(batchPayload);
