@@ -244,6 +244,9 @@ interface CreateDraftCampaignInput {
   htmlContent: string;
   textContent: string;
   segmentId?: string; // Optional segment ID (falls back to General/Marketing segment)
+  metadata?: any;
+  recipientsCount?: number;
+  recipientEmails?: string[];
 }
 
 interface ApprovalDetails {
@@ -259,24 +262,36 @@ interface ApprovalDetails {
  */
 export async function createDraftCampaign(input: CreateDraftCampaignInput) {
   const supabase = await createClient();
-  const segmentId = input.segmentId || process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
+  let segmentId: string | null = null;
+  let recipientsCount = input.recipientsCount ?? 0;
+  let metadata = input.metadata || null;
 
-  // Get recipient count estimate from database
-  let recipientsCount = 0;
-  if (segmentId === (process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8")) {
-    const { count } = await supabase
-      .from("subscribers")
-      .select("*", { count: "exact", head: true })
-      .eq("is_application_list", true)
-      .eq("status", "subscribed");
-    recipientsCount = count || 0;
+  if (input.recipientEmails && input.recipientEmails.length > 0) {
+    segmentId = null;
+    recipientsCount = input.recipientEmails.length;
+    metadata = { ...(input.metadata || {}), recipient_emails: input.recipientEmails };
   } else {
-    const { count } = await supabase
-      .from("subscribers")
-      .select("*", { count: "exact", head: true })
-      .eq("is_marketing_list", true)
-      .eq("status", "subscribed");
-    recipientsCount = count || 0;
+    const audienceType = input.metadata?.audience_type || 'segment';
+    if (audienceType === 'segment') {
+      segmentId = input.segmentId || process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
+      if (input.recipientsCount === undefined) {
+        if (segmentId === (process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8")) {
+          const { count } = await supabase
+            .from("subscribers")
+            .select("*", { count: "exact", head: true })
+            .eq("is_application_list", true)
+            .eq("status", "subscribed");
+          recipientsCount = count || 0;
+        } else {
+          const { count } = await supabase
+            .from("subscribers")
+            .select("*", { count: "exact", head: true })
+            .eq("is_marketing_list", true)
+            .eq("status", "subscribed");
+          recipientsCount = count || 0;
+        }
+      }
+    }
   }
 
   const { data: campaign, error: campaignError } = await supabase
@@ -289,6 +304,7 @@ export async function createDraftCampaign(input: CreateDraftCampaignInput) {
       html_content: input.htmlContent,
       text_content: input.textContent,
       recipients_count: recipientsCount,
+      metadata: metadata,
     })
     .select()
     .single();
@@ -315,10 +331,10 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
     throw new Error("Resend integration is not configured on the server.");
   }
 
-  const supabase = await createClient();
+  const serviceClient = createServiceClient();
 
-  // 1. Fetch draft campaign
-  const { data: campaign, error: fetchError } = await supabase
+  // 1. Fetch draft campaign using service client to ensure bypass of RLS constraints if needed
+  const { data: campaign, error: fetchError } = await serviceClient
     .from("campaigns")
     .select("*")
     .eq("id", campaignId)
@@ -333,8 +349,8 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
     throw new Error(`Campaign cannot be sent because it is in '${campaign.status}' status.`);
   }
 
-  // 3. Optimistic locking: update status to "sending" to prevent double-sends
-  const { data: lockedCampaign, error: lockError } = await supabase
+  // 3. Optimistic locking: update status to "sending" to prevent double-sends using service client
+  const { data: lockedCampaign, error: lockError } = await serviceClient
     .from("campaigns")
     .update({ status: "sending" })
     .eq("id", campaignId)
@@ -347,65 +363,189 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
   }
 
   try {
-    // 4. Create the Broadcast in Resend
-    const broadcastResponse = await resend.broadcasts.create({
-      name: campaign.title,
-      from: process.env.RESEND_FROM_EMAIL || "ABRAM <updates@abram.network>",
-      subject: campaign.subject,
-      text: campaign.text_content || "",
-      html: campaign.html_content || "",
-      segmentId: campaign.segment_id,
-    });
+    let resendBroadcastId = "";
+    const recipientEmails = lockedCampaign.metadata && typeof lockedCampaign.metadata === "object"
+      ? (lockedCampaign.metadata as any).recipient_emails
+      : null;
 
-    if (broadcastResponse.error) {
-      throw new Error(broadcastResponse.error.message);
+    const isIndividualSend = Array.isArray(recipientEmails) && recipientEmails.length > 0;
+
+    if (isIndividualSend) {
+      // Loop through each email in the array and send individually using resend.emails.send
+      for (const email of recipientEmails) {
+        if (typeof email !== "string" || !email.trim()) continue;
+        const targetEmail = email.trim().toLowerCase();
+
+        // Check if subscriber exists in database to get their ID
+        const { data: subscriber } = await serviceClient
+          .from("subscribers")
+          .select("id")
+          .eq("email", targetEmail)
+          .maybeSingle();
+
+        const subscriberId = subscriber?.id || null;
+
+        // Send individual email
+        const emailResponse = await resend.emails.send({
+          from: process.env.RESEND_FROM_EMAIL || "ABRAM <updates@abram.network>",
+          to: targetEmail,
+          subject: lockedCampaign.subject,
+          text: lockedCampaign.text_content || "",
+          html: lockedCampaign.html_content || "",
+          tags: [
+            { name: "campaign_id", value: campaignId }
+          ]
+        });
+
+        if (emailResponse.error) {
+          console.error(`Failed to send email to ${targetEmail}:`, emailResponse.error.message);
+        } else {
+          const resendEmailId = emailResponse.data?.id || null;
+          
+          // Insert a row in campaign_logs with status = 'sent'
+          const { error: logError } = await serviceClient
+            .from("campaign_logs")
+            .insert({
+              campaign_id: campaignId,
+              subscriber_id: subscriberId,
+              status: "sent",
+              recipient_email: targetEmail,
+              payload: { resend_email_id: resendEmailId }
+            });
+
+          if (logError) {
+            console.error(`Failed to insert campaign log for ${targetEmail}:`, logError.message);
+          }
+        }
+      }
+
+      // Complete campaign log and approval audit details using service client
+      const { error: updateError } = await serviceClient
+        .from("campaigns")
+        .update({
+          status: "sent",
+          sent_at: new Date().toISOString(),
+          approved_by: approval.approvedBy,
+          approved_at: new Date().toISOString(),
+          approval_ip: approval.ipAddress,
+          approval_user_agent: approval.userAgent,
+          approval_metadata: {
+            confirmation_phrase: approval.confirmationPhrase,
+            dispatch_mechanism: "manual_approval_dashboard_individual",
+          },
+        })
+        .eq("id", campaignId);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      return {
+        success: true,
+        message: "Campaign approved and successfully dispatched individually.",
+      };
+    } else {
+      const audienceType = lockedCampaign.metadata?.audience_type || 'segment';
+
+      if (audienceType === 'segment' && lockedCampaign.segment_id) {
+        // 4. Create the Broadcast in Resend
+        const broadcastResponse = await resend.broadcasts.create({
+          name: lockedCampaign.title,
+          from: process.env.RESEND_FROM_EMAIL || "ABRAM <updates@abram.network>",
+          subject: lockedCampaign.subject,
+          text: lockedCampaign.text_content || "",
+          html: lockedCampaign.html_content || "",
+          segmentId: lockedCampaign.segment_id,
+        });
+
+        if (broadcastResponse.error) {
+          throw new Error(broadcastResponse.error.message);
+        }
+
+        const broadcastId = broadcastResponse.data?.id;
+        if (!broadcastId) {
+          throw new Error("Resend API failed to return a valid Broadcast ID.");
+        }
+        resendBroadcastId = broadcastId;
+
+        // 5. Send the Broadcast immediately
+        const sendResponse = await resend.broadcasts.send(resendBroadcastId);
+
+        if (sendResponse.error) {
+          throw new Error(sendResponse.error.message);
+        }
+      } else {
+        // Send directly to the list of specific emails (legacy batch send)
+        const legacyEmails: string[] = lockedCampaign.metadata?.emails || [];
+        if (legacyEmails.length === 0) {
+          throw new Error("No recipient emails defined for this campaign.");
+        }
+
+        const fromEmail = process.env.RESEND_FROM_EMAIL || "ABRAM <updates@abram.network>";
+        
+        // Batch send emails (up to 100 per request is Resend's batch send limit)
+        const chunks: string[][] = [];
+        for (let i = 0; i < legacyEmails.length; i += 100) {
+          chunks.push(legacyEmails.slice(i, i + 100));
+        }
+
+        for (const chunk of chunks) {
+          const batchPayload = chunk.map(email => ({
+            from: fromEmail,
+            to: email,
+            subject: lockedCampaign.subject,
+            text: lockedCampaign.text_content || "",
+            html: lockedCampaign.html_content || "",
+          }));
+
+          const batchResponse = await resend.batch.send(batchPayload);
+          if (batchResponse.error) {
+            throw new Error(batchResponse.error.message);
+          }
+        }
+
+        resendBroadcastId = `batch_send_${Date.now()}`;
+      }
+
+      // 6. Complete campaign log and approval audit details using service client
+      const { error: updateError } = await serviceClient
+        .from("campaigns")
+        .update({
+          resend_broadcast_id: resendBroadcastId,
+          status: "sent",
+          sent_at: new Date().toISOString(),
+          approved_by: approval.approvedBy,
+          approved_at: new Date().toISOString(),
+          approval_ip: approval.ipAddress,
+          approval_user_agent: approval.userAgent,
+          approval_metadata: {
+            confirmation_phrase: approval.confirmationPhrase,
+            dispatch_mechanism: "manual_approval_dashboard",
+          },
+        })
+        .eq("id", campaignId);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      return {
+        success: true,
+        broadcastId: resendBroadcastId,
+        message: "Campaign approved and successfully dispatched.",
+      };
     }
-
-    const resendBroadcastId = broadcastResponse.data?.id;
-    if (!resendBroadcastId) {
-      throw new Error("Resend API failed to return a valid Broadcast ID.");
-    }
-
-    // 5. Send the Broadcast immediately
-    const sendResponse = await resend.broadcasts.send(resendBroadcastId);
-
-    if (sendResponse.error) {
-      throw new Error(sendResponse.error.message);
-    }
-
-    // 6. Complete campaign log and approval audit details
-    await supabase
-      .from("campaigns")
-      .update({
-        resend_broadcast_id: resendBroadcastId,
-        status: "sent",
-        sent_at: new Date().toISOString(),
-        approved_by: approval.approvedBy,
-        approved_at: new Date().toISOString(),
-        approval_ip: approval.ipAddress,
-        approval_user_agent: approval.userAgent,
-        approval_metadata: {
-          confirmation_phrase: approval.confirmationPhrase,
-          dispatch_mechanism: "manual_approval_dashboard",
-        },
-      })
-      .eq("id", campaignId);
-
-    return {
-      success: true,
-      broadcastId: resendBroadcastId,
-      message: "Campaign approved and successfully dispatched.",
-    };
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Broadcast transmission error:", error);
 
-    // Rollback to failed and store error details
-    await supabase
+    // Rollback to failed and store error details using service client
+    await serviceClient
       .from("campaigns")
       .update({
         status: "failed",
         metadata: {
+          ...campaign.metadata,
           error: message,
           approval_attempt: {
             approved_by: approval.approvedBy,

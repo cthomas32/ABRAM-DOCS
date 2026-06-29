@@ -241,6 +241,23 @@ export async function broadcastPublishedEntry(entryId: string, type: "blog" | "c
     let htmlContent = "";
     let textContent = "";
 
+    // Fetch DB template 'standard'
+    let dbTemplateHtml = "";
+    let designTokens: any = null;
+    try {
+      const { data: templateData, error: templateError } = await supabase
+        .from("email_templates")
+        .select("html_template, design_tokens")
+        .eq("name", "standard")
+        .single();
+      if (!templateError && templateData) {
+        dbTemplateHtml = templateData.html_template;
+        designTokens = templateData.design_tokens;
+      }
+    } catch (err) {
+      console.warn("Could not load email template standard from Supabase, using hardcoded fallback layout:", err);
+    }
+
     if (type === "blog") {
       const { data: post, error } = await supabase
         .from("blog_posts")
@@ -253,73 +270,91 @@ export async function broadcastPublishedEntry(entryId: string, type: "blog" | "c
 
       title = `Blog Broadcast: ${post.title}`;
       subject = `New Article: ${post.title}`;
-      
-      // Inline newsletter style for Blog
-      htmlContent = `
-        <!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>${post.title}</title>
-          </head>
-          <body style="margin:0;padding:0;background-color:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
-              <tr>
-                <td align="center" style="padding:48px 24px;">
-                  <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
-                    <!-- Logo -->
-                    <tr>
-                      <td align="center" style="padding:0 0 40px;">
-                        <img src="https://pgcsqnmegfinpzzeftug.supabase.co/storage/v1/object/public/organization-logos/ABRAM_Lockup_Cream@300x.png" alt="ABRAM" width="130" style="display:block;height:auto;border:0;" />
-                      </td>
-                    </tr>
-                    <!-- Headline -->
-                    <tr>
-                      <td align="center" style="padding:0 0 16px;">
-                        <h1 style="margin:0;font-size:28px;font-weight:400;color:#ffffff;line-height:1.3;letter-spacing:-0.3px;">
-                          ${post.title}
-                        </h1>
-                      </td>
-                    </tr>
-                    <!-- Body -->
-                    <tr>
-                      <td style="padding:0 0 32px;">
-                        <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#888888; text-align:left;">
-                          ${post.summary || "Read the latest update from the ABRAM team."}
-                        </p>
-                      </td>
-                    </tr>
-                    <!-- CTA Button -->
-                    <tr>
-                      <td align="center" style="padding:0 0 32px;">
-                        <table role="presentation" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td style="background-color:#ffffff;border-radius:9999px;">
-                              <a href="https://abram.network/blog/${post.slug}" target="_blank" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#000000;text-decoration:none;letter-spacing:0.2px;">
-                                Read Full Article
-                              </a>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                    <!-- Footer -->
-                    <tr>
-                      <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
-                        <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
-                          You are receiving this because you subscribed to updates from ABRAM.<br>
-                          Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
-                        </p>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </body>
-        </html>
-      `;
+      const textContentRaw = post.summary || "Read the latest update from the ABRAM team.";
+
+      if (dbTemplateHtml) {
+        const ctaBg = designTokens?.cta_bg || "#FAFAF9";
+        const ctaColor = designTokens?.cta_color || "#0A0A0A";
+        htmlContent = compileTemplateString(dbTemplateHtml, {
+          subject,
+          preheader: textContentRaw.substring(0, 130).replace(/\n/g, " ") + "...",
+          badge: "ARTICLE",
+          headline: post.title,
+          bodyHtml: `<p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #A1A1AA; font-size: 15px;">${textContentRaw}</p>`,
+          ctaText: "Read Full Article",
+          ctaUrl: `https://abram.network/blog/${post.slug}`,
+          ctaBg,
+          ctaColor,
+          ctaClass: designTokens?.cta_bg ? "btn-custom" : "btn-primary"
+        });
+      } else {
+        // Fallback to original hardcoded layout
+        htmlContent = `
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>${post.title}</title>
+            </head>
+            <body style="margin:0;padding:0;background-color:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
+                <tr>
+                  <td align="center" style="padding:48px 24px;">
+                    <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
+                      <!-- Logo -->
+                      <tr>
+                        <td align="center" style="padding:0 0 40px;">
+                          <img src="https://abram.network/abram-logo-lockup-cream.png" alt="ABRAM" width="130" style="display:block;height:auto;border:0;" />
+                        </td>
+                      </tr>
+                      <!-- Headline -->
+                      <tr>
+                        <td align="center" style="padding:0 0 16px;">
+                          <h1 style="margin:0;font-size:28px;font-weight:400;color:#ffffff;line-height:1.3;letter-spacing:-0.3px;">
+                            ${post.title}
+                          </h1>
+                        </td>
+                      </tr>
+                      <!-- Body -->
+                      <tr>
+                        <td style="padding:0 0 32px;">
+                          <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#888888; text-align:left;">
+                            ${post.summary || "Read the latest update from the ABRAM team."}
+                          </p>
+                        </td>
+                      </tr>
+                      <!-- CTA Button -->
+                      <tr>
+                        <td align="center" style="padding:0 0 32px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="background-color:#ffffff;border-radius:9999px;">
+                                <a href="https://abram.network/blog/${post.slug}" target="_blank" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#000000;text-decoration:none;letter-spacing:0.2px;">
+                                  Read Full Article
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!-- Footer -->
+                      <tr>
+                        <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
+                          <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
+                            You are receiving this because you subscribed to updates from ABRAM.<br>
+                            Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </body>
+          </html>
+        `;
+      }
       textContent = `New Blog Post Published: ${post.title}\n\nSummary: ${post.summary}\n\nRead the full article at: https://abram.network/blog/${post.slug}\n\nUnsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}`;
     } else {
       const { data: note, error } = await supabase
@@ -333,87 +368,105 @@ export async function broadcastPublishedEntry(entryId: string, type: "blog" | "c
 
       title = `Release Broadcast v${note.version}`;
       subject = `Release Notes: v${note.version} - ${note.title}`;
-      
-      // Inline newsletter style for Releases
-      htmlContent = `
-        <!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>v${note.version} - ${note.title}</title>
-          </head>
-          <body style="margin:0;padding:0;background-color:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
-              <tr>
-                <td align="center" style="padding:48px 24px;">
-                  <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
-                    <!-- Logo -->
-                    <tr>
-                      <td align="center" style="padding:0 0 40px;">
-                        <img src="https://pgcsqnmegfinpzzeftug.supabase.co/storage/v1/object/public/organization-logos/ABRAM_Lockup_Cream@300x.png" alt="ABRAM" width="130" style="display:block;height:auto;border:0;" />
-                      </td>
-                    </tr>
-                    <!-- Version Badge -->
-                    <tr>
-                      <td align="center" style="padding:0 0 16px;">
-                        <table role="presentation" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td align="center" style="border:1px solid rgba(255,255,255,0.15);border-radius:9999px;padding:4px 12px;background-color:rgba(255,255,255,0.04);vertical-align:middle;text-align:center;line-height:12px;">
-                              <span style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8ECAFF;line-height:12px;display:inline-block;vertical-align:middle;">
-                                Version ${note.version}
-                              </span>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                    <!-- Headline -->
-                    <tr>
-                      <td align="center" style="padding:0 0 16px;">
-                        <h1 style="margin:0;font-size:28px;font-weight:400;color:#ffffff;line-height:1.3;letter-spacing:-0.3px;">
-                          ${note.title}
-                        </h1>
-                      </td>
-                    </tr>
-                    <!-- Body -->
-                    <tr>
-                      <td style="padding:0 0 32px;">
-                        <div style="font-size:15px;line-height:1.6;color:#888888;text-align:left;">
-                          ${note.content}
-                        </div>
-                      </td>
-                    </tr>
-                    <!-- CTA Button -->
-                    <tr>
-                      <td align="center" style="padding:0 0 32px;">
-                        <table role="presentation" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td style="background-color:#ffffff;border-radius:9999px;">
-                              <a href="https://abram.network/changelog" target="_blank" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#000000;text-decoration:none;letter-spacing:0.2px;">
-                                View Changelog
-                              </a>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                    <!-- Footer -->
-                    <tr>
-                      <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
-                        <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
-                          You are receiving this because you subscribed to updates from ABRAM.<br>
-                          Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
-                        </p>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </body>
-        </html>
-      `;
+      const textContentRaw = `New Release v${note.version} Published: ${note.title}`;
+
+      if (dbTemplateHtml) {
+        const ctaBg = designTokens?.cta_bg || "#FAFAF9";
+        const ctaColor = designTokens?.cta_color || "#0A0A0A";
+        htmlContent = compileTemplateString(dbTemplateHtml, {
+          subject,
+          preheader: textContentRaw.substring(0, 130).replace(/\n/g, " ") + "...",
+          badge: `VERSION ${note.version}`,
+          headline: note.title,
+          bodyHtml: `<div style="font-size: 15px; line-height: 1.6; color: #A1A1AA; text-align: left;">${note.content}</div>`,
+          ctaText: "View Changelog",
+          ctaUrl: "https://abram.network/changelog",
+          ctaBg,
+          ctaColor,
+          ctaClass: designTokens?.cta_bg ? "btn-custom" : "btn-primary"
+        });
+      } else {
+        // Fallback to original hardcoded layout
+        htmlContent = `
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>v${note.version} - ${note.title}</title>
+            </head>
+            <body style="margin:0;padding:0;background-color:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
+                <tr>
+                  <td align="center" style="padding:48px 24px;">
+                    <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
+                      <!-- Logo -->
+                      <tr>
+                        <td align="center" style="padding:0 0 40px;">
+                          <img src="https://abram.network/abram-logo-lockup-cream.png" alt="ABRAM" width="130" style="display:block;height:auto;border:0;" />
+                        </td>
+                      </tr>
+                      <!-- Version Badge -->
+                      <tr>
+                        <td align="center" style="padding:0 0 16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td align="center" style="border:1px solid rgba(255,255,255,0.15);border-radius:9999px;padding:4px 12px;background-color:rgba(255,255,255,0.04);vertical-align:middle;text-align:center;line-height:12px;">
+                                <span style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8ECAFF;line-height:12px;display:inline-block;vertical-align:middle;">
+                                  Version ${note.version}
+                                </span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!-- Headline -->
+                      <tr>
+                        <td align="center" style="padding:0 0 16px;">
+                          <h1 style="margin:0;font-size:28px;font-weight:400;color:#ffffff;line-height:1.3;letter-spacing:-0.3px;">
+                            ${note.title}
+                          </h1>
+                        </td>
+                      </tr>
+                      <!-- Body -->
+                      <tr>
+                        <td style="padding:0 0 32px;">
+                          <div style="font-size:15px;line-height:1.6;color:#888888;text-align:left;">
+                            ${note.content}
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- CTA Button -->
+                      <tr>
+                        <td align="center" style="padding:0 0 32px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="background-color:#ffffff;border-radius:9999px;">
+                                <a href="https://abram.network/changelog" target="_blank" style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#000000;text-decoration:none;letter-spacing:0.2px;">
+                                  View Changelog
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!-- Footer -->
+                      <tr>
+                        <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
+                          <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
+                            You are receiving this because you subscribed to updates from ABRAM.<br>
+                            Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </body>
+          </html>
+        `;
+      }
       textContent = `New Release v${note.version} Published: ${note.title}\n\nRead the release notes at: https://abram.network/changelog\n\nUnsubscribe: {{{RESEND_UNSUBSCRIBE_URL}}}`;
     }
 
@@ -462,7 +515,10 @@ export async function createManualDraftCampaign(
   subject: string,
   textContent: string,
   htmlContent: string,
-  segmentId?: string
+  segmentId?: string,
+  metadata?: any,
+  recipientsCount?: number,
+  recipientEmails?: string[]
 ) {
   try {
     const result = await createDraftCampaign({
@@ -471,11 +527,61 @@ export async function createManualDraftCampaign(
       textContent,
       htmlContent,
       segmentId,
+      metadata,
+      recipientsCount,
+      recipientEmails,
     });
     return result;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     return { success: false, error: message || "Failed to create manual campaign draft." };
+  }
+}
+
+/**
+ * Server Action: Updates an existing campaign draft in the database.
+ */
+export async function updateManualDraftCampaignAction(
+  campaignId: string,
+  title: string,
+  subject: string,
+  textContent: string,
+  htmlContent: string,
+  segmentId?: string,
+  metadata?: any,
+  recipientsCount?: number
+) {
+  try {
+    const supabase = await createClient();
+
+    // Authenticate user session
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error("Unauthorized. Admin privileges are required to update campaign drafts.");
+    }
+
+    const { data, error } = await supabase
+      .from("campaigns")
+      .update({
+        title,
+        subject,
+        text_content: textContent,
+        html_content: htmlContent,
+        segment_id: segmentId || null,
+        metadata: metadata || null,
+        recipients_count: recipientsCount || 0,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", campaignId)
+      .eq("status", "draft")
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { success: true, campaign: data };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { success: false, error: message || "Failed to update campaign draft." };
   }
 }
 
@@ -535,3 +641,126 @@ export async function getCampaignLogs(campaignId?: string) {
     return { success: false, error: message || "Failed to fetch campaign logs." };
   }
 }
+
+/**
+ * Server Action: Fetches all email templates from Supabase.
+ */
+export async function getEmailTemplates(): Promise<{ success: boolean; templates?: any[]; error?: string }> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("email_templates")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+    return { success: true, templates: data || [] };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { success: false, error: message || "Failed to fetch email templates." };
+  }
+}
+
+/**
+ * Server Action: Sends a one-off test email to a single address so the admin
+ * can verify layout and content before dispatching to everyone.
+ * Uses the same from-address as production broadcasts.
+ * No campaign record is created — fire-and-forget preview only.
+ */
+export async function sendTestEmailAction(
+  toEmail: string,
+  subject: string,
+  htmlContent: string,
+  textContent: string
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const resend = getResendClient();
+    if (!resend) {
+      return { success: false, error: "Resend integration is not configured on the server." };
+    }
+
+    const fromAddress = process.env.RESEND_FROM_EMAIL || "ABRAM <updates@abram.network>";
+    const testSubject = `[TEST] ${subject}`;
+
+    const response = await resend.emails.send({
+      from: fromAddress,
+      to: toEmail.trim().toLowerCase(),
+      subject: testSubject,
+      html: htmlContent,
+      text: textContent || "Please view the HTML version of this test email.",
+      tags: [{ name: "type", value: "admin_test_preview" }],
+    });
+
+    if (response.error) {
+      return { success: false, error: response.error.message };
+    }
+
+    return {
+      success: true,
+      message: `Test email delivered to ${toEmail}. Check your inbox — subject will appear as "${testSubject}".`,
+    };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { success: false, error: message || "Failed to send test email." };
+  }
+}
+
+/**
+ * Helper: Compiles template HTML by replacing standard placeholders
+ */
+function compileTemplateString(
+  templateHtml: string,
+  data: {
+    subject: string;
+    preheader: string;
+    badge?: string;
+    headline: string;
+    bodyHtml: string;
+    ctaText?: string;
+    ctaUrl?: string;
+    ctaBg?: string;
+    ctaColor?: string;
+    ctaClass?: string;
+  }
+): string {
+  // Compile Badge section with inline border-collapse fix
+  const badgeSection = data.badge
+    ? `<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px; border-collapse: separate !important;">
+        <tr>
+          <td align="center" style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 4px 12px; background-color: rgba(255, 255, 255, 0.04); border-collapse: separate !important; vertical-align: middle;">
+            <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8ECAFF; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1;">
+              ${data.badge}
+            </span>
+          </td>
+        </tr>
+      </table>`
+    : "";
+
+  // Compile CTA section with inline border-collapse fix and button styles
+  const ctaBg = data.ctaBg || "#FAFAF9";
+  const ctaColor = data.ctaColor || "#0A0A0A";
+  const ctaClass = data.ctaClass || "btn-primary";
+  const ctaSection = data.ctaUrl
+    ? `<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 8px; border-collapse: separate !important;">
+        <tr>
+          <td bgcolor="${ctaBg}" class="${ctaClass}" style="border-radius: 9999px; overflow: hidden; border-collapse: separate !important;">
+            <a href="${data.ctaUrl}" target="_blank" style="display: block; padding: 10px 24px; font-size: 12px; font-weight: 600; color: ${ctaColor}; text-decoration: none; text-align: center; letter-spacing: 0.02em; font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;">
+              ${data.ctaText || "Read More"}
+            </a>
+          </td>
+        </tr>
+      </table>`
+    : "";
+
+  let html = templateHtml;
+  html = html.replace(/\{\{EMAIL_SUBJECT\}\}/g, data.subject || "");
+  html = html.replace(/\{\{PREHEADER_TEXT\}\}/g, data.preheader || "");
+  html = html.replace(/\{\{BADGE_SECTION\}\}/g, badgeSection);
+  html = html.replace(/\{\{HEADLINE\}\}/g, data.headline || "");
+  html = html.replace(/\{\{\{BODY_CONTENT\}\}\}/g, data.bodyHtml || "");
+  html = html.replace(/\{\{CTA_SECTION\}\}/g, ctaSection);
+  html = html.replace(/\{\{\{RESEND_UNSUBSCRIBE_URL\}\}\}/g, "{{{RESEND_UNSUBSCRIBE_URL}}}"); // Retain placeholder
+
+  return html;
+}
+

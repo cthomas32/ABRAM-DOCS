@@ -140,13 +140,14 @@ function htmlToText(html) {
 }
 
 // 6. Template compilation
-function compileTemplate(data) {
-  const templatePath = path.join(__dirname, 'email-template.html');
-  let template = '';
+function compileTemplate(data, customTemplateHtml = null) {
+  let template = customTemplateHtml;
   
-  if (fs.existsSync(templatePath)) {
-    template = fs.readFileSync(templatePath, 'utf8');
-  } else {
+  if (!template) {
+    const templatePath = path.join(__dirname, 'email-template.html');
+    if (fs.existsSync(templatePath)) {
+      template = fs.readFileSync(templatePath, 'utf8');
+    } else {
     // Inline fallback template if file is missing
     template = `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -265,6 +266,7 @@ function compileTemplate(data) {
   </body>
 </html>
 `;
+    }
   }
 
   // Compile Badge section with inline border-collapse fix
@@ -342,10 +344,42 @@ async function main() {
     process.exit(1);
   }
 
+  // Initialize Supabase Client early to query templates
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // Load template from database if configured
+  const templateName = args.template || 'standard';
+  let dbTemplateHtml = null;
+  let designTokens = null;
+
+  try {
+    console.log(`Fetching email template "${templateName}" from Supabase...`);
+    const { data: templateData, error: templateError } = await supabase
+      .from('email_templates')
+      .select('html_template, design_tokens')
+      .eq('name', templateName)
+      .single();
+
+    if (!templateError && templateData) {
+      dbTemplateHtml = templateData.html_template;
+      designTokens = templateData.design_tokens;
+      console.log(`Found template "${templateName}" in Supabase. Using database layout.`);
+    } else {
+      console.log(`Template "${templateName}" not found in database or query failed: ${templateError?.message || 'unknown'}. Falling back to local files.`);
+    }
+  } catch (err) {
+    console.log('Error querying Supabase for email template, falling back to local files:', err.message);
+  }
+
   // Compile components
   const bodyHtml = markdownToHtml(markdown);
   const textContent = htmlToText(bodyHtml);
   const preheader = args.preheader || textContent.substring(0, 130).replace(/\n/g, ' ') + '...';
+
+  // Apply database design tokens if present
+  const ctaBg = args['cta-bg'] || (designTokens && designTokens.cta_bg) || '#FAFAF9';
+  const ctaColor = args['cta-color'] || (designTokens && designTokens.cta_color) || '#0A0A0A';
+  const ctaClass = (args['cta-bg'] || (designTokens && designTokens.cta_bg)) ? 'btn-custom' : 'btn-primary';
 
   const campaignData = {
     subject: args.subject,
@@ -355,15 +389,12 @@ async function main() {
     bodyHtml: bodyHtml,
     ctaText: args['cta-text'] || 'Read More',
     ctaUrl: args['cta-url'] || '',
-    ctaBg: args['cta-bg'] || '#FAFAF9',
-    ctaColor: args['cta-color'] || '#0A0A0A',
-    ctaClass: args['cta-bg'] ? 'btn-custom' : 'btn-primary'
+    ctaBg: ctaBg,
+    ctaColor: ctaColor,
+    ctaClass: ctaClass
   };
 
-  const htmlContent = compileTemplate(campaignData);
-
-  // Initialize Supabase Client
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const htmlContent = compileTemplate(campaignData, dbTemplateHtml);
 
   console.log('Sending draft payload to Supabase campaigns table...');
   const segmentId = args.segment || process.env.RESEND_MARKETING_SEGMENT_ID || '8324468f-0399-4c05-9b98-3e17e76ffa41';
@@ -399,6 +430,7 @@ async function main() {
         created_via: 'claude_app_cli_automation',
         badge: args.badge || null,
         headline: args.headline,
+        template_used: templateName,
         cta: args['cta-url'] ? { text: args['cta-text'], url: args['cta-url'] } : null
       }
     })

@@ -22,7 +22,8 @@ node scripts/create-campaign-draft.js \
   --headline "New Integrations & Feature Spotlight" \
   --markdown "This is a **bold** update! Read more at [abram.network](https://abram.network)." \
   --cta-text "Read More" \
-  --cta-url "https://abram.network/changelog"
+  --cta-url "https://abram.network/changelog" \
+  --template "standard"
 ```
 
 ### Option B: Database-Only Insertion (For Mobile Claude App)
@@ -58,6 +59,38 @@ INSERT INTO public.campaigns (
   }'::jsonb
 );
 ```
+
+---
+
+## 🗄️ Database-Driven Templates & Design Tokens
+
+To ensure templates are consistent and easily modifiable, all layout structures and design tokens are stored in the Supabase table `public.email_templates`.
+
+### Querying Layout and Design Tokens
+Agents can fetch the master HTML structure and the theme tokens directly from Supabase:
+
+```sql
+SELECT html_template, design_tokens
+FROM public.email_templates
+WHERE name = 'standard';
+```
+
+### The Design Tokens Schema
+The `design_tokens` JSON column defines the colors, typography, margins, and borders used to format badges, CTA buttons, and containers:
+- `canvas_bg`: Overall backdrop color (`#0A0A0A`).
+- `card_bg`: Main card container color (`#0F0F12`).
+- `card_border`: Main card container border (`#27272A`).
+- `card_border_top`: Highlight top border catch (`#3F3F46`).
+- `text_primary`: Main text color (`#FAFAF9`).
+- `text_secondary`: Supporting paragraphs/list text (`#A1A1AA`).
+- `text_muted`: Footer notes and copyright (`#71717A`).
+- `text_link`: Accents and hyperlinked text (`#3B82F6`).
+- `badge_color`: Label text color (`#8ECAFF`).
+- `badge_bg`: Label background tint (`rgba(255, 255, 255, 0.04)`).
+- `badge_border`: Label border edge (`rgba(255, 255, 255, 0.15)`).
+- `cta_bg`: Primary action button fill (`#FAFAF9`).
+- `cta_color`: Primary action button label (`#0A0A0A`).
+- `font_family`: Geist Sans font stack.
 
 ---
 
