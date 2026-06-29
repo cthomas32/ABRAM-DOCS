@@ -778,38 +778,26 @@ export default function BroadcastsPage() {
           </button>
         </div>
 
-        {/* Resend API Integration Check */}
-        <div className="glass-panel p-5 rounded-2xl border border-white/5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-zinc-400" />
-              <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
-                Resend Delivery Authorization
-              </span>
+        {/* Resend API Integration Check — only shown when disconnected */}
+        {resendStatus.status !== "Connected" && (
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-red-500/20 bg-red-500/5">
+            <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-red-400 font-sans">Resend not connected</p>
+              <p className="text-[10px] text-zinc-500 font-sans truncate">
+                {resendStatus.message || "API key missing or invalid. Check your environment variables."}
+              </p>
             </div>
-            <button 
+            <button
               onClick={checkResend}
               disabled={checkingResend}
-              className="text-[10px] text-zinc-500 hover:text-zinc-300 flex items-center gap-1 cursor-pointer font-sans"
+              className="text-[10px] text-zinc-400 hover:text-zinc-200 flex items-center gap-1 cursor-pointer font-sans shrink-0"
             >
               <RefreshCw className={`w-3 h-3 ${checkingResend ? "animate-spin" : ""}`} />
-              <span>Verify Status</span>
+              <span>Retry</span>
             </button>
           </div>
-
-          <div className="flex items-center gap-3">
-            <span className={`text-[10px] px-2 py-0.5 rounded border font-semibold ${
-              resendStatus.status === "Connected" 
-                ? "bg-green-500/10 border-green-500/20 text-green-400" 
-                : "bg-red-500/10 border-red-500/20 text-red-400"
-            }`}>
-              {resendStatus.status}
-            </span>
-            <p className="text-xs text-zinc-400 font-sans leading-relaxed">
-              {resendStatus.message || "Verifying Resend authorization keys..."}
-            </p>
-          </div>
-        </div>
+        )}
 
         {/* Main Grid: Left Side Campaigns list, Right Side Selected Campaign statistics / logs */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
