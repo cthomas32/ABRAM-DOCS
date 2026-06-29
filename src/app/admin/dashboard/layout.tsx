@@ -62,7 +62,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Mobile Top Header */}
       <header className="md:hidden fixed top-0 left-0 right-0 z-40 h-16 bg-black/60 backdrop-blur-md border-b border-white/5 px-4 flex items-center justify-between">
         <span className="font-bold tracking-tight text-white text-sm flex items-center gap-2">
-          <span className="w-2 h-2 bg-red-600 rounded-full" />
           ABRAM Marketing Engine
         </span>
         <button 
@@ -78,7 +77,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="space-y-6">
           <div className="flex flex-col gap-1.5 pb-4 border-b border-white/5">
             <span className="font-bold tracking-tight text-white text-sm flex items-center gap-2">
-              <span className="w-2.5 h-2.5 bg-red-600 rounded-full" />
               ABRAM Marketing Engine
             </span>
             <span className="text-[9px] bg-white/[0.04] border border-white/10 px-2 py-0.5 rounded text-zinc-400 font-mono w-max">
