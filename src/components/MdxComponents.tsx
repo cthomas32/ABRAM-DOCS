@@ -152,9 +152,39 @@ const slugify = (text: string) => {
     .replace(/^-+|-+$/g, "");
 };
 
+// Parse standard inline CSS style string into React.CSSProperties object
+function parseInlineStyle(style: any): React.CSSProperties | undefined {
+  if (!style) return undefined;
+  if (typeof style === "object") return style as React.CSSProperties;
+  if (typeof style === "string") {
+    const styleObj: Record<string, string> = {};
+    style.split(";").forEach((rules) => {
+      const parts = rules.split(":");
+      if (parts.length >= 2) {
+        const key = parts[0].trim().replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+        const val = parts.slice(1).join(":").trim();
+        if (key && val) {
+          styleObj[key] = val;
+        }
+      }
+    });
+    return styleObj as React.CSSProperties;
+  }
+  return undefined;
+}
+
+// Omit unsafe/string style from props and apply parsed style
+export function getSafeProps<T extends { style?: any }>(props: T): Omit<T, "style"> & { style?: React.CSSProperties } {
+  const { style, ...rest } = props;
+  return {
+    ...rest,
+    ...(style ? { style: parseInlineStyle(style) } : {}),
+  } as any;
+}
+
 // Heading Overrides (ABRAM Design Language)
 export const h1 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-  <h1 className="text-3xl font-bold tracking-tight mt-10 mb-4 text-zinc-900 dark:text-zinc-50" {...props}>
+  <h1 className="text-3xl font-bold tracking-tight mt-10 mb-4 text-zinc-900 dark:text-zinc-50" {...getSafeProps(props)}>
     {children}
   </h1>
 );
@@ -163,7 +193,7 @@ export const h2 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingEleme
   const text = getTextBoxes(children);
   const id = slugify(text);
   return (
-    <h2 id={id} className="text-2xl font-semibold tracking-tight mt-8 mb-3 text-zinc-900 dark:text-zinc-50 scroll-mt-24" {...props}>
+    <h2 id={id} className="text-2xl font-semibold tracking-tight mt-8 mb-3 text-zinc-900 dark:text-zinc-50 scroll-mt-24" {...getSafeProps(props)}>
       {children}
     </h2>
   );
@@ -173,21 +203,21 @@ export const h3 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingEleme
   const text = getTextBoxes(children);
   const id = slugify(text);
   return (
-    <h3 id={id} className="text-xl font-semibold tracking-tight mt-6 mb-2 text-zinc-900 dark:text-zinc-100 scroll-mt-24" {...props}>
+    <h3 id={id} className="text-xl font-semibold tracking-tight mt-6 mb-2 text-zinc-900 dark:text-zinc-100 scroll-mt-24" {...getSafeProps(props)}>
       {children}
     </h3>
   );
 };
 
 export const h4 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-  <h4 className="text-lg font-semibold tracking-tight mt-5 mb-2 text-zinc-900 dark:text-zinc-200" {...props}>
+  <h4 className="text-lg font-semibold tracking-tight mt-5 mb-2 text-zinc-900 dark:text-zinc-200" {...getSafeProps(props)}>
     {children}
   </h4>
 );
 
 // Standard HTML tag overrides
 export const p = ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-  <p className="my-5 text-base leading-7 text-zinc-600 dark:text-zinc-400" {...props}>
+  <p className="my-5 text-base leading-7 text-zinc-600 dark:text-zinc-400" {...getSafeProps(props)}>
     {children}
   </p>
 );
@@ -197,19 +227,19 @@ import MdxLink from "./MdxLink";
 export const a = MdxLink;
 
 export const ul = ({ children, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
-  <ul className="list-disc pl-5 my-5 text-zinc-600 dark:text-zinc-400 space-y-2" {...props}>
+  <ul className="list-disc pl-5 my-5 text-zinc-600 dark:text-zinc-400 space-y-2" {...getSafeProps(props)}>
     {children}
   </ul>
 );
 
 export const ol = ({ children, ...props }: React.HTMLAttributes<HTMLOListElement>) => (
-  <ol className="list-decimal pl-5 my-5 text-zinc-600 dark:text-zinc-400 space-y-2" {...props}>
+  <ol className="list-decimal pl-5 my-5 text-zinc-600 dark:text-zinc-400 space-y-2" {...getSafeProps(props)}>
     {children}
   </ol>
 );
 
 export const li = ({ children, ...props }: React.HTMLAttributes<HTMLLIElement>) => (
-  <li className="text-base leading-7 text-zinc-600 dark:text-zinc-400" {...props}>
+  <li className="text-base leading-7 text-zinc-600 dark:text-zinc-400" {...getSafeProps(props)}>
     {children}
   </li>
 );
@@ -411,7 +441,7 @@ export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTabl
 
   return (
     <div className="my-6 w-full overflow-x-auto border border-zinc-200 dark:border-zinc-800 rounded-lg">
-      <table className="w-full border-collapse text-left text-sm" {...props}>
+      <table className="w-full border-collapse text-left text-sm" {...getSafeProps(props)}>
         {processedChildren}
       </table>
     </div>
@@ -420,35 +450,35 @@ export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTabl
 table.displayName = "table";
 
 export const thead = ({ children, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => (
-  <thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800" {...props}>
+  <thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800" {...getSafeProps(props)}>
     {children}
   </thead>
 );
 thead.displayName = "thead";
 
 export const tbody = ({ children, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => (
-  <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800" {...props}>
+  <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800" {...getSafeProps(props)}>
     {children}
   </tbody>
 );
 tbody.displayName = "tbody";
 
 export const tr = ({ children, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
-  <tr className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors" {...props}>
+  <tr className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors" {...getSafeProps(props)}>
     {children}
   </tr>
 );
 tr.displayName = "tr";
 
 export const th = ({ children, ...props }: React.HTMLAttributes<HTMLTableHeaderCellElement>) => (
-  <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100" {...props}>
+  <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100" {...getSafeProps(props)}>
     {children}
   </th>
 );
 th.displayName = "th";
 
 export const td = ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
-  <td className="px-4 py-3 text-zinc-700 dark:text-zinc-300 text-sm" {...props}>
+  <td className="px-4 py-3 text-zinc-700 dark:text-zinc-300 text-sm" {...getSafeProps(props)}>
     {children}
   </td>
 );
@@ -468,14 +498,14 @@ export const pre = ({ children, ...props }: React.HTMLAttributes<HTMLPreElement>
   }
 
   return (
-    <pre className="my-6 overflow-x-auto rounded-lg bg-zinc-950 p-4 font-mono text-sm text-zinc-50" {...props}>
+    <pre className="my-6 overflow-x-auto rounded-lg bg-zinc-950 p-4 font-mono text-sm text-zinc-50" {...getSafeProps(props)}>
       {children}
     </pre>
   );
 };
 
 export const code = ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
-  <code className="rounded bg-zinc-100 dark:bg-zinc-900 px-1.5 py-0.5 font-mono text-[0.875em] text-zinc-900 dark:text-zinc-100" {...props}>
+  <code className="rounded bg-zinc-100 dark:bg-zinc-900 px-1.5 py-0.5 font-mono text-[0.875em] text-zinc-900 dark:text-zinc-100" {...getSafeProps(props)}>
     {children}
   </code>
 );
@@ -519,7 +549,7 @@ export const img = ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageEle
       alt={alt}
       loading="lazy"
       className="mx-auto max-w-full h-auto rounded-xl border border-white/5 bg-zinc-950/20"
-      {...props}
+      {...getSafeProps(props)}
     />
     {alt && (
       <span className="block text-xs text-zinc-500 font-sans font-medium">

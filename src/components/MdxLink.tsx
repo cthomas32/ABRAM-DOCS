@@ -75,14 +75,44 @@ interface MdxLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   children: React.ReactNode;
 }
 
+function parseInlineStyle(style: any): React.CSSProperties | undefined {
+  if (!style) return undefined;
+  if (typeof style === "object") return style as React.CSSProperties;
+  if (typeof style === "string") {
+    const styleObj: Record<string, string> = {};
+    style.split(";").forEach((rules) => {
+      const parts = rules.split(":");
+      if (parts.length >= 2) {
+        const key = parts[0].trim().replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+        const val = parts.slice(1).join(":").trim();
+        if (key && val) {
+          styleObj[key] = val;
+        }
+      }
+    });
+    return styleObj as React.CSSProperties;
+  }
+  return undefined;
+}
+
+function getSafeProps<T extends { style?: any }>(props: T): Omit<T, "style"> & { style?: React.CSSProperties } {
+  const { style, ...rest } = props;
+  return {
+    ...rest,
+    ...(style ? { style: parseInlineStyle(style) } : {}),
+  } as any;
+}
+
 export default function MdxLink({ href, children, ...props }: MdxLinkProps) {
   const pathname = usePathname() || "";
   const className =
     "text-zinc-900 dark:text-zinc-100 underline decoration-zinc-300 dark:decoration-zinc-700 underline-offset-4 hover:decoration-zinc-900 dark:hover:decoration-zinc-100 font-medium transition-colors duration-200";
 
+  const safeProps = getSafeProps(props);
+
   if (!href) {
     return (
-      <span className={className} {...props}>
+      <span className={className} {...safeProps}>
         {children}
       </span>
     );
@@ -104,7 +134,7 @@ export default function MdxLink({ href, children, ...props }: MdxLinkProps) {
         target="_blank"
         rel="noopener noreferrer"
         className={className}
-        {...props}
+        {...safeProps}
       >
         {children}
       </a>
@@ -114,14 +144,14 @@ export default function MdxLink({ href, children, ...props }: MdxLinkProps) {
   // Same page hash link
   if (href.startsWith("#")) {
     return (
-      <a href={resolvedHref} className={className} {...props}>
+      <a href={resolvedHref} className={className} {...safeProps}>
         {children}
       </a>
     );
   }
 
   return (
-    <Link href={resolvedHref} className={className} {...props}>
+    <Link href={resolvedHref} className={className} {...safeProps}>
       {children}
     </Link>
   );

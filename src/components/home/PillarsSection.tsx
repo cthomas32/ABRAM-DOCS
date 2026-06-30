@@ -25,24 +25,31 @@ function GanttVisualization() {
       aria-hidden="true"
     >
       <style>{`
-        @keyframes gantt-slide {
-          0% { transform: scaleX(0); opacity: 0; }
-          15% { transform: scaleX(1); opacity: 1; }
-          100% { transform: scaleX(1); opacity: 1; }
-        }
-        @keyframes gantt-shimmer {
-          0%, 100% { opacity: 0.25; }
-          50% { opacity: 0.45; }
-        }
         .gantt-bar {
           transform-origin: left center;
-          animation: gantt-slide 3s ease-out forwards;
         }
         .gantt-shimmer {
-          animation: gantt-shimmer 4s ease-in-out infinite;
+          opacity: 0.25;
         }
         .gantt-active {
           opacity: 0.75;
+        }
+        @media (min-width: 768px) {
+          @keyframes gantt-slide {
+            0% { transform: scaleX(0); opacity: 0; }
+            15% { transform: scaleX(1); opacity: 1; }
+            100% { transform: scaleX(1); opacity: 1; }
+          }
+          @keyframes gantt-shimmer {
+            0%, 100% { opacity: 0.25; }
+            50% { opacity: 0.45; }
+          }
+          .gantt-bar {
+            animation: gantt-slide 3s ease-out forwards;
+          }
+          .gantt-shimmer {
+            animation: gantt-shimmer 4s ease-in-out infinite;
+          }
         }
       `}</style>
 
@@ -130,10 +137,6 @@ function MindMapVisualization() {
       aria-hidden="true"
     >
       <style>{`
-        @keyframes child-fade {
-          0% { opacity: 0; }
-          100% { opacity: 1; }
-        }
         .mm-center {
           opacity: 0.75;
         }
@@ -146,10 +149,13 @@ function MindMapVisualization() {
           opacity: 0.35;
         }
         .mm-child {
-          animation: child-fade 1.5s ease-out forwards;
-          opacity: 0;
+          opacity: 1;
         }
         @media (min-width: 768px) {
+          @keyframes child-fade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+          }
           @keyframes line-draw {
             0% { stroke-dashoffset: 80; opacity: 0; }
             30% { opacity: 0.3; }
@@ -158,6 +164,10 @@ function MindMapVisualization() {
           .mm-line {
             stroke-dashoffset: 80;
             animation: line-draw 2s ease-out forwards;
+          }
+          .mm-child {
+            opacity: 0;
+            animation: child-fade 1.5s ease-out forwards;
           }
         }
       `}</style>
@@ -264,10 +274,6 @@ function BudgetTickerVisualization() {
       aria-hidden="true"
     >
       <style>{`
-        @keyframes ticker-fade {
-          0% { opacity: 0; }
-          100% { opacity: 1; }
-        }
         .ring-progress {
           transform: rotate(-90deg);
           transform-origin: 56px 64px;
@@ -275,13 +281,16 @@ function BudgetTickerVisualization() {
           opacity: 0.65;
         }
         .ticker-item {
-          opacity: 0;
-          animation: ticker-fade 0.8s ease-out forwards;
+          opacity: 1;
         }
         .status-dot {
           opacity: 0.6;
         }
         @media (min-width: 768px) {
+          @keyframes ticker-fade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+          }
           @keyframes ring-fill {
             0% { stroke-dashoffset: ${circumference}; opacity: 0.25; }
             60% { opacity: 0.65; }
@@ -289,6 +298,10 @@ function BudgetTickerVisualization() {
           }
           .ring-progress {
             animation: ring-fill 2.5s ease-out forwards;
+          }
+          .ticker-item {
+            opacity: 0;
+            animation: ticker-fade 0.8s ease-out forwards;
           }
         }
       `}</style>
