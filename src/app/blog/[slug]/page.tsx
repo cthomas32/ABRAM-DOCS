@@ -14,16 +14,23 @@ interface BlogPostPageProps {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{
+    preview?: string;
+  }>;
 }
 
-const getPost = cache(async (slug: string) => {
+const getPost = cache(async (slug: string, preview: boolean = false) => {
   try {
-    const { data: post, error } = await supabase
+    let query = supabase
       .from("blog_posts")
       .select("*")
-      .eq("slug", slug)
-      .eq("status", "published")
-      .single();
+      .eq("slug", slug);
+
+    if (!preview) {
+      query = query.eq("status", "published");
+    }
+
+    const { data: post, error } = await query.maybeSingle();
 
     if (error || !post) {
       return null;
@@ -52,9 +59,11 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const { preview } = await searchParams;
+  const isPreview = preview === "true";
+  const post = await getPost(slug, isPreview);
 
   if (!post) {
     return {
@@ -96,9 +105,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({ params, searchParams }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const { preview } = await searchParams;
+  const isPreview = preview === "true";
+  const post = await getPost(slug, isPreview);
 
   if (!post) {
     notFound();
@@ -192,6 +203,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd).replace(/</g, "\\u003c") }}
       />
+
+      {post.status === "draft" && (
+        <div className="bg-yellow-500/5 border border-yellow-500/15 text-yellow-400/90 p-4 rounded-2xl flex items-center justify-between gap-4 font-sans text-xs shadow-md">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse shrink-0" />
+            <span>You are viewing a draft version of this article.</span>
+          </div>
+          <span className="text-[9px] uppercase font-bold tracking-widest text-yellow-500/60 shrink-0">Preview Mode</span>
+        </div>
+      )}
 
       {/* Back to Blog - Touch Target Optimized */}
       <div>

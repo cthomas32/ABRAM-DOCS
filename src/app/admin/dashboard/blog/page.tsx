@@ -307,14 +307,24 @@ export default function BlogManagerPage() {
                     <span>Edit Draft</span>
                   </Link>
                   {post.status === "draft" ? (
-                    <button
-                      onClick={() => handlePublish(post.id)}
-                      disabled={publishingId === post.id}
-                      className="btn-primary flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
-                    >
-                      {publishingId === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                      <span>Publish</span>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handlePublish(post.id)}
+                        disabled={publishingId === post.id}
+                        className="btn-primary flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
+                      >
+                        {publishingId === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                        <span>Publish</span>
+                      </button>
+                      <Link
+                        href={`/blog/${post.slug}?preview=true`}
+                        target="_blank"
+                        className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
+                        title="Preview Draft Post"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </Link>
+                    </>
                   ) : (
                     <Link
                       href={`/blog/${post.slug}`}

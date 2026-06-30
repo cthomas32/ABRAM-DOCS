@@ -267,17 +267,27 @@ export default function ChangelogManagerPage() {
                     <span>Edit Release</span>
                   </Link>
                   {release.status === "draft" ? (
-                    <button
-                      onClick={() => handlePublish(release.id)}
-                      disabled={publishingId === release.id}
-                      className="btn-primary flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
-                    >
-                      {publishingId === release.id ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                      <span>Publish</span>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handlePublish(release.id)}
+                        disabled={publishingId === release.id}
+                        className="btn-primary flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
+                      >
+                        {publishingId === release.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                        <span>Publish</span>
+                      </button>
+                      <Link
+                        href={`/changelog/${release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}?preview=true`}
+                        target="_blank"
+                        className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
+                        title="Preview Draft Release"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </Link>
+                    </>
                   ) : (
                     <Link
-                      href="/changelog"
+                      href={`/changelog/${release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}`}
                       target="_blank"
                       className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
                       title="View Public Changelog"

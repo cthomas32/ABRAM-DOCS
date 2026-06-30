@@ -7,6 +7,7 @@ interface ResendWebhookPayload {
   created_at: string;
   data: {
     id: string; // Resend email/event ID
+    email_id?: string; // Resend email message ID
     from: string;
     to: string[];
     subject: string;
@@ -98,7 +99,8 @@ export async function POST(request: Request) {
     const payload = (await request.json()) as ResendWebhookPayload;
     const { type, data } = payload;
 
-    console.log(`Received Resend Webhook [${type}] for email ID: ${data?.id}`);
+    const emailIdLog = data?.email_id || data?.id;
+    console.log(`Received Resend Webhook [${type}] for email ID: ${emailIdLog}`);
 
     // Webhooks are automated backend requests, so we must use a service client
     // to bypass RLS policies for reading campaigns/subscribers/logs and writing updates.
@@ -172,7 +174,7 @@ export async function POST(request: Request) {
     }
 
     // C. If not resolved, check by Resend email ID in existing logs
-    const emailId = data?.id;
+    const emailId = data?.email_id || data?.id;
     if (!campaignId && emailId) {
       try {
         const { data: existingLogs, error: lookupError } = await supabase
