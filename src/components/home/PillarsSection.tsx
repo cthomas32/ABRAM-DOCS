@@ -477,6 +477,16 @@ const pillars = [
 
 export default function PillarsSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -510,9 +520,9 @@ export default function PillarsSection() {
       <div className="max-w-[1380px] mx-auto px-6 relative z-10">
         {/* Section Header */}
         <motion.div 
-          initial="hidden"
+          initial={!mounted || isMobile ? "visible" : "hidden"}
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={!mounted || isMobile ? undefined : { once: true, margin: "-100px" }}
           variants={{
             hidden: { opacity: 0, y: 30 },
             visible: { 
@@ -538,9 +548,9 @@ export default function PillarsSection() {
               key={pillar.label}
               custom={i}
               variants={cardVariants}
-              initial="initial"
+              initial={!mounted || isMobile ? "animate" : "initial"}
               whileInView="animate"
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={!mounted || isMobile ? undefined : { once: true, margin: "-100px" }}
               className="group rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-6 hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 flex flex-col overflow-hidden relative min-h-[320px] md:min-h-[420px] shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
             >
               {/* Viewfinder brackets */}
