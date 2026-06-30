@@ -52,6 +52,14 @@ export default function FAQSection() {
           Unlike legacy systems like Movie Magic, StudioBinder, or Adobe Workfront, which require teams to jump between separate tools for scheduling, resource allocation, and billing, ABRAM unifies these workflows. We combine AI-assisted script breakdown and brief parsing with live, conflict-free resource scheduling and automated contractor invoicing via Stripe Connect. This eliminates manual data entry and fragmentation across the production lifecycle.
         </p>
       )
+    },
+    {
+      question: "Google Calendar Integration",
+      answer: (
+        <p className="text-zinc-400 text-sm md:text-base leading-7">
+          ABRAM Network integrates with Google Calendar to automatically synchronize your production schedules and roster bookings. When you authorize this integration, ABRAM will securely read and write calendar events to display real-time contractor availability, manage project shoot dates, and prevent scheduling conflicts. Your calendar data is never shared with third parties and is used solely to keep your schedules in sync.
+        </p>
+      )
     }
   ];
 

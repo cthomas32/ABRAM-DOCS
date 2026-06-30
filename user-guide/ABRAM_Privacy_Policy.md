@@ -115,15 +115,19 @@ Data shared with Anthropic, PBC is processed securely via their developer API. I
 
 Sentry's privacy policy is available at sentry.io/privacy. Anthropic's privacy policy is available at anthropic.com/privacy. Stripe's privacy policy is available at stripe.com/privacy. Adobe/Frame.io's privacy policy is available at adobe.com/privacy. Slack's privacy policy is available at slack.com/trust/privacy/policy. Use of these integrations is subject to the respective third parties' privacy policies and terms of service, and we encourage you to review them before connecting your accounts.
 
-### 5.2 Between Users
+### 5.2 Google API Services User Data Policy Compliance
+
+ABRAM Network’s use and transfer of information received from Google APIs to any other app will adhere to the Google API Services User Data Policy, including the Limited Use requirements.
+
+### 5.3 Between Users
 
 Certain profile information (name, skills, availability, profile photo, professional experience) is visible to other users for the purpose of crew matching and collaboration.
 
-### 5.3 Legal Compliance
+### 5.4 Legal Compliance
 
 We may disclose your information if required by law, court order, or to protect the rights and safety of ABRAM, our users, or the public.
 
-### 5.4 Business Transfers
+### 5.5 Business Transfers
 
 If ABRAM is acquired by or merged with another company, your data may be transferred as part of that transaction. We will notify you prior to its completion.
 
