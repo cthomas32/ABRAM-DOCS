@@ -477,6 +477,16 @@ const pillars = [
 
 export default function PillarsSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -486,11 +496,14 @@ export default function PillarsSection() {
   const yValue = useTransform(scrollYProgress, [0, 1], [30, -30]);
 
   const cardVariants: Variants = {
-    initial: { opacity: 0, y: 30 },
+    initial: { opacity: 0 },
     animate: (i: number) => ({
       opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay: i * 0.12 },
+      transition: {
+        duration: isMobile ? 0.6 : 1.0,
+        ease: "easeOut",
+        delay: isMobile ? 0 : i * 0.12,
+      },
     }),
   };
 
@@ -542,7 +555,7 @@ export default function PillarsSection() {
               initial="initial"
               whileInView="animate"
               viewport={{ once: true, margin: "-60px" }}
-              className="opacity-0 translate-y-8 group rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-6 hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 flex flex-col overflow-hidden relative min-h-[320px] md:min-h-[420px] shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
+              className="opacity-0 group rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-6 hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 flex flex-col overflow-hidden relative min-h-[320px] md:min-h-[420px] shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
             >
               {/* Viewfinder brackets */}
               <div className="absolute top-0 left-0 w-[6px] h-[6px] border-l border-t border-white/5 group-hover:border-white/15 transition-colors duration-300" />
