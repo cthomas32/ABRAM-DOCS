@@ -320,6 +320,8 @@ interface Subscriber {
   first_name: string | null;
   last_name: string | null;
   status: string;
+  is_marketing_list?: boolean;
+  is_application_list?: boolean;
 }
 
 export default function BroadcastsPage() {
@@ -378,6 +380,33 @@ export default function BroadcastsPage() {
   const [showResendModal, setShowResendModal] = useState(false);
   const [resendConfirmInput, setResendConfirmInput] = useState("");
   const [resending, setResending] = useState(false);
+
+  // Helper to get the actual dynamic recipient count for a draft campaign
+  const getDynamicRecipientsCount = (campaign: Campaign) => {
+    if (campaign.status !== "draft") {
+      return campaign.recipients_count || 0;
+    }
+
+    const audience = campaign.metadata?.audience_type || "segment";
+    if (audience === "subscribers") {
+      return campaign.metadata?.emails?.length || campaign.recipients_count || 0;
+    }
+    if (audience === "manual") {
+      return campaign.metadata?.emails?.length || campaign.recipients_count || 0;
+    }
+
+    // Segment audience - dynamic count from loaded subscribers list
+    const segmentId = campaign.segment_id || "8324468f-0399-4c05-9b98-3e17e76ffa41";
+    const activeSubscribers = subscribers.filter(s => s.status === "subscribed");
+
+    if (segmentId === "42a3da82-ad27-475f-b2ad-113c9c8fa6b8") {
+      // Application list
+      return activeSubscribers.filter(s => s.is_application_list).length;
+    } else {
+      // Marketing list
+      return activeSubscribers.filter(s => s.is_marketing_list).length;
+    }
+  };
 
   const fetchTemplates = async () => {
     const result = await getEmailTemplates();
@@ -1496,7 +1525,7 @@ export default function BroadcastsPage() {
                       <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/5 text-center">
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
                           <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Estimated Recipients</p>
-                          <p className="text-lg font-bold text-white mt-1 font-mono">{selectedCampaign.recipients_count || 0}</p>
+                          <p className="text-lg font-bold text-white mt-1 font-mono">{getDynamicRecipientsCount(selectedCampaign)}</p>
                         </div>
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
                           <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Target Audience</p>
@@ -1856,7 +1885,7 @@ export default function BroadcastsPage() {
                     Confirm Email Campaign Send?
                   </h3>
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                    You are about to broadcast the campaign <strong className="text-white">&ldquo;{selectedCampaign.title}&rdquo;</strong> to an estimated <strong className="text-white font-mono">{selectedCampaign.recipients_count || 0}</strong> subscribers on the <strong className="text-white">
+                    You are about to broadcast the campaign <strong className="text-white">&ldquo;{selectedCampaign.title}&rdquo;</strong> to an estimated <strong className="text-white font-mono">{getDynamicRecipientsCount(selectedCampaign)}</strong> subscribers on the <strong className="text-white">
                       {selectedCampaign.segment_id === "8324468f-0399-4c05-9b98-3e17e76ffa41"
                         ? "Marketing List"
                         : selectedCampaign.segment_id === "42a3da82-ad27-475f-b2ad-113c9c8fa6b8"
