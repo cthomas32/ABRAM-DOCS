@@ -148,6 +148,17 @@ All UI work must follow the specifications in [DESIGN.md](file:///Users/connorth
 - See the full type scale table in DESIGN.md. Use standard Tailwind sizes (`text-xs` through `text-6xl`).
 - Only allowed arbitrary sizes: `text-[10px]` (overline) and `text-[9px]` (micro).
 
+### Section Upper Titles / Labels
+- **Rule**: Never use bordered or background pill-style badges for main section upper labels/overline titles (e.g., at the top of landing/marketing page sections).
+- **Correct Styling**: Render as clean uppercase, non-pill labels with high tracking and muted color.
+  - Tailwind Classes: `text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans`
+  - Example:
+    ```tsx
+    <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
+      MY SECTION TITLE
+    </span>
+    ```
+
 ### 📱 Mobile Responsiveness
 All components and pages **must** be fully usable and visually correct on mobile devices. These rules are non-negotiable:
 

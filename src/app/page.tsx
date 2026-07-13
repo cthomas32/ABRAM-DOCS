@@ -203,7 +203,7 @@ export default function LandingPage() {
         <CreativeOpsSection />
         <ArtifactsSection />
         <CollaborationSection />
-        <RosterROISection />
+        {/* <RosterROISection /> */}
         <BrainSection />
         <FAQSection />
         <FinalCTASection />
