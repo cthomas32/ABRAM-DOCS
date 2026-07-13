@@ -80,9 +80,9 @@ export default function FAQSection() {
       <div className="max-w-4xl mx-auto px-6 relative z-10">
         {/* Header Block */}
         <div className="flex flex-col items-center text-center space-y-4 mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] text-zinc-400 text-[10px] font-semibold tracking-[0.2em] uppercase w-fit">
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
             FAQS
-          </div>
+          </span>
           
           <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-zinc-50 uppercase font-display leading-tight">
             Frequently Asked Questions

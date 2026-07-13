@@ -206,9 +206,9 @@ export default function TimelineSection() {
         
         {/* Header Block */}
         <div className="text-center space-y-4 max-w-lg mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/3 text-[#f5f5f3] text-xs font-semibold tracking-wider uppercase">
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
             Campaign Orchestration
-          </div>
+          </span>
           <h2 
             className="text-base md:text-lg font-medium text-white/90 tracking-wide leading-snug uppercase font-display"
           >

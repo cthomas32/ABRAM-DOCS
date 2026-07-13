@@ -297,9 +297,9 @@ export default function CrewSection() {
 
           {/* Right Side: Copy */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/3 text-[#f5f5f3] text-xs font-semibold tracking-wider uppercase">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
               Dynamic Crewing
-            </div>
+            </span>
 
             {/* Section Header (h2: text-base to text-lg, font-medium, leading-snug) */}
             <h2

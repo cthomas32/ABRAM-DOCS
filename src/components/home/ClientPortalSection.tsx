@@ -46,41 +46,38 @@ export default function ClientPortalSection() {
       />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center mb-16">
-          
-          {/* Copy Side */}
-          <div className="lg:col-span-5 space-y-6">
-            {/* Overline Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] text-zinc-400 text-[10px] font-semibold tracking-[0.2em] uppercase w-fit">
-              CLIENT EXPERIENCE
-            </div>
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          {/* Overline Badge */}
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
+            CLIENT EXPERIENCE
+          </span>
 
-            {/* Header */}
-            <h2 className="text-2xl font-semibold tracking-tight text-zinc-50 uppercase font-display leading-tight">
-              Branded Client Portals.
-            </h2>
+          {/* Header */}
+          <h2 className="text-2xl md:text-4xl font-semibold tracking-tight text-zinc-50 uppercase font-display leading-tight">
+            Branded Client Portals.
+          </h2>
 
-            {/* Description */}
-            <p className="text-sm md:text-base font-normal leading-7 text-zinc-400 max-w-xl font-sans">
-              Provide clients with interactive dashboards scoped to their projects. Share real-time timelines, approve deliverables, comment on drafts, and process payments securely in a single, branded hub.
-            </p>
+          {/* Description */}
+          <p className="mt-4 text-sm md:text-base font-normal leading-7 text-zinc-400 font-sans">
+            Provide clients with interactive dashboards scoped to their projects. Share real-time timelines, approve deliverables, comment on drafts, and process payments securely in a single, branded hub.
+          </p>
 
-            {/* CTA */}
-            <div className="pt-4">
-              <Link 
-                href="/agency/client-portal"
-                className="btn-glass px-5 py-2.5 text-xs rounded-full inline-flex items-center gap-1.5 transition-all duration-200 min-h-[44px] group"
-              >
-                <span>Explore Client Portal</span>
-                <ArrowRight className="h-3.5 w-3.5 text-zinc-400 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
+          {/* CTA */}
+          <div className="pt-6 flex justify-center">
+            <Link 
+              href="/agency/client-portal"
+              className="btn-glass px-5 py-2.5 text-xs rounded-full inline-flex items-center gap-1.5 transition-all duration-200 min-h-[44px] group"
+            >
+              <span>Explore Client Portal</span>
+              <ArrowRight className="h-3.5 w-3.5 text-zinc-400 transition-transform group-hover:translate-x-0.5" />
+            </Link>
           </div>
+        </div>
 
-          {/* Graphic Side */}
-          <div className="lg:col-span-7 w-full">
-            <AgencyClientPortalMockup />
-          </div>
+        {/* Graphic Side */}
+        <div className="w-full mb-16">
+          <AgencyClientPortalMockup />
         </div>
 
         {/* 4 Bottom Feature Cards */}

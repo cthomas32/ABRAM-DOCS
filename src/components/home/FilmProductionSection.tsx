@@ -271,9 +271,9 @@ export default function FilmProductionSection() {
           {/* Copy Side */}
           <div className="lg:col-span-5 space-y-6">
             {/* Overline Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] text-zinc-400 text-[10px] font-semibold tracking-[0.2em] uppercase w-fit">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
               FILM OPERATIONS
-            </div>
+            </span>
 
             {/* Header */}
             <h2 className="text-2xl font-semibold tracking-tight text-zinc-50 uppercase font-display leading-tight">
