@@ -96,6 +96,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Client Intake", href: "/agency/client-intake", desc: "Intake forms, briefs & requirements", title: "Client Intake Briefs & Requirements" },
         { name: "Crew Roster", href: "/agency/crew-roster", desc: "Contractor directory & availability", title: "Crew Roster & Contractor Availability" },
         { name: "Smart Scheduling", href: "/agency/smart-scheduling", desc: "AI-driven matching & booking board", title: "AI Smart Scheduling & Crew Booking" },
+        { name: "Client Portal", href: "/agency/client-portal", desc: "Secure, password-free client dashboards", title: "Secure Client Portal & Branded Dashboards" },
       ]
     },
     {

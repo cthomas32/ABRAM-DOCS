@@ -77,6 +77,9 @@ export default function HomeFooter({
           <Link href="/agency/smart-scheduling" title="AI Smart Scheduling & Crew Booking" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Smart Scheduling
           </Link>
+          <Link href="/agency/client-portal" title="Secure Client Portal & Branded Dashboards" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Client Portal
+          </Link>
         </div>
 
         {/* Column 4: Intelligence */}
