@@ -1,6 +1,7 @@
 "use server";
 
 import { serialize } from "next-mdx-remote/serialize";
+import { preprocessMdx } from "@/components/MdxComponents";
 
 export interface CompileMdxResponse {
   success: boolean;
@@ -15,10 +16,11 @@ export interface CompileMdxResponse {
  */
 export async function compileMdxAction(content: string): Promise<CompileMdxResponse> {
   try {
-    const mdxSource = await serialize(content);
+    const mdxSource = await serialize(preprocessMdx(content));
     return { success: true, mdxSource };
   } catch (err: any) {
     console.error("MDX Compilation Error:", err);
     return { success: false, error: err.message || "Failed to compile MDX content." };
   }
 }
+

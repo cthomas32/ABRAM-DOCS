@@ -182,6 +182,26 @@ export function getSafeProps<T extends { style?: any }>(props: T): Omit<T, "styl
   } as any;
 }
 
+// Convert standard inline HTML/SVG style="..." attributes into MDX-friendly style={{...}}
+export function preprocessMdx(content: string | undefined | null): string {
+  if (!content) return "";
+  return content.replace(/(<[a-zA-Z0-9]+[^>]*)\s+style="([^"]*)"/g, (match, before, styleVal) => {
+    const styleObj: Record<string, string> = {};
+    styleVal.split(";").forEach((rule: string) => {
+      const parts = rule.split(":");
+      if (parts.length >= 2) {
+        const key = parts[0].trim().replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+        const val = parts.slice(1).join(":").trim();
+        if (key && val) {
+          styleObj[key] = val;
+        }
+      }
+    });
+    return `${before} style={${JSON.stringify(styleObj)}}`;
+  });
+}
+
+
 // Heading Overrides (ABRAM Design Language)
 export const h1 = ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h1 className="text-3xl font-bold tracking-tight mt-10 mb-4 text-zinc-900 dark:text-zinc-50" {...getSafeProps(props)}>
@@ -587,10 +607,24 @@ export function AgentOnly({ children }: { children: React.ReactNode }) {
   return <div className="sr-only" data-agent-only="true">{children}</div>;
 }
 
+// Safe SVG wrappers to handle inline style strings
+export const svg = (props: React.ComponentPropsWithoutRef<"svg">) => <svg {...getSafeProps(props)} />;
+export const rect = (props: React.ComponentPropsWithoutRef<"rect">) => <rect {...getSafeProps(props)} />;
+export const circle = (props: React.ComponentPropsWithoutRef<"circle">) => <circle {...getSafeProps(props)} />;
+export const line = (props: React.ComponentPropsWithoutRef<"line">) => <line {...getSafeProps(props)} />;
+export const path = (props: React.ComponentPropsWithoutRef<"path">) => <path {...getSafeProps(props)} />;
+export const g = (props: React.ComponentPropsWithoutRef<"g">) => <g {...getSafeProps(props)} />;
+
 // Gather all component overrides in a single map
 export const mdxComponents = {
   Cover,
   AuthorCard,
+  svg,
+  rect,
+  circle,
+  line,
+  path,
+  g,
   h1,
   h2,
   h3,

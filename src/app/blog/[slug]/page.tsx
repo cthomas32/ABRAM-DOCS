@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { supabase } from "@/utils/supabase/static";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { mdxComponents } from "@/components/MdxComponents";
+import { mdxComponents, preprocessMdx } from "@/components/MdxComponents";
 import Link from "next/link";
 import { cache } from "react";
 import TelemetryTracker from "@/components/TelemetryTracker";
@@ -245,7 +245,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
         </header>
 
         <div className="text-zinc-300 font-sans select-text release-notes-content">
-          <MDXRemote source={post.content} components={mdxComponents} />
+          <MDXRemote source={preprocessMdx(post.content)} components={mdxComponents} />
         </div>
       </article>
 
