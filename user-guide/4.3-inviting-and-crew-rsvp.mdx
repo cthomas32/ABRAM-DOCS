@@ -1,125 +1,72 @@
 ---
-title: 'Inviting Freelancers and Managing Crew RSVPs'
+title: 'Inviting Crew and Managing RSVPs'
 sidebarTitle: Inviting & Crew RSVP
 description: >-
-  Compare ABRAM invitation flows for internal and external freelancers, the AI
-  Chatbot intake path, and the RSVP interface crew use to accept or decline.
+  Learn how to invite crew to a project through Matching, let the ABRAM
+  assistant help draft invitations, and understand what invitees see when
+  they respond.
 keywords:
   - ABRAM
-  - ABRAM Network
   - freelancer
   - producer
   - calendar
   - ai
-  - work package
+  - matching
+  - roster
   - workflow
   - crew
-  - onboarding
-  - copilot
-  - matchmaking
+  - assistant
   - rsvp
   - inviting
 ---
-# Section 4.3: Inviting & Crew RSVP
+# Section 4.3: Inviting Crew & Managing RSVPs
 
-ABRAM provides flexible invitation workflows designed to bring freelancers onto projects quickly. This section outlines the different invitation flows, how the AI Chatbot handles external invites, and the RSVP interface freelancers use to respond.
-
----
-
-## 1. Direct Project & Matchmaking Invites
-
-Within the producer platform, there are two primary methods to invite existing roster members to projects:
-
-### Direct Project Invites
-1. Open the project and navigate to the **Crew** or **Team** tab.
-2. Click **Invite Crew Member**.
-3. Choose a contact from your Crew Roster, specify their role slot and proposed rate, and send the invitation.
-
-### AI Matchmaking Invites
-1. Under the **Project Matching** dashboard, select the checkboxes next to the AI-recommended candidates.
-2. Click **Invite All Selected** to dispatch invitations in bulk, or click **Invite Candidate** next to individual listings.
+ABRAM helps you find the right people for a project and get invitations out quickly. This section covers how to invite crew from Matching, how the ABRAM assistant can help draft invitations for you, and what happens on the other end when someone responds.
 
 ---
 
-## 2. External Invites via Chatbot
+## 1. Inviting Crew from Matching
 
-In the current **Management Phase**, the chatbot is the primary mechanism for finding and onboarding external talent who are not yet on the platform.
+The main way to invite crew to a project is through the project's **Matching** screen.
 
-<ProgressFlow steps={[
-  { title: "1. Producer Chat", description: "Producers prompt the copilot to locate external talent.", icon: "MessageSquare", status: "completed" },
-  { title: "2. Web Search", description: "AI queries external websites, portfolios, and catalogs.", icon: "Search", status: "completed" },
-  { title: "3. Draft Invite", description: "AI extracts contacts and prepares custom invitations.", icon: "FilePlus", status: "completed" },
-  { title: "4. Action Plan", description: "Producer reviews a structured hold and invitation plan.", icon: "FileCheck", status: "active" },
-  { title: "5. Sent", description: "Emails dispatched securely following final approval.", icon: "Send", status: "pending" }
-]} />
+1. Open the project and go to **Matching**.
+2. Click **Find Matches**. ABRAM scores candidates from your roster against each open role, based on skills, availability, and other role requirements.
+3. From the results, you can:
+   * Click **Invite Candidate** to send an invitation for that person right away, or
+   * Select multiple candidates and click **Invite All Selected** to invite them in bulk.
+4. To customize an invitation before sending it — for example, to adjust the message, proposed rate, or start date — open the candidate's full profile and use the detailed invite page there.
 
-### The Chatbot Workflow
-1. **User Prompt**: You ask the chatbot, *"Find food photographers in Chicago and invite them to Project X."*
-2. **Search**: The chatbot uses its web search tool to find agencies, studios, or freelancers.
-3. **Drafting Invites**: Once the chatbot collects the contact details, it drafts the invitation.
-4. **Action Plan**: The chatbot compiles a structured **Action Plan** detailing who is being invited, their target roles, rates, and projects.
-5. **Approval**: You must click **Approve** in the chat panel. The system *never* sends emails automatically without your confirmation.
-6. **Execution**: The platform sends a secure, personalized email invitation to the recipient.
-
-### Rules & Gating Logic
-* **Required Data**: An email, first name, and last name are mandatory.
-* **Rate Limits**: Users are limited to **10 external invitations per day** to prevent spam.
-* **Duplicate Detection**: The tool checks for pending project or platform invitations to the same email and blocks duplicate requests.
-* **Existing User Check**: If the email is already associated with an account on ABRAM, the chatbot will suggest using the standard internal project invitation process.
-
-### Invitational Paths
-Depending on your requirements, invitations take one of two paths:
-* **Project Invite**: Links the invite to a project, creating a secure invitation link and triggering a project invite email.
-* **Platform Invite**: Sends a general network invite to join the platform.
+> **Good to know:** In the current Management Phase, Matching only draws from your own roster and team. ABRAM will never suggest or invite someone from outside your organization — every candidate you see has already been added to your roster.
 
 ---
 
-## 3. Freelancer RSVP Screen
+## 2. Letting the ABRAM Assistant Draft Invitations
 
-When an external freelancer receives an invitation email and clicks the secure link, they are directed to the secure **Public RSVP Screen**.
+If you'd rather not do it by hand, you can ask the ABRAM assistant to help draft and send invitations for you. For example, you might ask it to invite a specific person to a role, or to reach out to everyone still needed for a project.
 
-This is a clean, responsive web interface that does not require logging in to view:
-* **Host Info**: Displays the name of the organizer and organization inviting them.
-* **Project Details**: Includes the project title, dates, hours, daily/hourly rates, location details, and any custom notes from the producer.
-* **Response Options**: The freelancer can click:
-  * **Accept**: Confirms they will take the project slot.
-  * **Decline**: Declines the offer.
-  * **Tentative**: Flags that they are interested but need clarification.
-
-### Automated Capacity Sync on Acceptance
-When a freelancer accepts the invite:
-1. An account is created/linked (if external).
-2. The role slot is marked as **Filled**.
-3. A booking is automatically written to the freelancer's schedule as project work, matching the slot's date range and hours.
-4. The booking registers as a **planned capacity hold banner** on their utilization calendar, blocking out those hours from their availability pool.
+The assistant prepares an invitation plan showing who it intends to invite, for which role, and with what details — nothing is sent until you review it. Click **Approve** in the chat panel to send the invitations. The assistant never sends invitations on its own without your confirmation.
 
 ---
 
-## 4. Crew Assembly & Re-staffing (Producer)
+## 3. The Crew RSVP Screen
 
-The **Crew Assembly** interface (accessible directly from your project's crew settings) is the management center for assembling your crew for a specific work package, monitoring RSVP statuses, and resolving declines.
+When someone receives an invitation, they get a secure link they can open without needing to log in.
 
-* **Crew Builder**: The builder allows you to assign specific team members or approved roster freelancers to unfilled role slots required by the work package.
-* **Acceptance Status Tracking**: Displays a list of all invited crew members with color-coded status badges:
-  * **Accepted (Green)**: Crew member has accepted the invite.
-  * **Pending (Amber)**: Invitation is sent, awaiting response.
-  * **Declined (Red)**: Crew member has declined the assignment.
-* **Replacement Finder**: If a crew member declines or a role slot remains unfilled, click **Find Replacement**. The replacement finder scans your roster and recommends alternative candidates matching the role's required skills and budget, allowing you to dispatch a new invite instantly.
+This link opens a clean, simple RSVP page that shows:
+* The project title, dates, and times
+* The location
+* The name of the organizer
+* Any notes the producer included with the invitation
+
+This screen does **not** show pay or rate information — daily or hourly rates are not displayed here. Those details are shared separately if the invitee needs them.
+
+From this screen, the invitee can respond with one of three options:
+* **Accept** — confirms they'll take the role
+* **Maybe** — flags interest as tentative, without committing yet
+* **Decline** — turns down the invitation
 
 ---
 
-## 5. Freelancer Proposal Inbox (Freelancer Companies)
+## 4. What Happens After Someone Accepts
 
-For freelancers operating as **Production Companies**, project invitations do not just receive a simple RSVP button; they require scoping and formal bids.
-
-### Reviewing Invites
-* Navigate to the **Proposals** tab in the freelancer sidebar.
-* The **Proposal Inbox** lists all incoming project invitations, displaying the producer name, project details, required roles, skills, and budget.
-
-### Proposal Builder
-* Click on any invitation to open the **Proposal Builder**.
-* Build a structured proposal defining:
-  * **Personnel slots**: Assign specific staff from your internal team to the requested roles.
-  * **Equipment packages**: Add resource kits required for the shoot.
-  * **Proposed rates**: Specify hourly/daily rates for personnel and gear.
-* Submit the proposal. The producer is notified and can review, negotiate, or approve your proposal to finalize the project contract.
+Once an invitation is accepted, ABRAM automatically adds a booking to that crew member's schedule for the dates and times on the invitation — no extra steps needed on your end to get it onto their calendar.

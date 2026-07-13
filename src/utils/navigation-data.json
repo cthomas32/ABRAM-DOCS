@@ -48,7 +48,7 @@
       "0.3-ai-capabilities-and-copilot"
     ],
     "path": "user-guide/0.3-ai-capabilities-and-copilot",
-    "title": "AI Capabilities & Platform Co-pilot",
+    "title": "AI Capabilities & Abram",
     "group": "Introduction & Concepts",
     "groupIcon": "compass",
     "product": "Help Center"
@@ -59,7 +59,7 @@
       "0.4-production-brain-and-workspace-memory"
     ],
     "path": "user-guide/0.4-production-brain-and-workspace-memory",
-    "title": "Production Brain & Workspace Memory",
+    "title": "Memory & Organization Brain",
     "group": "Introduction & Concepts",
     "groupIcon": "compass",
     "product": "Help Center"
@@ -115,6 +115,17 @@
     ],
     "path": "user-guide/1.5-navigating-your-dashboard",
     "title": "Navigating Your Dashboard",
+    "group": "Setup & Team",
+    "groupIcon": "users",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "1.6-account-settings"
+    ],
+    "path": "user-guide/1.6-account-settings",
+    "title": "Account Settings",
     "group": "Setup & Team",
     "groupIcon": "users",
     "product": "Help Center"
@@ -191,7 +202,7 @@
       "3.3-work-orders-and-agreements"
     ],
     "path": "user-guide/3.3-work-orders-and-agreements",
-    "title": "Work Orders & Agreements",
+    "title": "Work Orders",
     "group": "Projects & Resources",
     "groupIcon": "folder-kanban",
     "product": "Help Center"
@@ -214,6 +225,39 @@
     ],
     "path": "user-guide/3.5-equipment-and-resource-management",
     "title": "Equipment & Resource Management",
+    "group": "Projects & Resources",
+    "groupIcon": "folder-kanban",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "3.6-stripboard-and-scene-scheduling"
+    ],
+    "path": "user-guide/3.6-stripboard-and-scene-scheduling",
+    "title": "Stripboard & Scheduling",
+    "group": "Projects & Resources",
+    "groupIcon": "folder-kanban",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "3.7-call-sheets"
+    ],
+    "path": "user-guide/3.7-call-sheets",
+    "title": "Call Sheets",
+    "group": "Projects & Resources",
+    "groupIcon": "folder-kanban",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "3.8-deliverables-review-and-approval"
+    ],
+    "path": "user-guide/3.8-deliverables-review-and-approval",
+    "title": "Deliverables",
     "group": "Projects & Resources",
     "groupIcon": "folder-kanban",
     "product": "Help Center"
@@ -287,6 +331,17 @@
   {
     "slug": [
       "user-guide",
+      "4.7-run-of-show"
+    ],
+    "path": "user-guide/4.7-run-of-show",
+    "title": "Run of Show",
+    "group": "Crewing & Scheduling",
+    "groupIcon": "calendar",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
       "5.1-freelancer-stripe-setup"
     ],
     "path": "user-guide/5.1-freelancer-stripe-setup",
@@ -331,6 +386,39 @@
   {
     "slug": [
       "user-guide",
+      "5.5-timesheets-and-time-tracking"
+    ],
+    "path": "user-guide/5.5-timesheets-and-time-tracking",
+    "title": "Timesheets",
+    "group": "Payments & Financials",
+    "groupIcon": "credit-card",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "5.6-quotes"
+    ],
+    "path": "user-guide/5.6-quotes",
+    "title": "Quotes",
+    "group": "Payments & Financials",
+    "groupIcon": "credit-card",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "5.7-referral-program"
+    ],
+    "path": "user-guide/5.7-referral-program",
+    "title": "Invite & Earn",
+    "group": "Payments & Financials",
+    "groupIcon": "credit-card",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
       "6.1-slack-notifications"
     ],
     "path": "user-guide/6.1-slack-notifications",
@@ -357,6 +445,17 @@
     ],
     "path": "user-guide/6.3-project-collaboration-and-file-sharing",
     "title": "Project Collaboration & File Sharing",
+    "group": "Integrations & Collaboration",
+    "groupIcon": "plug",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "6.4-client-portal"
+    ],
+    "path": "user-guide/6.4-client-portal",
+    "title": "Client Portal",
     "group": "Integrations & Collaboration",
     "groupIcon": "plug",
     "product": "Help Center"

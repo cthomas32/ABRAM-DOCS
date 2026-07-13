@@ -2,17 +2,15 @@
 title: 'Billing Ledger and AI Credit Consumption in ABRAM'
 sidebarTitle: Billing Ledger and AI Credits
 description: >-
-  How ABRAM calculates and meters AI credits, how the organization-bound
-  billing ledger tracks usage, and how producer features unlock by balance.
+  How ABRAM's organization-bound credit ledger works, what AI features
+  consume credits, how top-ups and plan allowances are structured, and
+  what happens when your balance runs out.
 keywords:
   - ABRAM
   - ABRAM Network
   - stripe
   - producer
-  - calendar
   - ai
-  - brief
-  - onboarding
   - billing
   - ledger
   - matchmaking
@@ -20,95 +18,137 @@ keywords:
 ---
 # Section 5.3: Billing Ledger and AI Credits
 
-This guide explains how AI credits are calculated, structured, and consumed in the ABRAM Network. It details how the organization-bound ledger works and how producer features are gated based on credit balances.
+This guide explains how AI credits work in ABRAM, how the organization-bound credit ledger is structured, and how AI features are gated by your credit balance.
 
 ---
 
 ## 1. The AI Credit Concept
 
-ABRAM meters and bills all user-initiated AI actions—such as parsing resumes, extracting project skills, matching candidates, or analyzing project briefs.
+ABRAM meters AI-powered actions—such as analyzing a project brief, suggesting team matches, breaking down a script, or chatting with the Abram assistant—using credits. The credit ledger belongs to your organization (or your personal workspace, if you're not part of a larger organization), not to any individual user, so every member of a team draws from the same shared pool.
 
 ---
 
-## 2. Typical Credit Costs & Caching
+## 2. What Consumes Credits
 
-Credit consumption is calculated based on the complexity of the operation and length of text or data processed. This ensures that you only pay for the resources required to process your request.
+The exact number of credits a given action uses is calculated from the actual AI work performed—things like the length of the text involved and the complexity of the task—so costs vary from one request to the next. There is no fixed price list; any specific figures you may see in the product (such as a cost estimate before running an action) are approximate and can change based on what you submit.
 
-| Feature / Action | Billing Model | Typical Cost / Range |
-| :--- | :--- | :--- |
-| **Project Brief Analysis** | Based on brief size & details | 5 - 25 credits per analysis |
-| **AI Team Matchmaking Suggestions** | Based on scope size & candidate count | 5 - 20 credits per suggestion |
-| **Resume & Profile Importing** | Based on resume file size | 2 - 10 credits per import |
-| **Chatbot Co-pilot Interaction** | Per query/response | 0.5 - 5 credits per message |
-| **Web Search Tool** | Based on query & results size | 1 - 5 credits per search |
-| **Image Generation** | Based on resolution & quality | 5 - 15 credits per image |
+AI features that draw from your credit balance include:
+
+- **Project brief analysis** — extracting scope, roles, and requirements from an uploaded brief
+- **Team matchmaking suggestions** — AI-assisted candidate and crew recommendations
+- **Script breakdown** — parsing a script into scenes, elements, and requirements
+- **Abram assistant conversations** — chatbot questions and actions performed on your behalf
+- **Document generation** — AI-drafted documents such as summaries or outlines
+- **Web search** — AI-assisted lookups the assistant performs to answer a question
 
 > [!NOTE]
-> **Smart Query Optimization** automatically reduces credit usage. If you repeat similar queries or ask follow-up questions within the same context (e.g. refining a project brief or candidate list), the platform reads from memory at a fraction of the standard credit cost, saving your organization credits.
-
-<AgentOnly>Prompt cache reads are billed at a highly discounted rate (~10% of standard), while cache writes are billed at ~125% of standard input rates.</AgentOnly>
+> Image generation is not yet available in ABRAM and does not consume credits.
 
 ---
 
 ## 3. The Three-Pool Credit Structure
 
-Every organization's ledger is divided into three distinct credit pools. When credits are deducted, they are drawn in a strict priority order:
+Every organization's ledger is divided into three credit pools. When an AI action is billed, credits are drawn in a strict priority order:
 
 <ProgressFlow steps={[
   { 
     title: "1. Monthly Allowance", 
-    description: "Included in your subscription tier. Reset monthly; unused balance does not roll over.", 
+    description: "Included in your subscription tier. Resets monthly; unused balance does not roll over.", 
     icon: "Calendar", 
     status: "active" 
   },
   { 
     title: "2. Trial Credits", 
-    description: "Awarded during onboarding. Valid until active trial timeframe expires.", 
+    description: "Awarded during onboarding. Valid until your trial period expires.", 
     icon: "Award", 
     status: "pending" 
   },
   { 
     title: "3. Purchased Balance", 
-    description: "Top-up credits bought via Stripe. Never expires, drawn last.", 
+    description: "Top-up credits bought through checkout. Never expires, drawn last.", 
     icon: "Coins", 
     status: "pending" 
   }
 ]} />
 
-1. **Monthly Allowance**: Included in your subscription tier (e.g., Team, Studio). Drawn first. It resets every month; unused allowance does not roll over.
-2. **Trial Credits**: Awarded during onboarding. Drawn second. Only valid if the trial is still active and has not expired.
-3. **Purchased Balance**: Top-up credits bought via Stripe. Drawn last. Purchased credits never expire.
-
-**Sign-Up Credit Bonus**: New personal accounts and organizations are automatically initialized with a one-time welcome bonus of 250 credits in their purchased balance pool.
+1. **Monthly Allowance**: Included in your subscription tier. Drawn first. It resets every month; unused allowance does not roll over.
+2. **Trial Credits**: Awarded during onboarding, where applicable. Drawn second, and only while your trial is still active.
+3. **Purchased Balance**: Top-up credits bought through checkout. Drawn last. Purchased credits never expire.
 
 ---
 
-## 4. Organization-Bound Billing
+## 4. Monthly Credit Allowances by Plan
 
-* **Organization-Bound Billing**: All billing ledgers are bound to organizations. Solo users are billed through their personal organization workspace.
-* **Membership Routing**: If a user belongs to an active organization membership, the organization's ledger is billed.
-* **Onboarding Exception**: AI calls made during the onboarding wizard (e.g., parsing your initial resume when setting up your profile) are free and bypass the ledger.
-* **Dynamic Seat Scaling**: For organizations on the **Team** or **Studio** tiers, your monthly AI credit allowances scale dynamically based on the number of team seats purchased (for example, on the Team tier, each seat adds 500 monthly credits). Workspace storage limits are fixed workspace pools (10 GB for Team, 15 GB for Studio) and do not scale with additional seats.
+Every subscription tier includes a monthly AI credit allowance:
+
+| Tier | Monthly AI Credits |
+| :--- | :--- |
+| **Free** | 0 |
+| **Solo Lite** | 300 |
+| **Solo Pro** | 600 |
+| **Team** | 500 per seat |
+| **Studio** | 1,000 per seat |
+| **Enterprise** | Custom |
+
+On Team and Studio plans, the monthly allowance scales with the number of seats on your subscription—each seat you add increases your organization's total monthly credits. Workspace storage limits, by contrast, are fixed per tier and do not change with seat count.
 
 ---
 
-## 5. Credit Gating (Example: Project Brief Analysis)
+## 5. Organization-Bound Billing
 
-When a producer uploads a project brief for AI analysis, the platform follows this verification sequence:
+* **Organization-Bound Billing**: All credit ledgers are bound to an organization. If you're working solo, your personal workspace acts as your organization for billing purposes.
+* **Membership Routing**: If you belong to an active organization, AI actions you take are billed against that organization's ledger rather than a personal one.
+* **Onboarding Exception**: AI calls made during the onboarding wizard (for example, parsing your resume while setting up your profile) are free and do not draw from the ledger.
 
-1. **Credit Check**: The platform verifies that your organization has enough credits (at least 5 credits) in its active pools.
-2. **Analysis Execution**: If credits are available, the analysis engine parses the brief to extract scope details and roles.
-3. **Ledger Update**: The actual credits consumed are deducted from your balance once the analysis is completed.
-4. **Insufficient Balance Alert**: If your balance is below the minimum required, the analysis is paused, and a checkout window appears to add top-up credits.
+---
+
+## 6. Buying Top-Up Credit Packs
+
+If your organization is running low, Owners and Admins can purchase one-time top-up packs from **Settings → Billing**. Purchases are processed securely through Stripe Checkout, and your balance updates immediately once the purchase completes.
+
+| Pack | Credits | Price |
+| :--- | :--- | :--- |
+| **Basic** | 150 credits | $10 |
+| **Pro** | 500 credits | $25 |
+| **Maximum** | 1,200 credits | $50 |
+
+Purchased credits are added to your Purchased Balance pool, which never expires and is drawn only after your Monthly Allowance and any Trial Credits are used up.
+
+---
+
+## 7. Credit Checks and the Credit Depletion Gate
+
+Before running an AI action, ABRAM checks that your organization has an available credit balance across its active pools. If the check passes, the action runs, and the actual credits consumed are deducted from your ledger once it completes.
+
+### When Your Balance Reaches Zero
+If your organization's combined balance (Monthly Allowance, Trial Credits, and Purchased Balance) is exhausted, AI features are blocked. Instead of running the action, ABRAM shows a prompt directing you to **Settings → Billing** to top up or upgrade before you can continue using AI features.
 
 ### Disconnect Safety Net
-If a network disconnect or timeout occurs during an analysis, the platform ensures your ledger is only billed for the work actually completed.
+If a network disconnect or timeout interrupts an AI action partway through, ABRAM only bills your ledger for the work that was actually completed.
 
 ---
 
-## 6. Budgeting & Scheduling Feature Gating
+## 8. Credit Usage Log
 
-To provide flexibility while encouraging tier upgrades, ABRAM gates advanced scheduling and budgeting features based on subscription level. This allows users on Free and Solo Lite tiers to test budgeting capabilities prior to upgrading.
+To help you track where credits are going, ABRAM keeps a **Credit Usage Log** under **Settings**. It lists a per-feature history of credit transactions—so you can see, for example, how much of your organization's recent usage came from brief analysis versus assistant conversations or script breakdowns. Use it to spot heavy usage patterns before your balance runs low.
+
+---
+
+## 9. Feature Gating by Plan Tier
+
+Separately from credit balances, some features are gated by your subscription tier rather than by credit consumption:
+
+- **Solo Pro and above**: call sheet export, custom intake forms, and third-party integrations (calendar sync, Slack, Frame.io, and similar connectors)
+- **Team and above**: barcode scanning and batch equipment tools
+- **Enterprise only**: single sign-on, audit logs, and custom roles
+
+If a feature is unavailable, check whether it requires a higher plan tier before assuming it's a credit issue—having a full credit balance does not unlock plan-gated features. See your plan's details in **Settings → Billing** for the full list of what's included at each tier.
+
+---
+
+## 10. Budgeting & Scheduling Feature Gating
+
+ABRAM also gates advanced scheduling and budgeting features based on subscription level, allowing users on Free and Solo Lite tiers to test budgeting capabilities before upgrading.
 
 | Tier | Scheduling Access | Budgeting Access |
 | :--- | :--- | :--- |
@@ -117,30 +157,35 @@ To provide flexibility while encouraging tier upgrades, ABRAM gates advanced sch
 | **Solo Pro** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
 | **Team** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
 | **Studio** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
-| **Enterprise** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
+| **Enterprise** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses, plus custom AI credit arrangements. |
 
 ### Gating Indicators & Upgrade Paths
-* **Locked Controls**: In read-only scheduling mode, action buttons (such as "Add Production Day", "Sync Crew to Schedule", and "AI Sort Board") render as locked, and drag-and-drop interactions are disabled.
-* **Trial Restrictions**: When the limit of 5 budget line items or 5 expenses is reached on Free or Solo Lite plans, the system blocks the insertion of new items and displays a notification inviting the user to upgrade.
+* **Locked Controls**: In read-only scheduling mode, action buttons (such as "Add Production Day," "Sync Crew to Schedule," and "AI Sort Board") render as locked, and drag-and-drop interactions are disabled.
+* **Trial Restrictions**: When the limit of 5 budget line items or 5 expenses is reached on Free or Solo Lite plans, the system blocks the insertion of new items and displays a notification inviting you to upgrade.
 * **Banners**: Persistent upgrade prompts are displayed at the top of the scheduling stripboard and financial overview frames for users on trial or restricted tiers, pointing to subscription settings for self-service upgrading.
 
 ---
 
-## 7. Upgrading Plans and Buying Credits
+## 11. Upgrading Plans and Buying Credits
 
-Owners and Admins can purchase additional credits or upgrade plan tiers in **Settings** -> **Billing**:
+Owners and Admins can purchase additional credits or upgrade plan tiers in **Settings → Billing**.
 
-### Buying Ad-Hoc Top-Ups
-If your balance runs low, you can click **Top-Up** to purchase credit packs. This opens Stripe Checkout to securely process the purchase, and updates your balance immediately.
+### Subscription Tiers
 
-### Individual Subscription Tiers
-ABRAM offers individual subscription tiers for solo professionals who do not require multi-user team collaboration:
-* **Solo Lite ($19/mo)**: Unlocks 300 monthly credits, unlimited active projects (for clients), 30 applications/listings, and 3 GB workspace storage.
-* **Solo Pro ($34/mo)**: Unlocks 600 monthly credits, PDF call sheet exports, Google/Outlook calendar sync, AI brief parser, 5 client portals, 1 active custom intake form, and 10 GB workspace storage.
+| Tier | Price | Seats | Monthly AI Credits | Storage |
+| :--- | :--- | :--- | :--- | :--- |
+| **Free** | $0 | 1 | 0 | 500 MB |
+| **Solo Lite** | $19/mo | 1 | 300 | 3 GB |
+| **Solo Pro** | $34/mo | 1 | 600 | 10 GB |
+| **Team** | $39/seat/mo | 2–5 | 500 per seat | 10 GB |
+| **Studio** | $49/seat/mo | 6–20 | 1,000 per seat | 15 GB |
+| **Enterprise** | Custom | Unlimited | Custom | 100 GB |
+
+Solo Pro and above unlock watermark-free call sheet export, AI brief upload and script breakdown, the full interactive resource scheduler, custom intake forms, and calendar and integration connectors. Team and Studio add multi-seat collaboration, role-based permissions, and barcode/batch equipment tools. Enterprise adds single sign-on, audit logs, and custom roles.
 
 ### Upgrading a Personal Workspace
-If you are currently on the **Free** tier in a personal workspace and select a team subscription (e.g., **Team** or **Studio**):
-1. **Workspace Promotion**: The platform launches a coordinated flow prompting you for your Company Name and Team Size.
-2. The platform automatically promotes your personal workspace to a full **Organization**.
-3. You are redirected to Stripe Checkout to set up the subscription.
-4. Once completed, your organization's Monthly Allowance is active, and team seat limits are updated.
+If you're currently on the **Free** tier in a personal workspace and select a team subscription (such as **Team** or **Studio**):
+1. **Workspace Promotion**: ABRAM launches a coordinated flow prompting you for your Company Name and Team Size.
+2. Your personal workspace is automatically promoted to a full **Organization**.
+3. You're redirected to Stripe Checkout to set up the subscription.
+4. Once checkout completes, your organization's Monthly Allowance is active and team seat limits are updated.

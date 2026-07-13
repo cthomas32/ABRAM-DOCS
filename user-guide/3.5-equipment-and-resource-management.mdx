@@ -16,36 +16,36 @@ keywords:
 ---
 # Section 3.5: Equipment & Resource Management
 
-The **Resource Management** platform (found under **Resources** in the producer sidebar) is the centralized dashboard for tracking, organizing, and scheduling physical assets. This includes production gear (camera packages, lighting kits), studio spaces, stages, and vehicles.
+The **Resource Management** platform (found under **Resources** in the producer sidebar) is the centralized dashboard for tracking, organizing, and scheduling physical assets. This includes production gear (camera packages, lighting kits), studio spaces, stages, and vehicles. It is organized into three tabs: **Inventory**, **Kits**, and **Calendar**.
 
 ---
 
 ## 1. Inventory Management
 
-The **Inventory** tab is the primary directory of all physical resources owned by your organization. 
+The **Inventory** tab is the primary directory of all physical resources owned by your organization.
 
 ### Adding and Categorizing Assets
 To add a new asset:
-1. Click the **Add Resource** button.
+1. Click the **Add Resource** button, or use the **Quick Add** row at the top of the inventory list for fast, single-line entry.
 2. Provide details:
-   * **Name**: The identifier of the gear (e.g., "Sensa FX6 - Body #1").
-   * **Category**: Choose from Camera, Lighting, Audio, Grip, Vehicle, Studio Space, or Custom.
+   * **Name**: The identifier of the gear (e.g., "Sensa FX6 - Body #1"). A **Global Catalog Search** offers AI-powered name suggestions as you type, pulling from a shared catalog of common equipment. Select **Custom** if you'd rather enter the item manually instead of picking from the catalog.
+   * **Category**: Choose from Equipment, Camera, Lighting, Audio, Grip, Electrical, Vehicle, Wardrobe, Props, Set Dec, Special FX, Location, Studio, Expendable, or Other.
    * **Location**: Select where the asset is stored (managed under Organization Settings).
    * **Day Rate / Hourly Rate**: The replacement or internal billing cost, used for project budget estimation.
-   * **Serial Number & Description**: Operational and maintenance details.
+   * **Serial Number & Barcode**: Operational and tracking identifiers.
+   * **Purchase Date & Purchase Price**: Acquisition details, useful for depreciation and insurance records.
+   * **Point of Contact**: Assign the person responsible for the asset.
+   * **Custom Fields**: Organization-defined fields for any additional details your team wants to track.
    * **Quantity**: Define the quantity of identical items available.
-
-### Folder Organization
-To prevent clutter, resources can be nested in folders:
-* **Creating Folders**: Click **New Folder**, name the folder, and select the category.
-* **Moving Assets**: Use the folder selection menu on any asset card to move it into a specific folder (e.g., nesting "Sensa 24-70mm GM Lens" inside a "Lenses" folder).
+3. Once saved, the asset receives an auto-generated **Asset ID** and its card displays a **Utilization %**, showing how often the item is booked relative to its availability.
 
 ### Bulk Actions
 For large studios and rental houses, ABRAM supports bulk operations:
 * **Bulk Import**: Click the **Import** button. You can upload a CSV/TSV/TXT file or directly paste tab-separated spreadsheet data. 
   > [!NOTE]
   > The system does not currently offer a downloadable spreadsheet template. Instead, a column formatting helper is displayed in the import window showing the expected headers, which include details such as Name, Type, Quantity, Serial Number, Barcode, Condition, Daily Rate, and Identifier. Only the Name field is required.
-* **Bulk Edit**: Select multiple assets using checkboxes, then click **Edit [X]**. You can update storage locations, status, rates, or categories in bulk.
+* **Bulk Edit**: Select multiple assets using checkboxes, then click **Edit [X]**. You can update Status, Condition, Location, Daily Rate, and Hourly Rate in bulk. Category is not included in bulk edits and must be changed per item.
+* **Barcode Scanner & Batch Allocate**: Scan barcodes to quickly look up or check out assets, and allocate multiple items to a project at once. These tools require a **Team plan or higher**.
 
 ---
 
@@ -73,6 +73,11 @@ When a Kit is booked, the system automatically creates resource allocations for 
 <ResourceManagementMock />
 
 The **Calendar** tab provides a visual timeline of all asset bookings across your projects.
+
+### Folder Organization
+To prevent clutter, resources can be nested in folders directly from the Calendar tab:
+* **Creating Folders**: Click **New Folder**, name the folder, and select the category.
+* **Moving Assets**: Use the folder selection menu on any asset row to move it into a specific folder (e.g., nesting "Sensa 24-70mm GM Lens" inside a "Lenses" folder).
 
 ### Scheduling Assets
 * **Draggable Timeline**: Resources are listed down the left side, with dates spanning the top. You can view daily, weekly, or monthly schedules.

@@ -51,7 +51,7 @@ This guide maps out the complete, chronological, step-by-step order of operation
     nodes: [
       { id: "step3", title: "Role Allocations", description: "Match roster to role slots", icon: "Users" },
       { id: "step4", title: "Invitations and RSVP", description: "Crew accepts holds", icon: "Mail", type: "warning" },
-      { id: "step5", title: "Work Orders and Agreements", description: "Pre-authorize card and lock PO", icon: "Briefcase" }
+      { id: "step5", title: "Work Orders and Agreements", description: "Secure funds and lock PO", icon: "Briefcase" }
     ]
   },
   {
@@ -100,7 +100,7 @@ After defining what needs to be produced and when, the platform identifies the t
 
 * **Role Slots**: Producers define specific roles within each Work Package (e.g., *Director of Photography*, *Lead Editor*, *Sound Designer*).
 * **Matchmaking Engine**: The system matches roles to candidates based on specialized skills, day/hourly rates, historical project ratings, and current capacity.
-* **Search Filters**: Managers can look within their private company roster (internal team registry), the external freelancer marketplace, or run a hybrid search.
+* **Search Filters**: Managers currently match roles by searching their private company roster (internal team registry). Today's staffing modes are Internal (match against your roster) and Skip (leave a role unstaffed for now and revisit it later). Searching an external freelancer marketplace, or running a hybrid internal/external search, is planned for a future Marketplace phase of the platform and is not available yet.
 
 ---
 
@@ -108,21 +108,21 @@ After defining what needs to be produced and when, the platform identifies the t
 
 Once candidates are identified, managers invite crew members to join the project.
 
-* **Direct Invitations**: Managers select roster members and dispatch invites directly, setting their role slots and rates.
+* **Direct Invitations**: Managers select roster members and dispatch invites directly, setting their role slots and rates. Because these are on-platform crew, the booking is confirmed right away — there's no separate accept/decline step for internal roster members.
 * **AI Chatbot Invitations**: Managers can ask the chatbot to search the web for external talent (e.g., *"Find food photographers in Chicago"*). The chatbot drafts an invitation action plan. Once the manager clicks **Approve**, the chatbot dispatches email invites. (External invites are rate-limited to 10 per day to prevent spam).
-* **Public RSVP**: External freelancers receive a secure link to a **Public RSVP Screen** showing project details, dates, locations, rates, and guidelines. They can click **Accept**, **Decline**, or **Tentative** without needing to log in.
-* **Crew Assembly**: Under the Crew Assembly dashboard, managers track RSVP statuses in real-time. If an invite is declined, the **Replacement Finder** scans the roster and suggests immediate alternatives.
+* **Public RSVP**: External freelancers invited by email receive a secure link to a **Public RSVP Screen** showing project details, dates, locations, rates, and guidelines. They can click **Accept**, **Decline**, or **Tentative** without needing to log in. This tracked invite-and-response cycle applies only to these external, email-based invitations.
+* **Tracking Responses**: Managers track the response status of outstanding invitations in real-time. If an invite is declined, managers return to the project's matching results to select an alternative from the roster.
 
 ---
 
 ## 5. Work Orders & Agreements
 
-A confirmed RSVP leads to the formalization of the contract and securing of funds.
+With crew identified, the platform formalizes the agreement and secures the funds behind it.
 
 * **The Work Order**: Serves as the agreement container. It locks down shoot days, campaign sprints, or post-production timelines, specifying rates, locations, guidelines, and resource bookings (like cameras or vehicles).
 * **Conflict Checking**: The system runs checks to ensure booked personnel and physical equipment kits are not double-booked elsewhere in the network.
-* **Agreement Sign-off**: The freelancer accepts the work order terms, shifting the status from *Pending* to *Confirmed*.
-* **Purchase Orders (POs) & Payment Holds**: Confirming the booking generates a **Purchase Order (PO)**. The producer authorizes payment via Stripe Checkout. The platform places a temporary **7-day hold** on the producer's credit card or bank account (ACH) for the total booked amount. This secures the freelancer's funding before work begins.
+* **Booking Confirmation**: On-platform crew — whether from your internal team or your roster — are booked directly into a **Confirmed** status as soon as they're selected, with no separate accept/decline step. Only external freelancers invited by email go through the invite-and-response cycle described above; their work order moves to *Confirmed* once they respond and accept.
+* **Purchase Orders (POs) & Securing Funds**: Confirming the booking generates a **Purchase Order (PO)**. The producer authorizes payment through Stripe, which secures the funds needed to cover the booking so the freelancer's payment is protected before work begins.
 
 ---
 

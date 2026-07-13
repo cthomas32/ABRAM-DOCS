@@ -21,6 +21,9 @@ keywords:
 
 This guide covers the lifecycle of generating invoices, managing producer checkout authorizations, approving Purchase Orders (POs), and tracking payouts in the ABRAM Network.
 
+> [!NOTE]
+> Need to send a cost estimate before work begins? **Quotes** are a related feature covered in [Section 5.6](./5.6-quotes.md), and let you draft an estimate that a producer can approve before you invoice.
+
 ---
 
 ## 1. The Invoicing Lifecycle
@@ -46,12 +49,12 @@ Freelancers can generate invoices linked to projects or select ad-hoc producer e
 * **Import Expenses**: If you have unbilled project expenses submitted and approved on ABRAM, they will appear in a sidebar. Check them to instantly append them as line items.
 
 ### Step 3: Add Line Items
-* Enter the **Description**, **Quantity**, and **Unit Price** for each item. 
+* Enter the **Description**, **Quantity**, and **Unit Price** for each item. You can add manual line items and expenses yourself, in addition to importing approved project expenses.
 * The system calculates the row totals and subtotal automatically.
 
 ### Step 4: Fees and Taxes Preview
 ABRAM calculates fees in real time:
-* **Platform Fee**: A flat **5% Payment Processing Fee** is calculated on the subtotal.
+* **Platform Fee**: A small platform processing fee is calculated on the subtotal and shown on the invoice before you submit it.
 
 ### Step 5: Save or Send
 * **Save Draft**: Saves the invoice locally. You can edit or delete drafts at any time.
@@ -87,7 +90,7 @@ When a producer authorizes a Purchase Order, the freelancer must accept it befor
 ### Step 2: Accept or Reject
 * **Accept Purchase Order**:
   * Triggers the payment fulfillment.
-  * ABRAM securely processes the transaction to complete the payment.
+  * ABRAM securely processes the transaction through Stripe to complete the payment.
   * The authorized funds are captured and transferred to your account.
   * The invoice status transitions to **Paid**, and audit logs are recorded.
 * **Reject**:
@@ -101,7 +104,7 @@ When a producer authorizes a Purchase Order, the freelancer must accept it befor
 At any stage of the lifecycle:
 1. Click on any invoice in your history to open the **Inline Detail View**.
 2. Click the **Download PDF** icon in the header.
-3. The system generates a print-ready, professional document containing your logo, producer address, line items, and a summary breakdown (Subtotal, 5% processing fee, and Total).
+3. The system generates a print-ready, professional document containing your logo, producer address, line items, and a summary breakdown (Subtotal, the platform processing fee, and Total).
 
 ---
 

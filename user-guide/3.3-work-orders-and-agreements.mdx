@@ -1,120 +1,100 @@
 ---
-title: 'Booking Crew and Resources with Work Orders'
-sidebarTitle: Work Orders & Agreements
+title: 'Section 3.3: Booking Crew and Resources with Work Orders'
+sidebarTitle: Work Orders
 description: >-
-  Use ABRAM Work Orders to book freelancers, internal staff, equipment kits,
-  and vehicles for specific dates, rates, and locations with signed agreements.
+  Use ABRAM Work Orders to book crew, equipment, and rooms for specific
+  dates and locations, with automatic conflict checks and cost tracking.
 keywords:
   - ABRAM
   - ABRAM Network
-  - freelancer
+  - work order
   - calendar
-  - ai
   - work package
-  - workflow
   - crew
   - scheduling
-  - work
-  - orders
-  - agreements
+  - resources
 ---
-# Section 3.3: Work Orders & Agreements
+# Section 3.3: Work Orders
 
-A **Work Order** is the contract container in ABRAM used to schedule and book personnel (freelancers or internal staff) and physical resources (camera packages, equipment kits, vehicles) for specific dates, times, and locations.
+A **Work Order** is a booking container that lives inside a Work Package. It's where you book personnel (internal team members, roster crew, or outside freelancers) and physical resources (gear, kits, vehicles, rooms) for specific dates, times, and a location.
 
 ---
 
 ## 1. Structure of a Work Order
 
-Work orders are housed inside individual Work Packages. They lock down the operational details of a shoot day, campaign sprint, or review workshop:
+Work orders are housed inside individual Work Packages and lock down the operational details of a shoot day, campaign sprint, or review session:
 
-* **Title & Notes**: Detailed scope of work, directions, and production guidelines.
-* **Timeline**: Exact start and end dates/times (supporting hourly scheduling or all-day events).
-* **Location**: Specific physical address or remote workspace link.
-* **Status**: Tracks the agreement state: **Pending** or **Confirmed**.
-
----
-
-## 2. Personnel, Rates, and Compensation
-
-When adding crew members to a Work Order, you can invite:
-* **Internal Org Members**: Staff already active in your company workspace.
-* **Roster Freelancers**: Approved external talent on your private roster.
-* **External Emails**: Invite new freelancers by entering their email address.
-
-### Rate Integration
-Compensation is automatically calculated to keep projects within budget:
-1. **Hierarchical Rate Selection**: When you add crew members to a Work Order, the system automatically resolves their billing rates using a strict priority order:
-   * *Crew Roster custom rate* (highest priority, set when inviting the crew member to the project roster).
-   * *Organization membership custom rate* (set in the team member edit panel).
-   * *Platform profile rate* (defined on the freelancer's public profile page).
-   * *Platform default day rate* (the standard platform baseline).
-   * *Zero ($0.00) default* (if no rate is configured anywhere).
-2. **Resource Unit Rates**: Physical gear, camera kits, or vehicles include a standard daily rate or cost-per-day defined in the organization’s inventory manager.
-3. **Budget Impact**: As you add personnel and kits, the system displays the total projected cost of the Work Order based on hours or days booked, warning you if it exceeds the parent package's budget allocation.
+* **Title & Notes**: Scope of work, directions, and guidelines.
+* **Timeline**: Start and end dates/times, supporting both hourly scheduling and all-day events.
+* **Location**: A physical address or remote workspace link.
+* **Status**: Tracks where the booking stands. Available statuses include Draft, Confirmed, In Progress, On Hold, Wrapped, Completed, and Cancelled. In Progress and Wrapped update automatically based on the work order's dates.
 
 ---
 
-## 3. Availability Conflict Checking & Validation
+## 2. Booking Personnel
 
-To prevent double-booking crew or equipment, ABRAM performs real-time checks. These are handled differently depending on whether they involve personnel or physical resources:
+When adding people to a Work Order, you can add:
+
+* **Internal Team Members**: Staff already active in your organization.
+* **Roster Crew**: Freelancers already on your private roster.
+* **External Emails**: New freelancers you invite by entering their email address.
+
+How each is booked differs:
+
+* **Internal team members and roster crew are booked immediately.** Adding them to a work order sets their booking status straight to Confirmed — there's no separate accept or decline step, since they're already part of your organization or roster.
+* **External email invitations go through a tracked invite cycle.** When you invite someone by email who isn't already on the platform, ABRAM sends an invitation and records when it was sent. That invitation shows as pending until the person responds and accepts it.
+
+---
+
+## 3. Rates and Budget Tracking
+
+Compensation is set directly on the booking, not resolved automatically from elsewhere:
+
+* **Personnel rates**: You set or confirm each person's rate when you add them to the work order.
+* **Resource rates**: Gear, kits, and vehicles carry their own daily or hourly rate from your organization's inventory.
+* **Running cost**: As you add people and resources, the work order shows a projected total cost, and warns you if it's on track to exceed the parent Work Package's budget.
+
+---
+
+## 4. Availability Conflict Checking
+
+To help prevent double-booking, ABRAM checks availability as you build a work order. Personnel and resources are treated differently:
 
 ### Personnel Conflicts (Soft Warnings)
-* **Soft Warning System**: When you assign a freelancer, the platform checks their calendar across all projects in your network.
-* **Informational Alerts**: If a scheduling overlap occurs, the system flags it with a yellow **Conflict Warning** icon in the UI and logs a conflict (such as an overcommitment or unavailability) in the Team Management dashboard.
-* **No Save Block**: Personnel conflicts do not block you from saving the work order; they serve as informational warnings so you can coordinate schedule adjustments.
+* If a crew member you're adding is already booked elsewhere for an overlapping time, ABRAM flags the conflict.
+* This does not block you from saving. You'll see a "Book anyway?" confirmation, so you can decide whether to proceed or adjust the schedule.
 
 ### Resource & Kit Conflicts (Hard Blocks)
-* **Strict Booking Lockout**: Physical resource bookings (gear, rooms, vehicles, or kits) are strictly enforced by the system.
-* **Double-Booking Prevention**: If you attempt to save or confirm a work order that allocates a resource whose quantity is fully booked elsewhere during that timeframe, the system actively throws a hard validation error: 
-  `Insufficient resource availability for "[Resource Name]" during requested dates.`
-* **Validation Enforcement**: You will be blocked from saving the work order until you resolve the resource double-booking, either by selecting a different piece of gear or shifting the booking timeline.
+* Physical resources — gear, kits, vehicles, and rooms — are enforced more strictly.
+* If a resource is already fully booked for the dates you've selected, ABRAM blocks you from saving the work order with an availability error.
+* You'll need to choose different gear or shift the booking's dates before you can save.
+
+A per-day conflict timeline gives you a visual view of overlapping bookings across the work order's dates.
 
 ---
 
-## 4. Resource Allocation & Lifecycle Cascades
+## 5. Resources, Kits, and Locations
 
-ABRAM synchronizes your physical inventory, kit assignments, and project locations with your active work orders.
+ABRAM keeps your physical inventory, kit assignments, and project locations in sync with your work orders:
 
-### Kit Expansion & Group Syncing
-* **Kit Expansion**: When you assign a pre-assembled kit (e.g., a "DSMC2 Camera Kit") to a work order, the system automatically expands the kit into its individual constituent items.
-* **Unified Group Rescheduling**: All allocations within a kit are linked. If you reschedule the work order or change booking dates, the system automatically shifts or deletes all constituent items as a unified group, preventing kits from being fragmented.
-* **Location Auto-Sync**: If you allocate a physical room or studio resource (e.g., "Stage A") to a work order, the platform automatically syncs that resource's location address to the work order's main **Location** field.
-
-### Work Order Status Cascade
-The system automatically syncs the statuses of linked personnel and resource bookings to the parent Work Order's status:
-
-| Work Order Status | Linked Resource Booking Status | Crew Booking Status | Operational Behavior |
-| :--- | :--- | :--- | :--- |
-| **Draft** / **On Hold** | Reserved | Hold | Resources are blocked out; crew calendars show tentative holds. |
-| **Confirmed** / **Pending** | Reserved | Pending Invite / Hold | Roster invitations are sent; gear remains blocked out. |
-| **In Progress** | In Use | Active | Crew is actively checked in; resources are marked in-use. |
-| **Wrapped** / **Completed** | Returned | Completed | Crew completed assignment; gear is released back to inventory. |
-| **Cancelled** | Cancelled | Cancelled | Gear and calendar hours are freed up immediately. |
+* **Kit Expansion**: Assigning a pre-built kit to a work order automatically expands it into its individual items, so each piece is tracked on its own.
+* **Kits Move Together**: Rescheduling the work order moves the whole kit as a group, keeping it from being split apart.
+* **Location Auto-Fill**: Assigning a room or studio resource automatically fills in the work order's Location field.
+* **Reserve and Release**: Confirming a work order reserves its resources and places holds on crew calendars. Completing or wrapping the work order releases those resources and calendar holds.
 
 ---
 
-## 5. Timesheet Auto-Population
+## 6. Timesheet Auto-Population
 
-To streamline payments, the platform automatically generates timesheet entries from your Work Orders:
-* **Automatic Entry Generation**: When a Work Order is active or wrapped, the system distributes the total hours evenly across the booking's calendar days and creates draft timecard entries.
-* **Manual Protection**: The system protects manual edits. If you manually enter or adjust hours on your time card, the auto-population will not overwrite your custom entries.
-* **Roster Sync**: If a crew member is removed from a Work Order, their auto-populated draft timecard entries for those dates are automatically cleaned up to prevent invoicing errors.
+To streamline payments, ABRAM generates draft time entries from your Work Orders:
+
+* **Automatic Entry Generation**: Once a Work Order is active or wrapped, the system spreads its scheduled hours across the booking's days and creates draft time entries.
+* **Manual Protection**: If you manually edit hours on a time entry, ABRAM won't overwrite your changes.
+* **Cleanup on Removal**: If you remove someone from a Work Order, their draft time entries for that booking are cleaned up automatically.
 
 ---
 
-## 6. Agreement Workflow
+## 7. Handy Shortcuts
 
-Managing work orders follows a structured invitation and confirmation cycle:
-
-<WorkOrderFlow />
-
-1. **Drafting**: The Project Manager creates the Work Order, selects the date/time range, books the crew, and configures the physical resources. The initial status is set to **Pending**.
-2. **Dispatching**: The manager clicks **Send Invitations**. This triggers:
-   * Real-time platform notifications for registered freelancers.
-   * Email invitations for external users, providing a secure checkout link.
-3. **Review & Sign-Off**: The freelancer reviews the work order details, dates, rates, and guidelines. They can click to **Accept** or **Decline**.
-4. **Confirmation & Sync**: 
-   * Accepting shifts the booking status to **Confirmed**.
-   * The confirmed hours are written to the project timeline.
-   * The event is synced to the freelancer’s calendar and the organization's resource allocator.
+* **Call Sheets**: You can create a call sheet directly from a work order, carrying over its crew, resources, and location.
+* **Quick Access**: Opening a project through a work-order link takes you straight into that work order, so you don't have to hunt for it.
