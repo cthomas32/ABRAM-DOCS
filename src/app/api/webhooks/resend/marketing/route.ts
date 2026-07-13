@@ -93,11 +93,15 @@ export async function POST(request: Request) {
         // Look up existing subscriber to prevent violating UNIQUE constraints or creating duplicates.
         // We match by resend_contact_id first, then by email.
         let targetId: string | null = null;
+        let isAppList = false;
+        let isMarketingList = true;
+        let jobTitleVal = null;
+        let companySizeVal = null;
 
         if (contactId) {
           const { data: existingById, error: errorById } = await supabase
             .from("subscribers")
-            .select("id")
+            .select("id, is_marketing_list, is_application_list, job_title, company_size")
             .eq("resend_contact_id", contactId)
             .maybeSingle();
 
@@ -107,13 +111,17 @@ export async function POST(request: Request) {
 
           if (existingById) {
             targetId = existingById.id;
+            isAppList = existingById.is_application_list;
+            isMarketingList = existingById.is_marketing_list;
+            jobTitleVal = existingById.job_title;
+            companySizeVal = existingById.company_size;
           }
         }
 
         if (!targetId && email) {
           const { data: existingByEmail, error: errorByEmail } = await supabase
             .from("subscribers")
-            .select("id")
+            .select("id, is_marketing_list, is_application_list, job_title, company_size")
             .eq("email", email)
             .maybeSingle();
 
@@ -123,17 +131,76 @@ export async function POST(request: Request) {
 
           if (existingByEmail) {
             targetId = existingByEmail.id;
+            isAppList = existingByEmail.is_application_list;
+            isMarketingList = existingByEmail.is_marketing_list;
+            jobTitleVal = existingByEmail.job_title;
+            companySizeVal = existingByEmail.company_size;
           }
         }
 
-        const subscriberData = {
+        // Check if job_title and company_size columns exist in the database (self-healing DDL safety)
+        const { error: colCheckError } = await supabase
+          .from("subscribers")
+          .select("job_title, company_size")
+          .limit(1);
+        const hasMarketingFields = !colCheckError;
+
+        // Fetch properties from Resend API to see if they signed up for the app
+        const apiKey = process.env.RESEND_MARKETING_API_KEY || process.env.RESEND_API_KEY;
+        if (apiKey && contactId) {
+          try {
+            const res = await fetch(`https://api.resend.com/contacts/${contactId}`, {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "User-Agent": "abram-next/1.0",
+              },
+            });
+            if (res.ok) {
+              const details = await res.json();
+              const resendProps = details.properties || details.custom_properties || {};
+              
+              // Helper to extract nested property value if it is an object
+              const getPropVal = (prop: any): string | null => {
+                if (!prop) return null;
+                if (typeof prop === "object" && "value" in prop) {
+                  return prop.value ? String(prop.value) : null;
+                }
+                return String(prop);
+              };
+
+              const planTierVal = getPropVal(resendProps.planTier);
+              const roleTypeVal = getPropVal(resendProps.roleType);
+              const accountTypeVal = getPropVal(resendProps.accountType);
+
+              jobTitleVal = getPropVal(resendProps.jobTitle || resendProps.job_title) || jobTitleVal;
+              companySizeVal = getPropVal(resendProps.companySize || resendProps.company_size) || companySizeVal;
+
+              if (planTierVal || accountTypeVal || roleTypeVal) {
+                isAppList = true;
+                isMarketingList = true;
+              }
+            }
+          } catch (err) {
+            console.error(`Failed to fetch contact details for ${contactId} in webhook:`, err);
+          }
+        }
+
+        const subscriberData: any = {
           email: email,
           resend_contact_id: contactId || null,
           first_name: data.firstName || null,
           last_name: data.lastName || null,
           status: status,
+          is_marketing_list: isMarketingList,
+          is_application_list: isAppList,
           updated_at: new Date().toISOString(),
         };
+
+        if (hasMarketingFields) {
+          subscriberData.job_title = jobTitleVal;
+          subscriberData.company_size = companySizeVal;
+        }
 
         if (targetId) {
           console.log(`Updating existing subscriber with ID ${targetId}`);

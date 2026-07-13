@@ -85,6 +85,53 @@ async function fetchContactsForSegment(apiKey: string, segmentId: string): Promi
 }
 
 /**
+ * Helper to fetch all contacts directly via Resend REST API
+ */
+async function fetchAllContactsFromResend(apiKey: string): Promise<any[]> {
+  try {
+    const res = await fetch("https://api.resend.com/contacts?limit=100", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "User-Agent": "abram-next/1.0",
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      console.warn(`Resend API returned status ${res.status} for listing all contacts:`, errorData);
+      return [];
+    }
+
+    const payload = await res.json();
+    return Array.isArray(payload) ? payload : (payload.data || []);
+  } catch (err) {
+    console.error("Network error fetching all contacts:", err);
+    return [];
+  }
+}
+
+/**
+ * Helper to fetch details for a specific contact directly via Resend REST API
+ */
+async function fetchContactDetailsFromResend(apiKey: string, contactId: string): Promise<any | null> {
+  try {
+    const res = await fetch(`https://api.resend.com/contacts/${contactId}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "User-Agent": "abram-next/1.0",
+      },
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.error(`Network error fetching contact details for ${contactId}:`, err);
+    return null;
+  }
+}
+
+/**
  * Server Action: Synchronizes all contacts from Resend into the local Supabase database.
  */
 export async function syncResendContacts(): Promise<{ success: boolean; count?: number; error?: string }> {
@@ -186,6 +233,94 @@ export async function syncResendContacts(): Promise<{ success: boolean; count?: 
 
       if (upsertError) {
         console.error(`Failed to sync marketing contact ${email}:`, upsertError.message);
+      } else {
+        syncedEmails.add(email);
+        syncCount++;
+      }
+    }
+
+    // 4. Fetch all contacts from the general contacts endpoint to catch unsegmented contacts
+    const allContacts = await fetchAllContactsFromResend(apiKey);
+    console.log(`Fetched ${allContacts.length} total contacts from Resend.`);
+
+    // Get existing subscribers from database to see if we already have them
+    const { data: existingSubs, error: fetchSubsError } = await supabase
+      .from("subscribers")
+      .select("email, is_marketing_list, is_application_list, job_title, company_size");
+    
+    const existingSubsMap = new Map<string, any>();
+    if (!fetchSubsError && existingSubs) {
+      for (const sub of existingSubs) {
+        existingSubsMap.set(sub.email.toLowerCase(), sub);
+      }
+    }
+
+    for (const contact of allContacts) {
+      const email = contact.email?.trim().toLowerCase();
+      if (!email || syncedEmails.has(email)) continue;
+
+      const existingSub = existingSubsMap.get(email);
+      let isAppList = existingSub ? existingSub.is_application_list : false;
+      let isMarketingList = existingSub ? existingSub.is_marketing_list : true;
+      let jobTitleVal = existingSub ? existingSub.job_title : null;
+      let companySizeVal = existingSub ? existingSub.company_size : null;
+
+      // If we don't have the contact in our database, or if they are unsegmented,
+      // fetch their full contact details from Resend to get properties like planTier, jobTitle, companySize.
+      if (!existingSub) {
+        const details = await fetchContactDetailsFromResend(apiKey, contact.id);
+        if (details) {
+          const resendProps = details.properties || details.custom_properties || {};
+          
+          // Helper to extract nested property value if it is an object
+          const getPropVal = (prop: any): string | null => {
+            if (!prop) return null;
+            if (typeof prop === "object" && "value" in prop) {
+              return prop.value ? String(prop.value) : null;
+            }
+            return String(prop);
+          };
+
+          const planTierVal = getPropVal(resendProps.planTier);
+          const roleTypeVal = getPropVal(resendProps.roleType);
+          const accountTypeVal = getPropVal(resendProps.accountType);
+          
+          jobTitleVal = getPropVal(resendProps.jobTitle || resendProps.job_title);
+          companySizeVal = getPropVal(resendProps.companySize || resendProps.company_size);
+
+          // Infer list membership from application properties (e.g. planTier, accountType, roleType)
+          if (planTierVal || accountTypeVal || roleTypeVal) {
+            isAppList = true;
+            isMarketingList = true;
+          } else {
+            isAppList = false;
+            isMarketingList = true;
+          }
+        }
+      }
+
+      const upsertData: any = {
+        email,
+        first_name: contact.firstName || contact.first_name || null,
+        last_name: contact.lastName || contact.last_name || null,
+        resend_contact_id: contact.id,
+        status: contact.unsubscribed ? "unsubscribed" : "subscribed",
+        is_marketing_list: isMarketingList,
+        is_application_list: isAppList,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (hasMarketingFields) {
+        upsertData.job_title = jobTitleVal;
+        upsertData.company_size = companySizeVal;
+      }
+
+      const { error: upsertError } = await supabase
+        .from("subscribers")
+        .upsert(upsertData, { onConflict: "email" });
+
+      if (upsertError) {
+        console.error(`Failed to sync residual contact ${email}:`, upsertError.message);
       } else {
         syncedEmails.add(email);
         syncCount++;
