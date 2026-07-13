@@ -11,7 +11,8 @@ import {
   CheckCircle2, 
   Cpu, 
   Coins, 
-  UserPlus
+  UserPlus,
+  Lock
 } from "lucide-react";
 import Link from "next/link";
 
@@ -275,9 +276,9 @@ function InteractiveIntakeMockup() {
 export default function CreativeOpsSection() {
   const features = [
     {
-      icon: FileText,
-      title: "Client Intake Hub",
-      description: "Convert chaotic creative briefs, files, and templates into structured project plans automatically."
+      icon: Lock,
+      title: "Branded Client Portal",
+      description: "Provide clients with private, interactive portals to track project timelines, approve deliverables, and process payments."
     },
     {
       icon: Users,

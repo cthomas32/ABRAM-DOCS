@@ -181,8 +181,10 @@ function ChangelogEditorContent() {
         if (error) throw error;
 
         if (release) {
-          setVersion(release.version || "");
-          setSlug(release.slug || "");
+          const loadedVersion = release.version || "";
+          const loadedSlug = release.slug || "";
+          setVersion(loadedVersion);
+          setSlug(loadedSlug);
           setTitle(release.title || "");
           setContent(release.content || "");
           setStatus(release.status as "draft" | "published");
@@ -192,6 +194,15 @@ function ChangelogEditorContent() {
           } else {
             setPublishDate("");
           }
+
+          // If the loaded slug is custom (doesn't match loaded version slugified, with or without leading 'v')
+          const slugifiedVer = loadedVersion.toLowerCase().replace(/[^a-z0-9-_]+/g, "-");
+          const slugifiedWithV = `v${slugifiedVer}`;
+          if (loadedSlug && loadedSlug !== slugifiedVer && loadedSlug !== slugifiedWithV) {
+            setIsSlugTouched(true);
+          } else {
+            setIsSlugTouched(false);
+          }
         }
       } else {
         // Initial defaults for a new release note
@@ -200,6 +211,7 @@ function ChangelogEditorContent() {
         setTitle("Initial Stable Release");
         setContent("## New Features\n\n- Bullet item here...\n\n## Improvements\n\n- Bullet item here...");
         setPublishDate("");
+        setIsSlugTouched(false);
       }
     } catch (err: any) {
       showToast(err.message || "Failed to load release details.", "error");
@@ -247,16 +259,20 @@ function ChangelogEditorContent() {
         return;
       }
       try {
-        let query = supabase
+        const { data, error } = await supabase
           .from("release_notes")
-          .select("id")
-          .eq("slug", cleanSlug);
-        if (idParam) {
-          query = query.neq("id", idParam);
-        }
-        const { data, error } = await query;
-        if (!error && data && data.length > 0) {
-          setSlugExists(true);
+          .select("*");
+        
+        if (!error && data) {
+          let filtered = data.filter((r) => r.slug === cleanSlug);
+          if (idParam) {
+            filtered = filtered.filter((r) => r.id !== idParam);
+          }
+          if (filtered.length > 0) {
+            setSlugExists(true);
+          } else {
+            setSlugExists(false);
+          }
         } else {
           setSlugExists(false);
         }
@@ -270,10 +286,10 @@ function ChangelogEditorContent() {
 
   // Auto-slugify version if slug hasn't been touched manually
   useEffect(() => {
-    if (!idParam && !isSlugTouched && version) {
+    if (!isSlugTouched && version) {
       setSlug(version.toLowerCase().replace(/[^a-z0-9-_]+/g, "-"));
     }
-  }, [version, isSlugTouched, idParam]);
+  }, [version, isSlugTouched]);
 
   // Syntax and SemVer Linter
   useEffect(() => {

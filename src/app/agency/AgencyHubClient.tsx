@@ -15,7 +15,8 @@ import {
   Activity, 
   ChevronRight,
   Workflow,
-  MousePointerClick
+  MousePointerClick,
+  Lock
 } from "lucide-react";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
@@ -100,50 +101,48 @@ export default function AgencyHubClient() {
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
               
-              {/* Card 1: Client Intake Showcase */}
+              {/* Card 1: Client Portal Showcase */}
               <div className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 p-6 flex flex-col justify-between shadow-lg relative overflow-visible group">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center">
-                      <FileText className="w-4 h-4 text-zinc-400" />
+                      <Lock className="w-4 h-4 text-zinc-400" />
                     </div>
                     <div>
                       <h2 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">
-                        Client Request & Intake
+                        Branded Client Portal
                       </h2>
                       <span className="text-[9px] font-medium tracking-widest uppercase text-zinc-500 font-mono">
-                        Brief Intelligence
+                        Collaboration Hub
                       </span>
                     </div>
                   </div>
 
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                    Construct custom intake forms and feed project briefs into our AI scoping wizard. Instantly parse deliverables, suggest timelines, and output budget models.
+                    Provide clients with private, interactive portals. Share real-time timelines, approve deliverables, comment on drafts, and process payments securely.
                   </p>
 
                   {/* Inline visual preview */}
                   <div className="p-3.5 rounded bg-zinc-950/40 border border-white/5 text-[10px] font-mono space-y-2 opacity-80 group-hover:opacity-100 transition-opacity select-none">
-                    <div className="flex items-center justify-between text-zinc-500 gap-2">
-                      <span className="truncate">helix_brief.txt</span>
-                      <span className="text-emerald-400 flex items-center gap-1 shrink-0">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Parsed
-                      </span>
+                    <div className="flex justify-between items-center text-zinc-300 gap-2">
+                      <span className="truncate">Helix Brand Portal</span>
+                      <span className="text-emerald-400 shrink-0 font-semibold font-mono">65% Done</span>
                     </div>
-                    <div className="text-zinc-400 truncate">
-                      Deliverables: 3x 3D Reels, 1x Vector Logo
+                    <div className="text-zinc-500 text-[9px] uppercase truncate">
+                      1/3 deliverables approved
                     </div>
                     <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                      <div className="h-full w-4/5 bg-white rounded-full" />
+                      <div className="h-full w-[65%] bg-white rounded-full" />
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-6">
                   <Link 
-                    href="/agency/client-intake" 
+                    href="/agency/client-portal" 
                     className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px]"
                   >
-                    <span>Intake Portal</span>
+                    <span>Client Portal</span>
                     <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
                   </Link>
                 </div>

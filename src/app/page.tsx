@@ -5,6 +5,7 @@ import BridgeSection from "@/components/home/BridgeSection";
 import ArtifactsSection from "@/components/home/ArtifactsSection";
 import OutcomeSection from "@/components/home/OutcomeSection";
 import ResourcesCalendarSection from "@/components/home/ResourcesCalendarSection";
+import ClientPortalSection from "@/components/home/ClientPortalSection";
 import RosterROISection from "@/components/home/RosterROISection";
 import FinalCTASection from "@/components/home/FinalCTASection";
 import BrainSection from "@/components/home/BrainSection";
@@ -197,6 +198,7 @@ export default function LandingPage() {
         <BridgeSection />
         {/* <OutcomeSection /> */}
         <FilmProductionSection />
+        <ClientPortalSection />
         <ResourcesCalendarSection />
         <CreativeOpsSection />
         <ArtifactsSection />
