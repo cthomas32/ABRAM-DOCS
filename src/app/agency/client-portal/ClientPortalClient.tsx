@@ -37,7 +37,7 @@ export default function ClientPortalClient() {
           "name": "ABRAM Client Portal",
           "applicationCategory": "BusinessApplication",
           "featureList": [
-            "Secure tokenized link access",
+            "Secure unique link access",
             "Interactive timeline & scheduling views",
             "Real-time deliverable approvals",
             "Threaded chat-style feedback",
@@ -269,12 +269,12 @@ export default function ClientPortalClient() {
                   </div>
                   <div className="p-3 bg-zinc-900/50 border border-white/5 rounded-lg">
                     <span className="text-[9px] font-sans text-zinc-500 uppercase block mb-1">Link Expiry Period</span>
-                    <span className="text-xs text-zinc-300 font-sans">30 Days (Auto-regenerates token)</span>
+                    <span className="text-xs text-zinc-300 font-sans">30 Days (Auto-expires access link)</span>
                   </div>
                   <div className="p-3 bg-zinc-900/50 border border-white/5 rounded-lg flex items-center justify-between">
                     <div>
                       <span className="text-[9px] font-sans text-zinc-500 uppercase block mb-1">Public Account Creation</span>
-                      <span className="text-xs text-zinc-300 font-sans">Disabled (Token-only restriction)</span>
+                      <span className="text-xs text-zinc-300 font-sans">Disabled (Direct invitation only)</span>
                     </div>
                   </div>
                 </div>
@@ -329,7 +329,7 @@ export default function ClientPortalClient() {
               <div className="space-y-1.5">
                 <h3 className="text-xs font-semibold text-zinc-200 font-sans">Isolated Trust Boundaries</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  A dedicated server-side gateway intercepts all portal requests, strictly restricting database queries to the client's token-scoped records.
+                  A dedicated server-side gateway intercepts all portal requests, strictly restricting database queries to the client's authorized records.
                 </p>
               </div>
             </div>
