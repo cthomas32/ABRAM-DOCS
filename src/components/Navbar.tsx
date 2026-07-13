@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Menu, PanelLeft, Search, X, ChevronDown, LayoutGrid, Calendar, ClipboardList, Sparkles, Users, FileText, Brain, Coins } from "lucide-react";
+import { ArrowUpRight, Menu, PanelLeft, Search, X, ChevronDown, LayoutGrid, Calendar, ClipboardList, Sparkles, Users, FileText, Brain, Coins, Link2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
@@ -310,6 +310,21 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                     <div className="flex-1 min-w-0">
                       <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Smart Scheduling</h4>
                       <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">AI-driven matching & booking board</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/agency/client-portal"
+                    onClick={() => setAgencyDropdownOpen(false)}
+                    title="Secure Client Portal & Branded Dashboards"
+                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <Link2 className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Client Portal</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Secure, password-free client dashboards</p>
                     </div>
                   </Link>
                 </motion.div>

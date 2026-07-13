@@ -229,6 +229,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/agency/client-portal`,
+      lastModified: agencyDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/intelligence`,
       lastModified: intelligenceDate,
       changeFrequency: 'monthly' as const,

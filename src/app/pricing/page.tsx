@@ -100,21 +100,21 @@ export default function PricingPage() {
                       'name': 'Solo Pro',
                       'price': '34',
                       'priceCurrency': 'USD',
-                      'description': 'For power users. Includes interactive schedules, watermark-free PDFs, email distribution, AI briefs, and 10 GB storage.'
+                      'description': 'For power users. Includes interactive schedules, watermark-free PDFs, email distribution, AI briefs, 10 GB storage, and client portal for up to 5 clients.'
                     },
                     {
                       '@type': 'Offer',
                       'name': 'Team Tier',
                       'price': '39',
                       'priceCurrency': 'USD',
-                      'description': 'Per seat pricing for boutique agencies. Includes 2-5 seats, custom intake forms, barcode scans, and transit buffers.'
+                      'description': 'Per seat pricing for boutique agencies. Includes 2-5 seats, custom intake forms, barcode scans, transit buffers, and client portal for up to 15 clients.'
                     },
                     {
                       '@type': 'Offer',
                       'name': 'Studio Tier',
                       'price': '49',
                       'priceCurrency': 'USD',
-                      'description': 'Per seat pricing for commercial production companies. Includes 6-20 seats, unlimited forms, and 15 GB storage.'
+                      'description': 'Per seat pricing for commercial production companies. Includes 6-20 seats, unlimited forms, 15 GB storage, and client portal for up to 50 clients.'
                     }
                   ]
                 }
@@ -178,6 +178,7 @@ export default function PricingPage() {
               <th>Budgeting Access</th>
               <th>AI Credits (Monthly)</th>
               <th>Storage Limit</th>
+              <th>Client Portal Limit</th>
             </tr>
           </thead>
           <tbody>
@@ -188,6 +189,7 @@ export default function PricingPage() {
               <td>Trial (Max 5 line items / 5 expenses)</td>
               <td>Welcome Bonus (250 one-time)</td>
               <td>1 GB</td>
+              <td>Not included</td>
             </tr>
             <tr>
               <td><strong>Solo Lite</strong></td>
@@ -196,6 +198,7 @@ export default function PricingPage() {
               <td>Trial (Max 5 line items / 5 expenses)</td>
               <td>300 monthly credits</td>
               <td>3 GB</td>
+              <td>Not included</td>
             </tr>
             <tr>
               <td><strong>Solo Pro</strong></td>
@@ -204,6 +207,7 @@ export default function PricingPage() {
               <td>Full Access</td>
               <td>600 monthly credits</td>
               <td>10 GB</td>
+              <td>5 clients</td>
             </tr>
             <tr>
               <td><strong>Team</strong></td>
@@ -212,6 +216,7 @@ export default function PricingPage() {
               <td>Full Access</td>
               <td>500 credits per seat / month</td>
               <td>10 GB</td>
+              <td>15 clients</td>
             </tr>
             <tr>
               <td><strong>Studio</strong></td>
@@ -220,6 +225,7 @@ export default function PricingPage() {
               <td>Full Access</td>
               <td>Custom allocation</td>
               <td>15 GB</td>
+              <td>50 clients</td>
             </tr>
             <tr>
               <td><strong>SMB / Enterprise</strong></td>
@@ -228,6 +234,7 @@ export default function PricingPage() {
               <td>Full Access</td>
               <td>Custom allocation (BYOK / custom LLM option)</td>
               <td>Custom allocation (Bespoke app flavors)</td>
+              <td>Unlimited</td>
             </tr>
           </tbody>
         </table>

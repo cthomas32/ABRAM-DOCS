@@ -102,7 +102,8 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "callsheet_email_distribution", name: "Automated Call Sheet Distribution" },
       { id: "asset_approvals", name: "Versioned Asset Approvals" },
       { id: "slack_integration", name: "Slack Integration" },
-      { id: "frameio_integration", name: "Frame.io Integration" }
+      { id: "frameio_integration", name: "Frame.io Integration" },
+      { id: "client_portal", name: "Client Portal" }
     ]
   },
   {
@@ -160,6 +161,7 @@ const PLANS: Plan[] = [
       asset_approvals: true,
       slack_integration: false,
       frameio_integration: false,
+      client_portal: false,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -215,6 +217,7 @@ const PLANS: Plan[] = [
       asset_approvals: true,
       slack_integration: false,
       frameio_integration: false,
+      client_portal: false,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -271,6 +274,7 @@ const PLANS: Plan[] = [
       asset_approvals: true,
       slack_integration: true,
       frameio_integration: true,
+      client_portal: "5 clients",
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -286,6 +290,7 @@ const PLANS: Plan[] = [
       "AI production brief parser",
       "Google & Outlook calendar sync",
       "Frame.io & Slack integrations",
+      "Client portal (up to 5 clients)",
       "10 GB workspace storage"
     ]
   },
@@ -331,6 +336,7 @@ const PLANS: Plan[] = [
       asset_approvals: true,
       slack_integration: true,
       frameio_integration: true,
+      client_portal: "15 clients",
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -349,6 +355,7 @@ const PLANS: Plan[] = [
       "Advanced Logistics & Operations settings",
       "Barcode Equipment Scanning",
       "Frame.io & Slack integrations",
+      "Client portal (up to 15 clients)",
       "10 GB workspace storage"
     ]
   },
@@ -394,6 +401,7 @@ const PLANS: Plan[] = [
       asset_approvals: true,
       slack_integration: true,
       frameio_integration: true,
+      client_portal: "50 clients",
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -412,6 +420,7 @@ const PLANS: Plan[] = [
       "Advanced Logistics & Operations settings",
       "Barcode Equipment Scanning",
       "Frame.io & Slack integrations",
+      "Client portal (up to 50 clients)",
       "15 GB workspace storage"
     ]
   },
@@ -457,6 +466,7 @@ const PLANS: Plan[] = [
       asset_approvals: true,
       slack_integration: true,
       frameio_integration: true,
+      client_portal: "Unlimited",
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -471,6 +481,7 @@ const PLANS: Plan[] = [
       "Custom AI & LLM integration (BYOK, private LLM deployments, fine-tuning)",
       "Custom system builds & features (tuned to your workflow)",
       "Custom storage limits & custom AI credits",
+      "Unlimited client portal access",
       "SSO & Directory Sync (SAML/SCIM) & Compliance Audit Logs"
     ]
   }
@@ -517,6 +528,7 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   asset_approvals: "Structured workflow for client sign-offs, feedback rounds, and status tracking of creative deliverables.",
   slack_integration: "Automated notifications to Slack channels for project updates, booking confirmations, and crew alerts.",
   frameio_integration: "Connect project files and timeline reviews directly with Frame.io review links and status updates.",
+  client_portal: "Secure client portal access to share schedules, media approvals, and budgets. Limits specify the maximum number of active client accounts.",
 
   // Financials & Payments
   stripe_express: "Simplified dashboard enabling crew members and contractors to securely link bank accounts for direct payout.",
