@@ -185,11 +185,10 @@ const PLANS: Plan[] = [
       watermark_free_invoices: false
     },
     marketingFeatures: [
-      "80 trial AI credits to explore Brief Intelligence",
-      "1 seat & 1 active project limit",
-      "Digital call sheet builder (PDF export on Solo Pro)",
-      "View-only resource scheduler",
-      "500 MB workspace storage limit"
+      "1 seat & 1 Active Project limit",
+      "80 trial AI credits for Brief Intelligence",
+      "View-only Advanced Scheduling Access",
+      "500 MB Workspace Storage limit"
     ]
   },
   {
@@ -247,11 +246,10 @@ const PLANS: Plan[] = [
       watermark_free_invoices: false
     },
     marketingFeatures: [
-      "1 seat & Unlimited active projects",
-      "Digital call sheet builder (PDF export on Solo Pro)",
-      "View-only resource scheduler",
+      "1 seat & Unlimited Active Projects",
+      "View-only Advanced Scheduling Access",
       "Track up to 30 resource items",
-      "3 GB workspace storage"
+      "3 GB Workspace Storage"
     ]
   },
   {
@@ -309,17 +307,17 @@ const PLANS: Plan[] = [
       watermark_free_invoices: true
     },
     marketingFeatures: [
-      "1 seat & Unlimited active projects",
+      "1 seat & Unlimited Active Projects",
       "Crew roster management & invitations",
-      "Watermark-free PDF exports",
-      "Call sheet email distribution to crew",
-      "Interactive resource scheduler",
-      "AI production brief parser",
-      "Google & Outlook calendar sync",
-      "Frame.io & Slack integrations",
-      "Client portal (up to 5 clients)",
+      "Advanced Scheduling Access",
+      "Branded Watermark-Free PDF Exports",
+      "Automated Call Sheet Distribution",
+      "Brief Intelligence (AI Brief Analyzer)",
+      "External Calendar Sync (Google/Outlook)",
+      "Slack & Frame.io integrations",
+      "Client Portal (up to 5 clients)",
       "Quotes, estimates & Stripe payouts",
-      "10 GB workspace storage"
+      "10 GB Workspace Storage"
     ]
   },
   {
@@ -377,19 +375,18 @@ const PLANS: Plan[] = [
       watermark_free_invoices: true
     },
     marketingFeatures: [
-      "2 – 5 team seats",
+      "2 – 5 team seats & Unlimited Active Projects",
       "Collaborative team workspace",
-      "Unlimited active projects",
-      "Interactive resource scheduler & templates",
-      "Watermark-free PDF exports & distribution",
-      "Role-based member permissions",
-      "3 custom intake forms",
-      "AI production brief parser",
-      "Advanced Logistics & Operations settings",
+      "Advanced Scheduling Access",
+      "Branded Watermark-Free PDF Exports",
+      "Automated Call Sheet Distribution",
+      "Team Roles & Permissions",
+      "3 Custom Intake Forms",
+      "Brief Intelligence (AI Brief Analyzer)",
       "Barcode Equipment Scanning",
-      "Frame.io & Slack integrations",
-      "Client portal (up to 15 clients)",
-      "10 GB workspace storage"
+      "Slack & Frame.io integrations",
+      "Client Portal (up to 15 clients)",
+      "10 GB Workspace Storage"
     ]
   },
   {
@@ -447,19 +444,18 @@ const PLANS: Plan[] = [
       watermark_free_invoices: true
     },
     marketingFeatures: [
-      "6 – 20 team seats",
+      "6 – 20 team seats & Unlimited Active Projects",
       "Collaborative studio workspace",
-      "Unlimited active projects",
-      "Interactive resource scheduler & templates",
-      "Watermark-free PDF exports & distribution",
-      "Production calendar & calendar sync",
-      "Unlimited project request forms",
-      "AI production brief parser",
-      "Advanced Logistics & Operations settings",
+      "Advanced Scheduling Access",
+      "Branded Watermark-Free PDF Exports",
+      "Automated Call Sheet Distribution",
+      "Team Roles & Permissions",
+      "Unlimited Custom Intake Forms",
+      "Brief Intelligence (AI Brief Analyzer)",
       "Barcode Equipment Scanning",
-      "Frame.io & Slack integrations",
-      "Client portal (up to 50 clients)",
-      "15 GB workspace storage"
+      "Slack & Frame.io integrations",
+      "Client Portal (up to 50 clients)",
+      "15 GB Workspace Storage"
     ]
   },
   {
@@ -517,14 +513,13 @@ const PLANS: Plan[] = [
       watermark_free_invoices: true
     },
     marketingFeatures: [
-      "Starts at 21 seats +",
+      "Starts at 21 seats & Unlimited Active Projects",
       "Dedicated corporate workspace",
-      "Unlimited active projects",
-      "SSO & SAML directory sync",
-      "Compliance audit logs",
+      "SSO & Directory Sync (SAML/SCIM)",
+      "Compliance Audit Logs",
       "Unlimited seats & custom roles",
       "Custom AI credits & storage",
-      "Unlimited client portal access",
+      "Unlimited Client Portal access",
       "Priority support"
     ]
   }
