@@ -879,7 +879,7 @@ export default function PricingClient() {
                           <span className="w-fit text-[9px] font-semibold tracking-wider uppercase bg-white/10 text-white px-2 py-0.5 rounded-full border border-white/10">
                             Popular
                           </span>
-                        ) : isTeam ? (
+                        ) : isStudio ? (
                           <span className="w-fit text-[9px] font-semibold tracking-wider uppercase bg-white/10 text-[#8ECAFF] px-2 py-0.5 rounded-full border border-white/10">
                             Agency Pick
                           </span>
@@ -922,7 +922,8 @@ export default function PricingClient() {
                               const savings = typeof annualTotal === "number"
                                 ? (priceMonthly ?? 0) * 12 - annualTotal
                                 : 0;
-                              return savings > 0 ? ` · Save $${savings}${isPerSeat ? "/seat" : ""}/yr` : "";
+                              const totalSavings = savings * currentSeats;
+                              return totalSavings > 0 ? ` · Save $${totalSavings.toLocaleString()}/yr` : "";
                             })()}
                           </div>
                         )}
