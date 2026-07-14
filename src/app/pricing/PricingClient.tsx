@@ -43,8 +43,10 @@ interface Plan {
     is_per_seat: boolean;
     unlimited?: boolean;
     custom?: boolean;
+    trial_credits?: number;
   };
   audience: string;
+  tagline: string;
   features: Record<string, boolean | string>;
   marketingFeatures: string[];
 }
@@ -63,11 +65,7 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "barcode_scanning", name: "Barcode Equipment Scanning" },
       { id: "audit_logs_viewer", name: "Compliance Audit Logs" },
       { id: "team_permissions", name: "Team Roles & Permissions" },
-      { id: "transit_buffers", name: "Transit Buffer Days" },
-      { id: "return_inspections", name: "Equipment Return Inspections" },
-      { id: "repair_lockouts", name: "Needs Repair Lockouts" },
-      { id: "sso_scim", name: "SSO & Directory Sync (SAML/SCIM)" },
-      { id: "custom_flavors", name: "Bespoke App Flavors & Branding" }
+      { id: "sso_scim", name: "SSO & Directory Sync (SAML/SCIM)" }
     ]
   },
   {
@@ -75,10 +73,7 @@ const FEATURES_SCHEMA: Category[] = [
     features: [
       { id: "manual_projects", name: "Manual Project Creator" },
       { id: "brief_analyzer", name: "Brief Intelligence (AI Brief Analyzer)" },
-      { id: "intake_forms", name: "Custom Intake Forms" },
-      { id: "form_mapping", name: "Intake Form Skill/Gear Mapping" },
-      { id: "domain_gating", name: "Email Domain Gating" },
-      { id: "custom_ai_models", name: "Custom AI & LLM Models (BYOK)" }
+      { id: "intake_forms", name: "Custom Intake Forms" }
     ]
   },
   {
@@ -103,14 +98,23 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "asset_approvals", name: "Versioned Asset Approvals" },
       { id: "slack_integration", name: "Slack Integration" },
       { id: "frameio_integration", name: "Frame.io Integration" },
-      { id: "client_portal", name: "Client Portal" }
+      { id: "client_portal", name: "Client Portal" },
+      { id: "client_portal_messaging", name: "Client Portal Messaging" }
+    ]
+  },
+  {
+    category: "Marketplace",
+    features: [
+      { id: "storefront_listings", name: "Storefront Listings" },
+      { id: "project_applications", name: "Monthly Project Applications" }
     ]
   },
   {
     category: "Financials & Payments",
     features: [
+      { id: "quotes_estimates", name: "Quotes & Estimates" },
       { id: "stripe_express", name: "Stripe Express Onboarding" },
-      { id: "invoicing", name: "Invoice Generation & Standard Payouts" },
+      { id: "invoicing", name: "Invoice Generation & Stripe Payouts" },
       { id: "financial_dashboard", name: "Client-Contractor Financial Dashboard" },
       { id: "po_holds", name: "Purchase Order (PO) 7-day Card Holds" },
       { id: "budgeting_access", name: "Advanced Budgeting Access" }
@@ -126,8 +130,9 @@ const PLANS: Plan[] = [
     price_type: "flat",
     billing_cycle: "monthly",
     seats: { min: 1, max: 1, included: 1 },
-    ai_credits: { monthly_quota: 0, is_per_seat: false },
-    audience: "Independent freelancers, creative contractors, and crew members.",
+    ai_credits: { monthly_quota: 0, is_per_seat: false, trial_credits: 80 },
+    audience: "Get your first production organized — free forever.",
+    tagline: "Free forever · no card required",
     features: {
       workspace_storage: "500 MB",
       active_projects: "Up to 1",
@@ -136,17 +141,10 @@ const PLANS: Plan[] = [
       barcode_scanning: false,
       audit_logs_viewer: false,
       team_permissions: false,
-      transit_buffers: false,
-      return_inspections: false,
-      repair_lockouts: false,
       sso_scim: false,
-      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: false,
       intake_forms: false,
-      form_mapping: false,
-      domain_gating: false,
-      custom_ai_models: false,
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: false,
@@ -162,6 +160,10 @@ const PLANS: Plan[] = [
       slack_integration: false,
       frameio_integration: false,
       client_portal: false,
+      client_portal_messaging: false,
+      storefront_listings: "1 Listing",
+      project_applications: "10 / month",
+      quotes_estimates: false,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -169,6 +171,7 @@ const PLANS: Plan[] = [
       budgeting_access: "Trial (5 lines/expenses)"
     },
     marketingFeatures: [
+      "80 trial AI credits to explore Brief Intelligence",
       "1 seat & 1 active project limit",
       "Digital call sheet builder (watermarked)",
       "View-only resource scheduler",
@@ -183,7 +186,8 @@ const PLANS: Plan[] = [
     billing_cycle: "monthly",
     seats: { min: 1, max: 1, included: 1 },
     ai_credits: { monthly_quota: 300, is_per_seat: false },
-    audience: "Independent creative producers and solo operators.",
+    audience: "For freelancers juggling multiple productions.",
+    tagline: "Everything to run unlimited projects",
     features: {
       workspace_storage: "3 GB",
       active_projects: "Unlimited",
@@ -192,17 +196,10 @@ const PLANS: Plan[] = [
       barcode_scanning: false,
       audit_logs_viewer: false,
       team_permissions: false,
-      transit_buffers: false,
-      return_inspections: false,
-      repair_lockouts: false,
       sso_scim: false,
-      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: false,
       intake_forms: false,
-      form_mapping: false,
-      domain_gating: false,
-      custom_ai_models: false,
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: false,
@@ -218,6 +215,10 @@ const PLANS: Plan[] = [
       slack_integration: false,
       frameio_integration: false,
       client_portal: false,
+      client_portal_messaging: false,
+      storefront_listings: "3 Listings",
+      project_applications: "30 / month",
+      quotes_estimates: true,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -240,7 +241,8 @@ const PLANS: Plan[] = [
     billing_cycle: "monthly",
     seats: { min: 1, max: 1, included: 1 },
     ai_credits: { monthly_quota: 600, is_per_seat: false },
-    audience: "High-volume independent producers and power users.",
+    audience: "Look like a studio: clean call sheets, client portals, AI parsing.",
+    tagline: "Most popular with independent producers",
     features: {
       workspace_storage: "10 GB",
       active_projects: "Unlimited",
@@ -249,17 +251,10 @@ const PLANS: Plan[] = [
       barcode_scanning: false,
       audit_logs_viewer: false,
       team_permissions: "10 Custom Roles",
-      transit_buffers: false,
-      return_inspections: false,
-      repair_lockouts: false,
       sso_scim: false,
-      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: true,
-      intake_forms: false,
-      form_mapping: false,
-      domain_gating: false,
-      custom_ai_models: false,
+      intake_forms: "1 Active Form",
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: true,
@@ -275,6 +270,10 @@ const PLANS: Plan[] = [
       slack_integration: true,
       frameio_integration: true,
       client_portal: "5 clients",
+      client_portal_messaging: true,
+      storefront_listings: "Unlimited",
+      project_applications: "Unlimited",
+      quotes_estimates: true,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -291,6 +290,7 @@ const PLANS: Plan[] = [
       "Google & Outlook calendar sync",
       "Frame.io & Slack integrations",
       "Client portal (up to 5 clients)",
+      "Quotes, estimates & Stripe payouts",
       "10 GB workspace storage"
     ]
   },
@@ -302,7 +302,8 @@ const PLANS: Plan[] = [
     billing_cycle: "monthly",
     seats: { min: 2, max: 5, included: 2 },
     ai_credits: { monthly_quota: 500, is_per_seat: true },
-    audience: "Boutique creative agencies, design shops, and small production teams.",
+    audience: "The moment you hire, everything stays in sync.",
+    tagline: "Your whole crew, one workspace",
     features: {
       workspace_storage: "10 GB",
       active_projects: "Unlimited",
@@ -311,17 +312,10 @@ const PLANS: Plan[] = [
       barcode_scanning: true,
       audit_logs_viewer: false,
       team_permissions: "15 Custom Roles",
-      transit_buffers: true,
-      return_inspections: true,
-      repair_lockouts: true,
       sso_scim: false,
-      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: true,
-      intake_forms: "1 Active Form",
-      form_mapping: true,
-      domain_gating: true,
-      custom_ai_models: false,
+      intake_forms: "3 Active Forms",
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: true,
@@ -337,6 +331,10 @@ const PLANS: Plan[] = [
       slack_integration: true,
       frameio_integration: true,
       client_portal: "15 clients",
+      client_portal_messaging: true,
+      storefront_listings: "Unlimited",
+      project_applications: "Unlimited",
+      quotes_estimates: true,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -350,7 +348,7 @@ const PLANS: Plan[] = [
       "Interactive resource scheduler & templates",
       "Watermark-free PDF exports & distribution",
       "Role-based member permissions",
-      "1 Active Custom Intake Form",
+      "3 custom intake forms",
       "AI production brief parser",
       "Advanced Logistics & Operations settings",
       "Barcode Equipment Scanning",
@@ -367,7 +365,8 @@ const PLANS: Plan[] = [
     billing_cycle: "monthly",
     seats: { min: 6, max: 20, included: 6 },
     ai_credits: { monthly_quota: 1000, is_per_seat: true },
-    audience: "Commercial production companies, post houses, and agencies.",
+    audience: "Run every production, crew, and client at scale.",
+    tagline: "2× AI credits, 50 client portals",
     features: {
       workspace_storage: "15 GB",
       active_projects: "Unlimited",
@@ -376,17 +375,10 @@ const PLANS: Plan[] = [
       barcode_scanning: true,
       audit_logs_viewer: false,
       team_permissions: "30 Custom Roles",
-      transit_buffers: true,
-      return_inspections: true,
-      repair_lockouts: true,
       sso_scim: false,
-      custom_flavors: false,
       manual_projects: true,
       brief_analyzer: true,
       intake_forms: "Unlimited Forms",
-      form_mapping: true,
-      domain_gating: true,
-      custom_ai_models: false,
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: true,
@@ -402,6 +394,10 @@ const PLANS: Plan[] = [
       slack_integration: true,
       frameio_integration: true,
       client_portal: "50 clients",
+      client_portal_messaging: true,
+      storefront_listings: "Unlimited",
+      project_applications: "Unlimited",
+      quotes_estimates: true,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -432,7 +428,8 @@ const PLANS: Plan[] = [
     billing_cycle: "monthly",
     seats: { min: 21, max: null, included: 21 },
     ai_credits: { monthly_quota: -2, is_per_seat: false, custom: true },
-    audience: "For growing SMBs, large studios, and enterprise media networks requiring bespoke app flavors and custom AI integrations.",
+    audience: "Security, compliance, and custom AI for media networks.",
+    tagline: "Custom terms, SSO, dedicated support",
     features: {
       workspace_storage: "Custom (100 GB base)",
       active_projects: "Unlimited",
@@ -441,17 +438,10 @@ const PLANS: Plan[] = [
       barcode_scanning: true,
       audit_logs_viewer: true,
       team_permissions: "Unlimited Roles",
-      transit_buffers: true,
-      return_inspections: true,
-      repair_lockouts: true,
       sso_scim: true,
-      custom_flavors: "Bespoke Branding",
       manual_projects: true,
       brief_analyzer: true,
       intake_forms: "Unlimited Forms",
-      form_mapping: true,
-      domain_gating: true,
-      custom_ai_models: "BYOK & Private LLM",
       personal_calendar: true,
       integrated_timesheets: true,
       calendar_sync: true,
@@ -467,6 +457,10 @@ const PLANS: Plan[] = [
       slack_integration: true,
       frameio_integration: true,
       client_portal: "Unlimited",
+      client_portal_messaging: true,
+      storefront_listings: "Unlimited",
+      project_applications: "Unlimited",
+      quotes_estimates: true,
       stripe_express: true,
       invoicing: true,
       financial_dashboard: true,
@@ -477,47 +471,40 @@ const PLANS: Plan[] = [
       "Starts at 21 seats +",
       "Dedicated corporate workspace",
       "Unlimited active projects",
-      "Custom branded instances & app flavors (tailored to your company)",
-      "Custom AI & LLM integration (BYOK, private LLM deployments, fine-tuning)",
-      "Custom system builds & features (tuned to your workflow)",
-      "Custom storage limits & custom AI credits",
+      "SSO & SAML directory sync",
+      "Compliance audit logs",
+      "Unlimited seats & custom roles",
+      "Custom AI credits & storage",
       "Unlimited client portal access",
-      "SSO & Directory Sync (SAML/SCIM) & Compliance Audit Logs"
+      "Priority support"
     ]
   }
 ];
 
 const FEATURE_DESCRIPTIONS: Record<string, string> = {
   // Workspace & Logistics
-  active_projects: "The number of projects that can be concurrently managed, scheduled, and active in your workspace.",
-  workspace_storage: "Total cloud storage capacity allowed for project assets, files, and workspace media.",
-  locations: "Distinct geographic hubs or physical equipment lockup locations supported within a single workspace.",
+  active_projects: "Run this many productions at once — each fully scheduled, staffed, and managed in your workspace.",
+  workspace_storage: "Room for every brief, call sheet, and asset — your total cloud storage for project files and media.",
+  locations: "Organize gear and crews across as many offices or equipment lockups as you operate.",
   interactive_scheduler: "Access levels for the interactive stripboard calendar. Read-only for Free/Solo Lite; full drag-and-drop, AI Sort, Sync Crew, and breaks for higher tiers.",
   barcode_scanning: "Camera-based barcode scanning to process physical equipment check-ins, check-outs, and inventory tracking.",
-  audit_logs_viewer: "Granular activity logs and compliance history tracking member, permission, and workspace modifications.",
-  team_permissions: "Granular role-based access controls to manage view/edit permissions for staff, crew, and clients.",
-  transit_buffers: "Automated scheduling buffers added before and after bookings to account for crew travel and gear transport.",
-  return_inspections: "Structured check-in checklists and digital sign-offs to assess equipment health immediately upon return.",
-  repair_lockouts: "Automated system that locks damaged gear out of future bookings until a repair status is resolved.",
+  audit_logs_viewer: "Prove who changed what, when — a complete compliance trail of member, permission, and workspace changes.",
+  team_permissions: "Give everyone exactly the access they need — role-based view/edit controls for staff, crew, and clients.",
   sso_scim: "Enterprise identity management supporting Single Sign-On and automated user provisioning via SAML and SCIM.",
-  custom_flavors: "Custom-branded instances and tailored application interfaces designed for your organization's specific workflow.",
   ai_credits: "Monthly quota of AI credits to power Brief Intelligence parsing and co-pilot matchmaking recommendations.",
 
   // Intake & Project Setup
-  manual_projects: "Create new project files manually with custom parameters, timelines, and crew allocations.",
+  manual_projects: "Spin up a new project in minutes with custom parameters, timelines, and crew allocations.",
   brief_analyzer: "AI-powered parsing of creative briefs to automatically extract deliverables, timelines, and talent roles.",
-  intake_forms: "Tailored request forms to collect project requirements, client needs, and timeline details directly.",
-  form_mapping: "Automatically translate incoming intake responses into matching roster skills and gear requirements.",
-  domain_gating: "Restrict workspace entry or form submissions to specific authorized corporate email domains.",
-  custom_ai_models: "Integrations for proprietary or custom LLMs, including Bring Your Own Keys (BYOK), private deployments, and model fine-tuning.",
+  intake_forms: "Get briefed properly the first time — custom forms that capture requirements, needs, and timelines.",
 
   // Crewing & Utilization
-  personal_calendar: "A dedicated dashboard for individual team members to track assignments, availability, and off-days.",
+  personal_calendar: "See your commitments at a glance — assignments, availability, and off-days in one personal dashboard.",
   integrated_timesheets: "Dynamic time tracking logging billable hours and off-days directly against task assignments and project milestones.",
   calendar_sync: "Bi-directional integration syncing system bookings to personal Google Calendar or Microsoft Outlook schedules.",
   talent_search: "Filter and search your vetted database of crew, contractors, and internal talent by skill, rate, and location.",
   ai_matchmaking: "Intelligent suggestions recommending the best-fit crew members for a project based on skills, availability, and past roles.",
-  capacity_planning: "A high-level grid view displaying team-wide bandwidth, active bookings, and utilization rates over time.",
+  capacity_planning: "Know instantly who's free and who's stretched — team-wide bandwidth, bookings, and utilization over time.",
   conflict_alerts: "Real-time warnings indicating double-bookings, expired certs, or scheduling overlaps for crew and gear.",
   external_invites: "Invite external crew members or agency contractors to join a specific project roster without full workspace access.",
 
@@ -529,11 +516,17 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   slack_integration: "Automated notifications to Slack channels for project updates, booking confirmations, and crew alerts.",
   frameio_integration: "Connect project files and timeline reviews directly with Frame.io review links and status updates.",
   client_portal: "Secure client portal access to share schedules, media approvals, and budgets. Limits specify the maximum number of active client accounts.",
+  client_portal_messaging: "Two-way messaging thread between your team and each client directly inside their client portal.",
+
+  // Marketplace
+  storefront_listings: "The number of public storefront/service listings you can publish in the ABRAM marketplace directory.",
+  project_applications: "The number of project applications you can submit per month through the marketplace directory.",
 
   // Financials & Payments
-  stripe_express: "Simplified dashboard enabling crew members and contractors to securely link bank accounts for direct payout.",
-  invoicing: "Generate professional invoices automatically from tracked time, rates, and budgets, with direct bank payouts.",
-  financial_dashboard: "A secure pane tracking project budgets, pending invoices, approved expenses, and historical payouts.",
+  quotes_estimates: "Create and send itemized quotes and estimates to clients or contractors, with accept/decline tracking.",
+  stripe_express: "Get crew paid fast — contractors securely link bank accounts for direct payouts in a simple dashboard.",
+  invoicing: "Generate professional invoices automatically from tracked time, rates, and budgets, with direct Stripe payouts.",
+  financial_dashboard: "Your production finances in one view — budgets, pending invoices, approved expenses, and payout history.",
   po_holds: "Pre-authorize and hold project budgets on client cards for 7 days to guarantee payment before production kick-off.",
   budgeting_access: "Advanced Budgeting limits: trial access (up to 5 line items and 5 expenses) for Free/Solo Lite; unlimited items and expenses for higher tiers."
 };
@@ -541,6 +534,9 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
 export default function PricingClient() {
   // Plan filter state ("solo" vs "team")
   const [planFilter, setPlanFilter] = useState<"solo" | "team">("solo");
+
+  // Monthly vs annual billing toggle (annual uses explicit per-plan prices, see ANNUAL_PRICE_BY_PLAN)
+  const [billingInterval, setBillingInterval] = useState<"monthly" | "annual">("monthly");
 
   // States for dynamic seat counters
   const [teamSeats, setTeamSeats] = useState<number>(2);
@@ -569,6 +565,7 @@ export default function PricingClient() {
     "Intake & Project Setup": true,
     "Crewing & Utilization": true,
     "Integrations & Collaboration": true,
+    "Marketplace": true,
     "Financials & Payments": true
   });
 
@@ -594,6 +591,41 @@ export default function PricingClient() {
     return plan.price_monthly;
   };
 
+  // Explicit annual prices (per-seat for per_seat plans, flat total otherwise).
+  // These are the actual Stripe annual charges — not a monthly x 11 estimate.
+  const ANNUAL_PRICE_BY_PLAN: Record<string, number> = {
+    solo_lite: 204,
+    solo_pro: 372,
+    team: 420,
+    studio: 504,
+  };
+
+  // Whole-number monthly-equivalent shown as the headline price when the
+  // Annual toggle is selected (e.g. "$17/mo billed annually").
+  const MONTHLY_EQUIVALENT_BY_PLAN: Record<string, number> = {
+    solo_lite: 17,
+    solo_pro: 31,
+    team: 35,
+    studio: 42,
+  };
+
+  // Returns the per-seat/flat annual total, or "Custom" for the enterprise tier.
+  const getAnnualPrice = (plan: Plan): number | string => {
+    if (plan.price_type === "custom" || plan.price_monthly === null) {
+      return "Custom";
+    }
+    return ANNUAL_PRICE_BY_PLAN[plan.id] ?? plan.price_monthly * 12;
+  };
+
+  // Returns the whole-number monthly-equivalent for annual billing, or
+  // "Custom" for the enterprise tier.
+  const getMonthlyEquivalentPrice = (plan: Plan): number | string => {
+    if (plan.price_type === "custom" || plan.price_monthly === null) {
+      return "Custom";
+    }
+    return MONTHLY_EQUIVALENT_BY_PLAN[plan.id] ?? plan.price_monthly;
+  };
+
   const getDynamicAICredits = (plan: Plan): string => {
     if (plan.ai_credits.custom) {
       return "Custom";
@@ -602,7 +634,9 @@ export default function PricingClient() {
       return "Unlimited";
     }
     if (plan.ai_credits.monthly_quota === 0) {
-      return "None";
+      return plan.ai_credits.trial_credits
+        ? `${plan.ai_credits.trial_credits} trial credits`
+        : "None";
     }
     if (plan.ai_credits.is_per_seat) {
       return `${plan.ai_credits.monthly_quota.toLocaleString()} credits/mo per seat`;
@@ -650,6 +684,41 @@ export default function PricingClient() {
             Choose the right subscription for your creative operations. Dynamic seat configurations, clear credit top-ups, and flat transaction rates.
           </p>
         </section>
+
+        {/* Monthly / Annual Billing Toggle */}
+        <div className="flex justify-center -mt-4">
+          <div className="inline-flex items-center p-1 bg-zinc-950/60 backdrop-blur-md rounded-full border border-white/5">
+            <button
+              onClick={() => setBillingInterval("monthly")}
+              className={`h-10 px-5 flex items-center justify-center rounded-full text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer select-none ${
+                billingInterval === "monthly"
+                  ? "bg-white text-black shadow-lg"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingInterval("annual")}
+              className={`h-10 pl-5 pr-3 flex items-center gap-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer select-none ${
+                billingInterval === "annual"
+                  ? "bg-white text-black shadow-lg"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Annual
+              <span
+                className={`px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide normal-case ${
+                  billingInterval === "annual"
+                    ? "bg-black/10 text-black"
+                    : "bg-white/10 text-zinc-300"
+                }`}
+              >
+                Save with annual
+              </span>
+            </button>
+          </div>
+        </div>
 
         {/* Plan Filter Toggle Selector */}
         <div className="lg:hidden flex justify-center -mt-6 -mb-4">
@@ -786,21 +855,40 @@ export default function PricingClient() {
                           <div className="flex items-baseline gap-0.5 h-10 lg:h-8 flex-wrap">
                             <span className="text-2xl lg:text-lg xl:text-xl font-bold font-mono text-zinc-50">$</span>
                             <span className="text-4xl lg:text-3xl xl:text-4xl font-bold font-mono text-white tracking-tight">
-                              {getDynamicPrice(plan)}
+                              {billingInterval === "annual" ? getMonthlyEquivalentPrice(plan) : getDynamicPrice(plan)}
                             </span>
                             <span className="text-xs lg:text-[10px] xl:text-xs text-zinc-500 font-sans ml-1">
                               {isPerSeat ? "/ seat / mo" : "/ mo"}
                             </span>
                           </div>
                         )}
-   
+
+                        {billingInterval === "annual" && !isCustom && (priceMonthly ?? 0) > 0 && (
+                          <div className="text-[10px] lg:text-[9px] xl:text-[10px] text-emerald-400/80 font-sans">
+                            billed annually
+                            {(() => {
+                              const annualTotal = getAnnualPrice(plan);
+                              const savings = typeof annualTotal === "number"
+                                ? (priceMonthly ?? 0) * 12 - annualTotal
+                                : 0;
+                              return savings > 0 ? ` · Save $${savings}${isPerSeat ? "/seat" : ""}/yr` : "";
+                            })()}
+                          </div>
+                        )}
+
                         {/* Seat counter indicator */}
                         {!isCustom && (
                           <div className="text-xs lg:text-[10px] xl:text-xs text-zinc-400 font-sans mt-1.5">
                             {isPerSeat ? (
-                              <>
-                                Total: <span className="font-mono text-zinc-200 font-semibold">${currentSeats * (priceMonthly ?? 0)}</span>/mo • <span className="font-mono text-zinc-200 font-semibold">{(currentSeats * plan.ai_credits.monthly_quota).toLocaleString()}</span> credits ({currentSeats} seats)
-                              </>
+                              billingInterval === "annual" ? (
+                                <>
+                                  Total: <span className="font-mono text-zinc-200 font-semibold">${(currentSeats * (typeof getAnnualPrice(plan) === "number" ? (getAnnualPrice(plan) as number) : 0)).toLocaleString()}</span>/yr • <span className="font-mono text-zinc-200 font-semibold">{(currentSeats * plan.ai_credits.monthly_quota).toLocaleString()}</span> credits/mo ({currentSeats} seats)
+                                </>
+                              ) : (
+                                <>
+                                  Total: <span className="font-mono text-zinc-200 font-semibold">${currentSeats * (priceMonthly ?? 0)}</span>/mo • <span className="font-mono text-zinc-200 font-semibold">{(currentSeats * plan.ai_credits.monthly_quota).toLocaleString()}</span> credits ({currentSeats} seats)
+                                </>
+                              )
                             ) : (
                               <>
                                 Flat rate <span className="text-zinc-500 lg:hidden xl:inline-flex">• 1 Seat</span>
@@ -813,6 +901,9 @@ export default function PricingClient() {
                             Starts at 21 seats +
                           </div>
                         )}
+                        <div className="text-[11px] lg:text-[10px] xl:text-[11px] text-zinc-500 font-sans mt-1.5">
+                          {plan.tagline}
+                        </div>
                       </div>
    
                       {/* Dynamic seat sliders */}
@@ -984,7 +1075,7 @@ export default function PricingClient() {
                     Capabilities
                   </th>
                   {filteredPlans.map((plan) => {
-                    const priceVal = getDynamicPrice(plan);
+                    const priceVal = billingInterval === "annual" ? getMonthlyEquivalentPrice(plan) : getDynamicPrice(plan);
                     const isPerSeat = plan.price_type === "per_seat";
                     const currentSeats = plan.id === "team" ? teamSeats : plan.id === "studio" ? studioSeats : null;
                     const dispPrice = typeof priceVal === "number"
@@ -1082,6 +1173,47 @@ export default function PricingClient() {
                 })}
               </tbody>
             </table>
+          </div>
+        </section>
+
+        {/* Pricing FAQ */}
+        <section className="flex flex-col gap-8">
+          <div className="text-center md:text-left">
+            <h2 className="text-2xl font-semibold tracking-tight text-zinc-50">
+              Common questions
+            </h2>
+            <p className="text-sm text-zinc-400 mt-1">
+              The short answers on billing, credits, and limits.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 w-full lg:max-w-[1400px] lg:mx-auto">
+            {[
+              {
+                q: "Can I change plans anytime?",
+                a: "Yes. Upgrades apply instantly with prorated credit for time left on your current plan. Downgrades and cancellations run to the end of your billing month — you're never hit with partial charges."
+              },
+              {
+                q: "What are AI credits?",
+                a: "Credits power ABRAM's AI features — Brief Intelligence parsing that turns creative briefs into structured projects, and AI matchmaking that suggests the best-fit crew. Each plan includes a monthly quota, and per-seat plans multiply credits by your seat count."
+              },
+              {
+                q: "What happens when I hit a limit?",
+                a: "You keep everything you've made. Nothing is deleted or locked away — you simply can't add more until the next cycle, and upgrading unlocks more instantly."
+              },
+              {
+                q: "Do you offer annual billing?",
+                a: "Yes — save with annual billing. Solo plans start at $17/mo billed annually. Use the monthly/annual toggle above to compare."
+              }
+            ].map((item) => (
+              <div
+                key={item.q}
+                className="border border-white/5 bg-white/5 rounded-2xl p-5 md:p-6"
+              >
+                <h3 className="text-sm font-semibold text-zinc-100">{item.q}</h3>
+                <p className="text-xs md:text-sm text-zinc-400 leading-relaxed mt-1.5">{item.a}</p>
+              </div>
+            ))}
           </div>
         </section>
 
