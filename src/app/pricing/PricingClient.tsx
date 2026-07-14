@@ -945,9 +945,15 @@ export default function PricingClient() {
                                 </>
                               )
                             ) : (
-                              <>
-                                Flat rate <span className="text-zinc-500 lg:hidden xl:inline-flex">• 1 Seat</span>
-                              </>
+                              billingInterval === "annual" && (priceMonthly ?? 0) > 0 ? (
+                                <>
+                                  Total: <span className="font-mono text-zinc-200 font-semibold">${getAnnualPrice(plan)}</span>/yr • 1 Seat
+                                </>
+                              ) : (
+                                <>
+                                  Flat rate <span className="text-zinc-500 lg:hidden xl:inline-flex">• 1 Seat</span>
+                                </>
+                              )
                             )}
                           </div>
                         )}
