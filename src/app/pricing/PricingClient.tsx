@@ -83,16 +83,18 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "integrated_timesheets", name: "Timesheets & Time Tracking" },
       { id: "calendar_sync", name: "External Calendar Sync (Google/Outlook)" },
       { id: "talent_search", name: "Internal Talent Roster Search" },
-      { id: "ai_matchmaking", name: "AI Matchmaking & Co-pilot Suggestions" },
+      { id: "ai_matchmaking", name: "Smart Matchmaking & Suggestions" },
+      { id: "ai_talent_search", name: "AI Talent Search (Natural Language)" },
       { id: "capacity_planning", name: "Shared Capacity Planning Dashboard" },
       { id: "conflict_alerts", name: "Calendar Conflict Alerts" },
-      { id: "external_invites", name: "External Roster Expansion (invite_external)" }
+      { id: "external_invites", name: "External Roster Expansion (invite_external)" },
+      { id: "open_crew_slots", name: "Open Crew Slots" }
     ]
   },
   {
     category: "Integrations & Collaboration",
     features: [
-      { id: "file_sharing", name: "Basic File Sharing & Comments" },
+      { id: "file_sharing", name: "Project File Sharing" },
       { id: "callsheet_pdf_export", name: "Branded Watermark-Free PDF Exports" },
       { id: "callsheet_email_distribution", name: "Automated Call Sheet Distribution" },
       { id: "asset_approvals", name: "Versioned Asset Approvals" },
@@ -117,7 +119,12 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "invoicing", name: "Invoice Generation & Stripe Payouts" },
       { id: "financial_dashboard", name: "Client-Contractor Financial Dashboard" },
       { id: "po_holds", name: "Purchase Order (PO) 7-day Card Holds" },
-      { id: "budgeting_access", name: "Advanced Budgeting Access" }
+      { id: "budgeting_access", name: "Advanced Budgeting Access" },
+      { id: "refunds_disputes", name: "Refunds & Dispute Handling" },
+      { id: "automated_payouts", name: "Automated Payouts" },
+      { id: "financial_export", name: "Financial Data Export (CSV/PDF)" },
+      { id: "budget_alerts", name: "Budget Alerts" },
+      { id: "watermark_free_invoices", name: "Watermark-Free Invoices" }
     ]
   }
 ];
@@ -150,10 +157,12 @@ const PLANS: Plan[] = [
       calendar_sync: false,
       talent_search: false,
       ai_matchmaking: false,
+      ai_talent_search: true,
       capacity_planning: "Basic Dashboard",
       conflict_alerts: "Booking Conflicts Only",
-      external_invites: "1 Seat Limit",
-      file_sharing: "Basic File Sharing (No Comments)",
+      external_invites: true,
+      open_crew_slots: true,
+      file_sharing: true,
       callsheet_pdf_export: false,
       callsheet_email_distribution: false,
       asset_approvals: true,
@@ -168,12 +177,17 @@ const PLANS: Plan[] = [
       invoicing: true,
       financial_dashboard: true,
       po_holds: true,
-      budgeting_access: "Trial (5 lines/expenses)"
+      budgeting_access: "Trial (5 lines/expenses)",
+      refunds_disputes: true,
+      automated_payouts: true,
+      financial_export: true,
+      budget_alerts: true,
+      watermark_free_invoices: false
     },
     marketingFeatures: [
       "80 trial AI credits to explore Brief Intelligence",
       "1 seat & 1 active project limit",
-      "Digital call sheet builder (watermarked)",
+      "Digital call sheet builder (PDF export on Solo Pro)",
       "View-only resource scheduler",
       "500 MB workspace storage limit"
     ]
@@ -205,10 +219,12 @@ const PLANS: Plan[] = [
       calendar_sync: false,
       talent_search: false,
       ai_matchmaking: true,
+      ai_talent_search: true,
       capacity_planning: "Full Dashboard",
       conflict_alerts: "Booking Conflicts Only",
-      external_invites: "1 Seat Limit",
-      file_sharing: "Basic File Sharing (No Comments)",
+      external_invites: true,
+      open_crew_slots: true,
+      file_sharing: true,
       callsheet_pdf_export: false,
       callsheet_email_distribution: false,
       asset_approvals: true,
@@ -223,11 +239,16 @@ const PLANS: Plan[] = [
       invoicing: true,
       financial_dashboard: true,
       po_holds: true,
-      budgeting_access: "Trial (5 lines/expenses)"
+      budgeting_access: "Trial (5 lines/expenses)",
+      refunds_disputes: true,
+      automated_payouts: true,
+      financial_export: true,
+      budget_alerts: true,
+      watermark_free_invoices: false
     },
     marketingFeatures: [
       "1 seat & Unlimited active projects",
-      "Digital call sheet builder (watermarked)",
+      "Digital call sheet builder (PDF export on Solo Pro)",
       "View-only resource scheduler",
       "Track up to 30 resource items",
       "3 GB workspace storage"
@@ -250,7 +271,7 @@ const PLANS: Plan[] = [
       interactive_scheduler: "Full Access",
       barcode_scanning: false,
       audit_logs_viewer: false,
-      team_permissions: "10 Custom Roles",
+      team_permissions: false,
       sso_scim: false,
       manual_projects: true,
       brief_analyzer: true,
@@ -260,10 +281,12 @@ const PLANS: Plan[] = [
       calendar_sync: true,
       talent_search: false,
       ai_matchmaking: true,
+      ai_talent_search: true,
       capacity_planning: "Full Dashboard",
       conflict_alerts: "Booking Conflicts Only",
-      external_invites: "1 Seat Limit",
-      file_sharing: "Basic File Sharing (No Comments)",
+      external_invites: true,
+      open_crew_slots: true,
+      file_sharing: true,
       callsheet_pdf_export: true,
       callsheet_email_distribution: true,
       asset_approvals: true,
@@ -278,7 +301,12 @@ const PLANS: Plan[] = [
       invoicing: true,
       financial_dashboard: true,
       po_holds: true,
-      budgeting_access: "Full Access"
+      budgeting_access: "Full Access",
+      refunds_disputes: true,
+      automated_payouts: true,
+      financial_export: true,
+      budget_alerts: true,
+      watermark_free_invoices: true
     },
     marketingFeatures: [
       "1 seat & Unlimited active projects",
@@ -311,7 +339,7 @@ const PLANS: Plan[] = [
       interactive_scheduler: "Full Access",
       barcode_scanning: true,
       audit_logs_viewer: false,
-      team_permissions: "15 Custom Roles",
+      team_permissions: "Role-based permissions",
       sso_scim: false,
       manual_projects: true,
       brief_analyzer: true,
@@ -321,10 +349,12 @@ const PLANS: Plan[] = [
       calendar_sync: true,
       talent_search: true,
       ai_matchmaking: true,
+      ai_talent_search: true,
       capacity_planning: "Full Dashboard",
       conflict_alerts: "Booking Conflicts Only",
-      external_invites: "Up to 5 Seats",
-      file_sharing: "Basic File Sharing (No Comments)",
+      external_invites: true,
+      open_crew_slots: true,
+      file_sharing: true,
       callsheet_pdf_export: true,
       callsheet_email_distribution: true,
       asset_approvals: true,
@@ -339,7 +369,12 @@ const PLANS: Plan[] = [
       invoicing: true,
       financial_dashboard: true,
       po_holds: true,
-      budgeting_access: "Full Access"
+      budgeting_access: "Full Access",
+      refunds_disputes: true,
+      automated_payouts: true,
+      financial_export: true,
+      budget_alerts: true,
+      watermark_free_invoices: true
     },
     marketingFeatures: [
       "2 – 5 team seats",
@@ -374,7 +409,7 @@ const PLANS: Plan[] = [
       interactive_scheduler: "Full Access",
       barcode_scanning: true,
       audit_logs_viewer: false,
-      team_permissions: "30 Custom Roles",
+      team_permissions: "Role-based permissions",
       sso_scim: false,
       manual_projects: true,
       brief_analyzer: true,
@@ -384,10 +419,12 @@ const PLANS: Plan[] = [
       calendar_sync: true,
       talent_search: true,
       ai_matchmaking: true,
+      ai_talent_search: true,
       capacity_planning: "Full Dashboard",
       conflict_alerts: "Booking Conflicts Only",
-      external_invites: "Up to 20 Seats",
-      file_sharing: "Basic File Sharing (No Comments)",
+      external_invites: true,
+      open_crew_slots: true,
+      file_sharing: true,
       callsheet_pdf_export: true,
       callsheet_email_distribution: true,
       asset_approvals: true,
@@ -402,7 +439,12 @@ const PLANS: Plan[] = [
       invoicing: true,
       financial_dashboard: true,
       po_holds: true,
-      budgeting_access: "Full Access"
+      budgeting_access: "Full Access",
+      refunds_disputes: true,
+      automated_payouts: true,
+      financial_export: true,
+      budget_alerts: true,
+      watermark_free_invoices: true
     },
     marketingFeatures: [
       "6 – 20 team seats",
@@ -437,7 +479,7 @@ const PLANS: Plan[] = [
       interactive_scheduler: "Full Access",
       barcode_scanning: true,
       audit_logs_viewer: true,
-      team_permissions: "Unlimited Roles",
+      team_permissions: "Custom Roles (Unlimited)",
       sso_scim: true,
       manual_projects: true,
       brief_analyzer: true,
@@ -447,10 +489,12 @@ const PLANS: Plan[] = [
       calendar_sync: true,
       talent_search: true,
       ai_matchmaking: true,
+      ai_talent_search: true,
       capacity_planning: "Full Dashboard",
       conflict_alerts: "Booking Conflicts Only",
-      external_invites: "Unlimited Seats",
-      file_sharing: "Basic File Sharing (No Comments)",
+      external_invites: true,
+      open_crew_slots: true,
+      file_sharing: true,
       callsheet_pdf_export: true,
       callsheet_email_distribution: true,
       asset_approvals: true,
@@ -465,7 +509,12 @@ const PLANS: Plan[] = [
       invoicing: true,
       financial_dashboard: true,
       po_holds: true,
-      budgeting_access: "Full Access"
+      budgeting_access: "Full Access",
+      refunds_disputes: true,
+      automated_payouts: true,
+      financial_export: true,
+      budget_alerts: true,
+      watermark_free_invoices: true
     },
     marketingFeatures: [
       "Starts at 21 seats +",
@@ -489,7 +538,7 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   interactive_scheduler: "Access levels for the interactive stripboard calendar. Read-only for Free/Solo Lite; full drag-and-drop, AI Sort, Sync Crew, and breaks for higher tiers.",
   barcode_scanning: "Camera-based barcode scanning to process physical equipment check-ins, check-outs, and inventory tracking.",
   audit_logs_viewer: "Prove who changed what, when — a complete compliance trail of member, permission, and workspace changes.",
-  team_permissions: "Give everyone exactly the access they need — role-based view/edit controls for staff, crew, and clients.",
+  team_permissions: "Assign built-in Admin/Member roles and granular view/edit permissions to teammates on Team and Studio; build fully custom named roles with tailored permission sets on Enterprise.",
   sso_scim: "Enterprise identity management supporting Single Sign-On and automated user provisioning via SAML and SCIM.",
   ai_credits: "Monthly quota of AI credits to power Brief Intelligence parsing and co-pilot matchmaking recommendations.",
 
@@ -503,19 +552,21 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   integrated_timesheets: "Dynamic time tracking logging billable hours and off-days directly against task assignments and project milestones.",
   calendar_sync: "Bi-directional integration syncing system bookings to personal Google Calendar or Microsoft Outlook schedules.",
   talent_search: "Filter and search your vetted database of crew, contractors, and internal talent by skill, rate, and location.",
-  ai_matchmaking: "Intelligent suggestions recommending the best-fit crew members for a project based on skills, availability, and past roles.",
+  ai_matchmaking: "Rule-based scoring that ranks best-fit crew by skills, availability, and rate — deterministic matching, not generative AI.",
   capacity_planning: "Know instantly who's free and who's stretched — team-wide bandwidth, bookings, and utilization over time.",
-  conflict_alerts: "Real-time warnings indicating double-bookings, expired certs, or scheduling overlaps for crew and gear.",
-  external_invites: "Invite external crew members or agency contractors to join a specific project roster without full workspace access.",
+  conflict_alerts: "Real-time warnings indicating double-bookings, over-allocation, and scheduling overlaps for crew and gear.",
+  external_invites: "Invite external crew members or agency contractors to join a specific project roster without giving them a full workspace seat — available on every plan.",
+  ai_talent_search: "Natural-language talent search — describe who you need (e.g. \"editor in LA under $500/day\") and Claude AI parses it into structured filters over your talent pool. Powered by your monthly AI credits.",
+  open_crew_slots: "Reserve unfilled roles on a project as placeholders — staff the position later without blocking scheduling, call sheets, or budgeting on having a name attached yet.",
 
   // Integrations & Collaboration
-  file_sharing: "Upload mood boards, briefs, and call sheets with threaded comment streams for collaborative planning.",
+  file_sharing: "Upload and organize mood boards, briefs, and call sheets so your whole project's files live in one place.",
   callsheet_pdf_export: "Generate clean, print-ready, unwatermarked PDF call sheets and summaries for physical set distribution.",
   callsheet_email_distribution: "Directly email digital call sheets, schedules, and location coordinates to the entire active crew roster in one click.",
   asset_approvals: "Structured workflow for client sign-offs, feedback rounds, and status tracking of creative deliverables.",
   slack_integration: "Automated notifications to Slack channels for project updates, booking confirmations, and crew alerts.",
   frameio_integration: "Connect project files and timeline reviews directly with Frame.io review links and status updates.",
-  client_portal: "Secure client portal access to share schedules, media approvals, and budgets. Limits specify the maximum number of active client accounts.",
+  client_portal: "Secure client portal access to share schedules, media approvals, quotes, and invoices. Limits specify the maximum number of active client accounts.",
   client_portal_messaging: "Two-way messaging thread between your team and each client directly inside their client portal.",
 
   // Marketplace
@@ -525,10 +576,15 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   // Financials & Payments
   quotes_estimates: "Create and send itemized quotes and estimates to clients or contractors, with accept/decline tracking.",
   stripe_express: "Get crew paid fast — contractors securely link bank accounts for direct payouts in a simple dashboard.",
-  invoicing: "Generate professional invoices automatically from tracked time, rates, and budgets, with direct Stripe payouts.",
+  invoicing: "Generate professional invoices from tracked expenses and rates, with direct Stripe payouts.",
   financial_dashboard: "Your production finances in one view — budgets, pending invoices, approved expenses, and payout history.",
   po_holds: "Pre-authorize and hold project budgets on client cards for 7 days to guarantee payment before production kick-off.",
-  budgeting_access: "Advanced Budgeting limits: trial access (up to 5 line items and 5 expenses) for Free/Solo Lite; unlimited items and expenses for higher tiers."
+  budgeting_access: "Advanced Budgeting limits: trial access (up to 5 line items and 5 expenses) for Free/Solo Lite; unlimited items and expenses for higher tiers.",
+  refunds_disputes: "Payment disputes and refunds are handled by ABRAM's platform team — we reverse transfers and application fees correctly on connected-account charges so you're never left covering a payee's cut of a refunded payment.",
+  automated_payouts: "Trigger a contractor or crew payout directly from a completed payment record; funds move via Stripe to their connected account with no manual bank transfer.",
+  financial_export: "Export budgets, expenses, invoices, and payout history to CSV or PDF for accounting, reconciliation, or sharing outside the platform.",
+  budget_alerts: "Automatic threshold warnings when a project's spend approaches or exceeds its allocated budget, so overruns get caught before they happen.",
+  watermark_free_invoices: "Remove the \"Powered by ABRAM\" footer from generated invoice PDFs for a fully white-labeled document to send to clients."
 };
 
 export default function PricingClient() {
@@ -1195,7 +1251,7 @@ export default function PricingClient() {
               },
               {
                 q: "What are AI credits?",
-                a: "Credits power ABRAM's AI features — Brief Intelligence parsing that turns creative briefs into structured projects, and AI matchmaking that suggests the best-fit crew. Each plan includes a monthly quota, and per-seat plans multiply credits by your seat count."
+                a: "Credits power ABRAM's AI features — Brief Intelligence parsing that turns creative briefs into structured projects, and natural-language AI Talent Search. Each plan includes a monthly quota, and per-seat plans multiply credits by your seat count."
               },
               {
                 q: "What happens when I hit a limit?",
