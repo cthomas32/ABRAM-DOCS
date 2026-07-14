@@ -1,135 +1,543 @@
 INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
-        'user-guide/4.3-inviting-and-crew-rsvp',
-        'Inviting Freelancers and Managing Crew RSVPs',
-        'Inviting & Crew RSVP',
-        'Compare ABRAM invitation flows for internal and external freelancers, the AI Chatbot intake path, and the RSVP interface crew use to accept or decline.',
-        '{"ABRAM","ABRAM Network","freelancer","producer","calendar","ai","work package","workflow","crew","onboarding","copilot","matchmaking","rsvp","inviting"}'::text[],
+        'user-guide/3.7-call-sheets',
+        'Section 3.7: Call Sheets',
+        'Call Sheets',
+        'Build, preview, and send call sheets from your project, with autofill helpers and crew distribution.',
+        '{"ABRAM","call sheets","production schedule","crew distribution"}'::text[],
         '---
-title: ''Inviting Freelancers and Managing Crew RSVPs''
-sidebarTitle: Inviting & Crew RSVP
-description: >-
-  Compare ABRAM invitation flows for internal and external freelancers, the AI
-  Chatbot intake path, and the RSVP interface crew use to accept or decline.
+title: "Section 3.7: Call Sheets"
+sidebarTitle: Call Sheets
+description: Build, preview, and send call sheets from your project, with autofill helpers and crew distribution.
+keywords:
+  - ABRAM
+  - call sheets
+  - production schedule
+  - crew distribution
+---
+
+# Call Sheets
+
+Call sheets bring together your locations, schedule, and personnel call times into a single document you can preview and share with your crew.
+
+## Where to find call sheets
+
+Open a project and go to the **Call Sheets** tab. From there you can start a new call sheet from scratch, or create one directly from a work order — which carries over that work order''s crew, resources, and location so you don''t have to re-enter them.
+
+## Building a call sheet
+
+The call sheet builder is organized into a few sections:
+
+- **General Info** — the core details for the day.
+- **Locations** — where the day''s work is happening.
+- **Production Schedule / Scenes** — your shooting or work schedule, including eighths-of-a-page counts for scenes.
+- **Personnel Calls** — individual call times for each crew member.
+- **Department Notes** — notes for specific departments.
+
+### Helpers to speed things up
+
+- **Autofill Project** pulls in details already on file for the project, so you don''t have to retype information you''ve already entered elsewhere.
+- **AI Auto-Fill** drafts the call sheet for you, giving you a starting point you can review and adjust.
+
+## Previewing and exporting
+
+Once your call sheet is built, open the preview to see how it will look. From the preview you can:
+
+- **Print** the call sheet.
+- **Edit** to go back and make changes.
+
+A call sheet can also link to an existing work order, or auto-create one if it doesn''t have one yet.
+
+## Sending the call sheet
+
+You can send the call sheet to your crew by selecting recipients from your project crew list, adding external email addresses, or a combination of both.
+
+## Plan requirements
+
+On the Free and Solo Lite plans, call sheets are watermarked with "Powered by ABRAM," and you can''t export a clean PDF or email the sheet to your crew. Watermark-free PDF export and sending call sheets directly to crew require a Solo Pro plan or higher.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/3.8-deliverables-review-and-approval',
+        'Section 3.8: Deliverables — Review & Approval',
+        'Deliverables',
+        'Walk through the full deliverable lifecycle in ABRAM — creating, assigning, submitting work, and getting it reviewed and approved.',
+        '{"ABRAM","deliverables","review","approval","feedback","revisions","client portal","work package"}'::text[],
+        '---
+title: ''Section 3.8: Deliverables — Review & Approval''
+sidebarTitle: Deliverables
+description: ''Walk through the full deliverable lifecycle in ABRAM — creating, assigning, submitting work, and getting it reviewed and approved.''
+keywords:
+  - ABRAM
+  - deliverables
+  - review
+  - approval
+  - feedback
+  - revisions
+  - client portal
+  - work package
+---
+# Section 3.8: Deliverables — Review & Approval
+
+A deliverable is a single piece of work someone owes the project — a document, a cut, a design file, or a link to work stored elsewhere. This guide walks through the full lifecycle: creating a deliverable, assigning it, submitting work against it, and moving it through feedback to approval.
+
+---
+
+## 1. Creating a Deliverable
+
+Add a deliverable by giving it a name. From there, you can optionally connect it to other deliverables in the project using two relationship types:
+
+* **Blocks**: This deliverable must be finished before the linked one can move forward.
+* **Relates To**: A looser connection for deliverables that are related but not strictly dependent on each other.
+
+These relationships feed the dependency view described below, so it''s worth setting them up if your deliverables have a natural order.
+
+---
+
+## 2. Assigning Work
+
+A deliverable isn''t limited to a single owner — you can add multiple assignees to the same deliverable, and each one gets their own allocated hours. This is useful when a deliverable is a shared effort rather than one person''s task.
+
+To help you pick the right people, ABRAM can suggest recommended assignees, each shown with a confidence indicator so you can gauge how strong a fit the suggestion is before you commit to it.
+
+Every change to who''s assigned is kept in an assignment history, so you can look back and see who was added or removed from a deliverable and when.
+
+---
+
+## 3. Submitting Work
+
+Once assigned, a contributor submits their work directly on the deliverable. Two submission types are supported:
+
+* **File upload**: Upload a PDF or Word document.
+* **Reference links**: Attach one or more links pointing to work hosted elsewhere (for example, a cut stored in Frame.io).
+
+Every time a new submission comes in, it''s saved as a new version — a revision counter increases with each round, so nothing overwrites the previous attempt and everyone can see how the work has evolved.
+
+---
+
+## 4. Feedback & Approval
+
+Reviewers respond to a submission with a typed feedback entry. Each entry is one of three types:
+
+* **Approve**: The submission is accepted.
+* **Request Revision**: The submission needs changes before it can be approved.
+* **Reject**: The submission is turned down.
+
+Feedback entries can optionally be time-coded, which is useful for pointing to a specific moment in a video or audio submission rather than describing it in words.
+
+Alongside formal feedback, every deliverable has a comment thread that supports @mentions to pull in specific teammates. Comments are clearly separated into client comments and internal comments, so your team''s internal back-and-forth stays distinct from anything a client has said.
+
+---
+
+## 5. Organizing & Tracking Deliverables
+
+A few tools help keep larger deliverables — or a large batch of them — manageable:
+
+* **Checklist sub-tasks**: Break a deliverable down into smaller checklist items to track partial progress.
+* **Dependency view**: See how deliverables connect to each other based on the Blocks and Relates To relationships you set when creating them.
+* **Portal visibility toggle**: Control whether a specific deliverable is shown or hidden in a connected Client Portal.
+* **Activity feed**: See a running history of what''s happened on the deliverable.
+* **Bulk actions**: Select several deliverables at once to assign them, set dependencies, update their status, or link them to a milestone in one step.
+
+---
+
+## 6. What Your Client Sees
+
+If a deliverable''s portal visibility toggle is turned on and it belongs to a project shared with a Client Portal, your client can open it, review the submission, and leave comments of their own. Their comments show up in the same thread, tagged separately from your team''s internal comments.
+
+For a full walkthrough of setting up and managing client access, see [Section 6.4: Client Portal](/user-guide/6.4-client-portal).
+
+---
+
+## 7. Related Guides
+
+* [Section 3.2: Work Packages & Milestones](/user-guide/3.2-work-packages-and-milestones) — how deliverables fit into the larger project structure
+* [Section 3.4: Task Lists & Tracking](/user-guide/3.4-task-lists-and-tracking) — tracking deliverables alongside milestones and work orders
+* [Section 6.4: Client Portal](/user-guide/6.4-client-portal) — sharing deliverables with clients for review
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/4.1-internal-talent-search',
+        'Internal Talent Search and Private Crew Roster',
+        'Internal Talent Search',
+        'Search your private ABRAM Crew Roster under Team Management to find vetted producers, freelancers, and production companies you regularly work with.',
+        '{"ABRAM","ABRAM Network","freelancer","producer","ai","crew","talent search","internal","talent","search"}'::text[],
+        '---
+title: ''Internal Talent Search and Private Crew Roster''
+sidebarTitle: Internal Talent Search
+description: ''Search your private ABRAM Crew Roster under Team Management to find vetted producers, freelancers, and production companies you regularly work with.''
 keywords:
   - ABRAM
   - ABRAM Network
   - freelancer
   - producer
+  - ai
+  - crew
+  - talent search
+  - internal
+  - talent
+  - search
+---
+# Section 4.1: Internal Talent Search
+
+In the current **Management Phase**, the marketplace-wide public talent directory ("Discover") is disabled. Instead, ABRAM operates as an internal production management platform where producers manage their own curated team of professionals.
+
+To find, search, and manage your team, navigate to **Team Management** in the producer sidebar and select the **Roster** tab. This page serves as your organization’s private talent directory (Crew Roster), where you can coordinate individuals and production companies you work with.
+
+---
+
+## 1. Browsing the Crew Roster
+
+The Roster tab presents a spreadsheet-style grid containing all your active team members, including both on-platform freelancers and external freelancers who have not yet signed up.
+
+The roster displays key information for each member:
+* **Name & Contact**: First and last name (or company name), initials, and email address.
+* **Type**: Categorized as **Individual** or **Company**.
+* **Roles**: Custom primary roles assigned to the freelancer.
+* **Location**: Their physical base of operations.
+* **Hourly / Day Rates**: Configured rates for project budget estimations.
+* **Status**: Status indicator showing whether they are registered on the platform (**On ABRAM**) or remain an **External** contact.
+
+---
+
+## 2. Searching and Filtering Roster Members
+
+To quickly find team members with specific capabilities or rates, use the filters at the top of the roster:
+
+### 1. Keyword Search
+Type in the search bar to filter by:
+* First or last name
+* Company name
+* Email address
+* Location
+* Primary roles
+
+### 2. Status Filters
+Use the **All Status** dropdown to filter by:
+* **On ABRAM**: Shows only members who have active accounts on the platform.
+* **External Only**: Shows contacts you have added to your roster but who have not registered an account yet.
+
+### 3. Role-Based Filters
+Click the **All Roles** dropdown to filter the view down to specific roles that exist within your roster (e.g., *Director*, *Cinematographer*, *Gaffer*, *Editor*). This list updates dynamically based on the roles present in your roster.
+
+### 4. Location Filters
+Click the **All Locations** dropdown to filter by geographical region (e.g., *Los Angeles*, *New York*, *London*).
+
+---
+
+## 3. Sorting and Ordering the Roster
+
+You can sort any column in ascending or descending order by clicking on the column headers:
+* **Name & Contact**: Sort alphabetically by name or company name.
+* **Type**: Group by individual vs. production company.
+* **Roles**: Sort alphabetically by their primary role.
+* **Location**: Sort alphabetically by location.
+* **Hourly / Day Rate**: Sort numerically to find the most cost-effective resources or senior specialists.
+* **Status**: Group by registered (On ABRAM) vs. external contacts.
+
+---
+
+## 4. Inline Editing and Roster Curation
+
+Producers have the ability to curate roster details directly within the spreadsheet grid. These settings are private to your organization and do not alter the freelancer''s public profile:
+
+* **Edit Roles**: Click on the roles cell of any crew member, type new roles (comma-separated), and press `Enter` (or click away) to save.
+* **Edit Hourly Rate / Day Rate**: Click on the rate cell, input the custom rate, and press `Enter` to save.
+
+---
+
+## 5. Manually Adding Crew Members
+
+If you work with freelancers who are not yet on ABRAM, you can add them to your private roster manually:
+
+1. Click **Team Management** > **Roster** and select **Add Crew Member** (or use the Add button).
+2. Choose the profile type: **Individual** or **Production Company**.
+3. Fill in their details:
+   * **Name / Company Name**
+   * **Email Address** *(required for sending future invitations)*
+   * **Phone Number** and **Location** *(optional)*
+   * **Hourly Rate** and **Day Rate** *(used for project planning)*
+   * **Primary Roles** and **Capabilities / Skills** *(comma-separated lists)*
+   * **Notes** *(internal-only notes visible to your agency/studio)*
+4. Click **Save** to add them to your roster. They will appear as an **External** contact until you invite them to the platform.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/4.2-ai-matchmaking-suggestions',
+        'AI Crew Matchmaking: Smart Suggestions for Projects',
+        'AI Matchmaking Suggestions',
+        'How ABRAM AI matchmaking ranks crew suggestions using real-time availability, skills, portfolio history, budget, and working preferences for each project.',
+        '{"ABRAM","ABRAM Network","milestone","freelancer","calendar","ai","brief","work package","workflow","crew","scheduling","onboarding","billing","ledger","matchmaking","suggestions"}'::text[],
+        '---
+title: ''AI Crew Matchmaking: Smart Suggestions for Projects''
+sidebarTitle: AI Matchmaking Suggestions
+description: >-
+  How ABRAM AI matchmaking ranks crew suggestions using real-time availability,
+  skills, portfolio history, budget, and working preferences for each project.
+keywords:
+  - ABRAM
+  - ABRAM Network
+  - milestone
+  - freelancer
   - calendar
   - ai
+  - brief
   - work package
   - workflow
   - crew
+  - scheduling
   - onboarding
-  - copilot
+  - billing
+  - ledger
   - matchmaking
+  - suggestions
+---
+# Section 4.2: AI Matchmaking Suggestions
+
+> [!IMPORTANT]
+> **Match Suitability Disclaimer**
+> A suitability percentage (e.g. 92%) represents a statistical match score generated by our AI matchmaking engine using profile inputs. It is not an endorsement or guarantee of contractor performance. You must vet all contractors and confirm details before signing a work order.
+
+ABRAM features an advanced, AI-powered project matchmaking system designed to suggest the optimal crew members for your projects. Instead of searching and reviewing profiles manually, the matchmaking engine automatically analyzes project requirements and compares them against your team''s real-time availability, skills, portfolio experience, budget, and working preferences.
+
+> [!NOTE]
+> AI matchmaking currently searches your **internal roster** only — the people already connected to your organization. Suggesting candidates from the wider ABRAM marketplace is planned as a future capability.
+
+---
+
+## 1. The Matching Workflow
+
+The matchmaking engine works on a per-role basis to compile optimal crew suggestions:
+
+<StageFlowchart stages={[
+  {
+    title: "1. Scope Input",
+    nodes: [
+      { id: "wp", title: "Work Package", description: "Configured milestones and phase boundaries", icon: "Package", type: "purple" }
+    ]
+  },
+  {
+    title: "2. Role and Effort Scoping",
+    nodes: [
+      { id: "rs", title: "Role Slots", description: "Individual positions mapped to dates and skills", icon: "User", type: "default" },
+      { id: "alloc", title: "Effort Hours Allocation", description: "Role hours determined from deliverables, AI, or even split", icon: "Clock", type: "warning", badge: "HOURS" }
+    ]
+  },
+  {
+    title: "3. Roster Query",
+    nodes: [
+      { id: "match", title: "Matchmaking Search", description: "Deep queries across your internal roster", icon: "Search", type: "default" }
+    ]
+  },
+  {
+    title: "4. Display and Actions",
+    nodes: [
+      { id: "ui", title: "Role Match Table", description: "Interactive review showing suitability score and concerns", icon: "LayoutGrid", type: "default" },
+      { id: "invite", title: "Create Hold and Invite", description: "Dispatch invitations and block capacity holds", icon: "Send", type: "success", badge: "INVITATION" }
+    ]
+  }
+]} />
+
+### 1. Splitting into Role Slots
+A project’s work package is broken down into individual **Role Slots** (e.g., *Cinematographer*, *Gaffer*, *Key Grip*). Each role slot has a defined start date, end date, and required skills.
+
+### 2. The Hours Allocation Sequence
+Before matching, the engine determines the required hours for each role slot using a simple sequence of sources:
+* **Explicit Allocations**: If you have already specified hours for a role within the deliverables (e.g., *Editor: 15 hours*, *Colorist: 5 hours*), the platform uses these values. This manual input is completely free.
+* **AI Estimation**: If you haven''t entered manual hours, you can use the AI Assistant to estimate the effort based on the project scope. To optimize credit usage, the system saves these estimations, so they are only calculated once.
+* **Even Split**: If manual inputs are not specified and you do not run AI estimation, the platform splits the project''s total estimated hours evenly among all active roles (e.g., 30 total hours split among 3 roles results in 10 hours each).
+
+### 3. Effort Hours to Weekly Capacity Conversion
+Once the total effort hours are determined, they are converted into a **weekly planned capacity hold** for scheduling:
+* **Short Projects (1 week or less)**: The weekly capacity hold is equal to the total effort hours.
+* **Long Projects (more than 1 week)**: The weekly capacity hold divides the total hours by the number of weeks, rounded to the nearest whole hour.
+
+This value is stored as the proposed hours per week on the crew invitation.
+
+### 4. Calendar and Booking Capacity Holds
+Upon invitation acceptance:
+* The system automatically creates a calendar booking marked as a **Project Work Capacity Hold**.
+* **Visual Layout**: This booking appears as a neat, all-day banner at the top of the freelancer''s calendar rather than blocking off specific hourly time slots. 
+* **Freelancer Autonomy**: This ensures scheduling availability checks remain accurate while giving freelancers complete autonomy to decide exactly *when* during the week they will perform the work. Freelancers log their actual hours worked on their weekly **Time Card**.
+
+---
+
+## 2. Crew Suitability Evaluation (0–100%)
+
+Candidates are ranked using a comprehensive matchmaking algorithm that calculates a suitability percentage based on four major factors:
+
+### 1. Technical Skill & Expertise Fit
+* **Skill Matching**: The AI compares the required project skills against the skills listed on the candidate''s profile. It uses synonym mapping (for example, if a project requires "Sensa Cut" and the freelancer listed "Sensa Editor", the AI automatically recognizes this match).
+* **Software Proficiency**: Checks familiarity with required production software tools.
+* **Role Alignment**: Confirms whether the freelancer''s primary declared roles match the slot.
+* **Equipment Matching**: Checks if the freelancer owns or operates specific technical equipment required for the shoot.
+* **Specialization Fit**: Evaluates whether the freelancer holds verified specializations related to the project type (e.g., video editing, motion design).
+* **Expertise Level**: Considers the freelancer''s average expertise level in their verified skills.
+
+### 2. Location & Work Mode Fit
+* **On-Site Roles**: For physical, on-location roles (like Gaffer or Cinematographer), the algorithm checks travel feasibility. It prioritizes local crew to minimize travel overhead, mileage costs, and accommodation logistics.
+* **Remote-Friendly Roles**: For digital or post-production roles (like Editor or Designer), physical location is ignored. The engine instead evaluates timezone overlap to ensure smooth communication during collaborative windows.
+
+### 3. Real-Time Availability & Capacity
+* **Schedule Analysis**: Rather than relying on a static availability flag on a profile, the algorithm queries all active bookings in the candidate''s schedule for the project''s exact date window.
+* **Remaining Hours**: The system subtracts current project commitments from the freelancer''s maximum weekly capacity. Freelancers with sufficient unbooked time to cover the role''s weekly requirements are ranked higher, while overbookings lower suitability.
+
+### 4. Budget Alignment
+* **Rate Check**: Compares the freelancer''s declared hourly or daily rate against the target budget allocated for that specific role slot.
+* **Budget Fit**: Freelancers whose rates fall within or below the budget range are prioritized, while rates exceeding the target budget will lower the candidate''s suitability ranking.
+
+---
+
+## 3. Reviewing Suggestions & Concerns
+
+To view AI matchmaking suggestions for a project:
+1. Navigate to **Projects** and open the specific project dashboard.
+2. Click **Find Matches** in the upper right. The engine will evaluate candidates for each defined role slot.
+3. Review the **Role Slot Matching Table** which displays suggested candidates sorted by match score.
+
+### Match Reasoning & Concerns
+Under each candidate''s score, the interface lists:
+* **Match Reasoning**: A quick summary of their strengths (e.g., *"Strong fit with excellent technical skill match and high availability"*).
+* **Concerns / Red Flags**: Potential risks, such as budget mismatches (hourly rate exceeds target budget) or timeline overlaps (conflicts with existing booked projects).
+
+Once you''ve selected the optimal candidates, you can check their names and click **Invite All Selected** to dispatch invitations immediately.
+
+---
+
+## 4. Credit Consumption & Caching for Matchmaking
+
+Running the AI matchmaking engine to analyze suitability, calculate scores, and generate match reasoning consumes platform credits from your workspace billing ledger.
+
+### Matchmaking Credit Rules
+* **Free Operations**: Browsing the freelancer list, searching your internal registry manually, or viewing freelancer profiles does not consume credits.
+* **Credit-Gated Operations**: Running the AI matchmaking suggestions (which calculates suitability scores and generates match reasoning or concerns) always consumes credits. This applies even if you manually entered the role hours or used the even split fallback instead of AI hours estimation.
+* **AI Processing**: The system uses specialized analysis engines to evaluate candidates, identify compatibility concerns, and write detailed suitability rationales. Credit consumption is based on the volume of data analyzed per query.
+* **Onboarding Free-Tier**: If you are a new organization founder completing your first-time onboarding setup, credit consumption is waived for your initial matchmaking trials.
+
+### Caching Safeguards
+To protect your workspace budget from redundant credit charges:
+* **Saved Role Estimates**: Once the AI estimates hours for a work package, the results are saved directly to the project''s deliverables. Reloading the dashboard or reviewing the saved estimates does not consume additional credits.
+* **Match Reasoning Cache**: The detailed match reasonings and concerns are cached for your session. Opening a candidate''s profile preview or reloading the matching grid does not trigger a new credit charge. You only consume credits when you explicitly trigger a new search or re-evaluate matchmaking after changing the project''s dates, roles, or deliverables.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/4.3-inviting-and-crew-rsvp',
+        'Inviting Crew and Managing RSVPs',
+        'Inviting & Crew RSVP',
+        'Learn how to invite crew to a project through Matching, let the ABRAM assistant help draft invitations, and understand what invitees see when they respond.',
+        '{"ABRAM","freelancer","producer","calendar","ai","matching","roster","workflow","crew","assistant","rsvp","inviting"}'::text[],
+        '---
+title: ''Inviting Crew and Managing RSVPs''
+sidebarTitle: Inviting & Crew RSVP
+description: >-
+  Learn how to invite crew to a project through Matching, let the ABRAM
+  assistant help draft invitations, and understand what invitees see when
+  they respond.
+keywords:
+  - ABRAM
+  - freelancer
+  - producer
+  - calendar
+  - ai
+  - matching
+  - roster
+  - workflow
+  - crew
+  - assistant
   - rsvp
   - inviting
 ---
-# Section 4.3: Inviting & Crew RSVP
+# Section 4.3: Inviting Crew & Managing RSVPs
 
-ABRAM provides flexible invitation workflows designed to bring freelancers onto projects quickly. This section outlines the different invitation flows, how the AI Chatbot handles external invites, and the RSVP interface freelancers use to respond.
-
----
-
-## 1. Direct Project & Matchmaking Invites
-
-Within the producer platform, there are two primary methods to invite existing roster members to projects:
-
-### Direct Project Invites
-1. Open the project and navigate to the **Crew** or **Team** tab.
-2. Click **Invite Crew Member**.
-3. Choose a contact from your Crew Roster, specify their role slot and proposed rate, and send the invitation.
-
-### AI Matchmaking Invites
-1. Under the **Project Matching** dashboard, select the checkboxes next to the AI-recommended candidates.
-2. Click **Invite All Selected** to dispatch invitations in bulk, or click **Invite Candidate** next to individual listings.
+ABRAM helps you find the right people for a project and get invitations out quickly. This section covers how to invite crew from Matching, how the ABRAM assistant can help draft invitations for you, and what happens on the other end when someone responds.
 
 ---
 
-## 2. External Invites via Chatbot
+## 1. Inviting Crew from Matching
 
-In the current **Management Phase**, the chatbot is the primary mechanism for finding and onboarding external talent who are not yet on the platform.
+The main way to invite crew to a project is through the project''s **Matching** screen.
 
-<ProgressFlow steps={[
-  { title: "1. Producer Chat", description: "Producers prompt the copilot to locate external talent.", icon: "MessageSquare", status: "completed" },
-  { title: "2. Web Search", description: "AI queries external websites, portfolios, and catalogs.", icon: "Search", status: "completed" },
-  { title: "3. Draft Invite", description: "AI extracts contacts and prepares custom invitations.", icon: "FilePlus", status: "completed" },
-  { title: "4. Action Plan", description: "Producer reviews a structured hold and invitation plan.", icon: "FileCheck", status: "active" },
-  { title: "5. Sent", description: "Emails dispatched securely following final approval.", icon: "Send", status: "pending" }
-]} />
+1. Open the project and go to **Matching**.
+2. Click **Find Matches**. ABRAM scores candidates from your roster against each open role, based on skills, availability, and other role requirements.
+3. From the results, you can:
+   * Click **Invite Candidate** to send an invitation for that person right away, or
+   * Select multiple candidates and click **Invite All Selected** to invite them in bulk.
+4. To customize an invitation before sending it — for example, to adjust the message, proposed rate, or start date — open the candidate''s full profile and use the detailed invite page there.
 
-### The Chatbot Workflow
-1. **User Prompt**: You ask the chatbot, *"Find food photographers in Chicago and invite them to Project X."*
-2. **Search**: The chatbot uses its web search tool to find agencies, studios, or freelancers.
-3. **Drafting Invites**: Once the chatbot collects the contact details, it drafts the invitation.
-4. **Action Plan**: The chatbot compiles a structured **Action Plan** detailing who is being invited, their target roles, rates, and projects.
-5. **Approval**: You must click **Approve** in the chat panel. The system *never* sends emails automatically without your confirmation.
-6. **Execution**: The platform sends a secure, personalized email invitation to the recipient.
-
-### Rules & Gating Logic
-* **Required Data**: An email, first name, and last name are mandatory.
-* **Rate Limits**: Users are limited to **10 external invitations per day** to prevent spam.
-* **Duplicate Detection**: The tool checks for pending project or platform invitations to the same email and blocks duplicate requests.
-* **Existing User Check**: If the email is already associated with an account on ABRAM, the chatbot will suggest using the standard internal project invitation process.
-
-### Invitational Paths
-Depending on your requirements, invitations take one of two paths:
-* **Project Invite**: Links the invite to a project, creating a secure invitation link and triggering a project invite email.
-* **Platform Invite**: Sends a general network invite to join the platform.
+> **Good to know:** In the current Management Phase, Matching only draws from your own roster and team. ABRAM will never suggest or invite someone from outside your organization — every candidate you see has already been added to your roster.
 
 ---
 
-## 3. Freelancer RSVP Screen
+## 2. Letting the ABRAM Assistant Draft Invitations
 
-When an external freelancer receives an invitation email and clicks the secure link, they are directed to the secure **Public RSVP Screen**.
+If you''d rather not do it by hand, you can ask the ABRAM assistant to help draft and send invitations for you. For example, you might ask it to invite a specific person to a role, or to reach out to everyone still needed for a project.
 
-This is a clean, responsive web interface that does not require logging in to view:
-* **Host Info**: Displays the name of the organizer and organization inviting them.
-* **Project Details**: Includes the project title, dates, hours, daily/hourly rates, location details, and any custom notes from the producer.
-* **Response Options**: The freelancer can click:
-  * **Accept**: Confirms they will take the project slot.
-  * **Decline**: Declines the offer.
-  * **Tentative**: Flags that they are interested but need clarification.
-
-### Automated Capacity Sync on Acceptance
-When a freelancer accepts the invite:
-1. An account is created/linked (if external).
-2. The role slot is marked as **Filled**.
-3. A booking is automatically written to the freelancer''s schedule as project work, matching the slot''s date range and hours.
-4. The booking registers as a **planned capacity hold banner** on their utilization calendar, blocking out those hours from their availability pool.
+The assistant prepares an invitation plan showing who it intends to invite, for which role, and with what details — nothing is sent until you review it. Click **Approve** in the chat panel to send the invitations. The assistant never sends invitations on its own without your confirmation.
 
 ---
 
-## 4. Crew Assembly & Re-staffing (Producer)
+## 3. The Crew RSVP Screen
 
-The **Crew Assembly** interface (accessible directly from your project''s crew settings) is the management center for assembling your crew for a specific work package, monitoring RSVP statuses, and resolving declines.
+When someone receives an invitation, they get a secure link they can open without needing to log in.
 
-* **Crew Builder**: The builder allows you to assign specific team members or approved roster freelancers to unfilled role slots required by the work package.
-* **Acceptance Status Tracking**: Displays a list of all invited crew members with color-coded status badges:
-  * **Accepted (Green)**: Crew member has accepted the invite.
-  * **Pending (Amber)**: Invitation is sent, awaiting response.
-  * **Declined (Red)**: Crew member has declined the assignment.
-* **Replacement Finder**: If a crew member declines or a role slot remains unfilled, click **Find Replacement**. The replacement finder scans your roster and recommends alternative candidates matching the role''s required skills and budget, allowing you to dispatch a new invite instantly.
+This link opens a clean, simple RSVP page that shows:
+* The project title, dates, and times
+* The location
+* The name of the organizer
+* Any notes the producer included with the invitation
+
+This screen does **not** show pay or rate information — daily or hourly rates are not displayed here. Those details are shared separately if the invitee needs them.
+
+From this screen, the invitee can respond with one of three options:
+* **Accept** — confirms they''ll take the role
+* **Maybe** — flags interest as tentative, without committing yet
+* **Decline** — turns down the invitation
 
 ---
 
-## 5. Freelancer Proposal Inbox (Freelancer Companies)
+## 4. What Happens After Someone Accepts
 
-For freelancers operating as **Production Companies**, project invitations do not just receive a simple RSVP button; they require scoping and formal bids.
-
-### Reviewing Invites
-* Navigate to the **Proposals** tab in the freelancer sidebar.
-* The **Proposal Inbox** lists all incoming project invitations, displaying the producer name, project details, required roles, skills, and budget.
-
-### Proposal Builder
-* Click on any invitation to open the **Proposal Builder**.
-* Build a structured proposal defining:
-  * **Personnel slots**: Assign specific staff from your internal team to the requested roles.
-  * **Equipment packages**: Add resource kits required for the shoot.
-  * **Proposed rates**: Specify hourly/daily rates for personnel and gear.
-* Submit the proposal. The producer is notified and can review, negotiate, or approve your proposal to finalize the project contract.
+Once an invitation is accepted, ABRAM automatically adds a booking to that crew member''s schedule for the dates and times on the invitation — no extra steps needed on your end to get it onto their calendar.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,
@@ -265,24 +673,16 @@ Here are the exact clicks to manage your schedule and block out dates:
 
 ---
 
-## 7. Capacity Tracking Dashboard
+## 7. Notification Routing
 
-For freelancers, the **Capacity Tracking** screen (found under **Capacity** in the freelancer sidebar) is a dedicated analytics and settings panel for managing weekly hours and manual bookings.
+From the **Settings** gear on the Schedule page, you can control where your Slack notifications go. If your workspace has Slack connected, route each category of update to the channel that makes sense for it:
+* **General**
+* **Milestones**
+* **Deliverables & Reviews**
+* **Financials & Invoicing**
+* **Logistics & Bookings**
 
-### Capacity Gauge & Weekly Hour Settings
-* **Capacity Gauge**: Displays a visual ring representation of your current utilization for the selected week (e.g., "32 hrs booked out of 40 max capacity").
-* **Base Weekly Hours**: Set your standard weekly availability (e.g., 40 hours/week) in profile settings.
-* **Weekly Overrides**: If you have a busy week or planned time off, click **Edit Week Availability** to set custom maximum hours for that specific week (e.g., capping capacity at 20 hours for a holiday week). This immediately updates your availability status on the producer matchmaking engine.
-
-### Timeline & List Views
-* **List View**: Lists your bookings chronologically with search and filter capabilities (filter by *All*, *Confirmed*, *Tentative*, *Internal*, or *Producer Projects*).
-* **Timeline View**: Visualizes your upcoming schedule on a linear capacity timeline, making it easy to spot gaps or over-commitments.
-
-### Logging Manual Bookings
-If you book work outside the ABRAM platform and want to reserve those hours to prevent matchmaking conflicts:
-1. Click **Add Booking** (`+`).
-2. Input the Booking Title, Producer Name, Date Range, and daily hours required.
-3. Save the booking. These hours will be deducted from your available capacity pool, and producers will see you as busy.
+Choose a destination for each category so scheduling and booking updates land where your team will actually see them. For help connecting your workspace, see **Section 6.1: Connecting Slack**.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,
@@ -398,7 +798,7 @@ INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords,
         'Team Management Dashboard for Producer Scheduling',
         'Team Management Dashboard',
         'Use the ABRAM Team Management dashboard to schedule crew, monitor utilization, resolve booking conflicts, manage rosters, and reuse staffing templates.',
-        '{"ABRAM","ABRAM Network","freelancer","producer","calendar","ai","work package","payout","crew","scheduling","billing","ledger","rsvp","team","management","dashboard"}'::text[],
+        '{"ABRAM","ABRAM Network","freelancer","producer","calendar","ai","work package","payout","crew","scheduling","billing","ledger","rsvp","team","management","dashboard","analytics"}'::text[],
         '---
 title: ''Team Management Dashboard for Producer Scheduling''
 sidebarTitle: Team Management Dashboard
@@ -420,16 +820,17 @@ keywords:
   - team
   - management
   - dashboard
+  - analytics
 ---
 # Section 4.6: Team Management Dashboard
 
-The **Team Management** dashboard (found under **Team Management** in the producer sidebar) is the operational command center for managing team member scheduling, tracking utilization, resolving scheduling conflicts, managing your roster, and building staffing templates.
+The **Team Management** dashboard (found under **Team Management** in the producer sidebar) is the operational command center for managing team member scheduling, tracking utilization, resolving scheduling conflicts, managing your roster, building staffing templates, and reviewing staffing analytics.
 
 ---
 
-## 1. Roster Tab
+## 1. Crew Roster Tab
 
-The **Roster** tab is the centralized directory for all personnel in your organization''s network, managing both registered on-platform users and external contacts.
+The **Crew Roster** tab is the centralized directory for all personnel in your organization''s network, managing both registered on-platform users and external contacts.
 
 * ** Roster Directory**: Every contact displays their name, contact details, member type (Individual vs. Company), location, tags, capabilities, and billing rates (Hourly and Day rates).
 * **Roster Management**: Managers can manually add external crew contacts, edit rates and primary roles inline, or delete contacts.
@@ -462,7 +863,7 @@ The **Calendar** tab renders a unified timeline mapping out the schedules of all
 
 * **Visual Timeline**: Displays every team member and resource as a row. Banners are color-coded based on booking categories (e.g., project work, time off, meetings, personal commitments, or kit reservations).
 * **Folder Grouping**: Managers can organize the roster into folder groups (e.g., "Camera Department", "Grip & Electric") to filter the calendar view.
-* **Drag-and-Drop Scheduling**: Block holds can be dragged to change start/end dates. If in a premium billing tier, the full drag-and-drop scheduler is enabled; otherwise, it operates in a read-only mode with upgrade triggers.
+* **Drag-and-Drop Scheduling**: Block holds can be dragged to change start/end dates. Everyone can view the Calendar, but the full interactive drag-and-drop scheduler requires a **Team plan or higher**. On lower plans, the Calendar operates in a read-only mode with upgrade prompts shown when a scheduling action is attempted.
 * **Direct Booking**: Double-clicking an empty slot on a team member''s row opens the booking editor to create a schedule hold or associate them with a work package.
 * **Resource and Kit Support**: Toggle **Show Kits** to display equipment allocations and unified gear kits directly alongside personnel on the calendar.
 
@@ -557,6 +958,119 @@ Freelancers log hours on the platform. The system aligns these entries with sche
 * **Work Order Completion Auto-population**: When a Work Order status is changed to **Wrapped** or **Completed** by a manager, timesheet entries are automatically populated for all assigned personnel, calculating daily hours from scheduled booking durations.
 * **Actual Cost Rollup**: Any manual or auto-populated timesheet or expense entry automatically rolls up and updates the project work package''s actual spend in real time.
 * **Approval Flow**: Managers verify, edit, or delete logged hours. Approved hours sync directly to the billing ledger to execute payouts.
+
+---
+
+## 8. Analytics Tab
+
+The **Analytics** tab is the reporting center for reviewing staffing performance and trends across your organization over time. Reports can be filtered by date range and, where applicable, by project, and any view can be exported for use outside the platform.
+
+* **Trends**: Visualizes utilization and booking activity over time, helping you spot seasonal or project-driven spikes in staffing demand.
+* **Heatmap**: A calendar-style heatmap highlighting which days, weeks, or team members carry the heaviest booking load.
+* **Projects**: Breaks down staffing hours and costs by project, useful for comparing crew investment across productions.
+* **Roles**: Aggregates hours and utilization by role (e.g., Camera Operator, Grip), showing which roles are in highest demand.
+* **At-Risk**: Surfaces team members or projects approaching capacity limits or showing patterns of overcommitment that may need attention.
+* **ROI**: Compares staffing spend against project outcomes to help evaluate the return on crew investment.
+* **CSV Export**: Any Analytics view can be exported as a CSV file for further analysis or reporting outside the platform.
+'
+      ) ON CONFLICT (slug) DO UPDATE SET
+        title = EXCLUDED.title,
+        sidebar_title = EXCLUDED.sidebar_title,
+        description = EXCLUDED.description,
+        keywords = EXCLUDED.keywords,
+        content = EXCLUDED.content,
+        updated_at = now();
+    
+
+      
+INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
+      VALUES (
+        'user-guide/4.7-run-of-show',
+        'Section 4.7: Run of Show',
+        'Run of Show',
+        'Build and run a minute-by-minute segment schedule for live and broadcast productions, with role-based views, AI generation, and live show-control tracking.',
+        '{"ABRAM","run of show","live production","broadcast schedule","show control","stripboard","scheduling"}'::text[],
+        '---
+title: ''Section 4.7: Run of Show''
+sidebarTitle: Run of Show
+description: ''Build and run a minute-by-minute segment schedule for live and broadcast productions, with role-based views, AI generation, and live show-control tracking.''
+keywords:
+  - ABRAM
+  - run of show
+  - live production
+  - broadcast schedule
+  - show control
+  - stripboard
+  - scheduling
+---
+# Section 4.7: Run of Show
+
+The **Run of Show** tab, found inside any project, is your minute-by-minute schedule of show segments. It is built for live, broadcast, and event productions where every segment needs a precise start time, owner, and set of notes — and where that schedule often needs to change in real time once the show is actually running.
+
+---
+
+## 1. What the Run of Show Is
+
+At its core, the Run of Show is a grid of segments laid out across a timeline. Each segment represents a discrete block of the show (an opening, a segment, a break, a performance, and so on) with its own scheduled time.
+
+To keep the grid readable for different roles on set, the Run of Show offers **role-based column presets**, so each team member can see the columns most relevant to their job:
+* **Producer**
+* **Camera**
+* **Audio**
+* **Graphics**
+* **Replay**
+* **Stage Manager**
+
+### Layout Options
+You can switch between two layouts depending on how you like to work:
+* **Focused Day**: A streamlined view for working through one day''s schedule at a time.
+* **Classic Stripboard**: A traditional stripboard-style layout for viewing the full run of segments.
+
+---
+
+## 2. Building Your Schedule
+
+There are two ways to populate your Run of Show:
+
+### Manual Entry
+Add and arrange segments directly in the grid, filling in the details relevant to your production.
+
+### AI Generate
+Instead of building every segment by hand, you can provide a free-text outline of your show (for example, a rough rundown of what happens and when) and have a full set of segments generated for you automatically. You can then review and adjust the generated segments as needed.
+
+> **Plan Availability**: The number of segments you can add to a Run of Show is capped by your plan. Higher plans allow more segments.
+
+---
+
+## 3. Editing and Reordering
+
+The Run of Show is designed to be adjusted quickly as plans change:
+* **Drag to Reorder**: Drag a segment to a new position in the schedule, and the times for surrounding segments recalculate automatically to keep the run sequential.
+* **Shift Times**: Use the **Shift Times** tool to bulk-adjust the timing of multiple segments at once — useful when the whole show needs to move earlier or later without re-entering every segment individually.
+
+---
+
+## 4. Go Live Mode
+
+When it''s time to actually run the show, switch into **Go Live** mode. This turns the Run of Show into a live show-control tool:
+* **Elapsed vs. Scheduled Tracking**: As the show progresses, Go Live mode tracks your actual elapsed time against the scheduled time for each segment, so you can see at a glance whether you''re running ahead, on time, or behind (variance).
+* **Show Controls**: From Go Live mode you can:
+  * **Pause** and **Resume** the show clock.
+  * **Advance** to the next segment.
+  * **End** the show once it''s complete.
+
+---
+
+## 5. Step-by-Step UI Navigation
+
+1. **Opening the Run of Show**: Open your project, then click the **Run of Show** tab.
+2. **Choosing a Layout**: Select **Focused Day** or **Classic Stripboard** depending on how you want to view your segments.
+3. **Generating a Schedule with AI**: Click **AI Generate**, enter a free-text outline of your show, and let ABRAM build the initial set of segments.
+4. **Adjusting Manually**: Add or edit segments directly in the grid as needed.
+5. **Reordering Segments**: Drag a segment to a new position — the schedule''s times recalculate automatically.
+6. **Shifting the Whole Schedule**: Click **Shift Times** to bulk-adjust the timing of multiple segments at once.
+7. **Switching Role Views**: Choose a column preset (**Producer**, **Camera**, **Audio**, **Graphics**, **Replay**, or **Stage Manager**) to see the columns relevant to your role.
+8. **Running the Show**: Click **Go Live** to enter show-control mode. Use **Pause**, **Resume**, and **Advance** to control the show as it runs, and click **End** when the show is complete.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,
@@ -617,16 +1131,16 @@ If a contractor has not completed their Stripe onboarding, clients can still pay
 
 ## 2. Step-by-Step Setup Instructions
 
-### Step 1: Navigate to Financials
+### Step 1: Navigate to Payouts
 1. Log in to your ABRAM freelancer workspace.
-2. In the left navigation sidebar, click on **Financials**.
-3. Under the **Overview** tab or the **Payouts** tab, look for the **Payout Setup** (or **Organization Payout Setup**) widget.
+2. Payout setup lives in the **Payouts** area. You can reach it either from **Settings → Payouts**, or from the **Financials** section''s **Payouts** tab.
+3. Look for the **Payout Setup** (or **Organization Payout Setup**) widget.
 
 ### Step 2: Initialize Stripe Account Creation
 1. Click **Get Started** on the setup card.
-   * *Note: Only users with Financial Management permissions (Owners and Admins for organizations) can initiate this setup.*
+   * *Note: Only organization owners or admins can manage the organization''s payout account. Other members can''t initiate or edit this setup.*
 2. ABRAM will securely register your profile with Stripe in the background. A loading spinner will appear briefly.
-3. You will be redirected automatically to the Stripe-hosted onboarding wizard in the same browser tab.
+3. You will be redirected automatically to the Stripe-hosted onboarding wizard in the same browser tab, where you complete a Stripe Express account setup.
 
 ### Step 3: Complete the Stripe Express Form
 On the Stripe-hosted onboarding portal, you must provide:
@@ -637,9 +1151,9 @@ On the Stripe-hosted onboarding portal, you must provide:
 3. **Payout Destination**: Enter your Bank Account details (Routing and Account Number) or link a Debit Card for instant payouts.
 
 ### Step 4: Verification and Return to ABRAM
-1. Once you review and submit your details, Stripe will redirect you back to the ABRAM Financials page.
+1. Once you review and submit your details, Stripe will redirect you back to the ABRAM Payouts page.
 2. ABRAM will automatically retrieve and update the setup status.
-3. Your Payout Setup card will update to show your active status.
+3. Your Payout Setup card will update to show one of three statuses: **Active**, **In Review**, or **Setup Required**.
 
 ---
 
@@ -660,7 +1174,7 @@ The **Stripe Connect Status** card indicates your verification state:
 
 ## 4. Managing Your Stripe Dashboard
 
-Once your Stripe Connect account status is **Active**, the setup button changes to **Open Stripe Dashboard** (or **Open Organization Dashboard**).
+Once your Stripe Connect account status is **Active**, the setup card shows an **Open Stripe Dashboard** button.
 
 Clicking this button takes you to Stripe Express where you can:
 * View pending and historical payout transfers.
@@ -668,13 +1182,16 @@ Clicking this button takes you to Stripe Express where you can:
 * Update your bank account or debit card information.
 * View and download annual tax documents (such as Form 1099-NEC).
 
+### Minimum Balance for Payout Requests
+To request a payout, your available balance must be at least **$10**. If your balance is below this threshold, keep accumulating earnings from paid invoices until you reach the minimum before requesting a transfer.
+
 ---
 
 ## 5. Multi-Organization Context (Prime Freelancers)
 
 If your user account is an Owner or Admin of a registered Production Company organization:
 * **Org-Bound Setup**: ABRAM binds Stripe Connect accounts to organizations rather than individual users. Setting up Stripe here configures the bank account for the entire organization''s billings.
-* **Role Restrictions**: Only organization members with financial permissions can start onboarding. Standard team members will see a read-only message: *"Only organization owners or authorized admins can manage Stripe setup."*
+* **Role Restrictions**: Only organization owners or admins can manage the organization''s payout account. Standard team members see a read-only view of the Payouts area asking them to contact their organization admin.
 * **Personal vs. Organization View**: If you operate as both an individual freelancer and run a company, you can toggle between your **Personal** and **Organization** payout balances on the **Payouts** tab. Ensure you configure Stripe for both if you expect payments in both roles.
 
 ### Payout Destination Resolution
@@ -723,6 +1240,9 @@ keywords:
 
 This guide covers the lifecycle of generating invoices, managing producer checkout authorizations, approving Purchase Orders (POs), and tracking payouts in the ABRAM Network.
 
+> [!NOTE]
+> Need to send a cost estimate before work begins? **Quotes** are a related feature covered in [Section 5.6](./5.6-quotes.md), and let you draft an estimate that a producer can approve before you invoice.
+
 ---
 
 ## 1. The Invoicing Lifecycle
@@ -748,12 +1268,12 @@ Freelancers can generate invoices linked to projects or select ad-hoc producer e
 * **Import Expenses**: If you have unbilled project expenses submitted and approved on ABRAM, they will appear in a sidebar. Check them to instantly append them as line items.
 
 ### Step 3: Add Line Items
-* Enter the **Description**, **Quantity**, and **Unit Price** for each item. 
+* Enter the **Description**, **Quantity**, and **Unit Price** for each item. You can add manual line items and expenses yourself, in addition to importing approved project expenses.
 * The system calculates the row totals and subtotal automatically.
 
 ### Step 4: Fees and Taxes Preview
 ABRAM calculates fees in real time:
-* **Platform Fee**: A flat **5% Payment Processing Fee** is calculated on the subtotal.
+* **Platform Fee**: A small platform processing fee is calculated on the subtotal and shown on the invoice before you submit it.
 
 ### Step 5: Save or Send
 * **Save Draft**: Saves the invoice locally. You can edit or delete drafts at any time.
@@ -789,7 +1309,7 @@ When a producer authorizes a Purchase Order, the freelancer must accept it befor
 ### Step 2: Accept or Reject
 * **Accept Purchase Order**:
   * Triggers the payment fulfillment.
-  * ABRAM securely processes the transaction to complete the payment.
+  * ABRAM securely processes the transaction through Stripe to complete the payment.
   * The authorized funds are captured and transferred to your account.
   * The invoice status transitions to **Paid**, and audit logs are recorded.
 * **Reject**:
@@ -803,7 +1323,7 @@ When a producer authorizes a Purchase Order, the freelancer must accept it befor
 At any stage of the lifecycle:
 1. Click on any invoice in your history to open the **Inline Detail View**.
 2. Click the **Download PDF** icon in the header.
-3. The system generates a print-ready, professional document containing your logo, producer address, line items, and a summary breakdown (Subtotal, 5% processing fee, and Total).
+3. The system generates a print-ready, professional document containing your logo, producer address, line items, and a summary breakdown (Subtotal, the platform processing fee, and Total).
 
 ---
 
@@ -827,540 +1347,6 @@ If you have a positive **Available Balance**:
 When payouts are executed, the system automatically routes them using the following rules:
 * **Routing Priority**: Payouts are routed to the contractor''s primary organization Stripe account. If the contractor belongs to multiple organizations, the platform routes the payout to the most appropriate business account based on their organizational roles.
 * **Onboarding Safety Net**: If you have not completed Stripe onboarding, clients can still pay your invoices. The platform temporarily holds the payment securely on the platform account. Once you complete your Stripe setup, the platform automatically releases and transfers the held funds to your connected bank account.
-'
-      ) ON CONFLICT (slug) DO UPDATE SET
-        title = EXCLUDED.title,
-        sidebar_title = EXCLUDED.sidebar_title,
-        description = EXCLUDED.description,
-        keywords = EXCLUDED.keywords,
-        content = EXCLUDED.content,
-        updated_at = now();
-    
-
-      
-INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
-      VALUES (
-        'user-guide/5.3-billing-ledger-and-ai-credits',
-        'Billing Ledger and AI Credit Consumption in ABRAM',
-        'Billing Ledger and AI Credits',
-        'How ABRAM calculates and meters AI credits, how the organization-bound billing ledger tracks usage, and how producer features unlock by balance.',
-        '{"ABRAM","ABRAM Network","stripe","producer","calendar","ai","brief","onboarding","billing","ledger","matchmaking","credits"}'::text[],
-        '---
-title: ''Billing Ledger and AI Credit Consumption in ABRAM''
-sidebarTitle: Billing Ledger and AI Credits
-description: >-
-  How ABRAM calculates and meters AI credits, how the organization-bound
-  billing ledger tracks usage, and how producer features unlock by balance.
-keywords:
-  - ABRAM
-  - ABRAM Network
-  - stripe
-  - producer
-  - calendar
-  - ai
-  - brief
-  - onboarding
-  - billing
-  - ledger
-  - matchmaking
-  - credits
----
-# Section 5.3: Billing Ledger and AI Credits
-
-This guide explains how AI credits are calculated, structured, and consumed in the ABRAM Network. It details how the organization-bound ledger works and how producer features are gated based on credit balances.
-
----
-
-## 1. The AI Credit Concept
-
-ABRAM meters and bills all user-initiated AI actions—such as parsing resumes, extracting project skills, matching candidates, or analyzing project briefs.
-
----
-
-## 2. Typical Credit Costs & Caching
-
-Credit consumption is calculated based on the complexity of the operation and length of text or data processed. This ensures that you only pay for the resources required to process your request.
-
-| Feature / Action | Billing Model | Typical Cost / Range |
-| :--- | :--- | :--- |
-| **Project Brief Analysis** | Based on brief size & details | 5 - 25 credits per analysis |
-| **AI Team Matchmaking Suggestions** | Based on scope size & candidate count | 5 - 20 credits per suggestion |
-| **Resume & Profile Importing** | Based on resume file size | 2 - 10 credits per import |
-| **Chatbot Co-pilot Interaction** | Per query/response | 0.5 - 5 credits per message |
-| **Web Search Tool** | Based on query & results size | 1 - 5 credits per search |
-| **Image Generation** | Based on resolution & quality | 5 - 15 credits per image |
-
-> [!NOTE]
-> **Smart Query Optimization** automatically reduces credit usage. If you repeat similar queries or ask follow-up questions within the same context (e.g. refining a project brief or candidate list), the platform reads from memory at a fraction of the standard credit cost, saving your organization credits.
-
-<AgentOnly>Prompt cache reads are billed at a highly discounted rate (~10% of standard), while cache writes are billed at ~125% of standard input rates.</AgentOnly>
-
----
-
-## 3. The Three-Pool Credit Structure
-
-Every organization''s ledger is divided into three distinct credit pools. When credits are deducted, they are drawn in a strict priority order:
-
-<ProgressFlow steps={[
-  { 
-    title: "1. Monthly Allowance", 
-    description: "Included in your subscription tier. Reset monthly; unused balance does not roll over.", 
-    icon: "Calendar", 
-    status: "active" 
-  },
-  { 
-    title: "2. Trial Credits", 
-    description: "Awarded during onboarding. Valid until active trial timeframe expires.", 
-    icon: "Award", 
-    status: "pending" 
-  },
-  { 
-    title: "3. Purchased Balance", 
-    description: "Top-up credits bought via Stripe. Never expires, drawn last.", 
-    icon: "Coins", 
-    status: "pending" 
-  }
-]} />
-
-1. **Monthly Allowance**: Included in your subscription tier (e.g., Team, Studio). Drawn first. It resets every month; unused allowance does not roll over.
-2. **Trial Credits**: Awarded during onboarding. Drawn second. Only valid if the trial is still active and has not expired.
-3. **Purchased Balance**: Top-up credits bought via Stripe. Drawn last. Purchased credits never expire.
-
-**Sign-Up Credit Bonus**: New personal accounts and organizations are automatically initialized with a one-time welcome bonus of 250 credits in their purchased balance pool.
-
----
-
-## 4. Organization-Bound Billing
-
-* **Organization-Bound Billing**: All billing ledgers are bound to organizations. Solo users are billed through their personal organization workspace.
-* **Membership Routing**: If a user belongs to an active organization membership, the organization''s ledger is billed.
-* **Onboarding Exception**: AI calls made during the onboarding wizard (e.g., parsing your initial resume when setting up your profile) are free and bypass the ledger.
-* **Dynamic Seat Scaling**: For organizations on the **Team** or **Studio** tiers, your monthly AI credit allowances scale dynamically based on the number of team seats purchased (for example, on the Team tier, each seat adds 500 monthly credits). Workspace storage limits are fixed workspace pools (10 GB for Team, 15 GB for Studio) and do not scale with additional seats.
-
----
-
-## 5. Credit Gating (Example: Project Brief Analysis)
-
-When a producer uploads a project brief for AI analysis, the platform follows this verification sequence:
-
-1. **Credit Check**: The platform verifies that your organization has enough credits (at least 5 credits) in its active pools.
-2. **Analysis Execution**: If credits are available, the analysis engine parses the brief to extract scope details and roles.
-3. **Ledger Update**: The actual credits consumed are deducted from your balance once the analysis is completed.
-4. **Insufficient Balance Alert**: If your balance is below the minimum required, the analysis is paused, and a checkout window appears to add top-up credits.
-
-### Disconnect Safety Net
-If a network disconnect or timeout occurs during an analysis, the platform ensures your ledger is only billed for the work actually completed.
-
----
-
-## 6. Budgeting & Scheduling Feature Gating
-
-To provide flexibility while encouraging tier upgrades, ABRAM gates advanced scheduling and budgeting features based on subscription level. This allows users on Free and Solo Lite tiers to test budgeting capabilities prior to upgrading.
-
-| Tier | Scheduling Access | Budgeting Access |
-| :--- | :--- | :--- |
-| **Free** | **Read-Only**: Can view the stripboard and calendar. Editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create and edit up to **5 budget line items** and **5 expenses**. Saving or adding items beyond that limit is locked. |
-| **Solo Lite** | **Read-Only**: Can view the stripboard and calendar. Editing, drag-and-drop, AI Sort, Sync Crew, and adding breaks are locked. | **Trial**: Can create and edit up to **5 budget line items** and **5 expenses**. Saving or adding items beyond that limit is locked. |
-| **Solo Pro** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
-| **Team** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
-| **Studio** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. |
-| **Enterprise** | **Full Access**: All scheduling features, including drag-and-drop, AI Sort, Sync Crew, and adding breaks, are fully unlocked. | **Full Access**: Unlimited budget line items and expenses. Custom AI credits. |
-
-### Gating Indicators & Upgrade Paths
-* **Locked Controls**: In read-only scheduling mode, action buttons (such as "Add Production Day", "Sync Crew to Schedule", and "AI Sort Board") render as locked, and drag-and-drop interactions are disabled.
-* **Trial Restrictions**: When the limit of 5 budget line items or 5 expenses is reached on Free or Solo Lite plans, the system blocks the insertion of new items and displays a notification inviting the user to upgrade.
-* **Banners**: Persistent upgrade prompts are displayed at the top of the scheduling stripboard and financial overview frames for users on trial or restricted tiers, pointing to subscription settings for self-service upgrading.
-
----
-
-## 7. Upgrading Plans and Buying Credits
-
-Owners and Admins can purchase additional credits or upgrade plan tiers in **Settings** -> **Billing**:
-
-### Buying Ad-Hoc Top-Ups
-If your balance runs low, you can click **Top-Up** to purchase credit packs. This opens Stripe Checkout to securely process the purchase, and updates your balance immediately.
-
-### Individual Subscription Tiers
-ABRAM offers individual subscription tiers for solo professionals who do not require multi-user team collaboration:
-* **Solo Lite ($19/mo)**: Unlocks 300 monthly credits, unlimited active projects (for clients), 30 applications/listings, and 3 GB workspace storage.
-* **Solo Pro ($34/mo)**: Unlocks 600 monthly credits, PDF call sheet exports, Google/Outlook calendar sync, AI brief parser, and 10 GB workspace storage.
-
-### Upgrading a Personal Workspace
-If you are currently on the **Free** tier in a personal workspace and select a team subscription (e.g., **Team** or **Studio**):
-1. **Workspace Promotion**: The platform launches a coordinated flow prompting you for your Company Name and Team Size.
-2. The platform automatically promotes your personal workspace to a full **Organization**.
-3. You are redirected to Stripe Checkout to set up the subscription.
-4. Once completed, your organization''s Monthly Allowance is active, and team seat limits are updated.
-'
-      ) ON CONFLICT (slug) DO UPDATE SET
-        title = EXCLUDED.title,
-        sidebar_title = EXCLUDED.sidebar_title,
-        description = EXCLUDED.description,
-        keywords = EXCLUDED.keywords,
-        content = EXCLUDED.content,
-        updated_at = now();
-    
-
-      
-INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
-      VALUES (
-        'user-guide/5.4-billing-and-payments',
-        'Producer Billing, Payment Methods, and Holds',
-        'Producer Billing and Payments',
-        'How producers and organization owners configure payment methods, fund project milestones, manage authorization holds, and reconcile charges on ABRAM.',
-        '{"ABRAM","ABRAM Network","stripe","milestone","freelancer","producer","ai","work package","invoice","billing","payments"}'::text[],
-        '---
-title: ''Producer Billing, Payment Methods, and Holds''
-sidebarTitle: Producer Billing and Payments
-description: ''How producers and organization owners configure payment methods, fund project milestones, manage authorization holds, and reconcile charges on ABRAM.''
-keywords:
-  - ABRAM
-  - ABRAM Network
-  - stripe
-  - milestone
-  - freelancer
-  - producer
-  - ai
-  - work package
-  - invoice
-  - billing
-  - payments
----
-# Section 5.4: Producer Billing and Payments
-
-This guide details how producers, producers, and organization owners configure payment options, fund project milestones, and manage payment holds.
-
----
-
-## 1. Setting Up Payment Methods
-
-To pay freelancer invoices or allocate budgets for project work packages, you must link a valid payment source to your organization.
-
-### How to Add a Card or Bank Account:
-1. Navigate to **Settings** > **Billing** (or click the **Financials** tab on your project sidebar and select **Payment Methods**).
-2. Click **Add Payment Method**.
-3. In the secure Stripe Checkout window, choose one of the following options:
-   * **Credit/Debit Card**: Enter your card number, expiration date, and CVV code. Supported cards include Visa, Mastercard, American Express, and Discover.
-   * **Bank Account (ACH)**: (US Only) Log in securely via your bank provider to authorize direct transfers. Bank transfers are free but take 3–5 business days to clear.
-4. Click **Save Method**. This card or bank account will be marked as your organization''s primary funding source.
-
----
-
-## 2. Milestone Payments & Funding Flow
-
-ABRAM uses a milestone-based funding flow to protect both producers and freelancers.
-
-### Chronological Funding Stages:
-1. **Milestone Scoping**: During project creation, the producer and freelancer agree to a set of work packages and milestones (e.g., "Pre-Production: 25%", "Final Edit: 75%").
-2. **Payment Authorization**: When the project starts, ABRAM requests a payment authorization for the first upcoming milestone.
-3. **Delivery & Approval**: The freelancer submits their deliverables. Once the producer reviews and approves the work package, they click **Approve & Release** in the project dashboard.
-4. **Capture & Transfer**: Stripe immediately captures the authorized funds, deducts the platform processing fee, and routes the remainder to the freelancer''s connected bank account.
-
----
-
-## 3. Payment Authorization Holds (7-Day Limit)
-
-Credit card authorizations have a strict **7-day expiration limit** set by card networks. If your project milestone takes longer than 7 days to complete, the hold will naturally expire.
-
-### How ABRAM Handles Hold Expirations:
-* **No Automatic Refresh**: Card authorization holds cannot be silently or automatically refreshed by the system.
-* **Hold Expiry Alerts**: The platform automatically monitors pending holds. Starting at **Day 5 and Day 6**, managers receive warnings and critical dashboard alerts prompting them to capture or release the hold.
-* **Auto-Release**: If no action is taken, the hold expires naturally on **Day 7**. The funds are automatically released back to the producer''s card, and the invoice status is marked as expired.
-* **Hold Release**: If a project is cancelled or a milestone is rejected by the producer before day 7, the authorization hold is released immediately. The funds are returned to the producer''s available balance.
-'
-      ) ON CONFLICT (slug) DO UPDATE SET
-        title = EXCLUDED.title,
-        sidebar_title = EXCLUDED.sidebar_title,
-        description = EXCLUDED.description,
-        keywords = EXCLUDED.keywords,
-        content = EXCLUDED.content,
-        updated_at = now();
-    
-
-      
-INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
-      VALUES (
-        'user-guide/6.1-slack-notifications',
-        'Slack Notifications and Channel Connector',
-        'Slack Notifications',
-        'Connect your Slack workspace to ABRAM to receive real-time milestone, task, review, and invoice updates in your designated production team channels.',
-        '{"ABRAM","ABRAM Network","milestone","producer","slack","ai","invoice","collaboration","crew","notifications"}'::text[],
-        '---
-title: ''Slack Notifications and Channel Connector''
-sidebarTitle: Slack Notifications
-description: ''Connect your Slack workspace to ABRAM to receive real-time milestone, task, review, and invoice updates in your designated production team channels.''
-keywords:
-  - ABRAM
-  - ABRAM Network
-  - milestone
-  - producer
-  - slack
-  - ai
-  - invoice
-  - collaboration
-  - crew
-  - notifications
----
-# Section 6.1: Slack Notifications
-
-Keep your production team aligned and producers updated by connecting your Slack workspace to ABRAM Network. The Slack connector sends real-time updates regarding milestones, tasks, review comments, and invoices directly to your designated channels.
-
----
-
-## 1. Connecting Slack via App Connectors
-
-The Slack integration is powered securely by our collaboration connector.
-1. Navigate to the **Settings** page.
-2. Click the **Connectors** tab.
-3. In the App Connectors list, find the **Slack** card and click **Connect**.
-4. You will be redirected to Slack''s authorization page.
-5. Choose the Slack workspace you want to connect to and click **Allow**.
-6. Once connected, Slack will show as *Connected* in your App Connectors list.
-
----
-
-## 2. Configuring Channel Mappings
-
-After authorized connection, you can decide which channels receive specific alerts. Channel mapping can be managed globally (for the whole organization) or overridden on a per-project basis:
-
-### Global Channel Mappings
-1. Open the Slack Connector settings inside the **Connectors** tab.
-2. Map general updates to a global channel (e.g., `#production-updates` or `#general`).
-3. Click **Save Mappings**.
-
-### Per-Project Channel Mappings
-For larger teams, you can direct updates to project-specific channels:
-1. Navigate to the **Projects** dashboard and select your active project.
-2. Click the **Project Settings** (gear icon) and go to the **Slack Settings** section.
-3. Override the global mapping by choosing a channel specifically for this project (e.g., `#project-sunset-promo`).
-4. All messages, task check-offs, and file comments related to this project will be routed there.
-
----
-
-## 3. Customizing Notifications
-
-You can choose what events trigger a Slack message. Select or deselect these options in your notification settings:
-
-| Notification Type | Trigger Event | Slack Output Example |
-| :--- | :--- | :--- |
-| **Project Milestones** | Project created, status changes (Planning -> Active), or milestones achieved. | `🎉 Milestone "Rough Cut Approved" completed for Project Sunset Promo!` |
-| **Tasks & Deliverables** | New task assigned, checklist items completed, or files uploaded. | `✅ Task "Color Correction" completed by Jane Doe.` |
-| **Producer Feedback** | Comments posted on deliverables, review link updates, or approvals. | `💬 Producer John Smith left a comment on "V1 Main Export": "Reduce music volume."` |
-| **Financial & Invoices** | Milestone expenses submitted, invoices approved, or payment confirmations. | `💵 Invoice INV-0045 for $5,000 has been approved by the producer.` |
-| **Schedule & Logistics** | Call sheet published, crew check-in alerts, or equipment check-out reminders. | `📅 Call sheet for Day 2 published. Crew call is 07:00 AM at Stage 4.` |
-
----
-
-## 4. Interactive Slack Actions & Fallbacks
-
-Slack notifications on ABRAM are not just passive alerts; they allow you to take direct actions from within your Slack workspace.
-
-### Interactive Buttons
-Notifications sent to your mapped Slack channels include interactive action buttons:
-* **Deliverable Reviews**: When a freelancer uploads a deliverable, the notification features **Approve** and **Request Revision** buttons. Clicking these buttons directly updates the deliverable status on the platform.
-* **Crew Check-ins**: Call sheet notifications include a **Mark On-Site** button. Freelancers can click this directly in Slack to mark themselves as checked-in and active on-site.
-* **System Alerts**: Administrative channel notifications feature options to resolve errors or launch debugging tools directly.
-
-### Message Updates In-Place
-When you click an interactive button in Slack, the notification message updates *in-place* to show a summary of the completed action (e.g., `✅ Deliverable "V1 Rough Cut" was approved by @username`). This prevents duplicate clicks and keeps your Slack channel history clean.
-
-### Manual Channel Connection Fallback
-If you are unable to locate a channel in the drop-down selector (e.g., due to integration permissions) or need to route messages to a private channel:
-1. Toggle the Slack settings to **Manual Mode**.
-2. Manually type in the Slack **Channel ID** (e.g., `C012345678`) and **Channel Name** (e.g., `#private-shoot-crew`).
-3. Save the fallback connection.
-* *Note: For private Slack channels, you must invite the ABRAM bot by running `/invite @ABRAM` in the private Slack channel before alerts can be successfully routed.*
-'
-      ) ON CONFLICT (slug) DO UPDATE SET
-        title = EXCLUDED.title,
-        sidebar_title = EXCLUDED.sidebar_title,
-        description = EXCLUDED.description,
-        keywords = EXCLUDED.keywords,
-        content = EXCLUDED.content,
-        updated_at = now();
-    
-
-      
-INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
-      VALUES (
-        'user-guide/6.2-frameio-workspaces',
-        'Frame.io Workspaces and Video Review Integration',
-        'Frame.io Workspaces',
-        'Link Frame.io to ABRAM project dashboards to browse media assets, track presentation links, and review producer feedback without switching apps.',
-        '{"ABRAM","ABRAM Network","producer","ai","workflow","collaboration","permissions","frameio","workspaces"}'::text[],
-        '---
-title: ''Frame.io Workspaces and Video Review Integration''
-sidebarTitle: Frame.io Workspaces
-description: ''Link Frame.io to ABRAM project dashboards to browse media assets, track presentation links, and review producer feedback without switching apps.''
-keywords:
-  - ABRAM
-  - ABRAM Network
-  - producer
-  - ai
-  - workflow
-  - collaboration
-  - permissions
-  - frameio
-  - workspaces
----
-# Section 6.2: Frame.io Workspaces
-
-The Frame.io integration bridges your video post-production review workflow directly with your ABRAM project dashboard. By linking Frame.io, you can browse media assets, track presentation links, and review producer comments without switching applications.
-
----
-
-## 1. Connecting Frame.io
-
-Before linking specific project folders, you must authorize Frame.io globally:
-1. Go to the **Settings** page and click the **Connectors** tab.
-2. Under the App Connectors list, click **Connect** on the **Frame.io** card.
-3. Authenticate with your Frame.io credentials and grant the requested permissions.
-4. Once connected, your authorization status will update to *Connected*.
-
----
-
-## 2. Linking a Project Workspace
-
-Once the connection is authorized globally, you can link a project workspace. The integration is built on the modern **Frame.io V4 REST API** architecture, allowing synchronization of media assets and stakeholder review shares.
-
-1. Navigate to the **Projects** dashboard and click on your active project.
-2. Select the **Frame.io** tab.
-3. If no workspace is linked yet, click **Provision Frame.io Project**.
-4. The system will automatically connect to Frame.io, create a dedicated project folder matching your project name, and sync the file references.
-
-### Role-Based Access Controls
-* **Administrative Actions**: Only Organization Administrators or project owners can provision workspaces, sync assets, or unlink references.
-* **Read-Only Members**: Standard team members see a read-only notice and can browse assets or review links, but cannot modify connection settings or authorize new folders.
-
-### Link Recovery & Re-Provisioning
-If a project folder is deleted on Frame.io, or if the connection becomes invalid, administrators can resolve the issue using two options on the Frame.io tab:
-1. **Clear Link Reference**: Removes the workspace link in ABRAM without deleting any remaining files on Frame.io.
-2. **Re-Provision Project**: Programmatically creates a fresh project folder on Frame.io matching the project name and restores active synchronization.
-
----
-
-## 3. Review Collaboration Features
-
-Once linked, the Frame.io tab turns into a media review dashboard containing three sections:
-
-### Overview Cards
-* **Linked Project:** Shows the name of the connected project and provides a direct link to open the folder on Frame.io.
-* **Review Shares:** Displays the number of active presentation and review links distributed to stakeholders.
-* **Media Assets:** Displays the total count of files, folders, and rushes synced to the root workspace.
-
-### Review Shares (Presentation Links)
-This list displays active reviewer links created in Frame.io:
-* See when the share was created and the number of video files attached.
-* Click **Open Review Link** to open the stakeholder review player. This allows producers to leave time-coded comments and drawings.
-* If you have administrative rights, a **New Share** button is available to launch the Frame.io review builder directly.
-
-### Project Media Assets
-Browse the root directory of your Frame.io workspace:
-* Files display descriptive icons for folders, videos, or documents.
-* File sizes (KB/MB) and file types are listed.
-* Click the **External Link** icon next to any file to open it in your browser or Frame.io application. This allows you to check specific frame-by-frame drawings and review histories.
-
-### Syncing and Refreshing
-Assets and links do not require manual matching, but you can update them instantly:
-* Click **Sync Assets & Shares** in the sidebar to sync new uploads, version stacks, or review link modifications.
-* Admins can click **Unlink Project Reference** to remove the connection. Unlinking does *not* delete files on Frame.io; it only clears the folder reference from ABRAM.
-'
-      ) ON CONFLICT (slug) DO UPDATE SET
-        title = EXCLUDED.title,
-        sidebar_title = EXCLUDED.sidebar_title,
-        description = EXCLUDED.description,
-        keywords = EXCLUDED.keywords,
-        content = EXCLUDED.content,
-        updated_at = now();
-    
-
-      
-INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
-      VALUES (
-        'user-guide/6.3-project-collaboration-and-file-sharing',
-        'Project Collaboration, File Sharing, and @Mentions',
-        'Project Collaboration & File Sharing',
-        'Share files, link external assets, and run @mention feedback threads on every ABRAM project deliverable for tighter crew and producer collaboration.',
-        '{"ABRAM","ABRAM Network","freelancer","producer","slack","ai","collaboration","project","file","sharing"}'::text[],
-        '---
-title: ''Project Collaboration, File Sharing, and @Mentions''
-sidebarTitle: Project Collaboration & File Sharing
-description: ''Share files, link external assets, and run @mention feedback threads on every ABRAM project deliverable for tighter crew and producer collaboration.''
-keywords:
-  - ABRAM
-  - ABRAM Network
-  - freelancer
-  - producer
-  - slack
-  - ai
-  - collaboration
-  - project
-  - file
-  - sharing
----
-# Section 6.3: Project Collaboration & File Sharing
-
-Successful creative productions rely on efficient asset sharing and structured feedback loop. ABRAM Network integrates file uploads, external link management, and `@mention` collaboration threads directly into each project deliverable.
-
----
-
-## 1. File Uploads & External Links
-
-ABRAM provides two ways to attach deliverables, scripts, budgets, or assets to a specific task:
-
-### Native File Uploads & Document Library
-You can upload project assets in two locations:
-* **Deliverables Tab**: Attach specific project deliverables (such as drafts, scripts, or exports) directly to their corresponding work tasks. Supported formats include PDF, DOC, and DOCX up to 100MB.
-* **Documents Tab**: Upload files to your general project document library. The Documents tab supports a wide range of formats (including PDF, Word, Excel, CSV, text, images, video, audio, and ZIP files up to 100MB). 
-* **AI Copilot References**: Uploading documents to the library automatically enables the AI Copilot to read and reference their contents during your workspace chats, allowing you to ask questions about the project files conversationally.
-
-### Deliverable Links (External Media)
-For file types not natively supported (such as raw video files, audio bundles, code repos, or Figma designs), use **Deliverable Links**:
-1. In the deliverable detail panel, click **Add Link**.
-2. Input the URL (e.g., Google Drive, Dropbox, Frame.io, YouTube).
-3. Provide a friendly label (e.g., "Rough Cut YouTube Link").
-4. Click **Add**. These external links stay grouped alongside native file attachments.
-
----
-
-## 2. Managing Deliverables and Revisions
-
-To maintain project quality control:
-* **Upload New Revisions:** To update a deliverable, delete the existing file and upload a new one. This ensures team members are always referencing the latest revision.
-* **Notification Alerts:** When a freelancer uploads a deliverable or marks a task as *Ready for Review*, producers and project leads are notified via in-app alerts, email, and Slack updates.
-* **Approvals:** Producers can mark deliverables as *Approved*, locking further edits and initiating payment schedules.
-
----
-
-## 3. Collaboration Threads & `@Mentions`
-
-Every deliverable features a dedicated, real-time comment thread. This keeps feedback, revision histories, and change requests consolidated with the asset.
-
-### Using Mentions
-To notify a specific team member:
-1. In the comment input box, type `@` followed by the user''s name.
-2. A dropdown list of active project members will appear.
-3. Select the correct user. The system will format the mention into a secure tag (e.g., `@Jane Doe`).
-4. Type your comment and click **Send** (or press **Enter** to submit directly; press **Shift + Enter** to insert a new line).
-5. The mentioned user will receive an immediate in-app and email alert, directing them to the thread.
-
-### Thread Replies & Actions
-* **Replies:** Click **Reply** beneath any comment to start a nested sub-discussion. This keeps specific review items grouped together.
-* **Deleting Comments:** You can delete your own comments by clicking the **Trash** icon. Project owners and admins can delete any comment to keep threads clear.
-
----
-
-## 4. Project Activity & Discussion Feed
-
-In addition to individual deliverable comments, each project features a unified **Activity Feed**:
-* **Consolidated Discussion**: A central board that displays all project-wide chat messages, updates, and replies.
-* **Chronological Status Logs**: The feed automatically integrates chronological logs of project events, including:
-  * Deliverable submissions and revision requests.
-  * Milestone confirmations and completions.
-  * Reported blocker issues.
-  * Project team changes (adding or removing crew members).
-  * System updates.
-This creates a single, complete timeline of both human conversations and automated project events.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,
