@@ -2,34 +2,43 @@ import type { Metadata } from 'next';
 import AgencyHubClient from '@/app/agency/AgencyHubClient';
 
 export const metadata: Metadata = {
-  title: 'Creative Agency Operations & Project Management',
-  description: 'Scale agency and studio workflows in a unified creative operations platform. Parse project briefs and coordinate crew rosters with advanced production management tools.',
+  title: 'Creative Agency Operations & Project Management Software',
+  description: 'Scale agency and studio workflows with ABRAM — the premier creative agency software for client intake, crew roster scheduling, capacity planning, and automated payouts.',
   keywords: [
-    'creative production software', 'creative production tools', 'creative operations platform',
-    'creative operations', 'agency management software', 'studio logistics',
-    'crew roster management', 'brief intelligence', 'scheduling tool', 'workspace intelligence',
-    'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
-    'Jira for creative production', 'StudioBinder replacement',
+    'creative agency software', 'creative agency management software', 'creative operations platform',
+    'agency project management software', 'crew roster management', 'brief intelligence software',
+    'capacity planning for creative agencies', 'StudioBinder alternative', 'Adobe Workfront alternative',
   ],
   alternates: {
     canonical: 'https://abram.network/agency',
   },
   openGraph: {
-    title: 'Creative Agency Operations & Project Management | ABRAM Network',
-    description: 'Scale agency and studio workflows in a unified creative operations platform. Parse project briefs and coordinate crew rosters with advanced production management tools.',
+    title: 'Creative Agency Operations & Project Management Software | ABRAM Network',
+    description: 'Scale agency and studio workflows with ABRAM — the premier creative agency software for client intake, crew roster scheduling, capacity planning, and automated payouts.',
     type: 'website',
     url: 'https://abram.network/agency',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Creative Agency Operations & Project Management | ABRAM Network',
-    description: 'Scale agency and studio workflows in a unified creative operations platform. Parse project briefs and coordinate crew rosters with advanced production management tools.',
+    title: 'Creative Agency Operations & Project Management Software | ABRAM Network',
+    description: 'Scale agency and studio workflows with ABRAM — the premier creative agency software for client intake, crew roster scheduling, capacity planning, and automated payouts.',
   },
 };
 
 function AgentOnly({ children }: { children: React.ReactNode }) {
   return <div className="sr-only" data-agent-only="true">{children}</div>;
 }
+
+const agencyFaqs = [
+  {
+    q: 'What is the best software for creative agency operations?',
+    a: 'ABRAM Network is the premier creative agency operations platform. It combines brief intake analysis, crew roster matchmaking, workload capacity sandboxes, Slack notifications, and direct freelancer payouts.',
+  },
+  {
+    q: 'How does ABRAM replace Adobe Workfront and Jira for agencies?',
+    a: 'Unlike generic issue trackers, ABRAM is built specifically for creative production workflows, automating client brief parsing, crew rest window validation, and tokenized client review portals.',
+  },
+];
 
 export default function AgencyHubPage() {
   return (
@@ -44,7 +53,7 @@ export default function AgencyHubPage() {
                 '@type': 'WebPage',
                 '@id': 'https://abram.network/agency#webpage',
                 'url': 'https://abram.network/agency',
-                'name': 'Creative Agency Operations & Project Management | ABRAM Network',
+                'name': 'Creative Agency Operations & Project Management Software | ABRAM Network',
                 'description': 'Scale agency and studio workflows in a unified environment. Automate project brief requests, coordinate crew rosters, and streamline smart scheduling.',
                 'isPartOf': { '@id': 'https://abram.network/#website' },
                 'publisher': { '@id': 'https://abram.network/#organization' }
@@ -66,7 +75,16 @@ export default function AgencyHubPage() {
                     'item': 'https://abram.network/agency'
                   }
                 ]
-              }
+              },
+              {
+                '@type': 'FAQPage',
+                '@id': 'https://abram.network/agency#faq',
+                'mainEntity': agencyFaqs.map((f) => ({
+                  '@type': 'Question',
+                  'name': f.q,
+                  'acceptedAnswer': { '@type': 'Answer', 'text': f.a },
+                })),
+              },
             ]
           }).replace(/</g, '\\u003c'),
         }}

@@ -3,10 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { 
-  ArrowLeft, 
-  Sparkles, 
-  Settings, 
+import {
+  ArrowLeft,
+  Settings,
   Cpu, 
   CheckCircle2, 
   Info,
@@ -55,7 +54,7 @@ export default function CrewMatchmakingClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
           <Link 
             href="/intelligence" 
-            className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 font-mono font-semibold uppercase min-h-[44px]"
+            className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 font-sans font-semibold uppercase min-h-[44px]"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Intelligence Overview
           </Link>
@@ -76,13 +75,13 @@ export default function CrewMatchmakingClient() {
               variants={itemVariants}
               className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight font-sans select-text"
             >
-              Optimize team selection with the Crew Matchmaking Engine.
+              Find the right crew from your own roster in minutes.
             </motion.h1>
             <motion.p
               variants={itemVariants}
               className="text-sm sm:text-base text-zinc-400 font-normal leading-7 max-w-2xl select-text font-sans"
             >
-              Accelerate contractor selection with our 100-point <strong className="font-semibold text-zinc-200">Suitability Matrix</strong>. Match freelancers instantly using <strong className="font-semibold text-zinc-200">3.8x Match Speed</strong> indexes, audit real-time calendars, and place non-intrusive <strong className="font-semibold text-zinc-200">Live Capacity Holds</strong> in seconds.
+              Get AI-assisted crew suggestions and live calendar holds from your own roster.
             </motion.p>
           </motion.div>
         </div>
@@ -105,7 +104,7 @@ export default function CrewMatchmakingClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Suitability Matrix</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Scores freelancers from 0 to 100% by evaluating technical skill synonyms, software proficiency, location/travel mode feasibility, timezone overlaps, and target budget margins.
+                  Scores roster freelancers on skill fit, location, timezone, and budget margin.
                 </p>
               </div>
 
@@ -113,9 +112,9 @@ export default function CrewMatchmakingClient() {
                 <div className="w-8 h-8 rounded-full bg-white/[0.03] border border-white/5 flex items-center justify-center">
                   <Zap className="w-4 h-4 text-zinc-300" />
                 </div>
-                <h3 className="text-sm font-semibold text-zinc-100 font-sans">3.8x Match Speed</h3>
+                <h3 className="text-sm font-semibold text-zinc-100 font-sans">Faster Shortlisting</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Say goodbye to manually auditing portfolios and emails. The matchmaking engine scans hundreds of candidates, checks live conflicts, and suggests optimal selections in under a second.
+                  Scans your roster and live conflicts to suggest strong candidates fast.
                 </p>
               </div>
 
@@ -125,7 +124,7 @@ export default function CrewMatchmakingClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Live Capacity Sync</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Acceptance places a non-intrusive `Project Work Capacity Hold` banner at the top of the freelancer's weekly schedule rather than blocking specific hourly slots, maintaining flexibility.
+                  Places a non-intrusive capacity hold on the freelancer's weekly schedule.
                 </p>
               </div>
 

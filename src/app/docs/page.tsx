@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import DocsHubClient from './DocsHubClient';
 
 export const metadata: Metadata = {
@@ -43,7 +44,9 @@ export default function DocsPage() {
           }).replace(/</g, '\\u003c'),
         }}
       />
-      <DocsHubClient />
+      <Suspense fallback={<div className="py-16 text-center text-zinc-500">Loading documentation...</div>}>
+        <DocsHubClient />
+      </Suspense>
     </>
   );
 }

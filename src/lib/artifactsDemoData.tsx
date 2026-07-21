@@ -20,7 +20,7 @@ export const artifactsDemoData: ArtifactFeature[] = [
     documentTitle: "Horizon Campaign - ROM",
     documentType: "invoice",
     userPrompt: "Generate a ROM for the 'Horizon Campaign'. We need a 3-day shoot in LA with a standard commercial crew and a 10-day post schedule.",
-    agentOperations: ["query_la_labor_rates", "estimate_equipment_costs", "calculate_post_production"],
+    agentOperations: ["Querying labor rates", "Estimating equipment costs", "Committing estimate"],
     assistantResponse: "I've pulled the current rates for the LA market and compiled a Rough Order of Magnitude. The estimated total is $173,030.00. I've attached the breakdown.",
     content: (
       <div className="font-sans text-xs text-zinc-350 space-y-6">
@@ -142,7 +142,7 @@ export const artifactsDemoData: ArtifactFeature[] = [
     documentTitle: "Horizon Timeline & Deliverables",
     documentType: "timeline",
     userPrompt: "Based on the ROM, draft a production timeline. We want to shoot starting June 24, with delivery needed by July 12.",
-    agentOperations: ["sync_calendar_availability", "draft_production_schedule", "set_milestones"],
+    agentOperations: ["Building action plan", "Optimizing schedule", "Setting milestones"],
     assistantResponse: "Here is the drafted timeline. I've scheduled prep for June 18-20, principal photography for June 24-26, and post to hit your July 12 delivery date.",
     content: (
       <div className="font-sans text-xs text-zinc-350 space-y-6">
@@ -270,7 +270,7 @@ export const artifactsDemoData: ArtifactFeature[] = [
     documentTitle: "Camera & G&E Requisition",
     documentType: "list",
     userPrompt: "Check our in-house inventory for the upcoming shoot, suggest 1 or 2 items to pair with what we already have, and reserve them.",
-    agentOperations: ["check_internal_inventory", "match_compatible_gear", "book_vendor_rentals"],
+    agentOperations: ["Checking inventory", "Matching compatible gear", "Booking vendor rentals"],
     assistantResponse: "I've checked our internal inventory and confirmed your RED V-Raptor is available. I've sourced and booked a Cooke Anamorphic lens set and a Teradek transmitter to pair with it, completing your camera package.",
     content: (
       <div className="font-sans text-xs text-zinc-300 space-y-6">
@@ -403,7 +403,7 @@ export const artifactsDemoData: ArtifactFeature[] = [
     documentTitle: "Scene 4 Breakdown",
     documentType: "markdown",
     userPrompt: "I just uploaded the script for the coffee shop scene. Can you break it down and tag the props and wardrobe?",
-    agentOperations: ["parse_pdf_script", "extract_entities", "tag_production_elements"],
+    agentOperations: ["Breaking down script", "Extracting scene elements", "Updating day-out-of-days"],
     assistantResponse: "Script analyzed. I've identified the locations, cast members, and auto-tagged key props like the briefcase and coffee cup, along with wardrobe elements.",
     content: (
       <div className="font-sans text-xs text-zinc-300 space-y-6">
@@ -520,7 +520,7 @@ export const artifactsDemoData: ArtifactFeature[] = [
     documentTitle: "Call Sheet - Day 1",
     documentType: "callsheet",
     userPrompt: "Generate the call sheet for Day 1 of the Horizon Campaign shoot. Call time is 6:00 AM.",
-    agentOperations: ["fetch_crew_roster", "check_weather_api", "compile_call_sheet"],
+    agentOperations: ["Drafting call sheet", "Checking weather", "Notifying crew"],
     assistantResponse: "Day 1 Call Sheet generated. Call time set for 6:00 AM. Sunrise is at 5:42 AM. Ready for distribution.",
     content: (
       <div className="font-sans text-xs text-zinc-300 space-y-6">

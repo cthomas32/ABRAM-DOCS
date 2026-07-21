@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, 
-  Sparkles, 
   Settings, 
   Cpu, 
   CheckCircle2, 
@@ -81,7 +80,7 @@ export default function ClientIntakeClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
           <Link 
             href="/agency" 
-            className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 font-mono font-semibold uppercase min-h-[44px]"
+            className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 font-sans font-semibold uppercase min-h-[44px]"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to agency hub
           </Link>
@@ -104,14 +103,14 @@ export default function ClientIntakeClient() {
               custom={0.1}
               className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight font-sans select-text"
             >
-              Automate intake scoping with Brief Intelligence.
+              Turn client briefs into scoped, staffed projects in minutes.
             </motion.h1>
             <motion.p
               variants={revealVariants}
               custom={0.2}
               className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed max-w-2xl select-text font-sans"
             >
-              Construct custom request forms for department clients or external partners. Let the AI Brief Analyzer extract deliverables, calculate resource requirements, and draft milestone timelines instantly.
+              Brief Intelligence extracts deliverables and drafts milestone timelines instantly.
             </motion.p>
           </motion.div>
         </div>
@@ -135,7 +134,7 @@ export default function ClientIntakeClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Natural Language Parsing</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  The Brief Scoper reads complex descriptions to identify core deliverables, differentiating high-effort video models from fast copy layouts automatically.
+                  Brief Intelligence reads descriptions to identify deliverables and separate high-effort work from quick tasks.
                 </p>
               </div>
 
@@ -146,7 +145,7 @@ export default function ClientIntakeClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Direct Field Mapping</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Connect custom questionnaire slots directly to workspace parameters. Submitted request values populate crewing requirements and scheduling boards.
+                  Connect questionnaire fields directly to crewing requirements and scheduling boards.
                 </p>
               </div>
 
@@ -157,7 +156,7 @@ export default function ClientIntakeClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Self-Healing Budget Guardrails</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Scoping calculations align to custom budget thresholds. The system flags scope creep before requests are approved and resources are scheduled.
+                  The system flags scope creep before requests are approved.
                 </p>
               </div>
 

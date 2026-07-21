@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Sparkles,
   Sliders,
   MapPin,
   Calendar as CalendarIcon,
@@ -296,7 +295,7 @@ export default function CrewMatchmakingSandbox() {
                   Matchmaker Scoring
                 </span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] uppercase font-bold tracking-wider">
-                  3.8x Match Speed
+                  AI-Assisted
                 </span>
               </div>
               <h3 className="text-base font-semibold text-white tracking-tight mt-1">Suitability Index Matrix</h3>
@@ -313,7 +312,7 @@ export default function CrewMatchmakingSandbox() {
                   <button
                     key={idx}
                     onClick={() => handlePresetClick(preset.name === "Balanced Fit" ? { skills: 50, location: 50, capacity: 50, budget: 50 } : preset.weights)}
-                    className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/5 text-[10px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-all text-left cursor-pointer truncate"
+                    className="px-3 py-1.5 min-h-[44px] sm:min-h-0 flex items-center rounded-lg bg-white/[0.02] border border-white/5 text-[10px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-all text-left cursor-pointer truncate"
                   >
                     {preset.name}
                   </button>
@@ -335,7 +334,7 @@ export default function CrewMatchmakingSandbox() {
                       <span className="font-semibold text-zinc-300 block">{slider.label}</span>
                       <span className="text-[10px] text-zinc-500 font-normal">{slider.desc}</span>
                     </div>
-                    <span className="font-mono text-zinc-400 font-bold">{slider.val}%</span>
+                    <span className="font-sans text-zinc-400 font-bold">{slider.val}%</span>
                   </div>
                   <input
                     type="range"
@@ -353,7 +352,7 @@ export default function CrewMatchmakingSandbox() {
             <div className="flex justify-end pt-2 border-t border-white/5">
               <button
                 onClick={resetSliders}
-                className="btn-ghost flex items-center space-x-1.5 px-3 py-1 text-xs text-zinc-500 hover:text-white"
+                className="btn-ghost flex items-center space-x-1.5 px-3 py-1 min-h-[44px] sm:min-h-0 text-xs text-zinc-500 hover:text-white"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Reset Sliders</span>
@@ -380,9 +379,9 @@ export default function CrewMatchmakingSandbox() {
                   <button
                     key={role}
                     onClick={() => setSelectedRole(role)}
-                    className={`px-3 py-1 rounded-full border text-[10px] font-medium cursor-pointer transition-all ${
+                    className={`px-3 py-1 min-h-[44px] sm:min-h-0 flex items-center rounded-full border text-[10px] font-medium cursor-pointer transition-all ${
                       selectedRole === role
-                        ? "bg-white text-black border-white"
+                        ? "bg-white/[0.10] text-white border border-white/[0.20] border-white"
                         : "bg-white/[0.02] border-white/5 text-zinc-400 hover:text-white"
                     }`}
                   >
@@ -427,7 +426,7 @@ export default function CrewMatchmakingSandbox() {
                           {/* Suitability Score Dial */}
                           <div className="flex flex-col items-end shrink-0">
                             <span className="text-[9px] text-zinc-500 font-semibold tracking-wider uppercase">Suitability</span>
-                            <span className={`text-base font-bold font-mono ${
+                            <span className={`text-base font-bold font-sans ${
                               candidate.suitabilityScore >= 90
                                 ? "text-emerald-400"
                                 : candidate.suitabilityScore >= 75
@@ -492,7 +491,7 @@ export default function CrewMatchmakingSandbox() {
                       <div className="flex items-center justify-between border-t border-white/5 pt-2 mt-2">
                         <button
                           onClick={() => setSelectedCandidateCalendar(candidate)}
-                          className="btn-ghost text-[9px] text-zinc-500 hover:text-white px-2 py-0.5"
+                          className="btn-ghost text-[9px] text-zinc-500 hover:text-white px-2 py-0.5 min-h-[44px] sm:min-h-0 flex items-center"
                         >
                           Check Schedule
                         </button>
@@ -500,12 +499,12 @@ export default function CrewMatchmakingSandbox() {
                         <button
                           disabled={!!isInvited}
                           onClick={() => dispatchInvitation(candidate)}
-                          className={`flex items-center space-x-1 py-0.5 px-2.5 text-[9px] font-semibold rounded-full border transition-all cursor-pointer ${
+                          className={`flex items-center space-x-1 py-0.5 px-2.5 min-h-[44px] sm:min-h-0 text-[9px] font-semibold rounded-full border transition-all cursor-pointer ${
                             isInvited?.status === "accepted"
                               ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
                               : isInvited?.status === "pending"
                                 ? "bg-white/[0.04] border-white/10 text-amber-400"
-                                : "bg-white text-black border-white hover:bg-zinc-200"
+                                : "bg-white/[0.10] text-white border border-white/[0.20] border-white hover:bg-zinc-200"
                           }`}
                         >
                           {isInvited?.status === "accepted" ? (
@@ -557,7 +556,7 @@ export default function CrewMatchmakingSandbox() {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <span className="text-[10px] text-zinc-500 font-mono">{inv.timestamp}</span>
+                      <span className="text-[10px] text-zinc-500 font-sans">{inv.timestamp}</span>
                       <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase ${
                         inv.status === "accepted"
                           ? "bg-emerald-500/10 text-emerald-400"
@@ -608,7 +607,7 @@ export default function CrewMatchmakingSandbox() {
                     <span className="text-[9px] opacity-75">All-day banner</span>
                   </div>
                   
-                  <div className="grid grid-cols-7 text-center text-[10px] text-zinc-600 font-mono">
+                  <div className="grid grid-cols-7 text-center text-[10px] text-zinc-600 font-sans">
                     <span>29</span>
                     <span>30</span>
                     <span>01</span>

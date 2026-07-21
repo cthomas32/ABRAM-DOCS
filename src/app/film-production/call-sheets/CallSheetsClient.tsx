@@ -2,19 +2,16 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { 
-  ArrowUpRight, 
-  CalendarRange, 
-  Coins, 
-  Users, 
-  Sparkles,
-  MapPin,
+import {
+  ArrowUpRight,
+  CalendarRange,
+  Users,
   Printer,
-  ArrowDown,
-  UserCheck
+  ArrowDown
 } from "lucide-react";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 import CallSheetMockup from "@/components/film-production/CallSheetMockup";
+import AbramMark from "@/components/AbramMark";
 
 export default function CallSheetsClient() {
   return (
@@ -50,10 +47,7 @@ export default function CallSheetsClient() {
               custom={0.1}
               className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
             >
-              Daily Call Sheets.
-              <span className="block mt-[8px] text-zinc-500">
-                Synchronized with your set.
-              </span>
+              Get accurate call sheets to your whole crew before call time.
             </motion.h1>
 
             {/* Hero Subtitle */}
@@ -62,7 +56,7 @@ export default function CallSheetsClient() {
               custom={0.2}
               className="text-base sm:text-lg md:text-xl font-normal leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans select-text"
             >
-              Distribute daily agendas, track crew call times, and coordinate set logistics from a single, live-updating interface. Connected directly to your stripboard and financial budget.
+              Distribute daily agendas, track crew call times, and coordinate set logistics from one live interface.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -110,7 +104,7 @@ export default function CallSheetsClient() {
               The Live Call Sheet Cockpit
             </h2>
             <p className="text-sm font-normal text-zinc-400 leading-relaxed font-sans">
-              Explore the daily schedule, key set logistics, and cast/crew lists. Toggle between tabs below to view the unified daily plan.
+              Explore the daily schedule, key set logistics, and cast/crew lists in one view.
             </p>
           </div>
 
@@ -124,26 +118,26 @@ export default function CallSheetsClient() {
       <div className="max-w-7xl mx-auto px-6 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent relative z-10" />
 
       {/* 3. Core Dispatch & Logistics Section */}
-      <section id="core-features" className="relative w-full py-20 md:py-24 bg-transparent overflow-visible border-t border-white/[0.08]">
-        
+      <section id="core-features" className="relative w-full py-20 md:py-24 bg-transparent overflow-visible border-t border-white/[0.08] pb-32">
+
         {/* Ambient Glows */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] md:w-[600px] h-[350px] bg-zinc-800/[0.02] rounded-full filter blur-[100px] pointer-events-none -z-10" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center space-y-4 max-w-xl mx-auto mb-16">
             <span className="font-display text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 block">
               Coordination Engine
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-50 font-sans">
-              Core Dispatch & Logistics
+              Everything your set needs, dispatched automatically
             </h2>
             <p className="text-sm font-normal text-zinc-400 leading-relaxed font-sans">
-              The foundational tools for managing and distributing physical set details, call times, and daily schedules.
+              ABRAM keeps crew, locations, and safety notes in sync before call time.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            
+
             {/* Feature 1: Daily Schedule Timeline */}
             <div className="border border-white/5 bg-zinc-950/20 backdrop-blur-md rounded-2xl p-6 hover:border-white/10 hover:bg-zinc-900/30 transition-all space-y-4">
               <div className="flex items-center gap-3">
@@ -155,7 +149,7 @@ export default function CallSheetsClient() {
                 </h3>
               </div>
               <p className="text-sm font-normal leading-relaxed text-zinc-400 font-sans">
-                Supports a dynamic, reorderable timeline of polymorphic items: Script Scenes (with scene numbers, set descriptions, day/night settings, page lengths, and required characters) and Non-Scene Events (travel blocks, rehearsals, meals, and custom banners).
+                Build a daily timeline of scenes, travel, rehearsals, and meals with locations included.
               </p>
             </div>
 
@@ -170,22 +164,22 @@ export default function CallSheetsClient() {
                 </h3>
               </div>
               <p className="text-sm font-normal leading-relaxed text-zinc-400 font-sans">
-                Links directly to the project team and contractor roster. Set unique call times for each member, associate cast with their respective script characters, and track activity statuses (W for Work, H for Hold, T for Travel, R for Rehearsal).
+                Set call times per member and track work, hold, travel, and rehearsal status.
               </p>
             </div>
 
-            {/* Feature 3: Location Details */}
+            {/* Feature 3: Smart & AI Autofill */}
             <div className="border border-white/5 bg-zinc-950/20 backdrop-blur-md rounded-2xl p-6 hover:border-white/10 hover:bg-zinc-900/30 transition-all space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-white">
-                  <MapPin className="w-5 h-5" />
+                  <AbramMark size={20} />
                 </div>
                 <h3 className="text-base font-semibold text-zinc-50 font-sans">
-                  Location Details
+                  Smart & AI Autofill
                 </h3>
               </div>
               <p className="text-sm font-normal leading-relaxed text-zinc-400 font-sans">
-                Configure multiple locations for the day (Basecamp, Main Set, Secondary Set, and Parking). Save street addresses and directions (e.g. parking zones and shuttle van timetables) so crew and cast know exactly where to go.
+                ABRAM's AI drafts department instructions, weather notes, and safety guidelines automatically.
               </p>
             </div>
 
@@ -200,80 +194,7 @@ export default function CallSheetsClient() {
                 </h3>
               </div>
               <p className="text-sm font-normal leading-relaxed text-zinc-400 font-sans">
-                Format schedules using print-friendly CSS stylesheets for clean physical printouts or PDF exports. Distribute call sheets instantly to crew portals via email and text, complete with delivery logs and read confirmations.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div className="max-w-7xl mx-auto px-6 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent relative z-10" />
-
-      {/* 4. Connected Intelligence & Automations Section */}
-      <section className="relative w-full py-20 md:py-24 bg-transparent overflow-visible border-t border-white/[0.08] pb-32">
-        
-        {/* Ambient Glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] md:w-[600px] h-[350px] bg-zinc-800/[0.02] rounded-full filter blur-[100px] pointer-events-none -z-10" />
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center space-y-4 max-w-xl mx-auto mb-16">
-            <span className="font-display text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 block">
-              Intelligent Workflows
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-50 font-sans">
-              Connected Intelligence & Automations
-            </h2>
-            <p className="text-sm font-normal text-zinc-400 leading-relaxed font-sans">
-              AI-assisted generation and integrated financial workflows that keep your basecamp in sync with your production office.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            
-            {/* Feature 5: Smart Autofill & AI Auto-Fill */}
-            <div className="border border-white/5 bg-zinc-950/20 backdrop-blur-md rounded-2xl p-6 hover:border-white/10 hover:bg-zinc-900/30 transition-all space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-white">
-                  <Sparkles className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-semibold text-zinc-50 font-sans">
-                  Smart & AI Autofill
-                </h3>
-              </div>
-              <p className="text-sm font-normal leading-relaxed text-zinc-400 font-sans">
-                Auto-calculates the shoot day number and syncs confirmed bookings. Anthropic Claude evaluates timeline data to draft department-specific instructions (Camera, Art, Wardrobe, Audio), local weather, and tailored stage safety guidelines.
-              </p>
-            </div>
-
-            {/* Feature 6: Work Order & Billing Integration */}
-            <div className="border border-white/5 bg-zinc-950/20 backdrop-blur-md rounded-2xl p-6 hover:border-white/10 hover:bg-zinc-900/30 transition-all space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-white">
-                  <Coins className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-semibold text-zinc-50 font-sans">
-                  Work Order & Billing
-                </h3>
-              </div>
-              <p className="text-sm font-normal leading-relaxed text-zinc-400 font-sans">
-                Connect call sheets directly to scheduled Work Orders. Sync crew hours with payroll ledgers, track equipment logistics, and quickly generate new work orders from the call sheet layout, copying crew lists and details.
-              </p>
-            </div>
-
-            {/* Feature 7: One-Click Public RSVPs */}
-            <div className="border border-white/5 bg-zinc-950/20 backdrop-blur-md rounded-2xl p-6 hover:border-white/10 hover:bg-zinc-900/30 transition-all space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-white">
-                  <UserCheck className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-semibold text-zinc-50 font-sans">
-                  One-Click Public RSVPs
-                </h3>
-              </div>
-              <p className="text-sm font-normal leading-relaxed text-zinc-400 font-sans">
-                Dispatch secure invitation links that let external cast and crew accept or decline bookings in one click without logging in. Acceptances automatically sync to the contractor's utilization calendar and update the live crew builder.
+                Distribute call sheets instantly by email and text with delivery confirmations.
               </p>
             </div>
 

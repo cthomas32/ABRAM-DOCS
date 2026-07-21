@@ -28,24 +28,30 @@ export default function FinalCTASection() {
           <div className="absolute -top-20 -left-20 w-44 h-44 rounded-full bg-white/[0.015] filter blur-3xl pointer-events-none transition-opacity group-hover:opacity-100" />
 
           {/* Headline */}
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">
-            One Platform, End-to-End
+          <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white leading-tight">
+            Deliver your next production on time and on budget.
           </h2>
 
           {/* Subtitle — constrained to never exceed headline width */}
           <p className="mt-4 text-sm md:text-base text-zinc-400 leading-relaxed">
-            Everything you need to plan, crew, and deliver.
+            Start free and feel the difference on your first project.
           </p>
 
-          {/* Single CTA */}
-          <div className="mt-10">
+          {/* CTA pair */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
             <a
               href="https://app.abram.network"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white px-10 py-3.5 text-sm font-semibold hover:bg-white/10 hover:border-white/20 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-[#8ECAFF]/50 cursor-pointer shadow-[0_0_30px_rgba(142,202,255,0.06)]"
             >
-              Get Started
+              Get Started Free
+            </a>
+            <a
+              href="/pricing"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-300"
+            >
+              View Pricing
             </a>
           </div>
         </div>

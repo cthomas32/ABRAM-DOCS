@@ -245,6 +245,11 @@ export default function PricingPage() {
           <li><strong>Dynamic Credit Scaling:</strong> On Team and Studio plans, monthly AI credit allowances scale dynamically with the number of seats purchased. Workspace storage limits are fixed pools (10 GB for Team, 15 GB for Studio) and do not scale with additional seats.</li>
           <li><strong>Upgrade Banners:</strong> Upgrade banners are displayed on the scheduling stripboard and financial frames for users on restricted tiers (Free, Solo Lite), prompting self-service upgrades via Stripe Checkout.</li>
         </ul>
+
+        <h3>3. Direct Account Registration</h3>
+        <p>
+          Anyone can sign up for a free ABRAM account instantly at <a href="https://app.abram.network">https://app.abram.network</a>. No credit card is required for the free tier.
+        </p>
       </AgentOnly>
     </>
   );

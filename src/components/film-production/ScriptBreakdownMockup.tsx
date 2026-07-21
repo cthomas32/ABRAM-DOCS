@@ -2,17 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Sparkles, 
-  RotateCcw, 
-  FileText, 
-  MapPin, 
-  Users, 
-  Package, 
-  Shirt, 
-  CheckCircle2, 
-  Loader2 
+import {
+  RotateCcw,
+  FileText,
+  MapPin,
+  Users,
+  Package,
+  Shirt,
+  CheckCircle2,
+  Loader2
 } from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 
 export default function ScriptBreakdownMockup() {
   const [status, setStatus] = useState<"idle" | "parsing" | "complete">("idle");
@@ -66,7 +66,7 @@ export default function ScriptBreakdownMockup() {
           <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4 text-xs text-zinc-500 font-sans">
             <div className="flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="font-mono text-zinc-400">scene_12_breakdown.fdx</span>
+              <span className="font-sans text-zinc-400">Scene 12 Breakdown</span>
             </div>
             <div className="flex items-center gap-2 text-[10px] tracking-wide text-zinc-500">
               <span className="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/5">Courier 12pt</span>
@@ -76,7 +76,7 @@ export default function ScriptBreakdownMockup() {
 
           {/* Screenplay Content */}
           <div className="flex-1 relative overflow-y-auto pr-1">
-            <div className={`font-mono text-xs sm:text-sm leading-relaxed transition-all duration-300 ${status === "parsing" ? "text-zinc-500 opacity-60" : "text-zinc-300"}`}>
+            <div className={`font-sans text-xs sm:text-sm leading-relaxed transition-all duration-300 ${status === "parsing" ? "text-zinc-500 opacity-60" : "text-zinc-300"}`}>
               <div className="mb-4 text-zinc-400 font-semibold tracking-wider">SCENE 12</div>
               
               <div className="mb-4">
@@ -184,7 +184,7 @@ export default function ScriptBreakdownMockup() {
                   className="flex flex-col items-center justify-center py-10 px-4 text-center border border-dashed border-white/5 rounded-lg bg-zinc-950/40 h-full"
                 >
                   <div className="w-10 h-10 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center mb-3">
-                    <Sparkles className="w-5 h-5 text-zinc-500" />
+                    <AbramMark size={20} />
                   </div>
                   <p className="text-xs text-zinc-400 font-medium font-sans mb-1">
                     Ready for Breakdown
@@ -204,7 +204,7 @@ export default function ScriptBreakdownMockup() {
                   className="space-y-4 py-4 h-full flex flex-col justify-center"
                 >
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="flex items-start gap-3 animate-pulse">
+                    <div key={i} className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded bg-zinc-900 border border-white/5 shrink-0" />
                       <div className="flex-1 space-y-1.5 py-1">
                         <div className="h-2.5 bg-zinc-800 rounded w-1/4" />
@@ -352,9 +352,9 @@ export default function ScriptBreakdownMockup() {
           {status === "idle" && (
             <button
               onClick={handleRunBreakdown}
-              className="btn-primary w-full sm:w-auto flex items-center justify-center gap-1.5 text-xs select-none min-h-[44px] md:min-h-0"
+              className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5 select-none min-h-[44px] md:min-h-0"
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <AbramMark size={14} />
               <span>Run AI Breakdown</span>
             </button>
           )}

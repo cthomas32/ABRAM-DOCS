@@ -456,21 +456,21 @@ const pillars = [
     label: "For Production Managers",
     title: "Plan with precision.",
     description:
-      "Allocate crews, manage capacity, and keep every shoot on schedule — all from one timeline.",
+      "Allocate crews, manage capacity, and keep every shoot on schedule from one timeline.",
     Visualization: GanttVisualization,
   },
   {
     label: "For Creative Directors",
     title: "Scope with clarity.",
     description:
-      "Turn any brief into structured deliverables, roles, and milestones — powered by AI that understands production.",
+      "Turn any brief into structured deliverables, roles, and milestones with AI that understands production.",
     Visualization: MindMapVisualization,
   },
   {
     label: "For Producers",
     title: "Control with confidence.",
     description:
-      "Track budgets in real-time, lock purchase orders, and pay crews directly — no spreadsheets, no surprises.",
+      "Track budgets in real time, lock purchase orders, and pay crews directly from the platform.",
     Visualization: BudgetTickerVisualization,
   },
 ];

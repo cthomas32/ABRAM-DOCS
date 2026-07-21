@@ -182,10 +182,53 @@ export function getSafeProps<T extends { style?: any }>(props: T): Omit<T, "styl
   } as any;
 }
 
+// Kebab-case SVG/HTML presentation attributes that React expects in camelCase.
+// Inline SVG authored in MDX uses standard kebab-case (e.g. stroke-width), which
+// React rejects as an invalid DOM property, so we normalize them to camelCase.
+const SVG_ATTRIBUTE_MAP: Record<string, string> = {
+  "stroke-width": "strokeWidth",
+  "stroke-linecap": "strokeLinecap",
+  "stroke-linejoin": "strokeLinejoin",
+  "stroke-dasharray": "strokeDasharray",
+  "stroke-dashoffset": "strokeDashoffset",
+  "stroke-opacity": "strokeOpacity",
+  "stroke-miterlimit": "strokeMiterlimit",
+  "fill-opacity": "fillOpacity",
+  "fill-rule": "fillRule",
+  "clip-rule": "clipRule",
+  "clip-path": "clipPath",
+  "stop-color": "stopColor",
+  "stop-opacity": "stopOpacity",
+  "flood-color": "floodColor",
+  "flood-opacity": "floodOpacity",
+  "text-anchor": "textAnchor",
+  "dominant-baseline": "dominantBaseline",
+  "alignment-baseline": "alignmentBaseline",
+  "baseline-shift": "baselineShift",
+  "font-family": "fontFamily",
+  "font-size": "fontSize",
+  "font-weight": "fontWeight",
+  "font-style": "fontStyle",
+  "font-variant": "fontVariant",
+  "letter-spacing": "letterSpacing",
+  "word-spacing": "wordSpacing",
+  "text-decoration": "textDecoration",
+  "marker-start": "markerStart",
+  "marker-mid": "markerMid",
+  "marker-end": "markerEnd",
+  "shape-rendering": "shapeRendering",
+  "vector-effect": "vectorEffect",
+  "paint-order": "paintOrder",
+  "pointer-events": "pointerEvents",
+  "color-interpolation": "colorInterpolation",
+  "color-interpolation-filters": "colorInterpolationFilters",
+};
+
 // Convert standard inline HTML/SVG style="..." attributes into MDX-friendly style={{...}}
 export function preprocessMdx(content: string | undefined | null): string {
   if (!content) return "";
-  return content.replace(/(<[a-zA-Z0-9]+[^>]*)\s+style="([^"]*)"/g, (match, before, styleVal) => {
+
+  let processed = content.replace(/(<[a-zA-Z0-9]+[^>]*)\s+style="([^"]*)"/g, (match, before, styleVal) => {
     const styleObj: Record<string, string> = {};
     styleVal.split(";").forEach((rule: string) => {
       const parts = rule.split(":");
@@ -199,6 +242,15 @@ export function preprocessMdx(content: string | undefined | null): string {
     });
     return `${before} style={${JSON.stringify(styleObj)}}`;
   });
+
+  // Rewrite kebab-case SVG presentation attributes to their React camelCase names.
+  // Only whitelisted attribute names immediately followed by `=` are matched, so
+  // prose and unrelated hyphenated text are left untouched.
+  for (const [kebab, camel] of Object.entries(SVG_ATTRIBUTE_MAP)) {
+    processed = processed.replace(new RegExp(`(\\s)${kebab}=`, "g"), `$1${camel}=`);
+  }
+
+  return processed;
 }
 
 

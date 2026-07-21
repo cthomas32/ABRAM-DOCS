@@ -127,7 +127,7 @@ export default function HeroSection() {
         {/* Centered content container */}
         <div className="relative flex flex-col items-center justify-center text-center max-w-3xl mx-auto w-full">
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 select-text max-w-2xl">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-5 select-text max-w-2xl">
             A new standard
             <span className="block mt-[5px]">for creative production</span>
           </h1>

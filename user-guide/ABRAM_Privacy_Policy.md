@@ -1,6 +1,12 @@
 ---
 title: Privacy Policy
 description: Privacy Policy for the ABRAM creative intelligence platform.
+keywords:
+  - ABRAM
+  - ABRAM Network
+  - privacy policy
+  - data protection
+  - privacy
 ---
 
 # Privacy Policy

@@ -632,7 +632,7 @@ export default function InteractivePlayground() {
       case 'W':
         return 'bg-zinc-500/10 border border-zinc-500/20 text-zinc-300';
       case 'H':
-        return 'bg-amber-500/15 border border-amber-500/30 text-amber-400 font-bold animate-pulse';
+        return 'bg-amber-500/15 border border-amber-500/30 text-amber-400 font-bold';
       case 'F':
         return 'bg-red-500/10 border border-red-500/30 text-red-400 font-bold';
       case 'SWF':
@@ -687,7 +687,7 @@ export default function InteractivePlayground() {
               onClick={() => setActiveTab(tab)}
               className={`px-3 md:px-4 py-2.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] md:min-h-0 flex items-center justify-center ${
                 activeTab === tab
-                  ? 'bg-white text-black font-semibold'
+                  ? 'bg-white/[0.10] text-white border border-white/[0.20] font-semibold'
                   : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
               }`}
             >
@@ -709,9 +709,9 @@ export default function InteractivePlayground() {
             </button>
             <button
               onClick={() => setShowAddModal(true)}
-              className="btn-primary w-full px-4 py-2.5 md:py-1.5 text-xs flex items-center justify-center gap-1 min-h-[44px] md:min-h-0"
+              className="btn-glass w-full rounded-full px-4 py-2.5 md:py-1.5 text-xs flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-0"
             >
-              <Plus className="w-3.5 h-3.5 text-black" /> <span>Add Scene</span>
+              <Plus className="w-3.5 h-3.5 text-zinc-300" /> <span>Add Scene</span>
             </button>
           </div>
         )}
@@ -841,7 +841,7 @@ export default function InteractivePlayground() {
                                   onClick={() => toggleCastSelection(actor.id)}
                                   className={`px-3 py-2.5 md:px-2.5 md:py-1 rounded-full border text-[10px] font-medium transition-all min-h-[44px] md:min-h-0 flex items-center justify-center ${
                                     isSelected
-                                      ? 'bg-white text-black font-semibold border-white'
+                                      ? 'bg-white/[0.10] text-white border border-white/[0.20] font-semibold border-white'
                                       : 'bg-transparent text-zinc-400 border-white/10 hover:border-white/20'
                                   }`}
                                 >
@@ -862,7 +862,7 @@ export default function InteractivePlayground() {
                           </button>
                           <button
                             type="submit"
-                            className="btn-primary flex-1 py-2.5 md:py-2 text-xs min-h-[44px] md:min-h-0 flex items-center justify-center"
+                            className="btn-glass flex-1 rounded-full py-2.5 md:py-2 text-xs min-h-[44px] md:min-h-0 flex items-center justify-center"
                           >
                             Create Strip
                           </button>
@@ -924,7 +924,7 @@ export default function InteractivePlayground() {
                         <div className="flex items-start gap-3 md:gap-4">
                           <div className="flex flex-col items-center justify-center bg-zinc-900/80 border border-white/8 h-14 w-14 rounded-lg flex-shrink-0">
                             <span className="text-[9px] uppercase font-bold text-zinc-500">Scene</span>
-                            <span className="text-lg font-bold text-white font-mono">{scene.sceneNumber}</span>
+                            <span className="text-lg font-bold text-white font-sans">{scene.sceneNumber}</span>
                           </div>
                           
                           <div className="space-y-1.5">
@@ -935,7 +935,7 @@ export default function InteractivePlayground() {
                                 {scene.setting}
                               </span>
                               <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">
-                                {scene.timeOfDay} — {scene.location}
+                                {scene.timeOfDay} · {scene.location}
                               </span>
                               <span className="text-[10px] text-zinc-400 font-medium px-2 py-0.5 bg-white/5 rounded-full">
                                 {formatEighths(scene.pages)}
@@ -1008,7 +1008,7 @@ export default function InteractivePlayground() {
                     <motion.div
                       key={scene.id}
                       layout
-                      className="bg-zinc-950/40 border border-white/5 py-2 px-3 flex items-center justify-between text-xs font-mono text-zinc-400 transition-all hover:bg-zinc-900/20"
+                      className="bg-zinc-950/40 border border-white/5 py-2 px-3 flex items-center justify-between text-xs font-sans text-zinc-400 transition-all hover:bg-zinc-900/20"
                     >
                       <div className="flex items-center gap-3 w-full">
                         <span className="text-zinc-500 text-[10px] w-6 text-right">#{scene.sceneNumber}</span>
@@ -1111,7 +1111,7 @@ export default function InteractivePlayground() {
               <div className="lg:col-span-3">
                 <div className="flex items-center justify-between mb-2 md:hidden">
                   <span className="text-[10px] text-zinc-500 uppercase font-semibold">Cast Matrix</span>
-                  <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                  <span className="text-[10px] text-zinc-400 font-sans">Swipe to view →</span>
                 </div>
                 <div className="overflow-x-auto rounded-xl border border-white/5 bg-zinc-950/20 backdrop-blur-md">
                   <table className="min-w-[600px] lg:min-w-full border-collapse text-left text-xs font-sans text-zinc-300">
@@ -1149,13 +1149,13 @@ export default function InteractivePlayground() {
                               </td>
                             );
                           })}
-                          <td className="px-3 py-3 text-center font-mono text-zinc-300 font-medium">
+                          <td className="px-3 py-3 text-center font-sans text-zinc-300 font-medium">
                             {row.totalWorkDays}
                           </td>
-                          <td className="px-3 py-3 text-center font-mono text-amber-400/90 font-medium">
+                          <td className="px-3 py-3 text-center font-sans text-amber-400/90 font-medium">
                             {row.totalHoldDays}
                           </td>
-                          <td className="px-3 py-3 text-center font-mono text-white font-bold bg-white/[0.02]">
+                          <td className="px-3 py-3 text-center font-sans text-white font-bold bg-white/[0.02]">
                             {row.totalPaidDays}
                           </td>
                         </tr>
@@ -1199,7 +1199,7 @@ export default function InteractivePlayground() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs">
                       <span className="text-zinc-400 font-medium">Production Shoot Days</span>
-                      <span className="text-white font-mono font-bold bg-white/5 px-2 py-0.5 rounded">
+                      <span className="text-white font-sans font-bold bg-white/5 px-2 py-0.5 rounded">
                         {budgetData.shootDaysCount} days
                       </span>
                     </div>
@@ -1214,68 +1214,76 @@ export default function InteractivePlayground() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs">
                       <span className="text-zinc-400 font-medium">Crew Count</span>
-                      <span className="text-white font-mono font-semibold">{crewCount} people</span>
+                      <span className="text-white font-sans font-semibold">{crewCount} people</span>
                     </div>
-                    <input
-                      type="range"
-                      min={1}
-                      max={40}
-                      step={1}
-                      value={crewCount}
-                      onChange={(e) => setCrewCount(parseInt(e.target.value, 10))}
-                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1 py-3 md:py-1.5"
-                    />
+                    <div className="min-h-[44px] md:min-h-0 flex items-center">
+                      <input
+                        type="range"
+                        min={1}
+                        max={40}
+                        step={1}
+                        value={crewCount}
+                        onChange={(e) => setCrewCount(parseInt(e.target.value, 10))}
+                        className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1"
+                      />
+                    </div>
                   </div>
 
                   {/* Crew Rate Slider */}
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs">
                       <span className="text-zinc-400 font-medium">Average Daily Crew Rate</span>
-                      <span className="text-white font-mono font-semibold">${crewRate}/day</span>
+                      <span className="text-white font-sans font-semibold">${crewRate}/day</span>
                     </div>
-                    <input
-                      type="range"
-                      min={150}
-                      max={1200}
-                      step={50}
-                      value={crewRate}
-                      onChange={(e) => setCrewRate(parseInt(e.target.value, 10))}
-                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1 py-3 md:py-1.5"
-                    />
+                    <div className="min-h-[44px] md:min-h-0 flex items-center">
+                      <input
+                        type="range"
+                        min={150}
+                        max={1200}
+                        step={50}
+                        value={crewRate}
+                        onChange={(e) => setCrewRate(parseInt(e.target.value, 10))}
+                        className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1"
+                      />
+                    </div>
                   </div>
 
                   {/* Gear Daily Rate Slider */}
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs">
                       <span className="text-zinc-400 font-medium">Daily Gear Package</span>
-                      <span className="text-white font-mono font-semibold">${gearRate}/day</span>
+                      <span className="text-white font-sans font-semibold">${gearRate}/day</span>
                     </div>
-                    <input
-                      type="range"
-                      min={0}
-                      max={3000}
-                      step={100}
-                      value={gearRate}
-                      onChange={(e) => setGearRate(parseInt(e.target.value, 10))}
-                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1 py-3 md:py-1.5"
-                    />
+                    <div className="min-h-[44px] md:min-h-0 flex items-center">
+                      <input
+                        type="range"
+                        min={0}
+                        max={3000}
+                        step={100}
+                        value={gearRate}
+                        onChange={(e) => setGearRate(parseInt(e.target.value, 10))}
+                        className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1"
+                      />
+                    </div>
                   </div>
 
                   {/* Actor Daily Rate Slider */}
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs">
                       <span className="text-zinc-400 font-medium">Actor SAG Daily Rate</span>
-                      <span className="text-white font-mono font-semibold">${actorRate}/day</span>
+                      <span className="text-white font-sans font-semibold">${actorRate}/day</span>
                     </div>
-                    <input
-                      type="range"
-                      min={200}
-                      max={2000}
-                      step={100}
-                      value={actorRate}
-                      onChange={(e) => setActorRate(parseInt(e.target.value, 10))}
-                      className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1 py-3 md:py-1.5"
-                    />
+                    <div className="min-h-[44px] md:min-h-0 flex items-center">
+                      <input
+                        type="range"
+                        min={200}
+                        max={2000}
+                        step={100}
+                        value={actorRate}
+                        onChange={(e) => setActorRate(parseInt(e.target.value, 10))}
+                        className="w-full accent-white cursor-pointer bg-zinc-800 rounded-lg appearance-none h-1"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1291,7 +1299,7 @@ export default function InteractivePlayground() {
                       <DollarSign className="w-8 h-8 text-zinc-500 -ml-1.5" />
                       {budgetData.totalCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </h2>
-                    <p className="text-[10px] text-zinc-500 font-mono">
+                    <p className="text-[10px] text-zinc-500 font-sans">
                       Formula: =[labor_cost] + [gear_cost] + [cast_cost]
                     </p>
                   </div>
@@ -1329,30 +1337,30 @@ export default function InteractivePlayground() {
                   
                   <div className="border border-white/5 bg-zinc-950/20 rounded-xl p-4 space-y-1">
                     <span className="text-[9px] font-bold tracking-wider text-zinc-500 uppercase">Crew Labor Cost</span>
-                    <span className="text-lg font-bold text-white font-mono">
+                    <span className="text-lg font-bold text-white font-sans">
                       ${budgetData.laborCost.toLocaleString()}
                     </span>
-                    <p className="text-[9px] text-zinc-600 font-mono">
+                    <p className="text-[9px] text-zinc-600 font-sans">
                       {budgetData.shootDaysCount}d × {crewCount}p × ${crewRate}
                     </p>
                   </div>
 
                   <div className="border border-white/5 bg-zinc-950/20 rounded-xl p-4 space-y-1">
                     <span className="text-[9px] font-bold tracking-wider text-zinc-500 uppercase">Gear Rental Cost</span>
-                    <span className="text-lg font-bold text-white font-mono">
+                    <span className="text-lg font-bold text-white font-sans">
                       ${budgetData.gearCost.toLocaleString()}
                     </span>
-                    <p className="text-[9px] text-zinc-600 font-mono">
+                    <p className="text-[9px] text-zinc-600 font-sans">
                       {budgetData.shootDaysCount}d × ${gearRate}
                     </p>
                   </div>
 
                   <div className="border border-white/5 bg-zinc-950/20 rounded-xl p-4 space-y-1">
                     <span className="text-[9px] font-bold tracking-wider text-zinc-500 uppercase">Cast SAG Cost</span>
-                    <span className="text-lg font-bold text-white font-mono">
+                    <span className="text-lg font-bold text-white font-sans">
                       ${budgetData.castCost.toLocaleString()}
                     </span>
-                    <p className="text-[9px] text-zinc-600 font-mono">
+                    <p className="text-[9px] text-zinc-600 font-sans">
                       {budgetData.totalCastPaidDays} paid days × ${actorRate}
                     </p>
                   </div>
@@ -1367,7 +1375,7 @@ export default function InteractivePlayground() {
                     <div className="text-xs space-y-1">
                       <div className="flex justify-between font-semibold text-zinc-200">
                         <span>1. Crew Labor Cost</span>
-                        <code className="text-[11px] text-zinc-400 font-mono bg-zinc-900 px-1 py-0.5 rounded">=[SHOOTDAYS] * [CREW_COUNT] * [CREW_RATE]</code>
+                        <code className="text-[11px] text-zinc-400 font-sans bg-zinc-900 px-1 py-0.5 rounded">=[SHOOTDAYS] * [CREW_COUNT] * [CREW_RATE]</code>
                       </div>
                       <p className="text-[10px] text-zinc-500">Calculates general crew day-rate costs.</p>
                     </div>
@@ -1375,7 +1383,7 @@ export default function InteractivePlayground() {
                     <div className="text-xs space-y-1">
                       <div className="flex justify-between font-semibold text-zinc-200">
                         <span>2. Gear Package Cost</span>
-                        <code className="text-[11px] text-zinc-400 font-mono bg-zinc-900 px-1 py-0.5 rounded">=[SHOOTDAYS] * [EQUIPMENT_DAILY]</code>
+                        <code className="text-[11px] text-zinc-400 font-sans bg-zinc-900 px-1 py-0.5 rounded">=[SHOOTDAYS] * [EQUIPMENT_DAILY]</code>
                       </div>
                       <p className="text-[10px] text-zinc-500">Accumulates daily tech packages & camera rental costs.</p>
                     </div>
@@ -1383,7 +1391,7 @@ export default function InteractivePlayground() {
                     <div className="text-xs space-y-1">
                       <div className="flex justify-between font-semibold text-zinc-200">
                         <span>3. Cast Talent Cost</span>
-                        <code className="text-[11px] text-zinc-400 font-mono bg-zinc-900 px-1 py-0.5 rounded">=[TOTAL_CAST_PAID_DAYS] * [ACTOR_RATE]</code>
+                        <code className="text-[11px] text-zinc-400 font-sans bg-zinc-900 px-1 py-0.5 rounded">=[TOTAL_CAST_PAID_DAYS] * [ACTOR_RATE]</code>
                       </div>
                       <p className="text-[10px] text-zinc-500">Linked to DOOD Matrix. Includes active work days + standby hold days.</p>
                     </div>

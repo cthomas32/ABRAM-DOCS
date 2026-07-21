@@ -141,7 +141,7 @@ export default function AgencyClientPortalMockup() {
   const [comments, setComments] = useState<ChatComment[]>([
     { id: "C-01", sender: "client", senderName: "Sarah Chen", role: "Helix CEO", text: "Hi team! We are looking for slightly stronger lighting highlights in the initial intro sequence. Can we update the render?", time: "10:14 AM" },
     { id: "C-02", sender: "crew", senderName: "Vesper Lin", role: "3D Lead", text: "Got it! I will increase the key light intensity and update the V2 render by this afternoon.", time: "10:30 AM" },
-    { id: "C-03", sender: "client", senderName: "Sarah Chen", role: "Helix CEO", text: "Perfect. V2 draft looks excellent—approving that deliverable now.", time: "Just Now" }
+    { id: "C-03", sender: "client", senderName: "Sarah Chen", role: "Helix CEO", text: "Perfect. V2 draft looks excellent. Approving that deliverable now.", time: "Just Now" }
   ]);
 
   const [newCommentText, setNewCommentText] = useState("");
@@ -175,7 +175,7 @@ export default function AgencyClientPortalMockup() {
   return (
     <div className="w-full max-w-5xl mx-auto rounded-2xl border border-white/5 bg-zinc-950/40 p-4 sm:p-6 lg:p-8 backdrop-blur-xl relative overflow-visible select-none">
       {/* Background glow avoiding container clipping */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[300px] bg-zinc-800/[0.015] rounded-full filter blur-[80px] pointer-events-none -z-10" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] sm:w-[600px] h-[200px] sm:h-[300px] bg-zinc-800/[0.015] rounded-full filter blur-[80px] pointer-events-none -z-10" />
 
       {/* View Wrapper */}
       <div className="w-full rounded-xl border border-white/8 bg-zinc-950/85 overflow-hidden shadow-2xl relative min-h-[500px]">
@@ -454,7 +454,7 @@ export default function AgencyClientPortalMockup() {
                     </span>
                   </div>
                   <p className="text-xs text-zinc-500 mt-1.5 font-sans">
-                    {activeProject.start_date} — {activeProject.end_date} · 8 on the crew · {deliverables.filter(d => d.approved_at).length}/{deliverables.length} approved
+                    {activeProject.start_date} to {activeProject.end_date} · 8 on the crew · {deliverables.filter(d => d.approved_at).length}/{deliverables.length} approved
                   </p>
                 </div>
                 
@@ -531,7 +531,7 @@ export default function AgencyClientPortalMockup() {
                                 <button
                                   type="button"
                                   onClick={() => handleApproveDeliverable(d.id)}
-                                  className="h-6 px-2.5 rounded-full bg-white text-black hover:bg-zinc-200 text-[10px] font-bold transition-all cursor-pointer"
+                                  className="h-6 px-2.5 rounded-full border border-white/15 bg-white/[0.06] text-white hover:bg-white/15 text-[10px] font-semibold transition-all cursor-pointer"
                                 >
                                   Approve
                                 </button>
@@ -597,7 +597,7 @@ export default function AgencyClientPortalMockup() {
                             </span>
                             <div className={`p-2.5 rounded-xl text-xs leading-normal font-sans ${
                               c.sender === "client" 
-                                ? "bg-white text-black rounded-tr-none" 
+                                ? "bg-white/[0.12] text-white border border-white/[0.12] rounded-tr-none" 
                                 : "bg-zinc-900 border border-white/5 text-zinc-300 rounded-tl-none"
                             }`}>
                               {c.text}
@@ -617,7 +617,7 @@ export default function AgencyClientPortalMockup() {
                       />
                       <button
                         type="submit"
-                        className="w-10 h-7 rounded-full bg-white flex items-center justify-center shrink-0 cursor-pointer"
+                        className="w-10 h-7 rounded-full border border-white/[0.15] bg-white/[0.08] flex items-center justify-center shrink-0 cursor-pointer"
                       >
                         <Send className="w-3.5 h-3.5 text-black" />
                       </button>
@@ -643,7 +643,7 @@ export default function AgencyClientPortalMockup() {
                       { id: "S1", start: "09:00 AM", title: "Intro & Client Kickoff Remarks", duration: 15, talent: "Sarah Chen, Exec Crew" },
                       { id: "S2", start: "09:15 AM", title: "A-Roll Studio Scene Setup", duration: 45, talent: "Lead Cast" },
                       { id: "S3", start: "10:00 AM", title: "Product Closeups & Macro Lighting", duration: 90, talent: "Macro Cast" },
-                      { id: "S4", start: "11:30 AM", title: "B-Roll Capture & Ambient Plates", duration: 30, talent: "—" }
+                      { id: "S4", start: "11:30 AM", title: "B-Roll Capture & Ambient Plates", duration: 30, talent: "TBD" }
                     ].map((seg) => (
                       <div
                         key={seg.id}

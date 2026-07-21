@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { 
   Search, 
@@ -72,6 +72,7 @@ function getSnippet(content: string, query: string): string {
 
 export default function DocsHubClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchRecord[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -85,6 +86,16 @@ export default function DocsHubClient() {
   
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
+
+  // Check URL search parameter ?q= for Google Sitelinks Searchbox compliance
+  useEffect(() => {
+    const qParam = searchParams.get("q");
+    if (qParam) {
+      setQuery(qParam);
+      setIsFocused(true);
+      ensureIndexLoaded();
+    }
+  }, [searchParams]);
 
   // Keyboard shortcut listener for '/' to focus inline search
   useEffect(() => {

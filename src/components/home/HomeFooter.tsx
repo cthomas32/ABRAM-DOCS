@@ -74,6 +74,12 @@ export default function HomeFooter({
           <Link href="/agency/crew-roster" title="Crew Roster & Contractor Availability" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Crew Roster
           </Link>
+          <Link href="/agency/capacity-planning" title="Workload Balancer & Capacity Planning" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Capacity Planning
+          </Link>
+          <Link href="/agency/resource-management" title="Resource Management" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Resource Management
+          </Link>
           <Link href="/agency/smart-scheduling" title="AI Smart Scheduling & Crew Booking" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Smart Scheduling
           </Link>
@@ -85,19 +91,16 @@ export default function HomeFooter({
         {/* Column 4: Intelligence */}
         <div className="flex flex-col space-y-2 col-span-1">
           <h4 className="text-xs font-semibold tracking-wide text-white mb-1">Intelligence</h4>
-          <Link href="/intelligence/creative-copilot" title="ABRAM Core AI Workspace Co-Pilot" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence/brain" title="ABRAM Core AI" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             ABRAM
           </Link>
-          <Link href="/intelligence" title="ROI Yield Engine Calculator" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-            ROI Engine
+          <Link href="/intelligence" title="Intelligence Overview Hub & ROI Calculator" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Overview Hub
           </Link>
-          <Link href="/intelligence/brain" title="Production Brain Workspace Memory & Search" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-            Production Brain
-          </Link>
-          <Link href="/intelligence/brief-intelligence" title="Brief Intelligence Blueprints & Scoping" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence/brief-intelligence" title="Brief Intelligence" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Brief Intelligence
           </Link>
-          <Link href="/intelligence/crew-matchmaking" title="Crew Suitability Matchmaking Index" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/intelligence/crew-matchmaking" title="Crew Matchmaking" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Crew Matchmaking
           </Link>
         </div>
@@ -108,11 +111,11 @@ export default function HomeFooter({
           <Link href="/" title="ABRAM Network Home" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Home
           </Link>
-          <Link href="/intelligence" title="Creative Intelligence Suite" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
-            Intelligence
-          </Link>
           <Link href="/pricing" title="ABRAM Platform Pricing Plans" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Pricing
+          </Link>
+          <Link href="/alternatives" title="ABRAM Platform Alternatives & Comparisons" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Alternatives
           </Link>
           <a
             href="https://app.abram.network"
@@ -168,6 +171,12 @@ export default function HomeFooter({
           </Link>
           <Link href="/alternatives/workfront" title="Adobe Workfront Alternative" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200">
             Adobe Workfront Alternative
+          </Link>
+          <Link href="/alternatives/celtx" title="Celtx Alternative" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200">
+            Celtx Alternative
+          </Link>
+          <Link href="/alternatives/sethero" title="SetHero Alternative" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200">
+            SetHero Alternative
           </Link>
         </div>
       </div>

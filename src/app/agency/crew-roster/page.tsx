@@ -26,5 +26,36 @@ export const metadata: Metadata = {
 };
 
 export default function CrewRosterPage() {
-  return <CrewRosterClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebPage',
+                '@id': 'https://abram.network/agency/crew-roster/#webpage',
+                'url': 'https://abram.network/agency/crew-roster',
+                'name': 'Crew & Resource Roster Management | ABRAM Network',
+                'description': 'Manage high-availability crew rosters and production assets.',
+                'isPartOf': { '@id': 'https://abram.network/#website' },
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://abram.network/agency/crew-roster/#breadcrumb',
+                'itemListElement': [
+                  { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://abram.network/' },
+                  { '@type': 'ListItem', 'position': 2, 'name': 'Agency Operations', 'item': 'https://abram.network/agency' },
+                  { '@type': 'ListItem', 'position': 3, 'name': 'Crew Roster', 'item': 'https://abram.network/agency/crew-roster' },
+                ],
+              },
+            ],
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
+      <CrewRosterClient />
+    </>
+  );
 }

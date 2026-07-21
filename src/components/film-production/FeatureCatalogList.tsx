@@ -28,7 +28,7 @@ const features: Feature[] = [
     id: "stripboard",
     tag: "Visual Scheduling",
     title: "Interactive Stripboard",
-    description: "Re-order scenes via drag-and-drop. Automatically recalculates daylight windows, set moves, and shooting page counts instantly.",
+    description: "Reorder scenes by drag-and-drop and recalculate page counts and set moves instantly.",
     icon: CalendarRange,
     previewType: "stripboard"
   },
@@ -36,7 +36,7 @@ const features: Feature[] = [
     id: "dood",
     tag: "Cast Allocation",
     title: "Day Out of Days (DOOD)",
-    description: "Track actor work, travel, and hold days. View starts, finishes, and idle periods in a dense, scannable calendar view.",
+    description: "Track actor work, travel, and hold days in one calendar view.",
     icon: Users,
     previewType: "dood"
   },
@@ -44,7 +44,7 @@ const features: Feature[] = [
     id: "union",
     tag: "Labor Compliance",
     title: "Smart Union Rules",
-    description: "Built-in compliance checks for SAG-AFTRA, DGA, and IATSE rules. Spot turnaround violations and rest hour penalties automatically.",
+    description: "Spot SAG-AFTRA, DGA, and IATSE turnaround violations and rest penalties automatically.",
     icon: ShieldAlert,
     previewType: "union"
   },
@@ -52,7 +52,7 @@ const features: Feature[] = [
     id: "budget",
     tag: "Financial Control",
     title: "Connected Budgeting",
-    description: "Link your stripboard directly to your chart of accounts. See the immediate budget impact of adding a shooting day.",
+    description: "See the budget impact of adding a shooting day instantly.",
     icon: Coins,
     previewType: "budget"
   }
@@ -76,7 +76,7 @@ export default function FeatureCatalogList() {
             Built for professional physical production
           </h2>
           <p className="text-sm sm:text-base font-normal leading-relaxed text-zinc-400 max-w-xl mx-auto font-sans">
-            Traditional film workflow tools meet modern software design. Fast, secure, and responsive on all devices.
+            Traditional film workflow tools meet modern, secure software design.
           </p>
         </div>
 
@@ -134,12 +134,12 @@ export default function FeatureCatalogList() {
               {/* Dynamic Interactive Title */}
               <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-6">
                 <div>
-                  <span className="text-[9px] font-mono tracking-widest uppercase text-zinc-500">Live Preview</span>
+                  <span className="text-[9px] font-sans tracking-widest uppercase text-zinc-500">Live Preview</span>
                   <h4 className="text-sm font-semibold text-zinc-200 mt-0.5">{activeFeature.title}</h4>
                 </div>
                 <div className="flex items-center gap-2">
                   {activeFeature.previewType === "dood" && (
-                    <span className="text-[10px] text-zinc-400 md:hidden block font-mono animate-pulse mr-2">Swipe to view →</span>
+                    <span className="text-[10px] text-zinc-400 md:hidden block font-sans mr-2">Swipe to view →</span>
                   )}
                   <div className="flex gap-1.5">
                     <span className="h-2 w-2 rounded-full bg-zinc-800" />
@@ -162,29 +162,29 @@ export default function FeatureCatalogList() {
                     
                     <div className="grid grid-cols-[14px_45px_30px_1fr_60px_40px] items-center gap-2 p-2 rounded-lg border border-white/10 bg-zinc-900/30 text-xs text-zinc-300">
                       <div className="h-3.5 w-full rounded bg-amber-400" />
-                      <span className="font-mono text-zinc-500">Sc. 1</span>
-                      <span className="font-mono text-zinc-500">INT</span>
+                      <span className="font-sans text-zinc-500">Sc. 1</span>
+                      <span className="font-sans text-zinc-500">INT</span>
                       <span className="truncate text-zinc-100 text-left font-medium">Exterior Gate - Setup</span>
                       <span className="text-zinc-400 text-right">0 4/8 pgs</span>
-                      <span className="text-zinc-500 text-center font-mono">1, 3</span>
+                      <span className="text-zinc-500 text-center font-sans">1, 3</span>
                     </div>
 
                     <div className="grid grid-cols-[14px_45px_30px_1fr_60px_40px] items-center gap-2 p-2 rounded-lg border border-white/5 bg-zinc-900/10 text-xs text-zinc-400 opacity-60">
                       <div className="h-3.5 w-full rounded bg-indigo-500" />
-                      <span className="font-mono">Sc. 2</span>
-                      <span className="font-mono">INT</span>
+                      <span className="font-sans">Sc. 2</span>
+                      <span className="font-sans">INT</span>
                       <span className="truncate text-left">Foyer Escape</span>
                       <span className="text-right">1 2/8 pgs</span>
-                      <span className="text-center font-mono">1, 2, 3</span>
+                      <span className="text-center font-sans">1, 2, 3</span>
                     </div>
 
                     <div className="grid grid-cols-[14px_45px_30px_1fr_60px_40px] items-center gap-2 p-2 rounded-lg border border-white/5 bg-zinc-900/10 text-xs text-zinc-400 opacity-60">
                       <div className="h-3.5 w-full rounded bg-emerald-500" />
-                      <span className="font-mono">Sc. 3</span>
-                      <span className="font-mono">EXT</span>
+                      <span className="font-sans">Sc. 3</span>
+                      <span className="font-sans">EXT</span>
                       <span className="truncate text-left">Rear Garden</span>
                       <span className="text-right">2 0/8 pgs</span>
-                      <span className="text-center font-mono">1, 2</span>
+                      <span className="text-center font-sans">1, 2</span>
                     </div>
                   </div>
                 )}
@@ -194,7 +194,7 @@ export default function FeatureCatalogList() {
                   <div className="w-full overflow-x-auto scrollbar-none">
                     <div className="min-w-[400px] border border-white/5 rounded-xl bg-zinc-950/20 p-3">
                       {/* Days Header */}
-                      <div className="grid grid-cols-[100px_repeat(5,1fr)] gap-1 border-b border-white/5 pb-2 mb-2 text-[9px] font-mono text-zinc-500 text-center">
+                      <div className="grid grid-cols-[100px_repeat(5,1fr)] gap-1 border-b border-white/5 pb-2 mb-2 text-[9px] font-sans text-zinc-500 text-center">
                         <div className="text-left">Actor (ID)</div>
                         <div>Day 1</div>
                         <div>Day 2</div>
@@ -269,17 +269,17 @@ export default function FeatureCatalogList() {
                   <div className="w-full space-y-4">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="p-3 rounded-lg border border-white/5 bg-white/[0.01]">
-                        <span className="text-[9px] font-mono text-zinc-500 uppercase block">Shoot Day cost</span>
-                        <span className="font-mono text-lg font-semibold text-white mt-1 block">$118,400</span>
+                        <span className="text-[9px] font-sans text-zinc-500 uppercase block">Shoot Day cost</span>
+                        <span className="font-sans text-lg font-semibold text-white mt-1 block">$118,400</span>
                       </div>
                       <div className="p-3 rounded-lg border border-white/5 bg-white/[0.01]">
-                        <span className="text-[9px] font-mono text-zinc-500 uppercase block">Active Fringe Rate</span>
-                        <span className="font-mono text-lg font-semibold text-emerald-400 mt-1 block">+18.5% (Escrowed)</span>
+                        <span className="text-[9px] font-sans text-zinc-500 uppercase block">Active Fringe Rate</span>
+                        <span className="font-sans text-lg font-semibold text-emerald-400 mt-1 block">+18.5% (Escrowed)</span>
                       </div>
                     </div>
 
                     <div className="border border-white/5 rounded-lg overflow-hidden bg-zinc-950/20">
-                      <div className="grid grid-cols-3 px-3 py-1.5 bg-white/5 text-[9px] font-mono uppercase tracking-widest text-zinc-500 border-b border-white/5">
+                      <div className="grid grid-cols-3 px-3 py-1.5 bg-white/5 text-[9px] font-sans uppercase tracking-widest text-zinc-500 border-b border-white/5">
                         <span>Account</span>
                         <span className="text-right">Projected</span>
                         <span className="text-right">Variance</span>
@@ -287,20 +287,20 @@ export default function FeatureCatalogList() {
                       
                       <div className="grid grid-cols-3 px-3 py-2 text-[11px] border-b border-white/5">
                         <span className="text-zinc-200">1100 - Cast Payroll</span>
-                        <span className="text-right font-mono text-zinc-300">$64,500</span>
-                        <span className="text-right font-mono text-zinc-500">-$2,100</span>
+                        <span className="text-right font-sans text-zinc-300">$64,500</span>
+                        <span className="text-right font-sans text-zinc-500">-$2,100</span>
                       </div>
 
                       <div className="grid grid-cols-3 px-3 py-2 text-[11px] border-b border-white/5">
                         <span className="text-zinc-200">2200 - Grip & Electric</span>
-                        <span className="text-right font-mono text-zinc-300">$22,000</span>
-                        <span className="text-right font-mono text-emerald-400">+$1,450</span>
+                        <span className="text-right font-sans text-zinc-300">$22,000</span>
+                        <span className="text-right font-sans text-emerald-400">+$1,450</span>
                       </div>
                       
                       <div className="grid grid-cols-3 px-3 py-2 text-[11px]">
                         <span className="text-zinc-200">3100 - Locations</span>
-                        <span className="text-right font-mono text-zinc-300">$18,900</span>
-                        <span className="text-right font-mono text-zinc-500">--</span>
+                        <span className="text-right font-sans text-zinc-300">$18,900</span>
+                        <span className="text-right font-sans text-zinc-500">--</span>
                       </div>
                     </div>
                   </div>

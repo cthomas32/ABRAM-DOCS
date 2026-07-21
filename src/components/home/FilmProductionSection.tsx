@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Calendar, 
-  Sparkles, 
+  FileSearch, 
   Clock, 
   ShieldCheck, 
   ArrowRight, 
@@ -31,7 +31,7 @@ const SCENES: Scene[] = [
   { id: "3", number: "14", header: "INT. KITCHEN", characters: "LEO", timeOfDay: "DAY", pages: "1 2/8 pgs" }
 ];
 
-function InteractiveProductionMockup() {
+export function InteractiveProductionMockup() {
   const [optimized, setOptimized] = useState(false);
   const [isOptimizing, setIsOptimizing] = useState(false);
 
@@ -59,9 +59,9 @@ function InteractiveProductionMockup() {
           <div className="flex items-center justify-between border-b border-white/5 pb-2.5 mb-3 text-[10px] sm:text-xs text-zinc-500 font-sans">
             <div className="flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="font-mono text-zinc-400">shooting_stripboard.sch</span>
+              <span className="font-sans font-medium text-zinc-300">Shooting Stripboard</span>
             </div>
-            <span className="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/5 font-mono text-[9px] uppercase tracking-wide">
+            <span className="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/5 font-sans text-[9px] uppercase tracking-wide">
               Day 1 of 5
             </span>
           </div>
@@ -80,19 +80,19 @@ function InteractiveProductionMockup() {
                   }`}
                 >
                   <div className="flex items-start sm:items-center gap-2">
-                    <div className={`w-8 text-[10px] font-mono text-center py-0.5 rounded shrink-0 ${
+                    <div className={`w-8 text-[10px] font-sans text-center py-0.5 rounded shrink-0 ${
                       isNight ? "bg-purple-950/60 border border-purple-500/20 text-purple-300" : "bg-zinc-950 border border-white/5 text-zinc-400"
                     }`}>
                       Sc. {scene.number}
                     </div>
                     <div>
                       <div className="text-xs font-semibold font-sans">{scene.header}</div>
-                      <div className="text-[9px] text-zinc-500 font-mono mt-0.5">{scene.characters} • {scene.timeOfDay}</div>
+                      <div className="text-[9px] text-zinc-500 font-sans mt-0.5">{scene.characters} • {scene.timeOfDay}</div>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-3 mt-2 sm:mt-0 pt-2 sm:pt-0 border-t border-white/5 sm:border-t-0">
-                    <span className="font-mono text-[10px] text-zinc-500">{scene.pages}</span>
+                    <span className="font-sans text-[10px] text-zinc-500">{scene.pages}</span>
                     <span className={`px-2 py-0.5 rounded text-[9px] font-medium border ${
                       idx === 0 
                         ? "bg-zinc-900/55 border-white/5 text-zinc-500" 
@@ -118,7 +118,7 @@ function InteractiveProductionMockup() {
               </span>
               <div className="flex items-center gap-1">
                 <span className={`w-1.5 h-1.5 rounded-full ${optimized ? "bg-emerald-400" : "bg-red-400"}`} />
-                <span className="font-mono text-[9px] text-zinc-400">SAG Rule 14B</span>
+                <span className="font-sans text-[9px] text-zinc-400">SAG Rule 14B</span>
               </div>
             </div>
 
@@ -127,7 +127,7 @@ function InteractiveProductionMockup() {
               <div className="bg-zinc-900/30 border border-white/5 rounded-lg p-3 space-y-2">
                 <div className="flex items-center justify-between text-xs text-zinc-400 font-sans">
                   <span>Crew Wrap Time:</span>
-                  <span className="font-mono text-zinc-300">03:00 AM</span>
+                  <span className="font-sans text-zinc-300">03:00 AM</span>
                 </div>
                 <div className="flex items-center justify-between text-xs text-zinc-400 font-sans">
                   <span>Next Crew Call:</span>
@@ -135,7 +135,7 @@ function InteractiveProductionMockup() {
                     key={optimized ? "opt-call" : "unopt-call"}
                     initial={{ opacity: 0, y: -2 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`font-mono font-semibold ${optimized ? "text-emerald-400" : "text-amber-400"}`}
+                    className={`font-sans font-semibold ${optimized ? "text-emerald-400" : "text-amber-400"}`}
                   >
                     {optimized ? "03:00 PM" : "01:00 PM"}
                   </motion.span>
@@ -147,7 +147,7 @@ function InteractiveProductionMockup() {
                     key={optimized ? "opt-rest" : "unopt-rest"}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className={`font-mono font-bold ${optimized ? "text-emerald-400" : "text-red-400"}`}
+                    className={`font-sans font-bold ${optimized ? "text-emerald-400" : "text-red-400"}`}
                   >
                     {optimized ? "12.0 hours" : "10.0 hours"}
                   </motion.span>
@@ -209,17 +209,17 @@ function InteractiveProductionMockup() {
             ) : optimized ? (
               <button 
                 onClick={handleReset}
-                className="btn-glass px-4 py-2 text-xs min-h-[38px] w-full flex items-center justify-center gap-1.5 hover:bg-white/[0.08]"
+                className="btn-glass rounded-full px-4 py-1.5 text-xs inline-flex items-center justify-center gap-1.5 mx-auto hover:bg-white/[0.08]"
               >
                 <RotateCcw className="w-3.5 h-3.5 text-zinc-400" />
                 <span>Reset Demo</span>
               </button>
             ) : (
-              <button 
+              <button
                 onClick={handleOptimize}
-                className="btn-primary px-4 py-2 text-xs min-h-[38px] w-full flex items-center justify-center gap-1.5"
+                className="btn-glass rounded-full px-4 py-1.5 text-xs inline-flex items-center justify-center gap-1.5 mx-auto"
               >
-                <Zap className="w-3.5 h-3.5 text-zinc-950 shrink-0" />
+                <Zap className="w-3.5 h-3.5 text-zinc-300 shrink-0" />
                 <span>Resolve Rest Violation</span>
               </button>
             )}
@@ -239,7 +239,7 @@ export default function FilmProductionSection() {
       description: "Visual timeline scheduling with Day Out of Days actor tracking."
     },
     {
-      icon: Sparkles,
+      icon: FileSearch,
       title: "Script Breakdown",
       description: "Automated screenplay parsing into tagged shooting elements."
     },

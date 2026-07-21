@@ -26,5 +26,36 @@ export const metadata: Metadata = {
 };
 
 export default function SmartSchedulingPage() {
-  return <SmartSchedulingClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebPage',
+                '@id': 'https://abram.network/agency/smart-scheduling/#webpage',
+                'url': 'https://abram.network/agency/smart-scheduling',
+                'name': 'Smart Resource & Crew Scheduling | ABRAM Network',
+                'description': 'Coordinate equipment resources, location calendars, and crew schedules in an interactive timeline.',
+                'isPartOf': { '@id': 'https://abram.network/#website' },
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://abram.network/agency/smart-scheduling/#breadcrumb',
+                'itemListElement': [
+                  { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://abram.network/' },
+                  { '@type': 'ListItem', 'position': 2, 'name': 'Agency Operations', 'item': 'https://abram.network/agency' },
+                  { '@type': 'ListItem', 'position': 3, 'name': 'Smart Scheduling', 'item': 'https://abram.network/agency/smart-scheduling' },
+                ],
+              },
+            ],
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
+      <SmartSchedulingClient />
+    </>
+  );
 }

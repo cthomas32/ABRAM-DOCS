@@ -17,7 +17,7 @@ export default function FAQSection() {
       question: "What is ABRAM?",
       answer: (
         <p className="text-zinc-400 text-sm md:text-base leading-7">
-          ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. It enables organizations to coordinate crew rosters, manage equipment logistics, perform script breakdowns, process invoices, and parse briefs with private, secure AI-assisted workflow optimization—designed to empower creative professionals, not replace them.
+          ABRAM is the operations and project management platform built to empower creative production teams, agencies, and studios. It enables organizations to coordinate crew rosters, manage equipment logistics, perform script breakdowns, process invoices, and parse briefs with private, secure AI-assisted workflow optimization built to serve creative professionals.
         </p>
       )
     },
@@ -68,7 +68,7 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="relative py-16 md:py-24 lg:py-32 border-t border-white/5 bg-transparent overflow-visible">
+    <section className="relative py-16 md:py-24 lg:py-32 border-t border-white/5 bg-transparent overflow-hidden">
       {/* Ambient Glows */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[600px] lg:h-[600px] bg-purple-500/[0.02] rounded-full filter blur-[80px] lg:blur-[130px] pointer-events-none" 

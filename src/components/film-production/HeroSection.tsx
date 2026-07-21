@@ -35,10 +35,7 @@ export default function HeroSection() {
             custom={0.1}
             className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
           >
-            The Stripboard, Reimagined.
-            <span className="block mt-[8px] text-zinc-500">
-              Connected to your budget.
-            </span>
+            Schedule your shoot and see the budget impact before you commit.
           </motion.h1>
 
           {/* Hero Subtitle (Body Token) */}
@@ -47,7 +44,7 @@ export default function HeroSection() {
             custom={0.2}
             className="text-base sm:text-lg md:text-xl font-normal leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans select-text"
           >
-            Integrate scheduling and financial forecasting in a unified workspace. Predict union rest violations, analyze daily burn rates, and adjust locations on the fly.
+            Predict union rest violations, analyze daily burn rates, and adjust locations on the fly.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -81,16 +78,20 @@ export default function HeroSection() {
             className="w-full max-w-4xl mx-auto relative rounded-2xl border border-white/8 bg-zinc-950/20 backdrop-blur-md p-3 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
           >
             {/* Header elements inside the mockup */}
-            <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4 text-[10px] sm:text-xs text-zinc-500">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-white/5 pb-3 mb-4 text-[10px] sm:text-xs text-zinc-500">
               <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="font-mono text-zinc-400 font-semibold uppercase">abram_brain: main_board</span>
+                <span className="h-2 w-2 rounded-full bg-emerald-500 flex-shrink-0" />
+                <span className="font-sans text-zinc-400 font-semibold uppercase">ABRAM Production Board</span>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-[10px] text-zinc-400 md:hidden block font-mono animate-pulse">Swipe to view →</span>
                 <span>Total Days: <strong className="text-white">18</strong></span>
                 <span>Est. Budget: <strong className="text-white">$2,450,000</strong></span>
               </div>
+            </div>
+
+            {/* Mobile-only swipe hint, placed directly above the scrollable stripboard */}
+            <div className="flex items-center justify-end mb-1.5 md:hidden">
+              <span className="text-[10px] text-zinc-400 font-sans">Swipe to view →</span>
             </div>
 
             {/* Simulated Stripboard rows */}
@@ -100,25 +101,25 @@ export default function HeroSection() {
                 {/* Scene 1 - INT. DAY (Yellow strip) */}
                 <div className="grid grid-cols-[14px_50px_36px_80px_1fr_120px_100px_50px] items-center gap-x-3 px-3 py-2 rounded-lg border border-white/5 bg-zinc-950/40 text-xs text-zinc-300 hover:border-white/10 hover:bg-white/[0.01] transition-all">
                   <div className="h-4 w-full rounded bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.3)]" />
-                  <div className="font-mono font-medium text-zinc-400">12</div>
-                  <div className="font-mono text-zinc-400">INT</div>
-                  <div className="font-mono text-zinc-400">DAY</div>
+                  <div className="font-sans font-medium text-zinc-400">12</div>
+                  <div className="font-sans text-zinc-400">INT</div>
+                  <div className="font-sans text-zinc-400">DAY</div>
                   <div className="truncate font-medium text-zinc-100 text-left">Leo decodes the ledger</div>
                   <div className="truncate text-zinc-400 text-left">Living Room</div>
-                  <div className="font-mono text-right text-zinc-400">1 4/8 pgs</div>
-                  <div className="font-mono text-center text-zinc-400">1, 2, 4</div>
+                  <div className="font-sans text-right text-zinc-400">1 4/8 pgs</div>
+                  <div className="font-sans text-center text-zinc-400">1, 2, 4</div>
                 </div>
 
                 {/* Scene 2 - EXT. NIGHT (Green strip with Warning Alert) */}
                 <div className="grid grid-cols-[14px_50px_36px_80px_1fr_120px_100px_50px] items-center gap-x-3 px-3 py-2 rounded-lg border border-amber-500/25 bg-amber-500/5 text-xs text-zinc-300 hover:border-white/10 transition-all relative">
                   <div className="h-4 w-full rounded bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-                  <div className="font-mono font-medium text-zinc-400">13</div>
-                  <div className="font-mono text-zinc-400">EXT</div>
-                  <div className="font-mono text-zinc-400">NIGHT</div>
+                  <div className="font-sans font-medium text-zinc-400">13</div>
+                  <div className="font-sans text-zinc-400">EXT</div>
+                  <div className="font-sans text-zinc-400">NIGHT</div>
                   <div className="truncate font-medium text-zinc-100 text-left">The escape through the courtyard</div>
                   <div className="truncate text-zinc-400 text-left">Courtyard</div>
-                  <div className="font-mono text-right text-zinc-400">3 2/8 pgs</div>
-                  <div className="font-mono text-center text-zinc-400">1, 2, 8, 12</div>
+                  <div className="font-sans text-right text-zinc-400">3 2/8 pgs</div>
+                  <div className="font-sans text-center text-zinc-400">1, 2, 8, 12</div>
                   
                   {/* Absolute Warning Badge */}
                   <div className="absolute right-4 -top-3 px-2 py-0.5 rounded-full border border-amber-500/30 bg-zinc-950 text-[9px] font-semibold text-amber-400 flex items-center gap-1 shadow-lg">
@@ -130,13 +131,13 @@ export default function HeroSection() {
                 {/* Scene 3 - INT. NIGHT (Indigo strip) */}
                 <div className="grid grid-cols-[14px_50px_36px_80px_1fr_120px_100px_50px] items-center gap-x-3 px-3 py-2 rounded-lg border border-white/5 bg-zinc-950/40 text-xs text-zinc-300 hover:border-white/10 hover:bg-white/[0.01] transition-all">
                   <div className="h-4 w-full rounded bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.3)]" />
-                  <div className="font-mono font-medium text-zinc-400">14</div>
-                  <div className="font-mono text-zinc-400">INT</div>
-                  <div className="font-mono text-zinc-400">NIGHT</div>
+                  <div className="font-sans font-medium text-zinc-400">14</div>
+                  <div className="font-sans text-zinc-400">INT</div>
+                  <div className="font-sans text-zinc-400">NIGHT</div>
                   <div className="truncate font-medium text-zinc-100 text-left">Leo and Maya split the cargo</div>
                   <div className="truncate text-zinc-400 text-left">Safehouse Attic</div>
-                  <div className="font-mono text-right text-zinc-400">2 1/8 pgs</div>
-                  <div className="font-mono text-center text-zinc-400">1, 2</div>
+                  <div className="font-sans text-right text-zinc-400">2 1/8 pgs</div>
+                  <div className="font-sans text-center text-zinc-400">1, 2</div>
                 </div>
 
               </div>
@@ -149,22 +150,22 @@ export default function HeroSection() {
                   <Calendar className="h-3.5 w-3.5 text-zinc-400" />
                   Active Crew Count
                 </span>
-                <span className="font-mono text-sm sm:text-base font-semibold text-white">42 Active</span>
+                <span className="font-sans text-sm sm:text-base font-semibold text-white">42 Active</span>
               </div>
               <div className="p-3 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.02] transition-colors">
                 <span className="flex items-center gap-1.5 text-[10px] font-medium tracking-wide text-zinc-500 uppercase mb-1">
                   <DollarSign className="h-3.5 w-3.5 text-zinc-400" />
                   Daily Burn Rate
                 </span>
-                <span className="font-mono text-sm sm:text-base font-semibold text-white">$142,500</span>
+                <span className="font-sans text-sm sm:text-base font-semibold text-white">$142,500</span>
               </div>
               <div className="p-3 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.02] transition-colors">
                 <span className="flex items-center gap-1.5 text-[10px] font-medium tracking-wide text-zinc-500 uppercase mb-1">
                   <Clock className="h-3.5 w-3.5 text-zinc-400" />
                   Union Overtime Risk
                 </span>
-                <span className="font-mono text-sm sm:text-base font-semibold text-amber-400 flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span className="font-sans text-sm sm:text-base font-semibold text-amber-400 flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
                   Moderate
                 </span>
               </div>

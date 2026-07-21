@@ -95,6 +95,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Overview Hub", href: "/agency", desc: "Suite control cockpit & client dashboard", title: "Creative Operations Overview Hub" },
         { name: "Client Intake", href: "/agency/client-intake", desc: "Intake forms, briefs & requirements", title: "Client Intake Briefs & Requirements" },
         { name: "Crew Roster", href: "/agency/crew-roster", desc: "Contractor directory & availability", title: "Crew Roster & Contractor Availability" },
+        { name: "Capacity Planning", href: "/agency/capacity-planning", desc: "Balance workloads before they break", title: "Workload Balancer & Capacity Planning" },
         { name: "Smart Scheduling", href: "/agency/smart-scheduling", desc: "AI-driven matching & booking board", title: "AI Smart Scheduling & Crew Booking" },
         { name: "Client Portal", href: "/agency/client-portal", desc: "Secure, password-free client dashboards", title: "Secure Client Portal & Branded Dashboards" },
       ]
@@ -105,11 +106,10 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
       isDropdown: true,
       title: "Creative Intelligence Suite",
       submenu: [
-        { name: "ABRAM", href: "/intelligence/creative-copilot", desc: "Central conversational agent & workspace co-pilot", title: "ABRAM Core AI Workspace Co-Pilot" },
-        { name: "ROI Engine", href: "/intelligence", desc: "ROI calculator & yield overview", title: "ROI Yield Engine Calculator" },
-        { name: "Production Brain", href: "/intelligence/brain", desc: "Workspace memory & search", title: "Production Brain Workspace Memory & Search" },
-        { name: "Brief Intelligence", href: "/intelligence/brief-intelligence", desc: "AI brief intelligence & scoping", title: "Brief Intelligence Blueprints & Scoping" },
-        { name: "Crew Matchmaking", href: "/intelligence/crew-matchmaking", desc: "100-pt crew suitability index", title: "Crew Suitability Matchmaking Index" },
+        { name: "ABRAM", href: "/intelligence/brain", desc: "The Core AI for creative production", title: "ABRAM, the Core AI" },
+        { name: "Overview Hub", href: "/intelligence", desc: "Intelligence suite and ROI calculator", title: "Intelligence Overview Hub & ROI Calculator" },
+        { name: "Brief Intelligence", href: "/intelligence/brief-intelligence", desc: "Score and blueprint any incoming brief", title: "Brief Intelligence Blueprints & Scoping" },
+        { name: "Crew Matchmaking", href: "/intelligence/crew-matchmaking", desc: "Rank crew fit for every role", title: "Crew Matchmaking" },
       ]
     },
     { name: "Blog", href: "/blog", title: "ABRAM Network Blog & Insights" },

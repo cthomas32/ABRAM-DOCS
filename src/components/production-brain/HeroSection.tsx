@@ -58,7 +58,7 @@ export default function HeroSection() {
               variants={itemVariants}
               className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500"
             >
-              INTRODUCING WORKSPACE MEMORY
+              ABRAM · CORE AI
             </motion.span>
 
             {/* Display Headline */}
@@ -74,7 +74,7 @@ export default function HeroSection() {
               variants={itemVariants}
               className="text-zinc-400 leading-7 text-base max-w-lg"
             >
-              ABRAM's Workspace Memory serves as the secure, persistent cognitive layer for creative productions. It retains crew preferences, rate cards, and Union parameters across campaigns, transforming ad-hoc operations into organized, compound knowledge.
+A private brain scoped to your studio. Every project teaches it your crews, your rates, and your clients, and that knowledge exists nowhere else.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -86,7 +86,7 @@ export default function HeroSection() {
                 href="https://app.abram.network"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary"
+                className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5"
               >
                 Get Started
               </a>

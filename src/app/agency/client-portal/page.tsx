@@ -26,5 +26,36 @@ export const metadata: Metadata = {
 };
 
 export default function ClientPortalPage() {
-  return <ClientPortalClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebPage',
+                '@id': 'https://abram.network/agency/client-portal/#webpage',
+                'url': 'https://abram.network/agency/client-portal',
+                'name': 'Client Portal & Secure Branded Dashboards | ABRAM Network',
+                'description': 'Provide secure client portals to view active campaign statuses, approve digital deliverables, and pay invoices.',
+                'isPartOf': { '@id': 'https://abram.network/#website' },
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://abram.network/agency/client-portal/#breadcrumb',
+                'itemListElement': [
+                  { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://abram.network/' },
+                  { '@type': 'ListItem', 'position': 2, 'name': 'Agency Operations', 'item': 'https://abram.network/agency' },
+                  { '@type': 'ListItem', 'position': 3, 'name': 'Client Portal', 'item': 'https://abram.network/agency/client-portal' },
+                ],
+              },
+            ],
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
+      <ClientPortalClient />
+    </>
+  );
 }

@@ -4,7 +4,8 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Menu, PanelLeft, Search, X, ChevronDown, LayoutGrid, Calendar, ClipboardList, Sparkles, Users, FileText, Brain, Coins, Link2 } from "lucide-react";
+import { ArrowUpRight, Menu, PanelLeft, Search, X, ChevronDown, LayoutGrid, Calendar, ClipboardList, FileSearch, Users, FileText, Coins, Link2, Scale } from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
@@ -145,7 +146,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             <Link
               href="/film-production"
               title="Film Production Suite"
-              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 border border-transparent ${
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
                 pathname.startsWith("/film-production")
                   ? "bg-white/10 text-white border-white/10"
                   : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
@@ -167,59 +168,68 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                     href="/film-production"
                     onClick={() => setFilmDropdownOpen(false)}
                     title="Film Production Overview Hub"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <LayoutGrid className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Overview Hub</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Suite control cockpit & breakdowns</p>
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Overview</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">The full film production suite</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/film-production/script-breakdown"
                     onClick={() => setFilmDropdownOpen(false)}
-                    title="AI Script Breakdown & Screenplay Parser"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Script Breakdown"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <FileSearch className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Script Breakdown</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">AI screenplay parser & element mapping</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-600 text-[10px] font-sans">01</span>
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Script Breakdown</h4>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Break down a screenplay in a minute</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/film-production/scheduling-budgeting"
                     onClick={() => setFilmDropdownOpen(false)}
-                    title="Film Production Scheduling & Budgeting"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Scheduling & Budgeting"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <Calendar className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Scheduling & Budgeting</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Timeline board & daily burn rates</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-600 text-[10px] font-sans">02</span>
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Scheduling & Budgeting</h4>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Schedule the shoot, see the budget</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/film-production/call-sheets"
                     onClick={() => setFilmDropdownOpen(false)}
-                    title="Digital Call Sheets & Crew Call Times"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Call Sheets"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <ClipboardList className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Digital Call Sheets</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Daily schedule, weather & crew call times</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-600 text-[10px] font-sans">03</span>
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Call Sheets</h4>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Get call sheets to crew daily</p>
                     </div>
                   </Link>
                 </motion.div>
@@ -235,7 +245,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             <Link
               href="/agency"
               title="Creative Agency Operations Suite"
-              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 border border-transparent ${
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
                 pathname.startsWith("/agency")
                   ? "bg-white/10 text-white border-white/10"
                   : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
@@ -257,74 +267,104 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                     href="/agency"
                     onClick={() => setAgencyDropdownOpen(false)}
                     title="Creative Operations Overview Hub"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <LayoutGrid className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Overview Hub</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Suite control cockpit & client dashboard</p>
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Overview</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">The full creative operations suite</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/agency/client-intake"
                     onClick={() => setAgencyDropdownOpen(false)}
-                    title="Client Intake Briefs & Requirements"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Client Intake"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <FileText className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Client Intake</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Intake forms, briefs & requirements</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-600 text-[10px] font-sans">01</span>
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Client Intake</h4>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Turn briefs into scoped projects</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/agency/crew-roster"
                     onClick={() => setAgencyDropdownOpen(false)}
-                    title="Crew Roster & Contractor Availability"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Crew Roster"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <Users className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Crew Roster</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Contractor directory & availability</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-600 text-[10px] font-sans">02</span>
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Crew Roster</h4>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Staff from the crew you trust</p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/agency/capacity-planning"
+                    onClick={() => setAgencyDropdownOpen(false)}
+                    title="Capacity Planning"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                  >
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
+                      <Scale className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-600 text-[10px] font-sans">03</span>
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Capacity Planning</h4>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Balance workloads before they break</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/agency/smart-scheduling"
                     onClick={() => setAgencyDropdownOpen(false)}
-                    title="AI Smart Scheduling & Crew Booking"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Smart Scheduling"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <Calendar className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Smart Scheduling</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">AI-driven matching & booking board</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-600 text-[10px] font-sans">04</span>
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Smart Scheduling</h4>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Catch conflicts before they cost you</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/agency/client-portal"
                     onClick={() => setAgencyDropdownOpen(false)}
-                    title="Secure Client Portal & Branded Dashboards"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Client Portals"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <Link2 className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Client Portal</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Secure, password-free client dashboards</p>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-600 text-[10px] font-sans">05</span>
+                        <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Client Portals</h4>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Clients approve and pay in one place</p>
                     </div>
                   </Link>
                 </motion.div>
@@ -339,7 +379,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             <Link
               href="/intelligence"
               title="Creative Intelligence Suite"
-              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 border border-transparent ${
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
                 pathname.startsWith("/intelligence")
                   ? "bg-white/10 text-white border-white/10"
                   : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
@@ -358,13 +398,13 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                   className="absolute top-full left-0 mt-2 w-64 rounded-2xl border border-white/8 bg-zinc-950/98 backdrop-blur-[32px] p-2 shadow-2xl flex flex-col gap-1 z-50 pointer-events-auto"
                 >
                   <Link
-                    href="/intelligence/creative-copilot"
+                    href="/intelligence/brain"
                     onClick={() => setIntelligenceDropdownOpen(false)}
-                    title="ABRAM Core AI Workspace Co-Pilot"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="ABRAM Core AI"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
-                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
-                      <Sparkles className="w-3.5 h-3.5" />
+                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 shrink-0">
+                      <AbramMark size={14} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
@@ -373,67 +413,52 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                           Core AI
                         </span>
                       </div>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Central conversational agent & workspace co-pilot</p>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">The Core AI for creative production</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/intelligence"
                     onClick={() => setIntelligenceDropdownOpen(false)}
-                    title="ROI Yield Engine Calculator"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Intelligence Overview Hub & ROI Calculator"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <Coins className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">ROI Engine</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">ROI calculator & yield overview</p>
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/intelligence/brain"
-                    onClick={() => setIntelligenceDropdownOpen(false)}
-                    title="Production Brain Workspace Memory & Search"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
-                  >
-                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
-                      <Brain className="w-3.5 h-3.5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Production Brain</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Workspace memory & search</p>
+                      <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Overview Hub</h4>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Intelligence suite and ROI calculator</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/intelligence/brief-intelligence"
                     onClick={() => setIntelligenceDropdownOpen(false)}
-                    title="Brief Intelligence Blueprints & Scoping"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Brief Intelligence"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <FileText className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Brief Intelligence</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Brief blueprints & scoping</p>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Score and blueprint any incoming brief</p>
                     </div>
                   </Link>
 
                   <Link
                     href="/intelligence/crew-matchmaking"
                     onClick={() => setIntelligenceDropdownOpen(false)}
-                    title="Crew Suitability Matchmaking Index"
-                    className="flex items-start gap-3 p-2 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
+                    title="Crew Matchmaking"
+                    className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
                     <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 group-hover:text-white transition-colors shrink-0">
                       <Users className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors font-sans">Crew Matchmaking</h4>
-                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">100-pt crew suitability index</p>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 leading-normal font-sans">Rank crew fit for every role</p>
                     </div>
                   </Link>
                 </motion.div>
@@ -468,7 +493,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             target="_blank"
             rel="noopener noreferrer"
             title="Get Started with ABRAM App"
-            className="inline-flex items-center gap-1.5 rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             Get Started
             <ArrowUpRight className="h-3.5 w-3.5" />

@@ -7,296 +7,204 @@ import {
   ArrowRight,
   Check,
   X,
-  ShieldCheck,
-  Calendar,
-  DollarSign,
-  Clock,
-  Users,
-  Zap,
-  Sparkles,
-  Smartphone,
-  ArrowUpRight,
-  Database,
-  ChevronDown
+  ChevronDown,
+  Cloud,
+  GitMerge,
+  PieChart,
+  Wallet,
 } from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
-export default function MovieMagicClient() {
+type Faq = { q: string; a: string };
+
+const differentiators = [
+  {
+    icon: Cloud,
+    title: "Cloud collaboration for the whole team",
+    body:
+      "ABRAM runs in the browser so producers, coordinators, and accountants work in the same project at the same time from any location. Movie Magic Budgeting is a single-user desktop application where one person owns the file at a time.",
+    points: ["Simultaneous multi-user editing", "Remote access with no install"],
+  },
+  {
+    icon: GitMerge,
+    title: "Schedule and budget in one project",
+    body:
+      "The stripboard, call sheets, and budget share the same production in ABRAM. Movie Magic sells Scheduling and Budgeting as separate products without native end-to-end data sharing, which usually means re-entering information between them.",
+    points: ["One source of truth per production", "Fewer manual handoffs between tools"],
+  },
+  {
+    icon: PieChart,
+    title: "Budget variance against actuals",
+    body:
+      "ABRAM tracks spend against your approved budget, raises risk alerts, and calibrates future estimates from real actuals. This gives you cost-to-complete visibility inside the same platform.",
+    points: ["Live variance and risk alerts", "Estimates that learn from your data"],
+  },
+  {
+    icon: Wallet,
+    title: "Payouts, invoicing, and client portals",
+    body:
+      "ABRAM pays crew from approved milestones, invoices clients, and shares token-based portals where clients approve quotes and pay, extending well beyond scheduling and budgeting.",
+    points: ["Milestone crew payouts", "Client quote approval and payment"],
+  },
+];
+
+const comparison = [
+  {
+    feature: "Stripboard and Day-out-of-Days",
+    abram: "Cloud stripboard, Day-out-of-Days, and run of show",
+    them: "Industry-standard desktop scheduling with recognized formats",
+    abramYes: true,
+    themYes: true,
+  },
+  {
+    feature: "Detailed line-item budgeting",
+    abram: "Budget tracking with variance, risk alerts, and calibration",
+    them: "Deep, specialist budgeting trusted on large union features",
+    abramYes: true,
+    themYes: true,
+  },
+  {
+    feature: "Real-time multi-user collaboration",
+    abram: "Whole team works in the same project at once",
+    them: "Single-user desktop file, one editor at a time",
+    abramYes: true,
+    themYes: false,
+  },
+  {
+    feature: "Connected schedule and budget",
+    abram: "Schedule, call sheets, and budget share one project",
+    them: "Scheduling and Budgeting sold and run separately",
+    abramYes: true,
+    themYes: false,
+  },
+  {
+    feature: "Crew payouts and invoicing",
+    abram: "Milestone crew payouts and client invoicing built in",
+    them: "Not part of the scheduling or budgeting products",
+    abramYes: true,
+    themYes: false,
+  },
+  {
+    feature: "Client approval portal",
+    abram: "Token-based portals with quote approval and payment",
+    them: "Not offered",
+    abramYes: true,
+    themYes: false,
+  },
+  {
+    feature: "AI production copilot",
+    abram: "ABRAM Core turns briefs into work packages and executes actions with approval",
+    them: "Not offered",
+    abramYes: true,
+    themYes: false,
+  },
+];
+
+const migration = [
+  {
+    step: "1",
+    title: "Rebuild the schedule in the cloud",
+    body: "Recreate your shooting schedule on the ABRAM stripboard so the whole team can view and edit it live, with call sheets reading directly from it.",
+  },
+  {
+    step: "2",
+    title: "Attach the budget to the same project",
+    body: "Set up your budget inside the production so variance and risk alerts track against actuals, ending the re-entry between separate scheduling and budgeting files.",
+  },
+  {
+    step: "3",
+    title: "Add payouts and client access",
+    body: "Turn on crew payouts and share a token-based client portal so approvals, invoicing, and payment run alongside the schedule and budget.",
+  },
+];
+
+export default function MovieMagicClient({ faqs }: { faqs: Faq[] }) {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-
-  const comparisonFeatures = [
-    {
-      feature: "Workspace Access",
-      abram: "Cloud-native. Access from any device with live collaboration",
-      moviemagic: "Highly secure, industry-standard offline desktop installation (.mbd/.mms)",
-      abramCheck: true,
-      moviemagicCheck: true
-    },
-    {
-      feature: "Milestone Payouts",
-      abram: "Integrated Stripe Connect payments directly from approved deliverables",
-      moviemagic: "Cost budgeting only; payroll managed through external partners",
-      abramCheck: true,
-      moviemagicCheck: false
-    },
-    {
-      feature: "Turnaround Safety Checks",
-      abram: "Automatic SAG-AFTRA, DGA & IATSE wrap-to-call rest margin warnings",
-      moviemagic: "Classic Day Out of Days (DOOD) sheets with manual verification",
-      abramCheck: true,
-      moviemagicCheck: true
-    },
-    {
-      feature: "Screenplay breakdown",
-      abram: "AI screenplay parser maps props, cast, wardrobe in seconds",
-      moviemagic: "Precise, manual tagging of elements for deep catalog control",
-      abramCheck: true,
-      moviemagicCheck: true
-    },
-    {
-      feature: "Availability Calendar",
-      abram: "Bi-directional Google/Outlook calendar sync with shared rosters",
-      moviemagic: "Dedicated scheduling stripboards designed for static calendar planning",
-      abramCheck: true,
-      moviemagicCheck: false
-    },
-    {
-      feature: "Call Sheets Integration",
-      abram: "Call sheets sync with stripboards and auto-notify crew via Slack/Email",
-      moviemagic: "Downstream document export; call sheets managed separately",
-      abramCheck: true,
-      moviemagicCheck: false
-    }
-  ];
-
-  const faqs = [
-    {
-      q: "How does ABRAM compare to Movie Magic for film scheduling and budgeting?",
-      a: "Movie Magic is a long-standing offline desktop standard, trusted by studio production accountants for highly granular budgeting structures, complex union rate tables, and standalone scheduling. ABRAM is a cloud-native, real-time alternative designed for collaborative teams—integrating screenplay parsing, live digital call sheets, active union rest checking, and direct crew payouts via Stripe Connect in a single online workspace."
-    },
-    {
-      q: "Does ABRAM support Movie Magic file exports?",
-      a: "ABRAM is designed to import standard screenplay formats for automated breakdowns. For scheduling and budgeting, ABRAM operates on its own collaborative database to support multi-user editing, and provides standard CSV and PDF exports to coordinate with external production offices and accounting departments."
-    },
-    {
-      q: "How does ABRAM handle union compliance compared to Movie Magic?",
-      a: "Movie Magic provides robust offline tools like Day Out of Days (DOOD) sheets for manual verification. ABRAM features active scheduling safety compliance—automatically checking wrap times against subsequent call times to warn planners of SAG-AFTRA, DGA, or IATSE rest margin violations in real-time."
-    }
-  ];
-
-  const toggleFaq = (index: number) => {
-    setActiveFaq(activeFaq === index ? null : index);
-  };
+  const toggleFaq = (i: number) => setActiveFaq(activeFaq === i ? null : i);
 
   return (
-    <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 select-none relative z-10 isolate">
-      {/* Ambient Page Glows */}
+    <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 relative z-10 isolate">
       <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />
       <div className="absolute top-[40%] right-1/4 w-[280px] md:w-[500px] h-[280px] bg-[#8ECAFF]/[0.02] rounded-full blur-[100px] pointer-events-none -z-10" />
 
-      {/* Hero Section */}
-      <section className="relative w-full min-h-[35vh] md:min-h-[45vh] flex flex-col justify-center py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-transparent overflow-visible mb-8 md:mb-12">
+      {/* Hero */}
+      <section className="relative w-full flex flex-col justify-center py-12 md:py-20 px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
         <div className="max-w-7xl mx-auto w-full">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col items-center justify-center text-center max-w-4xl mx-auto w-full"
-          >
-            {/* Overline Tag */}
-            <motion.span
-              variants={revealVariants}
-              custom={0.0}
-              className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-4 font-sans block"
-            >
-              Competitor Comparison
+          <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="flex flex-col items-center text-center max-w-4xl mx-auto w-full">
+            <motion.span variants={revealVariants} custom={0.0} className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-4 font-sans block">
+              Movie Magic Alternative
             </motion.span>
-
-            {/* Title */}
-            <motion.h1
-              variants={revealVariants}
-              custom={0.1}
-              className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
-            >
-              Cloud-Native Scheduling.
-              <span className="block mt-[8px] text-zinc-500">
-                A modern alternative to Movie Magic.
-              </span>
+            <motion.h1 variants={revealVariants} custom={0.1} className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans">
+              ABRAM puts your schedule, budget, and call sheets in one cloud workspace your whole team can open at the same time.
             </motion.h1>
-
-            {/* Subtitle */}
-            <motion.p
-              variants={revealVariants}
-              custom={0.2}
-              className="text-base sm:text-lg md:text-xl font-normal leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans select-text"
-            >
-              Move away from legacy, offline desktop files. ABRAM unifies scheduling, script breakdowns, SAG/union compliance checks, and crew payouts into a real-time collaborative hub.
+            <motion.p variants={revealVariants} custom={0.2} className="text-base sm:text-lg md:text-xl leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans">
+              Move from single-user desktop files to a connected production platform where the schedule feeds the budget and every update reaches the crew.
             </motion.p>
-
-            <motion.div
-              variants={revealVariants}
-              custom={0.3}
-              className="flex flex-col sm:flex-row gap-4 w-full justify-center items-center"
-            >
-              <Link
-                href="/pricing"
-                className="btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
-              >
-                <span>Get Started Free</span>
+            <motion.div variants={revealVariants} custom={0.3} className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
+              <Link href="/pricing" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
+                <span>Get started free</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <Link
-                href="/film-production/scheduling-budgeting"
-                className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
-              >
-                <span>Launch Schedule Playground</span>
+              <Link href="/film-production/scheduling-budgeting" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
+                <span>See scheduling and budgeting</span>
               </Link>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Main Differences Cards */}
-      <section className="relative w-full px-4 sm:px-6 lg:px-8 bg-transparent overflow-visible mb-16 md:mb-24">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10 max-w-2xl mx-auto">
-            <h2 className="text-xl font-semibold tracking-tight text-zinc-50 font-sans mb-3">
-              How ABRAM Complements the Production Pipeline
-            </h2>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-              Movie Magic has been the offline standard for decades, but modern productions require connectivity. See how ABRAM updates your physical production pipeline.
+      {/* Where Movie Magic is strong */}
+      <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
+        <div className="max-w-4xl mx-auto">
+          <div className="rounded-2xl border border-white/8 bg-zinc-950/30 backdrop-blur-md p-6 md:p-8">
+            <h2 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-3">Where Movie Magic is strong</h2>
+            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
+              Movie Magic Scheduling and Movie Magic Budgeting are the entrenched industry standard for professional film and television. Their stripboards and budget top-sheets are the formats studios, unions, and completion bond companies expect, and many line producers and accountants know the software deeply. For large union features that demand those exact deliverables, Movie Magic is a proven specialist. Teams tend to seek an alternative when they want cloud collaboration, a connected schedule and budget, and finance that reaches all the way to crew and client payments.
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Card 1: Cloud Collaboration */}
-            <div className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 p-6 flex flex-col justify-between shadow-lg">
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center">
-                    <Database className="w-4 h-4 text-zinc-400" />
-                  </div>
-                  <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">
-                    Cloud Workspace vs. Desktop Files
-                  </h3>
-                </div>
-                <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">
-                  While Movie Magic excels in offline, single-user desktop precision for complex studio budgets, ABRAM offers a cloud-collaborative alternative. Multiple producers can edit stripboards and update line items concurrently in a shared, web-based workspace with automatic version history.
-                </p>
-                <ul className="text-xs text-zinc-500 space-y-2 mb-6 font-sans">
-                  <li className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                    <span>Real-time co-authoring with instant timeline rendering</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                    <span>Change tracking histories to easily review historical changes</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Card 2: Stripe Connect Crew Payouts */}
-            <div className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 p-6 flex flex-col justify-between shadow-lg">
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center">
-                    <DollarSign className="w-4 h-4 text-zinc-400" />
-                  </div>
-                  <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">
-                    Direct Payout Infrastructure
-                  </h3>
-                </div>
-                <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">
-                  Movie Magic focuses purely on scheduling and cost estimation, leaving payroll to external systems. ABRAM integrates Stripe Connect directly, letting teams process payouts and track invoice ledger balances from approved milestone packages.
-                </p>
-                <ul className="text-xs text-zinc-500 space-y-2 mb-6 font-sans">
-                  <li className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                    <span>Onboarding safety net keeps payments secure until Stripe setup completes</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                    <span>Flat 5% processing fee on contractor payments</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Card 3: Automated Union Rest Checks */}
-            <div className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 p-6 flex flex-col justify-between shadow-lg">
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center">
-                    <ShieldCheck className="w-4 h-4 text-zinc-400" />
-                  </div>
-                  <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">
-                    Automated Union Rest Checks
-                  </h3>
-                </div>
-                <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">
-                  Movie Magic has long been the offline standard for generating detailed Day Out of Days (DOOD) sheets. ABRAM adds active, real-time safety checking—automatically monitoring call sheet wrap times and warning coordinators of SAG-AFTRA, DGA, or IATSE rest period compliance constraints.
-                </p>
-                <ul className="text-xs text-zinc-500 space-y-2 mb-6 font-sans">
-                  <li className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                    <span>Visual turnaround alerts warning coordinators of penalties</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                    <span>Dynamic schedule blocks lock automatically to avoid overlap errors</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Card 4: Dynamic Script Breakdown & Rosters */}
-            <div className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 p-6 flex flex-col justify-between shadow-lg">
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-zinc-400" />
-                  </div>
-                  <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">
-                    AI Ingestion & Unified Roster
-                  </h3>
-                </div>
-                <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">
-                  While Movie Magic allows for highly precise, manual element tagging, ABRAM accelerates the breakdown phase by utilizing an automated screenplay parser to extract characters, locations, and props, linking them directly to profiles in your shared roster.
-                </p>
-                <ul className="text-xs text-zinc-500 space-y-2 mb-6 font-sans">
-                  <li className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                    <span>Automatic location, prop, character, and SFX extraction</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                    <span>Direct links to crew profiles with bi-directional Google/Outlook sync</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Feature Matrix Table */}
-      <section className="relative w-full px-4 sm:px-6 lg:px-8 bg-transparent overflow-visible mb-16 md:mb-24">
+      {/* Differentiators */}
+      <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 max-w-2xl mx-auto">
-            <h2 className="text-xl font-semibold tracking-tight text-zinc-50 font-sans mb-3">
-              Side-by-Side Comparison
-            </h2>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-              Compare ABRAM and Movie Magic across scheduling, budgeting, and production payroll.
-            </p>
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-50 font-sans mb-3">What ABRAM does differently</h2>
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">A cloud approach that keeps everyone in the same production at the same time.</p>
           </div>
-
-          {/* Mobile swipe indicator */}
-          <div className="md:hidden text-[10px] text-zinc-500 text-center mb-2 font-sans tracking-wide">
-            Swipe to view →
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {differentiators.map((d, i) => (
+              <div key={i} className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 p-6 shadow-lg">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center">
+                    <d.icon className="w-4 h-4 text-zinc-400" />
+                  </div>
+                  <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">{d.title}</h3>
+                </div>
+                <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-4">{d.body}</p>
+                <ul className="text-xs text-zinc-500 space-y-2 font-sans">
+                  {d.points.map((p, j) => (
+                    <li key={j} className="flex items-start gap-2">
+                      <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
+        </div>
+      </section>
 
+      {/* Comparison table */}
+      <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10 max-w-2xl mx-auto">
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-50 font-sans mb-3">ABRAM and Movie Magic side by side</h2>
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">A feature comparison, with credit where Movie Magic is the recognized standard.</p>
+          </div>
+          <div className="md:hidden text-[10px] text-zinc-500 text-center mb-2 font-sans tracking-wide">Swipe to view →</div>
           <div className="overflow-x-auto rounded-xl border border-white/5 bg-zinc-950/40">
             <table className="w-full text-left border-collapse min-w-[600px] font-sans">
               <thead>
@@ -307,27 +215,19 @@ export default function MovieMagicClient() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {comparisonFeatures.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-white/[0.01] transition-colors">
+                {comparison.map((row, i) => (
+                  <tr key={i} className="hover:bg-white/[0.01] transition-colors">
                     <td className="p-4 text-xs font-semibold text-zinc-100">{row.feature}</td>
                     <td className="p-4 text-xs text-zinc-300">
-                      <div className="flex items-center gap-2">
-                        {row.abramCheck ? (
-                          <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                        ) : (
-                          <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />
-                        )}
+                      <div className="flex items-start gap-2">
+                        {row.abramYes ? <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" /> : <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />}
                         <span>{row.abram}</span>
                       </div>
                     </td>
                     <td className="p-4 text-xs text-zinc-500">
-                      <div className="flex items-center gap-2">
-                        {row.moviemagicCheck ? (
-                          <Check className="w-4 h-4 text-emerald-400/60 shrink-0" />
-                        ) : (
-                          <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />
-                        )}
-                        <span>{row.moviemagic}</span>
+                      <div className="flex items-start gap-2">
+                        {row.themYes ? <Check className="w-4 h-4 text-emerald-400/60 shrink-0 mt-0.5" /> : <X className="h-4 w-4 text-red-500/50 shrink-0 mt-0.5" />}
+                        <span>{row.them}</span>
                       </div>
                     </td>
                   </tr>
@@ -338,45 +238,41 @@ export default function MovieMagicClient() {
         </div>
       </section>
 
-      {/* Accordion FAQ Block */}
+      {/* Migration */}
+      <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10 max-w-2xl mx-auto">
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-50 font-sans mb-3">Switching from Movie Magic to ABRAM</h2>
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">Teams usually rebuild one production in the cloud first, then bring finance and clients into the same workspace.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {migration.map((m, i) => (
+              <div key={i} className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-6">
+                <div className="text-[10px] font-semibold tracking-widest text-zinc-500 mb-3 font-sans">STEP {m.step}</div>
+                <h3 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-2">{m.title}</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed font-sans">{m.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <div className="text-center mb-10">
-          <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white font-sans">
-            Frequently Asked Questions
-          </h2>
+          <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white font-sans">Frequently asked questions</h2>
         </div>
-
         <div className="space-y-4">
-          {faqs.map((faq, idx) => (
-            <div
-              key={idx}
-              className="glass-panel rounded-2xl border border-white/5 overflow-hidden transition-all duration-300"
-            >
-              <button
-                onClick={() => toggleFaq(idx)}
-                type="button"
-                className="w-full flex items-center justify-between p-5 text-left text-sm font-medium text-zinc-200 hover:text-white transition-colors select-none focus:outline-none"
-              >
+          {faqs.map((faq, i) => (
+            <div key={i} className="glass-panel rounded-2xl border border-white/5 overflow-hidden transition-all duration-300">
+              <button onClick={() => toggleFaq(i)} type="button" className="w-full flex items-center justify-between p-5 text-left text-sm font-medium text-zinc-200 hover:text-white transition-colors focus:outline-none">
                 <span>{faq.q}</span>
-                <ChevronDown
-                  className={`h-4 w-4 text-zinc-500 transition-transform duration-300 ${
-                    activeFaq === idx ? "rotate-180" : ""
-                  }`}
-                />
+                <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform duration-300 ${activeFaq === i ? "rotate-180" : ""}`} />
               </button>
-
               <AnimatePresence initial={false}>
-                {activeFaq === idx && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden border-t border-white/[0.03]"
-                  >
-                    <p className="p-5 text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans select-text">
-                      {faq.a}
-                    </p>
+                {activeFaq === i && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden border-t border-white/[0.03]">
+                    <p className="p-5 text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">{faq.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -385,40 +281,34 @@ export default function MovieMagicClient() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative w-full px-4 sm:px-6 lg:px-8 bg-transparent overflow-visible">
+      {/* CTA */}
+      <section className="relative w-full px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="rounded-2xl border border-white/8 bg-gradient-to-b from-zinc-900/40 to-zinc-950/20 backdrop-blur-md p-8 md:p-12 text-center relative overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[250px] h-[250px] bg-white/[0.01] rounded-full blur-[80px] pointer-events-none -z-10" />
-            <h2 className="text-2xl font-bold tracking-tight text-white font-sans mb-4">
-              Bring Your Budget & Schedule to the Cloud
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8 font-sans leading-relaxed">
-              Consolidate offline scheduling, script breakdowns, dynamic budgets, and crew payments in a single platform. Make production management faster and completely error-free.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link
-                href="/pricing"
-                className="btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
-              >
-                <span>Get Started Free</span>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <AbramMark size={16} />
+              <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans">Built for the cloud</span>
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight text-white font-sans mb-4">Bring the whole production online</h2>
+            <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8 font-sans leading-relaxed">Give your team a connected schedule and budget, crew payouts, and client approvals, with ABRAM Core helping the work move faster.</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <Link href="/pricing" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
+                <span>Get started free</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <Link
-                href="/film-production/scheduling-budgeting"
-                className="btn-glass w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-full text-xs font-medium min-h-[44px] md:min-h-0"
-              >
-                <span>Try Scheduling Playground</span>
+              <Link href="/intelligence/brain" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
+                <span>Meet ABRAM Core</span>
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Trademark Disclaimer */}
+      {/* Disclaimer */}
       <section className="max-w-5xl mx-auto px-4 mt-12 text-center">
-        <p className="text-[10px] text-zinc-500/80 leading-relaxed font-light select-text">
-          Disclaimer: Movie Magic is a registered trademark of Entertainment Partners. ABRAM is an independent platform and has no official affiliation, sponsorship, endorsement, or partnership with Movie Magic, Entertainment Partners, SAG-AFTRA, DGA, IATSE, or any other labor union or platform mentioned. References to these brands or trademarks are for comparative, informational, and illustrative purposes only.
+        <p className="text-[10px] text-zinc-500/80 leading-relaxed font-light">
+          Disclaimer: Movie Magic, Movie Magic Scheduling, and Movie Magic Budgeting are trademarks of Entertainment Partners. ABRAM is an independent platform with no affiliation, sponsorship, endorsement, or partnership with Entertainment Partners, SAG-AFTRA, DGA, IATSE, or any other organization mentioned. References to these brands are for comparative and informational purposes only, and product details reflect publicly available information at the time of writing.
         </p>
       </section>
     </main>

@@ -1,6 +1,12 @@
 ---
 title: Acceptable Use Policy
 description: Acceptable Use Policy for the ABRAM creative intelligence platform.
+keywords:
+  - ABRAM
+  - ABRAM Network
+  - acceptable use policy
+  - platform rules
+  - compliance
 ---
 
 # Acceptable Use Policy

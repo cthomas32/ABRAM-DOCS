@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import AbramMark from "@/components/AbramMark";
 import {
   Upload,
   FileText,
@@ -9,7 +10,6 @@ import {
   CheckCircle,
   HelpCircle,
   Clock,
-  Sparkles,
   DollarSign,
   Briefcase,
   Wrench,
@@ -312,33 +312,36 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
       <div className="glass-panel rounded-2xl p-6 md:p-8 border border-white/5 bg-zinc-950/20 backdrop-blur-md animate-fade-in">
         
         {/* Step Indicator Bar */}
-        <div className="flex items-center justify-between border-b border-white/5 pb-5 mb-6 md:mb-8 overflow-x-auto whitespace-nowrap">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${activeStep === "input" ? "bg-white text-black" : "bg-white/10 text-zinc-400"}`}>1</span>
+        <div className="text-[9px] text-zinc-600 tracking-wider uppercase mb-1.5 flex items-center gap-1.5 md:hidden font-sans">
+          Swipe to view steps <span>→</span>
+        </div>
+        <div className="flex items-center justify-between gap-3 border-b border-white/5 pb-5 mb-6 md:mb-8">
+          <div className="flex items-center space-x-6 overflow-x-auto whitespace-nowrap scrollbar-none">
+            <div className="flex items-center space-x-2 shrink-0">
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${activeStep === "input" ? "bg-white/[0.10] text-white border border-white/[0.20]" : "bg-white/10 text-zinc-400"}`}>1</span>
               <span className={`text-xs font-semibold ${activeStep === "input" ? "text-white" : "text-zinc-500"}`}>Intake</span>
             </div>
-            <ChevronRight className="w-4 h-4 text-zinc-600" />
-            <div className="flex items-center space-x-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${activeStep === "parsing" ? "bg-white text-black" : "bg-white/10 text-zinc-400"}`}>2</span>
+            <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
+            <div className="flex items-center space-x-2 shrink-0">
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${activeStep === "parsing" ? "bg-white/[0.10] text-white border border-white/[0.20]" : "bg-white/10 text-zinc-400"}`}>2</span>
               <span className={`text-xs font-semibold ${activeStep === "parsing" ? "text-white" : "text-zinc-500"}`}>Analysis</span>
             </div>
-            <ChevronRight className="w-4 h-4 text-zinc-600" />
-            <div className="flex items-center space-x-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${activeStep === "questions" ? "bg-white text-black" : "bg-white/10 text-zinc-400"}`}>3</span>
+            <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
+            <div className="flex items-center space-x-2 shrink-0">
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${activeStep === "questions" ? "bg-white/[0.10] text-white border border-white/[0.20]" : "bg-white/10 text-zinc-400"}`}>3</span>
               <span className={`text-xs font-semibold ${activeStep === "questions" ? "text-white" : "text-zinc-500"}`}>Scoping Check</span>
             </div>
-            <ChevronRight className="w-4 h-4 text-zinc-600" />
-            <div className="flex items-center space-x-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${activeStep === "blueprint" ? "bg-white text-black" : "bg-white/10 text-zinc-400"}`}>4</span>
+            <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
+            <div className="flex items-center space-x-2 shrink-0">
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${activeStep === "blueprint" ? "bg-white/[0.10] text-white border border-white/[0.20]" : "bg-white/10 text-zinc-400"}`}>4</span>
               <span className={`text-xs font-semibold ${activeStep === "blueprint" ? "text-white" : "text-zinc-500"}`}>Work Packages</span>
             </div>
           </div>
 
           {activeStep !== "input" && (
-            <button 
-              onClick={resetSandbox} 
-              className="btn-ghost flex items-center space-x-1.5 px-3 py-1.5 text-xs text-zinc-400 hover:text-white"
+            <button
+              onClick={resetSandbox}
+              className="btn-ghost flex items-center space-x-1.5 px-3 py-1.5 text-xs text-zinc-400 hover:text-white shrink-0"
             >
               <RefreshCw className="w-3 h-3" />
               <span>Reset</span>
@@ -375,7 +378,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                       onClick={() => selectTemplate(t.id)}
                       className={`px-4 py-2 rounded-full border text-xs font-medium transition-all duration-200 cursor-pointer ${
                         selectedTemplate === t.id
-                          ? "bg-white text-black border-white"
+                          ? "bg-white/[0.10] text-white border border-white/[0.20] border-white"
                           : "bg-white/[0.03] border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
                       }`}
                     >
@@ -427,13 +430,13 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                   <button
                     disabled={briefText.length < 100}
                     onClick={startAnalysis}
-                    className={`btn-primary flex items-center space-x-2 transition-all ${
-                      briefText.length < 100 
-                        ? "opacity-40 cursor-not-allowed bg-zinc-800 text-zinc-500 hover:bg-zinc-800" 
+                    className={`btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5 transition-all ${
+                      briefText.length < 100
+                        ? "opacity-40 cursor-not-allowed"
                         : "hover:scale-[1.02]"
                     }`}
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-current" />
+                    <AbramMark size={14} />
                     <span>Analyze Brief & Scope Project</span>
                   </button>
                 </div>
@@ -443,7 +446,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
               <div className="lg:col-span-4 flex flex-col space-y-4">
                 <div className="p-5 rounded-2xl border border-white/5 bg-white/[0.01] flex flex-col space-y-4">
                   <div className="flex items-center space-x-2 text-white">
-                    <Sparkles className="w-4 h-4 text-zinc-300" />
+                    <AbramMark size={16} />
                     <span className="text-sm font-semibold">Parser Capabilities</span>
                   </div>
                   
@@ -489,7 +492,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                 {/* Spinning/pulsing elements */}
                 <div className="w-16 h-16 rounded-full border border-white/5 animate-ping absolute" />
                 <div className="w-12 h-12 rounded-full border-t-2 border-white animate-spin" />
-                <Sparkles className="w-5 h-5 text-white absolute" />
+                <AbramMark size={20} className="absolute" />
               </div>
 
               <div className="text-center max-w-sm">
@@ -500,7 +503,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
               </div>
 
               {/* Console log simulation */}
-              <div className="w-full max-w-md rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs text-zinc-400 space-y-1.5 shadow-inner">
+              <div className="w-full max-w-md rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-sans text-xs text-zinc-400 space-y-1.5 shadow-inner">
                 {parsingLogs.map((log, index) => (
                   <div key={index} className="flex items-start space-x-2">
                     <span className="text-emerald-500 font-bold">✓</span>
@@ -553,9 +556,9 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                         <button
                           key={opt.val}
                           onClick={() => handleAnswerChange("location", opt.val)}
-                          className={`p-3 rounded-lg border text-xs font-medium text-left transition-all ${
+                          className={`p-3 min-h-[44px] flex items-center rounded-lg border text-xs font-medium text-left transition-all ${
                             answers.location === opt.val
-                              ? "bg-white text-black border-white font-semibold"
+                              ? "bg-white/[0.10] text-white border border-white/[0.20] border-white font-semibold"
                               : "bg-black/25 border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
                           }`}
                         >
@@ -580,9 +583,9 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                         <button
                           key={opt.val}
                           onClick={() => handleAnswerChange("deliverables", opt.val)}
-                          className={`p-3 rounded-lg border text-xs font-medium text-left transition-all ${
+                          className={`p-3 min-h-[44px] flex items-center rounded-lg border text-xs font-medium text-left transition-all ${
                             answers.deliverables === opt.val
-                              ? "bg-white text-black border-white font-semibold"
+                              ? "bg-white/[0.10] text-white border border-white/[0.20] border-white font-semibold"
                               : "bg-black/25 border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
                           }`}
                         >
@@ -607,9 +610,9 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                         <button
                           key={opt.val}
                           onClick={() => handleAnswerChange("gear", opt.val)}
-                          className={`p-3 rounded-lg border text-xs font-medium text-left transition-all ${
+                          className={`p-3 min-h-[44px] flex items-center rounded-lg border text-xs font-medium text-left transition-all ${
                             answers.gear === opt.val
-                              ? "bg-white text-black border-white font-semibold"
+                              ? "bg-white/[0.10] text-white border border-white/[0.20] border-white font-semibold"
                               : "bg-black/25 border-white/5 text-zinc-400 hover:border-white/10 hover:text-white"
                           }`}
                         >
@@ -623,7 +626,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                 <div>
                   <button
                     onClick={finalizeBlueprint}
-                    className="btn-primary flex items-center space-x-2 font-semibold hover:scale-[1.02] transition-transform"
+                    className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5 font-semibold hover:scale-[1.02] transition-transform"
                   >
                     <span>Finalize Work Packages & Project Scope</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -661,7 +664,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                         className="transition-all duration-500 ease-out"
                       />
                     </svg>
-                    <span className="absolute text-xl font-bold text-white font-mono">
+                    <span className="absolute text-xl font-bold text-white font-sans">
                       {confidence}%
                     </span>
                   </div>
@@ -703,17 +706,17 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                 <div className="flex flex-wrap gap-4 text-left border-t md:border-t-0 border-white/5 pt-3 md:pt-0">
                   <div className="px-3 py-1 bg-white/[0.03] border border-white/5 rounded-lg">
                     <span className="text-[9px] text-zinc-500 block uppercase font-medium">Estimated Scope Range</span>
-                    <span className="text-sm font-bold text-white font-mono">{blueprint.budget}</span>
+                    <span className="text-sm font-bold text-white font-sans">{blueprint.budget}</span>
                   </div>
                   
                   <div className="px-3 py-1 bg-white/[0.03] border border-white/5 rounded-lg">
                     <span className="text-[9px] text-zinc-500 block uppercase font-medium">Total Project Effort</span>
-                    <span className="text-sm font-bold text-white font-mono">{blueprint.hours}</span>
+                    <span className="text-sm font-bold text-white font-sans">{blueprint.hours}</span>
                   </div>
 
                   <div className="px-3 py-1 bg-white/[0.03] border border-white/5 rounded-lg">
                     <span className="text-[9px] text-zinc-500 block uppercase font-medium">Scoping Confidence</span>
-                    <span className="text-sm font-bold text-emerald-400 font-mono">100%</span>
+                    <span className="text-sm font-bold text-emerald-400 font-sans">100%</span>
                   </div>
                 </div>
               </div>
@@ -760,7 +763,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                           {phase.tasks.map((task, j) => (
                             <div key={j} className="flex justify-between items-center bg-white/[0.02] hover:bg-white/[0.04] p-3 rounded-lg border border-white/5 transition-colors">
                               <span className="text-xs text-zinc-300 font-medium">{task.name}</span>
-                              <div className="flex items-center space-x-3 text-xs text-zinc-500 font-mono">
+                              <div className="flex items-center space-x-3 text-xs text-zinc-500 font-sans">
                                 <span className="px-2 py-0.5 rounded bg-white/5 text-zinc-400 text-[10px]">
                                   {task.role}
                                 </span>
@@ -782,7 +785,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                   <div className="space-y-2">
                     <div className="flex items-center justify-between mb-2 md:hidden">
                       <span className="text-[10px] text-zinc-500 uppercase font-semibold">Deliverables List</span>
-                      <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                      <span className="text-[10px] text-zinc-400 font-sans">Swipe to view →</span>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-left border-collapse text-xs text-zinc-400 min-w-[550px]">
@@ -798,7 +801,7 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
                           {blueprint.deliverables.map((del, index) => (
                             <tr key={index} className="border-b border-white/5 hover:bg-white/[0.01] transition-colors">
                               <td className="py-3 px-3 text-zinc-300 font-medium">{del.name}</td>
-                              <td className="py-3 px-3 font-mono">{del.format}</td>
+                              <td className="py-3 px-3 font-sans">{del.format}</td>
                               <td className="py-3 px-3">{del.deadline}</td>
                               <td className="py-3 px-3">
                                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
@@ -873,13 +876,13 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
               {/* Action Buttons to Transition to Matchmaking */}
               <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <span className="text-xs text-zinc-500 max-w-md">
-                  This blueprint will pre-populate the crew matchmaking sliders and role requirements for <strong>3.8x faster matchmaking</strong> speed.
+                  This blueprint will pre-populate the crew matchmaking sliders and role requirements so you can shortlist crew faster.
                 </span>
 
                 <div className="flex items-center space-x-3">
                   <a
                     href="/intelligence/crew-matchmaking"
-                    className="btn-primary flex items-center space-x-1.5 font-semibold hover:scale-[1.02] transition-transform"
+                    className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5 font-semibold hover:scale-[1.02] transition-transform"
                   >
                     <span>Run AI Crew Matchmaking</span>
                     <ArrowRight className="w-3.5 h-3.5" />

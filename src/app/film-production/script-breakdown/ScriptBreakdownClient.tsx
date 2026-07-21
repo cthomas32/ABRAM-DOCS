@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Cpu, Sparkles, LayoutGrid, CheckCircle, ArrowDown } from "lucide-react";
+import { ArrowUpRight, Cpu, Boxes, LayoutGrid, CheckCircle, ArrowDown } from "lucide-react";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 import ScriptBreakdownTimeline from "@/components/film-production/ScriptBreakdownTimeline";
 
@@ -40,10 +40,7 @@ export default function ScriptBreakdownClient() {
               custom={0.1}
               className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
             >
-              AI Script Breakdown.
-              <span className="block mt-[8px] text-zinc-500">
-                Instantly map your shoot.
-              </span>
+              Break down a screenplay into a shoot plan in under a minute.
             </motion.h1>
 
             {/* Hero Subtitle */}
@@ -52,7 +49,7 @@ export default function ScriptBreakdownClient() {
               custom={0.2}
               className="text-base sm:text-lg md:text-xl font-normal leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans select-text"
             >
-              Convert flat screenplay PDFs or Word documents into categorizable scheduling items. Automatically detect scenes, character dialogue tracks, props, and conflicts to build your stripboard in seconds.
+              Convert screenplay PDFs or Word documents into categorizable scheduling items automatically.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -101,7 +98,7 @@ export default function ScriptBreakdownClient() {
               Watch the Engine in Action
             </h2>
             <p className="text-sm font-normal text-zinc-400 leading-relaxed font-sans">
-              Interact with each stage of the parsing pipeline. See how ABRAM handles ingestion, reconstructs layout formats, extracts item metadata, and reconciles revisions.
+              See how ABRAM handles ingestion, layout, extraction, and revisions.
             </p>
           </div>
 
@@ -139,7 +136,7 @@ export default function ScriptBreakdownClient() {
                   Turn Days into Seconds
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  A manual script breakdown takes hours of scanning, highlighting, and copy-pasting. ABRAM does it automatically in under a minute, freeing your team to focus on creative execution.
+                  ABRAM breaks down scripts automatically in under a minute, saving hours of manual work.
                 </p>
               </div>
             </div>
@@ -153,7 +150,7 @@ export default function ScriptBreakdownClient() {
                   Zero-Config Scheduling
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  The extracted data feeds directly into the Classic Stripboard and Production Scheduling engines. Scenes are instantly color-coded by time of day and location type, ready for drag-and-drop sequencing.
+                  Scenes feed directly into your stripboard, color-coded and ready for scheduling.
                 </p>
               </div>
             </div>
@@ -161,13 +158,13 @@ export default function ScriptBreakdownClient() {
             <div className="p-6 rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md flex flex-col justify-between min-h-[220px]">
               <div>
                 <div className="w-8 h-8 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center mb-4">
-                  <Sparkles className="w-4 h-4 text-zinc-400" />
+                  <Boxes className="w-4 h-4 text-zinc-400" />
                 </div>
                 <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans mb-2">
                   Instant Resource Planning
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Populates the Master Book of Elements and Day Out of Days (DOOD) grids automatically. Track when and where every prop, vehicle, and cast member is required across the entire schedule.
+                  Automatically tracks every prop, vehicle, and cast member across your schedule.
                 </p>
               </div>
             </div>
@@ -181,7 +178,7 @@ export default function ScriptBreakdownClient() {
                   Flexible Access & Metering
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Features are built into the platform's credit-based model. Basic parsing is included in standard subscriptions, with Custom AI credit allocations tailored for Enterprise scale workspaces.
+                  Basic parsing is included in every plan, with custom AI credits for Enterprise.
                 </p>
               </div>
             </div>

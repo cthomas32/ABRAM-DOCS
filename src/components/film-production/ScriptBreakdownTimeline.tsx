@@ -2,25 +2,26 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Upload, 
-  Layout, 
-  Sparkles, 
-  GitMerge, 
-  Check, 
-  FileText, 
-  Loader2, 
-  Users, 
-  MapPin, 
-  Package, 
-  Shirt, 
-  Film, 
-  Car, 
+import {
+  Upload,
+  Layout,
+  GitMerge,
+  Check,
+  CheckCircle2,
+  FileText,
+  Loader2,
+  Users,
+  MapPin,
+  Package,
+  Shirt,
+  Film,
+  Car,
   AlertTriangle,
   RotateCcw,
   Plus,
   ChevronRight
 } from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 
 // Types for Step 1
 interface MockFile {
@@ -50,9 +51,9 @@ export default function ScriptBreakdownTimeline() {
   // STEP 1: Ingestion State & Handlers
   // ----------------------------------------------------
   const mockFiles: MockFile[] = [
-    { name: "vesper_passage_v4_draft.pdf", size: "14.2 MB", pages: 142, type: "PDF" },
-    { name: "onyx_reign_pilot.docx", size: "6.4 MB", pages: 58, type: "DOCX" },
-    { name: "nebula_outpost_revised.txt", size: "0.8 MB", pages: 110, type: "TXT" }
+    { name: "Vesper Passage - Draft 4", size: "14.2 MB", pages: 142, type: "PDF" },
+    { name: "Onyx Reign Pilot Episode", size: "6.4 MB", pages: 58, type: "DOCX" },
+    { name: "Nebula Outpost - Revised", size: "0.8 MB", pages: 110, type: "TXT" }
   ];
   const [selectedFile, setSelectedFile] = useState<MockFile | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -200,7 +201,7 @@ export default function ScriptBreakdownTimeline() {
   const stepsList = [
     { number: 1, title: "Document Ingestion", icon: Upload, subtitle: "Screenplay parsing intake" },
     { number: 2, title: "Layout Reconstruction", icon: Layout, subtitle: "Formatting & alignment cues" },
-    { number: 3, title: "Scene & Element Extraction", icon: Sparkles, subtitle: "AI tag classification" },
+    { number: 3, title: "Scene & Element Extraction", icon: null, subtitle: "AI tag classification" },
     { number: 4, title: "Smart Merging", icon: GitMerge, subtitle: "Reconciling duplicate conflicts" }
   ];
 
@@ -223,17 +224,17 @@ export default function ScriptBreakdownTimeline() {
               }`}
             >
               <div className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-all duration-200 ${
-                isActive 
-                  ? "bg-white text-zinc-950 border-white" 
+                isActive
+                  ? "bg-white/[0.10] text-white border border-white/[0.20] border-white"
                   : "bg-zinc-900 border-white/5 text-zinc-400"
               }`}>
-                <Icon className="w-4 h-4" />
+                {step.number === 3 ? <AbramMark size={16} /> : Icon && <Icon className="w-4 h-4" />}
               </div>
-              <div className="hidden sm:block overflow-hidden">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500 block leading-none mb-1">
+              <div className="min-w-0 overflow-hidden">
+                <div className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500 block leading-none mb-1">
                   Step 0{step.number}
                 </div>
-                <div className="text-xs font-semibold truncate leading-tight">
+                <div className="text-[11px] sm:text-xs font-semibold truncate leading-tight">
                   {step.title}
                 </div>
               </div>
@@ -246,7 +247,7 @@ export default function ScriptBreakdownTimeline() {
       <div className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-xl p-4 sm:p-6 lg:p-8 relative min-h-[460px] flex flex-col justify-between overflow-visible">
         
         {/* Glow Element */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[650px] h-[320px] bg-[#8ECAFF]/[0.015] rounded-full filter blur-[100px] pointer-events-none -z-10" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] sm:w-[350px] md:w-[650px] h-[200px] sm:h-[320px] bg-[#8ECAFF]/[0.015] rounded-full filter blur-[100px] pointer-events-none -z-10" />
 
         <AnimatePresence mode="wait">
           <motion.div
@@ -323,7 +324,7 @@ export default function ScriptBreakdownTimeline() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between text-[10px] text-zinc-500">
                           <span>{uploadMessage}</span>
-                          <span className="font-mono">{uploadProgress}%</span>
+                          <span className="font-sans">{uploadProgress}%</span>
                         </div>
                         <div className="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
                           <motion.div 
@@ -365,7 +366,7 @@ export default function ScriptBreakdownTimeline() {
                     Step 2: Intelligent Layout Reconstruction
                   </h3>
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans max-w-2xl">
-                    Analyzing page indentations, alignment metrics, and formatting parameters to isolate Scene Headers, Action blocks, Character tags, and Dialogue. Hover over any script element to visualize how the reconstruction engine classifies it.
+                    Analyzing page indentations, alignment metrics, and formatting parameters to isolate Scene Headers, Action blocks, Character tags, and Dialogue. Hover (or tap on mobile) any script element to visualize how the reconstruction engine classifies it.
                   </p>
                 </div>
 
@@ -374,26 +375,32 @@ export default function ScriptBreakdownTimeline() {
                   {/* Left Column: Screenplay Viewer */}
                   <div className="lg:col-span-6 flex flex-col p-4 rounded-xl border border-white/5 bg-zinc-950/60 min-h-[260px] justify-between">
                     <div className="flex items-center justify-between border-b border-white/5 pb-2.5 mb-3 text-[10px] text-zinc-500 font-sans">
-                      <span className="font-mono">RAW SCREENPLAY (COURIER INDENTATION)</span>
+                      <span className="font-sans">RAW SCREENPLAY (COURIER INDENTATION)</span>
                       <span>PAGE 12</span>
                     </div>
 
-                    <div className="font-mono text-xs text-zinc-300 leading-relaxed flex-1 space-y-4 py-2">
+                    <span className="md:hidden text-[9px] text-zinc-500 font-sans mb-2 -mt-1">
+                      Tap a line to decode it →
+                    </span>
+
+                    <div className="font-sans text-xs text-zinc-300 leading-relaxed flex-1 space-y-4 py-2">
                       {step2Lines.map((line) => (
-                        <div
+                        <button
                           key={line.id}
+                          type="button"
                           onMouseEnter={() => setHoveredLine(line.id)}
                           onMouseLeave={() => setHoveredLine(null)}
-                          className={`p-1.5 rounded transition-all duration-200 cursor-help ${
-                            hoveredLine === line.id 
-                              ? "bg-white/[0.04] text-white" 
+                          onClick={() => setHoveredLine((prev) => (prev === line.id ? null : line.id))}
+                          className={`w-full text-left p-1.5 rounded transition-all duration-200 cursor-pointer md:cursor-help min-h-[44px] ${
+                            hoveredLine === line.id
+                              ? "bg-white/[0.04] text-white"
                               : "hover:bg-white/[0.01]"
                           }`}
                         >
-                          <pre className="whitespace-pre-wrap font-mono text-[11px] sm:text-xs">
+                          <pre className="whitespace-pre-wrap font-sans text-[11px] sm:text-xs">
                             {line.raw}
                           </pre>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -402,7 +409,8 @@ export default function ScriptBreakdownTimeline() {
                   <div className="lg:col-span-6 flex flex-col p-4 rounded-xl border border-white/5 bg-zinc-900/10 min-h-[260px]">
                     <div className="flex items-center justify-between border-b border-white/5 pb-2.5 mb-4 text-[10px] text-zinc-500 font-sans">
                       <span>CLASSIFICATION MATRIX</span>
-                      <span>HOVER AN ELEMENT TO DECODE</span>
+                      <span className="hidden md:inline">HOVER AN ELEMENT TO DECODE</span>
+                      <span className="md:hidden">TAP AN ELEMENT TO DECODE</span>
                     </div>
 
                     <div className="flex-1 flex flex-col justify-center">
@@ -415,12 +423,13 @@ export default function ScriptBreakdownTimeline() {
                             exit={{ opacity: 0 }}
                             className="flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/5 rounded-lg bg-zinc-950/20 h-full"
                           >
-                            <Layout className="w-7 h-7 text-zinc-500 mb-2 animate-pulse" />
+                            <Layout className="w-7 h-7 text-zinc-500 mb-2" />
                             <p className="text-xs text-zinc-300 font-sans mb-1 font-semibold">
                               Interactive Analysis Mode
                             </p>
                             <p className="text-[10px] text-zinc-500 font-sans max-w-[240px]">
-                              Hover over any lines of text in the screenplay editor on the left to see how the engine extracts structures.
+                              <span className="hidden md:inline">Hover over any lines of text in the screenplay editor on the left to see how the engine extracts structures.</span>
+                              <span className="md:hidden">Tap any line of text in the screenplay editor above to see how the engine extracts structures.</span>
                             </p>
                           </motion.div>
                         ) : (
@@ -445,7 +454,7 @@ export default function ScriptBreakdownTimeline() {
                                     </span>
                                   </div>
 
-                                  <div className="p-3.5 rounded-lg bg-zinc-950 border border-white/5 font-mono text-xs text-white">
+                                  <div className="p-3.5 rounded-lg bg-zinc-950 border border-white/5 font-sans text-xs text-white">
                                     {line.parsed}
                                   </div>
 
@@ -513,11 +522,11 @@ export default function ScriptBreakdownTimeline() {
                             <div className="text-xs font-semibold font-sans mb-0.5">
                               Scene {details.number}
                             </div>
-                            <div className="text-[10px] font-mono truncate text-zinc-500">
+                            <div className="text-[10px] font-sans truncate text-zinc-500">
                               {details.setting}
                             </div>
                           </div>
-                          <span className="text-[10px] font-mono text-zinc-400 shrink-0 ml-2">
+                          <span className="text-[10px] font-sans text-zinc-400 shrink-0 ml-2">
                             {details.length}
                           </span>
                         </button>
@@ -548,7 +557,7 @@ export default function ScriptBreakdownTimeline() {
                             onClick={() => setActiveCategory(cat)}
                             className={`px-3 py-2.5 md:py-1 rounded-full text-[10px] font-medium tracking-wide uppercase transition-all duration-200 cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center ${
                               activeCategory === cat 
-                                ? "bg-white text-zinc-950 font-semibold" 
+                                ? "bg-white/[0.10] text-white border border-white/[0.20] font-semibold" 
                                 : "bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-zinc-200"
                             }`}
                           >
@@ -657,7 +666,7 @@ export default function ScriptBreakdownTimeline() {
                     </div>
 
                     <div className="text-[10px] text-zinc-500 pt-4 border-t border-white/5 mt-4 flex items-center gap-1">
-                      <Sparkles className="w-3 h-3 text-[#8ECAFF]" />
+                      <CheckCircle2 className="w-3 h-3 text-[#8ECAFF]" />
                       <span>Extracted values are cross-checked with project breakdown catalog records.</span>
                     </div>
                   </div>
@@ -704,7 +713,7 @@ export default function ScriptBreakdownTimeline() {
                         <p className="text-xs text-zinc-300 font-sans leading-relaxed">
                           The parser detected duplicate identifiers pointing to similar actors:
                         </p>
-                        <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                        <div className="grid grid-cols-2 gap-2 text-xs font-sans">
                           <div className="p-2 rounded bg-zinc-900 border border-white/5">
                             <span className="text-[9px] text-zinc-500 uppercase block">Name 1 (14 scenes)</span>
                             <span className="text-zinc-200">LEO VANCE</span>
@@ -720,7 +729,7 @@ export default function ScriptBreakdownTimeline() {
                     {!resolvedCharacter ? (
                       <button
                         onClick={() => setResolvedCharacter(true)}
-                        className="btn-primary w-full text-xs min-h-[44px] md:min-h-0 flex items-center justify-center"
+                        className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center justify-center mx-auto min-h-[44px] md:min-h-0"
                       >
                         Merge into single identity "Leo Vance"
                       </button>
@@ -762,7 +771,7 @@ export default function ScriptBreakdownTimeline() {
                               disabled={resolvedScene}
                               className={`flex-1 px-2.5 py-2.5 md:py-1.5 rounded-lg border text-[10px] font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center ${
                                 sceneAction === opt 
-                                  ? "bg-white text-zinc-950 border-white" 
+                                  ? "bg-white/[0.10] text-white border border-white/[0.20] border-white" 
                                   : "bg-zinc-900 border-white/5 text-zinc-400 hover:text-zinc-200 disabled:opacity-50"
                               }`}
                             >
@@ -776,7 +785,7 @@ export default function ScriptBreakdownTimeline() {
                     {!resolvedScene ? (
                       <button
                         onClick={() => setResolvedScene(true)}
-                        className="btn-primary w-full text-xs min-h-[44px] md:min-h-0 flex items-center justify-center"
+                        className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center justify-center mx-auto min-h-[44px] md:min-h-0"
                       >
                         Apply "{sceneAction === "overwrite" ? "Overwrite" : sceneAction === "split" ? "Split as Scene 12A" : "Keep Original"}" Resolution
                       </button>

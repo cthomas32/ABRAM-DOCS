@@ -1,5 +1,7 @@
 "use client";
 
+import AbramMark from "@/components/AbramMark";
+
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { 
@@ -9,7 +11,6 @@ import {
   X, 
   Paperclip, 
   ArrowUp, 
-  Sparkles,
   ChevronDown,
   Loader2,
   Play,
@@ -132,7 +133,7 @@ export default function ScrollDrivenChatbot({ activeFeature, onSequenceComplete,
                         <Loader2 className="w-3.5 h-3.5 text-purple-400 animate-spin" />
                       )}
                       <span className="text-[#a1a1aa]">
-                        {isCompleted ? 'Completed' : 'Executing'} <code className="font-mono text-white bg-[#27272a]/60 px-1 py-0.5 rounded text-[11px]">{op}</code>
+                        <code className="font-mono text-white bg-[#27272a]/60 px-1 py-0.5 rounded text-[11px]">{op}{isCompleted ? '' : '…'}</code>
                       </span>
                     </div>
                   );
@@ -178,7 +179,7 @@ export default function ScrollDrivenChatbot({ activeFeature, onSequenceComplete,
           />
           <div className="flex items-center justify-between mt-2">
             <button className="flex items-center gap-1.5 px-2 py-1.5 rounded-md hover:bg-[#27272a] transition-colors text-[#a1a1aa]">
-              <Sparkles className="w-3.5 h-3.5" />
+              <AbramMark size={14} />
               <span className="text-xs font-medium">Skills</span>
               <ChevronDown className="w-3 h-3 ml-0.5" />
             </button>

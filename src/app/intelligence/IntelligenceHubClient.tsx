@@ -46,7 +46,7 @@ export default function IntelligenceHubClient() {
                 Three Pillars of Roster Yield
               </h2>
               <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-                ABRAM doesn't just manage rosters; it optimizes the cost structure of your entire production workflow.
+                ABRAM optimizes the cost structure of your entire production workflow.
               </p>
             </div>
 
@@ -64,13 +64,13 @@ export default function IntelligenceHubClient() {
                       <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">
                         Admin Time Reduction
                       </h3>
-                      <span className="text-[9px] font-medium tracking-widest uppercase text-zinc-500 font-mono">
+                      <span className="text-[9px] font-medium tracking-widest uppercase text-zinc-500 font-sans">
                         Workflow Efficiency
                       </span>
                     </div>
                   </div>
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                    Accelerate brief-to-crew cycle times. Remove manual spreadsheets, emails, and availability tracking. Automatically parse requirements and match against verified contractor datasets.
+                    Accelerate brief-to-crew cycle times by removing manual spreadsheets and emails.
                   </p>
                 </div>
               </div>
@@ -86,13 +86,13 @@ export default function IntelligenceHubClient() {
                       <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">
                         Leakage Prevention
                       </h3>
-                      <span className="text-[9px] font-medium tracking-widest uppercase text-zinc-500 font-mono">
+                      <span className="text-[9px] font-medium tracking-widest uppercase text-zinc-500 font-sans">
                         Financial Guardrails
                       </span>
                     </div>
                   </div>
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                    Avoid overlapping crew bookings, idle contractor billing, and rest-turnaround compliance fees. Enforce contract constraints automatically before they result in financial penalty.
+                    Prevent overlapping bookings and compliance fees before they cost you.
                   </p>
                 </div>
               </div>
@@ -108,13 +108,13 @@ export default function IntelligenceHubClient() {
                       <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans">
                         Capacity Optimization
                       </h3>
-                      <span className="text-[9px] font-medium tracking-widest uppercase text-zinc-500 font-mono">
+                      <span className="text-[9px] font-medium tracking-widest uppercase text-zinc-500 font-sans">
                         Resource Utilization
                       </span>
                     </div>
                   </div>
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                    Analyze roster availability in real-time. Distribute workloads evenly to avoid contractor burnout while maintaining high active utilization across active agency projects.
+                    Distribute workloads evenly to prevent burnout and maximize crew utilization.
                   </p>
                 </div>
               </div>

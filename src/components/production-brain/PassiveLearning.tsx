@@ -280,7 +280,7 @@ export default function PassiveLearning() {
                     Approved Timesheets
                   </h3>
                   <p className="text-[7px] sm:text-[9px] md:text-[10px] text-zinc-400 leading-normal mt-0.5 truncate">
-                    Helix Shoot — Day 2 Crew
+                    Helix Shoot, Day 2 Crew
                   </p>
                 </motion.div>
               </motion.div>
@@ -367,7 +367,7 @@ export default function PassiveLearning() {
                     Calendar Holds
                   </h3>
                   <p className="text-[7px] sm:text-[9px] md:text-[10px] text-zinc-400 leading-normal mt-0.5 truncate">
-                    Studio C — July 14-16
+                    Studio C, July 14-16
                   </p>
                 </motion.div>
               </motion.div>
@@ -376,6 +376,39 @@ export default function PassiveLearning() {
           </div>
 
         </div>
+
+        {/* What the Brain knows — accumulated knowledge chips */}
+        <motion.div
+          variants={titleVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="mt-10 md:mt-14 flex flex-col items-center gap-4"
+        >
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans">
+            WHAT YOUR BRAIN KNOWS
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl">
+            {[
+              "Crew preferences",
+              "Rate cards",
+              "Vendor costs",
+              "Union parameters",
+              "Budget outcomes",
+              "Actual task durations",
+              "Assignment patterns",
+              "Client approval patterns",
+              "Schedule turnarounds",
+              "Gear utilization",
+            ].map((chip) => (
+              <span
+                key={chip}
+                className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] text-zinc-300 font-sans"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );

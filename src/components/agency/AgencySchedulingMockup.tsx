@@ -1,12 +1,13 @@
 "use client";
 
+import AbramMark from "@/components/AbramMark";
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Calendar, 
   ShieldAlert, 
   Check, 
-  Sparkles, 
   Clock, 
   Sliders, 
   ArrowRight,
@@ -175,16 +176,16 @@ export default function AgencySchedulingMockup() {
               <button
                 onClick={handleResolve}
                 disabled={isOptimizing}
-                className="btn-primary min-h-[44px] px-3.5 shrink-0 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-black cursor-pointer bg-red-400 border-none hover:bg-red-300 rounded-full"
+                className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5 min-h-[44px] shrink-0 justify-center text-red-400 cursor-pointer font-semibold"
               >
                 {isOptimizing ? (
                   <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-red-400" />
                     <span>Resolving...</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-3.5 h-3.5 text-black" />
+                    <AbramMark size={14} />
                     <span>AI Resolve Overlaps</span>
                   </>
                 )}
@@ -220,16 +221,16 @@ export default function AgencySchedulingMockup() {
       </AnimatePresence>
 
       {/* Timeline Scroll Hint */}
-      <div className="flex justify-between items-center px-1 mb-2 text-[10px] text-zinc-500 font-mono md:hidden gap-2">
+      <div className="flex justify-between items-center px-1 mb-2 text-[10px] text-zinc-500 font-sans md:hidden gap-2">
         <span>Timeline Board</span>
-        <span className="text-[9px] text-zinc-400 animate-pulse shrink-0">Swipe to view full schedule →</span>
+        <span className="text-[9px] text-zinc-400 shrink-0">Swipe to view full schedule →</span>
       </div>
 
       {/* Timeline Layout */}
       <div className="overflow-x-auto scrollbar-thin">
         <div className="min-w-[650px] md:min-w-0 space-y-4">
           {/* Timeline Header Row (Days of Week) */}
-          <div className="grid grid-cols-12 border-b border-white/5 pb-2 text-[10px] uppercase tracking-wider font-semibold text-zinc-500 font-mono">
+          <div className="grid grid-cols-12 border-b border-white/5 pb-2 text-[10px] uppercase tracking-wider font-semibold text-zinc-500 font-sans">
             <div className="col-span-3 sm:col-span-4 pl-2">Resource Name</div>
             <div className="col-span-9 sm:col-span-8 grid grid-cols-5 text-center">
               {daysOfWeek.map((day) => (
@@ -247,7 +248,7 @@ export default function AgencySchedulingMockup() {
                 {/* Resource Meta */}
                 <div className="col-span-3 sm:col-span-4 p-3 border-r border-white/5 flex flex-col justify-center">
                   <span className="text-xs font-semibold text-white block">{res.name}</span>
-                  <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-mono mt-0.5">{res.type}</span>
+                  <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-sans mt-0.5">{res.type}</span>
                 </div>
 
                 {/* Weekly Timeline Blocks */}
@@ -260,7 +261,7 @@ export default function AgencySchedulingMockup() {
                   </div>
 
                   {/* Blocks Container */}
-                  <div className="absolute inset-0 px-1 py-2 flex flex-col justify-center relative">
+                  <div className="absolute inset-0 px-1 py-2 flex flex-col justify-center">
                     {res.blocks.map((block) => {
                       const startIdx = block.days[0];
                       const colSpan = block.days.length;
@@ -286,10 +287,10 @@ export default function AgencySchedulingMockup() {
                           <span className="text-[10px] truncate block font-sans font-semibold">
                             {block.label}
                           </span>
-                          <div className="flex items-center justify-between text-[8px] font-mono opacity-80 mt-0.5">
+                          <div className="flex items-center justify-between text-[8px] font-sans opacity-80 mt-0.5">
                             <span className="truncate uppercase">{block.project}</span>
                             {!isResolved && block.conflict && (
-                              <span className="text-red-400 animate-pulse font-bold text-[9px]">CONFLICT</span>
+                              <span className="text-red-400 font-bold text-[9px]">CONFLICT</span>
                             )}
                           </div>
                         </motion.div>

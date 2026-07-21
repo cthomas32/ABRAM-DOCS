@@ -73,6 +73,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
+    canonical: './',
     types: {
       'text/markdown': [
         {
@@ -211,6 +212,18 @@ export default function RootLayout({
                     'priceCurrency': 'USD',
                     'description': 'Free tier available with credit-based usage'
                   },
+                  'potentialAction': {
+                    '@type': 'RegisterAction',
+                    'name': 'Sign Up for ABRAM Free Workspace Account',
+                    'target': {
+                      '@type': 'EntryPoint',
+                      'urlTemplate': 'https://app.abram.network',
+                      'actionPlatform': [
+                        'http://schema.org/DesktopWebPlatform',
+                        'http://schema.org/MobileWebPlatform'
+                      ]
+                    }
+                  },
                   'publisher': { '@id': 'https://abram.network/#organization' }
                 },
                 {
@@ -260,23 +273,23 @@ export default function RootLayout({
                     {
                       "@type": "SiteNavigationElement",
                       "position": 4,
+                      "name": "Software Alternatives",
+                      "description": "Software comparisons of ABRAM vs StudioBinder, Movie Magic, Workfront, Celtx, and SetHero.",
+                      "url": "https://abram.network/alternatives"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 5,
                       "name": "Platform Pricing Plans",
                       "description": "Flexible and credit-based pricing tiers for creative teams and agencies.",
                       "url": "https://abram.network/pricing"
                     },
                     {
                       "@type": "SiteNavigationElement",
-                      "position": 5,
+                      "position": 6,
                       "name": "ABRAM Network Blog",
                       "description": "Insights, stories, and articles about the future of film production and creative operations.",
                       "url": "https://abram.network/blog"
-                    },
-                    {
-                      "@type": "SiteNavigationElement",
-                      "position": 6,
-                      "name": "Product Changelog",
-                      "description": "Latest updates, feature releases, and system updates for the ABRAM platform.",
-                      "url": "https://abram.network/changelog"
                     },
                     {
                       "@type": "SiteNavigationElement",

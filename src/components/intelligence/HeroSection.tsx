@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Sparkles, ArrowDown } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 export default function HeroSection() {
@@ -34,10 +34,7 @@ export default function HeroSection() {
             custom={0.1}
             className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
           >
-            Roster Intelligence.
-            <span className="block mt-2 text-zinc-500">
-              Measure the yield.
-            </span>
+            Recover hours of admin time every week.
           </motion.h1>
 
           {/* Subtitle / Body */}
@@ -46,7 +43,7 @@ export default function HeroSection() {
             custom={0.2}
             className="text-base sm:text-lg md:text-xl font-normal leading-7 text-zinc-400 max-w-2xl mx-auto mb-10 font-sans select-text"
           >
-            Quantify the operational efficiency of automated crew scheduling, contract enforcement, and client intake brief matching. Calculate your studio's potential return on investment.
+            Calculate your studio's return on automated scheduling and contract enforcement.
           </motion.p>
 
           {/* Scroll Hint / Action button */}

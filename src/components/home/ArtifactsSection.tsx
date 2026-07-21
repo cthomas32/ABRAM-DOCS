@@ -68,6 +68,10 @@ export default function ArtifactsSection() {
             {activeFeature && (
               <>
                 <div className="mb-8">
+                  <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-5 inline-flex items-center gap-2 font-sans">
+                    <span className="text-zinc-600 font-sans">04</span>
+                    ABRAM, YOUR PRODUCTION COPILOT
+                  </span>
                   <div className="flex items-center gap-2 mb-6">
                     {artifactsDemoData.map((_, idx) => (
                       <ProgressBarSegment

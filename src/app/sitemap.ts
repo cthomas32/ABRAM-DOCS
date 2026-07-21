@@ -223,6 +223,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/agency/capacity-planning`,
+      lastModified: agencyDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/agency/resource-management`,
+      lastModified: agencyDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/agency/smart-scheduling`,
       lastModified: agencyDate,
       changeFrequency: 'monthly' as const,
@@ -259,12 +271,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/intelligence/creative-copilot`,
-      lastModified: intelligenceDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.9,
-    },
-    {
       url: `${baseUrl}/pricing`,
       lastModified: DEFAULT_RELEASE_DATE,
       changeFrequency: 'monthly' as const,
@@ -284,6 +290,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/alternatives/workfront`,
+      lastModified: DEFAULT_RELEASE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/alternatives/celtx`,
+      lastModified: DEFAULT_RELEASE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/alternatives/sethero`,
       lastModified: DEFAULT_RELEASE_DATE,
       changeFrequency: 'monthly' as const,
       priority: 0.8,

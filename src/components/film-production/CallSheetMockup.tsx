@@ -25,9 +25,9 @@ import {
   Printer,
   Coins,
   FileText,
-  Sparkles,
   Link2
 } from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 
 type TabId = "timeline" | "personnel" | "locations" | "autofill" | "billing" | "distribution";
 
@@ -224,38 +224,38 @@ export default function CallSheetMockup() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-              <span className="font-mono text-[9px] tracking-widest text-zinc-400 font-semibold uppercase">
+              <span className="h-2 w-2 rounded-full bg-amber-500" />
+              <span className="font-sans text-[9px] tracking-widest text-zinc-400 font-semibold uppercase">
                 ABRAM PRODUCTION ENGINE // ACTIVE RUN-OF-SHOW
               </span>
             </div>
             <h3 className="text-xl font-bold tracking-tight text-white font-sans flex items-center gap-2">
               Day {dayNumber} of 18 Call Board
               {aiGenerated && (
-                <span className="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full font-mono flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5" /> AI Autofilled
+                <span className="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full font-sans flex items-center gap-1">
+                  <AbramMark size={14} /> AI Autofilled
                 </span>
               )}
             </h3>
-            <p className="text-xs text-zinc-500 font-mono">
+            <p className="text-xs text-zinc-500 font-sans">
               PROJECT: VESPER CHRONICLES (EPISODE 1)
             </p>
           </div>
-          <div className="flex flex-row gap-4 text-xs font-mono border-t md:border-t-0 md:border-l border-white/5 pt-3 md:pt-0 md:pl-6 text-zinc-400 justify-between md:justify-start">
+          <div className="flex flex-row gap-4 text-xs font-sans border-t md:border-t-0 md:border-l border-white/5 pt-3 md:pt-0 md:pl-6 text-zinc-400 justify-between md:justify-start">
             <div className="space-y-1">
               <div className="text-[9px] uppercase tracking-wider text-zinc-500">Weather</div>
-              <div className="text-white flex items-center gap-1 font-mono text-xs">
+              <div className="text-white flex items-center gap-1 font-sans text-xs">
                 {aiGenerated ? <CloudRain className="w-3.5 h-3.5 text-blue-400" /> : <CloudSun className="w-3.5 h-3.5 text-amber-400" />}
                 {weatherForecast}
               </div>
             </div>
             <div className="space-y-1">
               <div className="text-[9px] uppercase tracking-wider text-zinc-500">Crew Call</div>
-              <div className="text-white font-semibold font-mono text-xs">07:00 AM</div>
+              <div className="text-white font-semibold font-sans text-xs">07:00 AM</div>
             </div>
             <div className="space-y-1">
               <div className="text-[9px] uppercase tracking-wider text-zinc-500">Linked Work Order</div>
-              <div className="text-zinc-300 font-semibold flex items-center gap-1 font-mono text-xs">
+              <div className="text-zinc-300 font-semibold flex items-center gap-1 font-sans text-xs">
                 <Link2 className="w-3 h-3 text-zinc-500" />
                 {linkedWorkOrderId}
               </div>
@@ -268,7 +268,7 @@ export default function CallSheetMockup() {
       <div className="px-4 sm:px-6 pt-4 border-b border-white/5 bg-zinc-950/20">
         <div className="flex items-center justify-between md:hidden mb-2">
           <span className="text-[10px] text-zinc-500 uppercase font-semibold">Options</span>
-          <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe tabs →</span>
+          <span className="text-[10px] text-zinc-400 font-sans">Swipe tabs →</span>
         </div>
         <div className="flex gap-1 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 select-none">
           {tabs.map((tab) => (
@@ -277,18 +277,18 @@ export default function CallSheetMockup() {
               onClick={() => setActiveTab(tab.id)}
               className={`relative px-3.5 py-2.5 md:py-1.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] md:min-h-0 flex items-center justify-center ${
                 activeTab === tab.id
-                  ? "text-black animate-none"
+                  ? "text-white"
                   : "text-zinc-400 hover:text-zinc-200"
               }`}
             >
               {activeTab === tab.id && (
                 <motion.div
                   layoutId="active-callsheet-tab"
-                  className="absolute inset-0 bg-white rounded-full -z-10"
+                  className="absolute inset-0 rounded-full bg-white/[0.10] border border-white/[0.20]"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
-              {tab.label}
+              <span className="relative z-10">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -410,9 +410,9 @@ export default function CallSheetMockup() {
                       >
                         Cancel
                       </button>
-                      <button 
-                        type="submit" 
-                        className="btn-primary py-2.5 md:py-1 px-3.5 text-[10px] min-h-[44px] md:min-h-0 flex items-center justify-center"
+                      <button
+                        type="submit"
+                        className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5 min-h-[44px] md:min-h-0"
                       >
                         Add to Timeline
                       </button>
@@ -430,7 +430,7 @@ export default function CallSheetMockup() {
                       <div className={`border rounded-lg p-3 space-y-1 hover:bg-white/[0.01] transition-all flex flex-col sm:flex-row sm:items-start justify-between gap-3 ${event.color}`}>
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="text-[9px] uppercase tracking-wider bg-white/5 border border-white/5 px-2 py-0.5 rounded font-mono text-zinc-400">
+                            <span className="text-[9px] uppercase tracking-wider bg-white/5 border border-white/5 px-2 py-0.5 rounded font-sans text-zinc-400">
                               {event.tag}
                             </span>
                             <h4 className="text-sm font-semibold text-white">
@@ -442,7 +442,7 @@ export default function CallSheetMockup() {
                           </p>
                         </div>
                         <div className="sm:text-right shrink-0">
-                          <span className="text-xs font-mono font-semibold text-zinc-300 bg-zinc-955 border border-white/5 px-2.5 py-0.5 rounded">
+                          <span className="text-xs font-sans font-semibold text-zinc-300 bg-zinc-955 border border-white/5 px-2.5 py-0.5 rounded">
                             {event.time}
                           </span>
                         </div>
@@ -469,7 +469,7 @@ export default function CallSheetMockup() {
 
                 <div className="flex items-center justify-between mb-2 md:hidden">
                   <span className="text-[10px] text-zinc-500 uppercase font-semibold">Personnel Roster</span>
-                  <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                  <span className="text-[10px] text-zinc-400 font-sans">Swipe to view →</span>
                 </div>
 
                 <div className="overflow-x-auto border border-white/5 rounded-xl bg-zinc-950/30">
@@ -488,7 +488,7 @@ export default function CallSheetMockup() {
                     <tbody className="divide-y divide-white/5 font-sans">
                       {roster.map((row) => (
                         <tr key={row.id} className="hover:bg-white/[0.01] transition-all">
-                          <td className="px-4 py-3 font-mono text-[10px] text-zinc-500">{row.id}</td>
+                          <td className="px-4 py-3 font-sans text-[10px] text-zinc-500">{row.id}</td>
                           <td className="px-4 py-3 font-semibold text-white">{row.name}</td>
                           <td className="px-4 py-3">
                             <span className="px-2 py-0.5 rounded-full text-[9px] bg-white/5 text-zinc-400 border border-white/5">
@@ -496,19 +496,19 @@ export default function CallSheetMockup() {
                             </span>
                           </td>
                           <td className="px-4 py-3 text-zinc-400">{row.role}</td>
-                          <td className="px-4 py-3 font-mono text-zinc-400">
+                          <td className="px-4 py-3 font-sans text-zinc-400">
                             {row.character !== "N/A" ? (
                               <span className="text-zinc-300 font-semibold">{row.character}</span>
                             ) : (
-                              <span className="text-zinc-600">—</span>
+                              <span className="text-zinc-600">N/A</span>
                             )}
                           </td>
-                          <td className="px-4 py-3 font-mono text-white">{row.call}</td>
+                          <td className="px-4 py-3 font-sans text-white">{row.call}</td>
                           <td className="px-4 py-3 text-center">
                             <button
                               type="button"
                               onClick={() => cycleStatus(row.id)}
-                              className={`w-11 h-11 md:w-7 md:h-7 rounded-full text-xs font-mono font-bold transition-all hover:scale-105 cursor-pointer flex items-center justify-center ${
+                              className={`w-11 h-11 md:w-7 md:h-7 rounded-full text-xs font-sans font-bold transition-all hover:scale-105 cursor-pointer flex items-center justify-center ${
                                 row.status === "W"
                                   ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
                                   : row.status === "H"
@@ -545,13 +545,13 @@ export default function CallSheetMockup() {
                     >
                       <div className="space-y-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] uppercase tracking-wider font-mono font-bold text-zinc-500 bg-white/5 px-2 py-0.5 rounded">
+                          <span className="text-[9px] uppercase tracking-wider font-sans font-bold text-zinc-500 bg-white/5 px-2 py-0.5 rounded">
                             {loc.type}
                           </span>
                           <MapPin className="w-3.5 h-3.5 text-zinc-500" />
                         </div>
                         <h4 className="text-sm font-semibold text-white font-sans">{loc.name}</h4>
-                        <p className="text-xs text-zinc-400 font-mono">{loc.address}</p>
+                        <p className="text-xs text-zinc-400 font-sans">{loc.address}</p>
                       </div>
                       <p className="text-[11px] text-zinc-500 leading-normal border-t border-white/5 pt-2 mt-2">
                         {loc.note}
@@ -572,23 +572,23 @@ export default function CallSheetMockup() {
                     </span>
                     <h3 className="text-base font-bold text-white">Smart Autofill Engine</h3>
                     <p className="text-xs text-zinc-400">
-                      Pulls calendar days, confirmed crew bookings, and coordinates Anthropic Claude to compile safety & department sheets.
+                      Pulls calendar days, confirmed crew bookings, and coordinates ABRAM's AI to compile safety & department sheets.
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={runAIAutofill}
                     disabled={isAutofilling}
-                    className="btn-primary w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 min-h-[44px] md:min-h-0"
+                    className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5 shrink-0 min-h-[44px] md:min-h-0"
                   >
                     {isAutofilling ? (
                       <>
-                        <span className="h-3 w-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                        <span className="h-3 w-3 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />
                         Analyzing...
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-4 h-4 text-black" />
+                        <AbramMark size={16} />
                         Run AI & Smart Autofill
                       </>
                     )}
@@ -603,22 +603,22 @@ export default function CallSheetMockup() {
                       <div className="space-y-2 text-xs">
                         <div>
                           <span className="text-zinc-500 block">Auto-calculated Day</span>
-                          <span className="font-mono text-white font-semibold">Day {dayNumber} of 18</span>
+                          <span className="font-sans text-white font-semibold">Day {dayNumber} of 18</span>
                         </div>
                         <div>
                           <span className="text-zinc-500 block">Roster Staff Sync</span>
-                          <span className="font-mono text-zinc-300">7 Active Bookings Found</span>
+                          <span className="font-sans text-zinc-300">7 Active Bookings Found</span>
                         </div>
                         <div>
-                          <span className="text-zinc-500 block">LLM Engine</span>
-                          <span className="font-mono text-zinc-400">Anthropic Claude Sonnet</span>
+                          <span className="text-zinc-500 block">AI Engine</span>
+                          <span className="font-sans text-zinc-400">ABRAM's AI</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="p-4 rounded-xl border border-white/5 bg-zinc-950/40 space-y-2">
                       <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Weather Conditions</h4>
-                      <p className="text-xs text-zinc-400 leading-relaxed font-mono">
+                      <p className="text-xs text-zinc-400 leading-relaxed font-sans">
                         {weatherForecast}
                       </p>
                     </div>
@@ -638,24 +638,24 @@ export default function CallSheetMockup() {
 
                     <div className="p-4 rounded-xl border border-white/5 bg-zinc-950/40 space-y-3">
                       <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
-                        Claude Drafted Department Instructions
+                        AI-Drafted Department Instructions
                       </h4>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                         <div className="space-y-1 p-2.5 rounded border border-white/5 bg-zinc-900/40">
-                          <span className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase font-mono">Camera</span>
+                          <span className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase font-sans">Camera</span>
                           <p className="text-zinc-400 leading-normal select-text">{deptInstructions.camera}</p>
                         </div>
                         <div className="space-y-1 p-2.5 rounded border border-white/5 bg-zinc-900/40">
-                          <span className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase font-mono">Art / Props</span>
+                          <span className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase font-sans">Art / Props</span>
                           <p className="text-zinc-400 leading-normal select-text">{deptInstructions.art}</p>
                         </div>
                         <div className="space-y-1 p-2.5 rounded border border-white/5 bg-zinc-900/40">
-                          <span className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase font-mono">Wardrobe</span>
+                          <span className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase font-sans">Wardrobe</span>
                           <p className="text-zinc-400 leading-normal select-text">{deptInstructions.wardrobe}</p>
                         </div>
                         <div className="space-y-1 p-2.5 rounded border border-white/5 bg-zinc-900/40">
-                          <span className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase font-mono">Audio</span>
+                          <span className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase font-sans">Audio</span>
                           <p className="text-zinc-400 leading-normal select-text">{deptInstructions.audio}</p>
                         </div>
                       </div>
@@ -681,33 +681,33 @@ export default function CallSheetMockup() {
                         Daily Call Sheets link to scheduled Work Orders to sync verified contractor hours directly with project budgets.
                       </p>
                     </div>
-                    <span className="font-mono text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                    <span className="font-sans text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full flex items-center gap-1.5">
                       <Check className="w-3.5 h-3.5" /> Billing Connected
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40 space-y-1.5">
-                      <span className="text-[9px] uppercase tracking-wider font-mono text-zinc-500">Linked Work Order ID</span>
-                      <span className="text-sm font-semibold text-white block font-mono">{linkedWorkOrderId}</span>
+                      <span className="text-[9px] uppercase tracking-wider font-sans text-zinc-500">Linked Work Order ID</span>
+                      <span className="text-sm font-semibold text-white block font-sans">{linkedWorkOrderId}</span>
                       <span className="text-[10px] text-zinc-500 leading-normal block">Contractor lists and equipment items mapped.</span>
                     </div>
 
                     <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40 space-y-1.5">
-                      <span className="text-[9px] uppercase tracking-wider font-mono text-zinc-500">Aggregated Timesheet Hours</span>
-                      <span className="text-sm font-semibold text-white block font-mono">{billingTotalHrs} Hours</span>
+                      <span className="text-[9px] uppercase tracking-wider font-sans text-zinc-500">Aggregated Timesheet Hours</span>
+                      <span className="text-sm font-semibold text-white block font-sans">{billingTotalHrs} Hours</span>
                       <span className="text-[10px] text-zinc-500 leading-normal block">Calculated from crew call-to-wrap schedules.</span>
                     </div>
 
                     <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40 space-y-1.5">
-                      <span className="text-[9px] uppercase tracking-wider font-mono text-zinc-500">Budget Invoicing Status</span>
-                      <span className="text-sm font-semibold text-zinc-300 block font-mono">Unbilled (Draft)</span>
+                      <span className="text-[9px] uppercase tracking-wider font-sans text-zinc-500">Budget Invoicing Status</span>
+                      <span className="text-sm font-semibold text-zinc-300 block font-sans">Unbilled (Draft)</span>
                       <span className="text-[10px] text-zinc-500 leading-normal block">Ready for payroll timesheet export.</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 w-full">
-                    <div className="text-xs text-zinc-500 font-mono w-full sm:w-auto text-center sm:text-left">
+                    <div className="text-xs text-zinc-500 font-sans w-full sm:w-auto text-center sm:text-left">
                       {ledgerSyncSuccess && (
                         <motion.span 
                           initial={{ opacity: 0 }}
@@ -742,9 +742,9 @@ export default function CallSheetMockup() {
                         onClick={() => {
                           alert("Action simulated: New billing Work Order has been generated using active crew assets!");
                         }}
-                        className="btn-primary w-full sm:w-auto px-4 py-2.5 md:py-2 text-xs flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-0"
+                        className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center gap-1.5 min-h-[44px] md:min-h-0"
                       >
-                        <FileText className="w-3.5 h-3.5 text-black" /> Create Work Order from Call Sheet
+                        <FileText className="w-3.5 h-3.5 text-zinc-300" /> Create Work Order from Call Sheet
                       </button>
                     </div>
                   </div>
@@ -770,10 +770,10 @@ export default function CallSheetMockup() {
                     </div>
 
                     <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40 space-y-3">
-                      <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 block border-b border-white/5 pb-1">
+                      <span className="text-[10px] uppercase font-sans tracking-wider text-zinc-400 block border-b border-white/5 pb-1">
                         Email & Portal Broadcast Preview
                       </span>
-                      <div className="font-mono text-[10px] text-zinc-500 space-y-1 bg-zinc-950/60 p-2.5 rounded select-text">
+                      <div className="font-sans text-[10px] text-zinc-500 space-y-1 bg-zinc-950/60 p-2.5 rounded select-text">
                         <p className="text-zinc-300 font-semibold">To: [Roster Crew Members]</p>
                         <p>Subject: Day {dayNumber} Call Sheet - Ep 1</p>
                         <p className="text-zinc-400 mt-2">
@@ -787,15 +787,15 @@ export default function CallSheetMockup() {
                         type="button"
                         onClick={triggerDistribution}
                         disabled={dispatchState === "sending"}
-                        className="btn-primary w-full py-2.5 text-xs flex items-center justify-center gap-2"
+                        className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center justify-center gap-1.5 mx-auto min-h-[44px] text-center"
                       >
-                        <Send className="w-3.5 h-3.5 text-black" />
+                        <Send className="w-3.5 h-3.5 text-zinc-300 shrink-0" />
                         {dispatchState === "sending" ? "Dispatching Broadcast..." : "Send to Crew Portal & Dispatch Emails"}
                       </button>
 
                       {dispatchState === "sending" && (
                         <div className="space-y-1.5 pt-1">
-                          <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+                          <div className="flex justify-between text-[10px] font-sans text-zinc-500">
                             <span>Sending status...</span>
                             <span>{dispatchProgress}%</span>
                           </div>
@@ -832,7 +832,7 @@ export default function CallSheetMockup() {
                         </p>
                       </div>
 
-                      <div className="border border-white/5 rounded-xl bg-zinc-900/20 p-4 font-mono text-[9px] text-zinc-500 space-y-1 select-text">
+                      <div className="border border-white/5 rounded-xl bg-zinc-900/20 p-4 font-sans text-[9px] text-zinc-500 space-y-1 select-text">
                         <span className="text-[10px] text-zinc-400 font-semibold block border-b border-white/5 pb-1">@media print stylesheet details</span>
                         <p className="text-zinc-600">{"//"} Strip glass backgrounds for ink savings</p>
                         <p className="text-zinc-300">.glass-panel {"{"} background: white !important; color: black !important; border: none !important; {"}"}</p>
@@ -846,7 +846,7 @@ export default function CallSheetMockup() {
                       onClick={() => {
                         window.print();
                       }}
-                      className="btn-glass w-full py-2.5 text-xs flex items-center justify-center gap-2"
+                      className="btn-glass w-full py-2.5 text-xs flex items-center justify-center gap-2 min-h-[44px]"
                     >
                       <Printer className="w-3.5 h-3.5" /> Print / Export PDF Call Sheet
                     </button>
@@ -869,13 +869,13 @@ export default function CallSheetMockup() {
                         <div key={row.id} className="p-2 border border-white/5 rounded bg-zinc-900/40 flex items-center justify-between">
                           <div className="space-y-0.5">
                             <span className="font-semibold text-white block">{row.name}</span>
-                            <span className="text-[9px] text-zinc-500 font-mono block">{row.role}</span>
+                            <span className="text-[9px] text-zinc-500 font-sans block">{row.role}</span>
                           </div>
-                          <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${
+                          <span className={`text-[9px] font-sans font-bold px-1.5 py-0.5 rounded-full ${
                             row.dispatchStatus === "Sent" 
                               ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                               : row.dispatchStatus === "Sending"
-                              ? "bg-blue-500/10 text-blue-400 border border-blue-500/20 animate-pulse"
+                              ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
                               : "bg-white/5 text-zinc-500 border border-white/5"
                           }`}>
                             {row.dispatchStatus}
@@ -894,7 +894,7 @@ export default function CallSheetMockup() {
       </div>
 
       {/* Bottom Footer Info bar */}
-      <div className="p-3 border-t border-white/5 bg-zinc-950/40 flex justify-between items-center text-[9px] font-mono text-zinc-500">
+      <div className="p-3 border-t border-white/5 bg-zinc-950/40 flex justify-between items-center text-[9px] font-sans text-zinc-500">
         <div>ABRAM Roster Sync & AI Generation Engine</div>
         <div>v2.0-stable</div>
       </div>

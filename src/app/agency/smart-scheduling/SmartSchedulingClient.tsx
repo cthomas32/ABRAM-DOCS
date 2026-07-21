@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, 
-  Sparkles, 
   Calendar, 
   Clock, 
   ShieldAlert,
@@ -80,7 +79,7 @@ export default function SmartSchedulingClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
           <Link 
             href="/agency" 
-            className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 font-mono font-semibold uppercase min-h-[44px]"
+            className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 font-sans font-semibold uppercase min-h-[44px]"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to agency hub
           </Link>
@@ -103,14 +102,14 @@ export default function SmartSchedulingClient() {
               custom={0.1}
               className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight font-sans select-text"
             >
-              Resolve scheduling overlaps with automated conflict detection.
+              Catch scheduling conflicts before they cost you a shoot day.
             </motion.h1>
             <motion.p
               variants={revealVariants}
               custom={0.2}
               className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed max-w-2xl select-text font-sans"
             >
-              Coordinate physical assets and personnel inside an interactive horizontal calendar timeline. The system scans allocations in real-time, warning producers of turnaround or double-booking conflicts.
+              The system flags turnaround and double-booking conflicts in real time.
             </motion.p>
           </motion.div>
         </div>
@@ -134,7 +133,7 @@ export default function SmartSchedulingClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Conflict Detection</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Instantly flag overlapping tasks or multi-booked studio spaces. Prevent schedule errors before final work packages are dispatched to team members.
+                  Instantly flag overlapping tasks and multi-booked studio spaces.
                 </p>
               </div>
 
@@ -145,7 +144,7 @@ export default function SmartSchedulingClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Turnaround Compliance</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  The system measures check-in/out telemetry alongside travel distances, alerting producers if a contractor call-time violates union rest intervals.
+                  The system alerts producers when a call time violates union rest intervals.
                 </p>
               </div>
 
@@ -156,7 +155,7 @@ export default function SmartSchedulingClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">AI Resolve & Shift</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Resolve scheduling blocks automatically with AI. The scheduling engine re-allocates task items based on priority weight parameters to maximize utilization.
+                  AI automatically re-allocates tasks by priority to maximize utilization.
                 </p>
               </div>
 

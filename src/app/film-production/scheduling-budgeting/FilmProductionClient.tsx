@@ -28,7 +28,7 @@ export default function FilmProductionClient() {
               Experience the Controls
             </h2>
             <p className="text-sm font-normal text-zinc-400 leading-relaxed font-sans">
-              Test the stripboard schedule, check the Day Out of Days actor holds, and adjust variables to watch the budget ledger update in real-time.
+              Adjust the stripboard, check actor holds, and watch the budget update instantly.
             </p>
           </div>
 

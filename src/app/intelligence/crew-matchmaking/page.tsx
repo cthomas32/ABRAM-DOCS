@@ -42,8 +42,8 @@ export default function CrewMatchmakingPage() {
           'name': 'ABRAM Crew Matchmaking',
           'applicationCategory': 'BusinessApplication',
           'featureList': [
-            '100-Point Suitability Index Matrix',
-            '3.8x Match Speed Processing',
+            'AI-Assisted Roster Suitability Matrix',
+            'Faster Crew Shortlisting',
             'Live Capacity Synchronization Hold',
             'Roster Schedule Overlay Analysis',
           ],

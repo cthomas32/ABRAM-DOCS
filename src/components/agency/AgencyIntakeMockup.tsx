@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import AbramMark from "@/components/AbramMark";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Sparkles, 
   FileText, 
   Layers, 
   DollarSign, 
@@ -158,15 +158,15 @@ export default function AgencyIntakeMockup() {
   return (
     <div className="w-full max-w-5xl mx-auto rounded-2xl border border-white/5 bg-zinc-950/40 p-4 sm:p-6 lg:p-8 backdrop-blur-xl relative overflow-visible">
       {/* Background glow avoiding container clipping */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[300px] bg-zinc-800/[0.015] rounded-full filter blur-[80px] pointer-events-none -z-10" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] sm:w-[600px] h-[200px] sm:h-[300px] bg-zinc-800/[0.015] rounded-full filter blur-[80px] pointer-events-none -z-10" />
 
       {/* Templates Selector */}
       <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-4 border-b border-white/5 mb-6">
         <button
           onClick={() => handleTemplateChange("video-campaign")}
-          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] flex items-center justify-center ${
+          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] sm:min-h-0 sm:h-8 flex items-center justify-center ${
             template === "video-campaign"
-              ? "bg-white text-black"
+              ? "bg-white/[0.10] text-white border border-white/[0.20]"
               : "bg-white/5 text-zinc-400 hover:text-zinc-200 border border-white/5"
           }`}
         >
@@ -174,9 +174,9 @@ export default function AgencyIntakeMockup() {
         </button>
         <button
           onClick={() => handleTemplateChange("brand-identity")}
-          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] flex items-center justify-center ${
+          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] sm:min-h-0 sm:h-8 flex items-center justify-center ${
             template === "brand-identity"
-              ? "bg-white text-black"
+              ? "bg-white/[0.10] text-white border border-white/[0.20]"
               : "bg-white/5 text-zinc-400 hover:text-zinc-200 border border-white/5"
           }`}
         >
@@ -184,9 +184,9 @@ export default function AgencyIntakeMockup() {
         </button>
         <button
           onClick={() => handleTemplateChange("social-bundle")}
-          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] flex items-center justify-center ${
+          className={`px-4 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 min-h-[44px] sm:min-h-0 sm:h-8 flex items-center justify-center ${
             template === "social-bundle"
-              ? "bg-white text-black"
+              ? "bg-white/[0.10] text-white border border-white/[0.20]"
               : "bg-white/5 text-zinc-400 hover:text-zinc-200 border border-white/5"
           }`}
         >
@@ -200,16 +200,16 @@ export default function AgencyIntakeMockup() {
         <div className="lg:col-span-6 flex flex-col justify-between rounded-xl border border-white/5 bg-zinc-950/80 p-5 shadow-inner">
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-white/5 pb-3">
-              <span className="font-mono text-[10px] tracking-widest text-zinc-400 font-semibold uppercase flex items-center gap-1.5">
-                <Settings className="w-3.5 h-3.5" /> Client Portal View
+              <span className="font-sans text-[10px] tracking-widest text-zinc-400 font-semibold uppercase flex items-center gap-1.5">
+                <Settings className="w-3.5 h-3.5" /> New Project Brief
               </span>
               <span className="text-[10px] text-zinc-500 bg-white/5 px-2 py-0.5 rounded">
-                Draft
+                Step 1 · Brief
               </span>
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-semibold uppercase text-zinc-400 block font-mono">Project Name</label>
+              <label className="text-[10px] font-semibold uppercase text-zinc-400 block font-sans">Project Name</label>
               <input
                 type="text"
                 value={projectName}
@@ -219,7 +219,7 @@ export default function AgencyIntakeMockup() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-semibold uppercase text-zinc-400 block font-mono">Creative Brief Details</label>
+              <label className="text-[10px] font-semibold uppercase text-zinc-400 block font-sans">Creative Brief Details</label>
               <textarea
                 value={briefText}
                 onChange={(e) => setBriefText(e.target.value)}
@@ -229,7 +229,7 @@ export default function AgencyIntakeMockup() {
             </div>
 
             <div className="space-y-2">
-              <div className="flex justify-between text-[10px] font-semibold uppercase text-zinc-400 font-mono">
+              <div className="flex justify-between text-[10px] font-semibold uppercase text-zinc-400 font-sans">
                 <span>Target Budget Cap</span>
                 <span className="text-white">${budgetCap.toLocaleString()}</span>
               </div>
@@ -249,17 +249,17 @@ export default function AgencyIntakeMockup() {
             <button
               onClick={handleRunScoping}
               disabled={isScoping}
-              className="btn-primary w-full min-h-[44px] text-xs flex items-center justify-center gap-2 cursor-pointer"
+              className="btn-glass rounded-full px-4 py-1.5 text-xs inline-flex items-center justify-center gap-2 cursor-pointer"
             >
               {isScoping ? (
                 <>
-                  <span className="h-3 w-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                  Generating Scope Blueprint...
+                  <span className="h-3 w-3 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />
+                  Generating Work Plan...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-black" />
-                  Run AI Brief Scoper
+                  <AbramMark size={14} />
+                  Generate Work Plan
                 </>
               )}
             </button>
@@ -270,11 +270,11 @@ export default function AgencyIntakeMockup() {
         <div className="lg:col-span-6 flex flex-col rounded-xl border border-white/5 bg-zinc-950/20 p-5 relative overflow-hidden justify-between">
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-white/5 pb-3">
-              <span className="font-mono text-[10px] tracking-widest text-zinc-400 font-semibold uppercase flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5" /> Scope Blueprint
+              <span className="font-sans text-[10px] tracking-widest text-zinc-400 font-semibold uppercase flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5" /> Work Plan
               </span>
               {scopedOutput && (
-                <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-mono">
+                <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-sans">
                   Calculated
                 </span>
               )}
@@ -285,8 +285,8 @@ export default function AgencyIntakeMockup() {
               <div className="h-64 flex flex-col items-center justify-center text-center space-y-4">
                 <span className="h-6 w-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                 <div className="space-y-1">
-                  <p className="text-xs text-white font-semibold font-mono">Scoping Engine Running</p>
-                  <p className="text-[10px] text-zinc-500 animate-pulse">{scopingSteps[scopingStep]}</p>
+                  <p className="text-xs text-white font-semibold font-sans">Scoping Engine Running</p>
+                  <p className="text-[10px] text-zinc-500">{scopingSteps[scopingStep]}</p>
                 </div>
               </div>
             )}
@@ -294,10 +294,10 @@ export default function AgencyIntakeMockup() {
             {/* Empty state */}
             {!isScoping && !scopedOutput && (
               <div className="h-64 flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/5 rounded-lg bg-zinc-950/20">
-                <Sparkles className="w-8 h-8 text-zinc-600 mb-3 animate-pulse" />
-                <p className="text-xs font-semibold text-zinc-300 font-sans mb-1">Scope Engine Ready</p>
+                <AbramMark size={28} className="mb-3 opacity-60" />
+                <p className="text-xs font-semibold text-zinc-300 font-sans mb-1">Ready to plan</p>
                 <p className="text-[11px] text-zinc-500 leading-normal max-w-xs">
-                  Submit the intake parameters on the left to extract deliverables, assign matched crew, and structure milestones automatically.
+                  Submit the brief to see deliverables, crew, and milestones.
                 </p>
               </div>
             )}
@@ -313,15 +313,15 @@ export default function AgencyIntakeMockup() {
                   {/* Financials & Timeline Meta */}
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     <div className="p-3 rounded-lg border border-white/5 bg-zinc-950/40 space-y-1">
-                      <span className="text-[9px] uppercase tracking-wider font-mono text-zinc-500 block">Est. Scoped Cost</span>
-                      <span className="text-sm font-semibold text-white font-mono flex items-center">
+                      <span className="text-[9px] uppercase tracking-wider font-sans text-zinc-500 block">Est. Scoped Cost</span>
+                      <span className="text-sm font-semibold text-white font-sans flex items-center">
                         <DollarSign className="w-3.5 h-3.5 text-zinc-500 mr-0.5" />
                         {scopedOutput.estimatedCost.toLocaleString()}
                       </span>
                     </div>
                     <div className="p-3 rounded-lg border border-white/5 bg-zinc-950/40 space-y-1">
-                      <span className="text-[9px] uppercase tracking-wider font-mono text-zinc-500 block">Duration Target</span>
-                      <span className="text-sm font-semibold text-zinc-300 font-mono flex items-center">
+                      <span className="text-[9px] uppercase tracking-wider font-sans text-zinc-500 block">Duration Target</span>
+                      <span className="text-sm font-semibold text-zinc-300 font-sans flex items-center">
                         <Calendar className="w-3.5 h-3.5 text-zinc-500 mr-1" />
                         {scopedOutput.timelineDays} Days
                       </span>
@@ -330,7 +330,7 @@ export default function AgencyIntakeMockup() {
 
                   {/* Extracted Deliverables */}
                   <div className="space-y-2">
-                    <span className="text-[9px] uppercase font-mono tracking-wider text-zinc-500 block">Extracted Deliverables</span>
+                    <span className="text-[9px] uppercase font-sans tracking-wider text-zinc-500 block">Extracted Deliverables</span>
                     <div className="space-y-1.5 text-xs">
                       {scopedOutput.deliverables.map((item, idx) => (
                         <div key={idx} className="flex items-center justify-between p-2 rounded bg-zinc-950/60 border border-white/5 gap-2 min-w-0">
@@ -339,10 +339,10 @@ export default function AgencyIntakeMockup() {
                             <span className="text-zinc-200 truncate">{item.name}</span>
                           </div>
                           <div className="flex items-center gap-1.5 shrink-0">
-                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-zinc-900 border border-white/5 text-zinc-400 font-mono uppercase">
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-zinc-900 border border-white/5 text-zinc-400 font-sans uppercase">
                               {item.complexity}
                             </span>
-                            <span className="text-white font-mono font-semibold">x{item.qty}</span>
+                            <span className="text-white font-sans font-semibold">x{item.qty}</span>
                           </div>
                         </div>
                       ))}
@@ -351,12 +351,12 @@ export default function AgencyIntakeMockup() {
 
                   {/* Required Crew Matches */}
                   <div className="space-y-2">
-                    <span className="text-[9px] uppercase font-mono tracking-wider text-zinc-500 block">AI Crew Matchmaking Matches</span>
+                    <span className="text-[9px] uppercase font-sans tracking-wider text-zinc-500 block">Suggested Crew</span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                       {scopedOutput.roles.map((role, idx) => (
                         <div key={idx} className="p-2.5 rounded bg-zinc-950/40 border border-white/5 flex flex-col justify-between">
                           <span className="text-zinc-300 font-semibold truncate block mb-1">{role.title}</span>
-                          <div className="flex justify-between items-center text-[9px] font-mono mt-1 border-t border-white/5 pt-1">
+                          <div className="flex justify-between items-center text-[9px] font-sans mt-1 border-t border-white/5 pt-1">
                             <span className="text-zinc-500">{role.estHours}h allocated</span>
                             <span className="text-emerald-400 font-semibold">{role.suitability}% Match</span>
                           </div>
@@ -367,12 +367,12 @@ export default function AgencyIntakeMockup() {
 
                   {/* Milestones Timeline */}
                   <div className="space-y-2">
-                    <span className="text-[9px] uppercase font-mono tracking-wider text-zinc-500 block">Structured Milestone Targets</span>
+                    <span className="text-[9px] uppercase font-sans tracking-wider text-zinc-500 block">Structured Milestone Targets</span>
                     <div className="space-y-1 text-xs">
                       {scopedOutput.milestones.map((item, idx) => (
                         <div key={idx} className="flex items-center justify-between p-1.5 text-zinc-400 border-l border-white/10 pl-3 ml-2 min-w-0">
                           <span className="truncate mr-2">{item.name}</span>
-                          <span className="text-[9px] font-mono text-zinc-500 font-semibold shrink-0">Day {item.targetDay}</span>
+                          <span className="text-[9px] font-sans text-zinc-500 font-semibold shrink-0">Day {item.targetDay}</span>
                         </div>
                       ))}
                     </div>
@@ -387,7 +387,7 @@ export default function AgencyIntakeMockup() {
               {isApproved ? (
                 <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center gap-2 text-emerald-400 text-xs min-h-[44px]">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span className="font-semibold font-mono text-[10px] uppercase tracking-wider">Project Scoped & Pushed to Crew Roster</span>
+                  <span className="font-semibold font-sans text-[10px] uppercase tracking-wider">Your project is live</span>
                 </div>
               ) : (
                 <button

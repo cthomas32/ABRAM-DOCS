@@ -8,7 +8,7 @@ import {
   DollarSign, 
   ShieldCheck, 
   RotateCcw,
-  Sparkles,
+  Zap,
   Building,
   Briefcase,
   Users2
@@ -182,7 +182,7 @@ export default function ROICalculator() {
               Interactive ROI Calculator
             </h2>
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans max-w-xl">
-              Model your agency or studio's workload and automation capabilities to see the cumulative impact on time, administrative labor, and leakage prevention.
+              See the impact of automation on your time, labor, and leakage costs.
             </p>
           </div>
 
@@ -194,7 +194,7 @@ export default function ROICalculator() {
                 onClick={() => setActiveTier(tier.id)}
                 className={`px-4 py-3 md:py-1.5 rounded-full text-xs font-semibold font-sans transition-all duration-200 cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center ${
                   activeTier === tier.id
-                    ? "bg-white text-black shadow-lg"
+                    ? "bg-white/[0.10] text-white border border-white/[0.20] shadow-lg"
                     : "text-zinc-400 hover:text-white hover:bg-white/[0.03]"
                 }`}
               >
@@ -217,7 +217,7 @@ export default function ROICalculator() {
                   <Briefcase className="w-4 h-4 text-zinc-400" />
                   Projects per Year
                 </label>
-                <span className="text-white font-mono text-sm px-2.5 py-0.5 rounded bg-zinc-900 border border-white/5">
+                <span className="text-white font-sans text-sm px-2.5 py-0.5 rounded bg-zinc-900 border border-white/5">
                   {formatNumber(projects)}
                 </span>
               </div>
@@ -229,7 +229,7 @@ export default function ROICalculator() {
                 onChange={(e) => setProjects(Number(e.target.value))}
                 className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer accent-white"
               />
-              <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
+              <div className="flex justify-between text-[10px] text-zinc-500 font-sans">
                 <span>Min: {activeConfig.minProjects}</span>
                 <span>Max: {activeConfig.maxProjects}</span>
               </div>
@@ -242,7 +242,7 @@ export default function ROICalculator() {
                   <Users2 className="w-4 h-4 text-zinc-400" />
                   Crew Roster Size
                 </label>
-                <span className="text-white font-mono text-sm px-2.5 py-0.5 rounded bg-zinc-900 border border-white/5">
+                <span className="text-white font-sans text-sm px-2.5 py-0.5 rounded bg-zinc-900 border border-white/5">
                   {formatNumber(crew)}
                 </span>
               </div>
@@ -254,7 +254,7 @@ export default function ROICalculator() {
                 onChange={(e) => setCrew(Number(e.target.value))}
                 className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer accent-white"
               />
-              <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
+              <div className="flex justify-between text-[10px] text-zinc-500 font-sans">
                 <span>Min: {activeConfig.minCrew}</span>
                 <span>Max: {activeConfig.maxCrew}</span>
               </div>
@@ -264,10 +264,10 @@ export default function ROICalculator() {
             <div className="space-y-3">
               <div className="flex justify-between items-center text-xs font-medium font-sans">
                 <label className="text-zinc-200 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-zinc-400" />
+                  <Zap className="w-4 h-4 text-zinc-400" />
                   Automation Yield (Efficiency Rate)
                 </label>
-                <span className="text-white font-mono text-sm px-2.5 py-0.5 rounded bg-zinc-900 border border-white/5">
+                <span className="text-white font-sans text-sm px-2.5 py-0.5 rounded bg-zinc-900 border border-white/5">
                   {automation}%
                 </span>
               </div>
@@ -279,7 +279,7 @@ export default function ROICalculator() {
                 onChange={(e) => setAutomation(Number(e.target.value))}
                 className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer accent-white"
               />
-              <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
+              <div className="flex justify-between text-[10px] text-zinc-500 font-sans">
                 <span>Min: {activeConfig.minAutomation}%</span>
                 <span>Max: {activeConfig.maxAutomation}%</span>
               </div>
@@ -290,19 +290,19 @@ export default function ROICalculator() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <span className="block text-zinc-500">Hourly Rate Cap</span>
-                  <span className="font-mono text-white text-xs font-semibold">{formatCurrency(activeConfig.hourlyRate)}/hr</span>
+                  <span className="font-sans text-white text-xs font-semibold">{formatCurrency(activeConfig.hourlyRate)}/hr</span>
                 </div>
                 <div>
                   <span className="block text-zinc-500">Avg. Project Budget</span>
-                  <span className="font-mono text-white text-xs font-semibold">{formatCurrency(activeConfig.avgProjectBudget)}</span>
+                  <span className="font-sans text-white text-xs font-semibold">{formatCurrency(activeConfig.avgProjectBudget)}</span>
                 </div>
                 <div>
                   <span className="block text-zinc-500">Operational Leakage</span>
-                  <span className="font-mono text-white text-xs font-semibold">{(activeConfig.leakageRate * 100).toFixed(1)}%</span>
+                  <span className="font-sans text-white text-xs font-semibold">{(activeConfig.leakageRate * 100).toFixed(1)}%</span>
                 </div>
                 <div>
                   <span className="block text-zinc-500">License Cost / Yr</span>
-                  <span className="font-mono text-white text-xs font-semibold">{formatCurrency(activeConfig.platformCost)}</span>
+                  <span className="font-sans text-white text-xs font-semibold">{formatCurrency(activeConfig.platformCost)}</span>
                 </div>
               </div>
             </div>
@@ -332,11 +332,11 @@ export default function ROICalculator() {
                 <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase font-sans">
                   NET ROI ESTIMATE
                 </span>
-                <div className="flex items-baseline gap-2">
+                <div className="flex items-baseline gap-2 flex-wrap">
                   <span className="text-4xl sm:text-5xl font-bold tracking-tight text-white font-sans">
                     {netROI}%
                   </span>
-                  <span className="text-xs text-emerald-400 font-semibold flex items-center gap-0.5 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                  <span className="text-xs text-emerald-400 font-semibold flex items-center gap-0.5 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full whitespace-nowrap">
                     +{formatCurrency(netSavings)}/yr
                   </span>
                 </div>
@@ -351,7 +351,7 @@ export default function ROICalculator() {
                     <Clock className="w-3.5 h-3.5 text-zinc-500" />
                     Time Saved
                   </span>
-                  <span className="text-white font-semibold font-mono text-right">
+                  <span className="text-white font-semibold font-sans text-right">
                     {formatNumber(timeSaved)} hours/yr
                   </span>
                 </div>
@@ -362,7 +362,7 @@ export default function ROICalculator() {
                     <DollarSign className="w-3.5 h-3.5 text-zinc-500" />
                     Labor Savings
                   </span>
-                  <span className="text-white font-semibold font-mono text-right">
+                  <span className="text-white font-semibold font-sans text-right">
                     {formatCurrency(laborSavings)}/yr
                   </span>
                 </div>
@@ -373,7 +373,7 @@ export default function ROICalculator() {
                     <ShieldCheck className="w-3.5 h-3.5 text-zinc-500" />
                     Leakage Prevented
                   </span>
-                  <span className="text-white font-semibold font-mono text-right">
+                  <span className="text-white font-semibold font-sans text-right">
                     {formatCurrency(leakagePrevention)}/yr
                   </span>
                 </div>
@@ -384,7 +384,7 @@ export default function ROICalculator() {
                     <Building className="w-3.5 h-3.5 text-zinc-500" />
                     Payback Period
                   </span>
-                  <span className="text-emerald-400 font-semibold font-mono text-right">
+                  <span className="text-emerald-400 font-semibold font-sans text-right">
                     {paybackPeriod <= 0.1 ? "Immediate" : `${paybackPeriod} months`}
                   </span>
                 </div>
@@ -392,14 +392,14 @@ export default function ROICalculator() {
               </div>
 
               {/* Call to action */}
-              <div className="pt-6 relative z-10">
+              <div className="pt-6 relative z-10 flex flex-col items-center">
                 <a
                   href="/pricing"
-                  className="btn-primary w-full"
+                  className="btn-glass rounded-full px-4 py-2 text-xs inline-flex items-center justify-center gap-1.5 w-full"
                 >
                   View Deployment Plans
                 </a>
-                <p className="text-[9px] text-zinc-500 text-center mt-3 font-mono">
+                <p className="text-[9px] text-zinc-500 text-center mt-3 font-sans">
                   *Formulations are linear approximations based on industry averages.
                 </p>
               </div>

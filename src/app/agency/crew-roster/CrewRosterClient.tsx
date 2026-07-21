@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, 
-  Sparkles, 
   Users, 
   Sliders, 
   Send,
@@ -28,12 +27,12 @@ export default function CrewRosterClient() {
         "publisher": { "@id": "https://abram.network/#organization" },
         "mainEntity": {
           "@type": "SoftwareApplication",
-          "name": "ABRAM Matchmaker Engine",
+          "name": "ABRAM Crew Matchmaking",
           "applicationCategory": "BusinessApplication",
           "featureList": [
-            "Weighted Contractor Suitability Indexing",
+            "AI-Assisted Roster Suggestions",
             "Unified Gear & Personnel Asset Directory",
-            "Automated Shortlist Selection Optimizer",
+            "Manual Shortlist Selection Review",
             "One-Click Portal Broadcast Dispatch"
           ]
         }
@@ -80,7 +79,7 @@ export default function CrewRosterClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
           <Link 
             href="/agency" 
-            className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 font-mono font-semibold uppercase min-h-[44px]"
+            className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 font-sans font-semibold uppercase min-h-[44px]"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to agency hub
           </Link>
@@ -103,14 +102,14 @@ export default function CrewRosterClient() {
               custom={0.1}
               className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight font-sans select-text"
             >
-              Optimize talent allocations with Weighted Suitability Indexes.
+              Staff your next project faster from the crew you already trust.
             </motion.h1>
             <motion.p
               variants={revealVariants}
               custom={0.2}
               className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed max-w-2xl select-text font-sans"
             >
-              Maintain a high-availability database of motion designers, copywriters, and physical stages. Filter by department, run suitability comparisons, and let the AI optimizer select the best roster combination.
+              Filter by department and get AI-assisted roster suggestions ranked by fit.
             </motion.p>
           </motion.div>
         </div>
@@ -134,7 +133,7 @@ export default function CrewRosterClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Suitability Scoring</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Generate instant matchmaking indexes by scanning contractor profiles against task lists. Score candidates based on skill match density, ratings, and rates.
+                  Crew Matchmaking scores candidates by skill match, ratings, and rate.
                 </p>
               </div>
 
@@ -145,7 +144,7 @@ export default function CrewRosterClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">Unified Asset Directory</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Manage external contractors, internal crew staff, camera packages, and studio physical spaces in a single, secure query system with strict access permissions.
+                  Manage contractors, staff, gear, and studio spaces in one secure directory.
                 </p>
               </div>
 
@@ -156,7 +155,7 @@ export default function CrewRosterClient() {
                 </div>
                 <h3 className="text-sm font-semibold text-zinc-100 font-sans">One-Click Dispatch</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  Lock roster shortlists and push invitations instantly to external crew via text. Contractors RSVP in a mobile-optimized viewport to update their schedules.
+                  Lock shortlists and dispatch invitations instantly to crew via text.
                 </p>
               </div>
 

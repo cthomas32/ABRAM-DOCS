@@ -15,6 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: data.title || "Privacy Policy",
     description: data.description || "Privacy Policy for the ABRAM creative intelligence platform.",
+    keywords: ["ABRAM", "privacy policy", "data protection", "gdpr", "privacy"],
     alternates: {
       canonical: 'https://abram.network/privacy-policy',
     },
@@ -35,10 +36,38 @@ export default function PrivacyPolicyPage() {
   const { content } = matter(fileContent);
 
   return (
-    <div className="py-8 max-w-3xl mx-auto selection:bg-zinc-800 selection:text-white">
-      <article className="max-w-none">
-        <MDXRemote source={content} components={mdxComponents} />
-      </article>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebPage',
+                '@id': 'https://abram.network/privacy-policy/#webpage',
+                'url': 'https://abram.network/privacy-policy',
+                'name': 'Privacy Policy | ABRAM Network',
+                'description': 'Privacy Policy for the ABRAM platform.',
+                'isPartOf': { '@id': 'https://abram.network/#website' },
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://abram.network/privacy-policy/#breadcrumb',
+                'itemListElement': [
+                  { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://abram.network/' },
+                  { '@type': 'ListItem', 'position': 2, 'name': 'Privacy Policy', 'item': 'https://abram.network/privacy-policy' },
+                ],
+              },
+            ],
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
+      <div className="py-8 max-w-3xl mx-auto selection:bg-zinc-800 selection:text-white">
+        <article className="max-w-none">
+          <MDXRemote source={content} components={mdxComponents} />
+        </article>
+      </div>
+    </>
   );
 }
