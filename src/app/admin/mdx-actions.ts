@@ -1,6 +1,7 @@
 "use server";
 
 import { serialize } from "next-mdx-remote/serialize";
+import remarkGfm from "remark-gfm";
 import { preprocessMdx } from "@/components/MdxComponents";
 
 export interface CompileMdxResponse {
@@ -16,7 +17,11 @@ export interface CompileMdxResponse {
  */
 export async function compileMdxAction(content: string): Promise<CompileMdxResponse> {
   try {
-    const mdxSource = await serialize(preprocessMdx(content));
+    const mdxSource = await serialize(preprocessMdx(content), {
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+      },
+    });
     return { success: true, mdxSource };
   } catch (err: any) {
     console.error("MDX Compilation Error:", err);

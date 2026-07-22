@@ -1,6 +1,7 @@
 import matter from "gray-matter";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { mdxComponents } from "../../../components/MdxComponents";
 import { getAllDocPages } from "../../../utils/navigation";
 import { ensureContentCopied } from "../../../utils/navigation-server";
@@ -466,7 +467,15 @@ export default async function DocPage({ params }: PageProps) {
                 </div>
               </div>
             )}
-            <MDXRemote source={doc.content} components={mdxComponents} />
+            <MDXRemote
+              source={doc.content}
+              components={mdxComponents}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                },
+              }}
+            />
           </article>
         </div>
         <TableOfContents />

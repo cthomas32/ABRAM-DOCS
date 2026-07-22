@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { supabase } from "@/utils/supabase/static";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { mdxComponents, preprocessMdx } from "@/components/MdxComponents";
 import Link from "next/link";
 
@@ -155,7 +156,15 @@ export default async function ChangelogPage() {
                   </h2>
 
                   <div className="prose prose-zinc dark:prose-invert max-w-none text-zinc-300 font-sans select-text line-clamp-3 release-notes-content">
-                    <MDXRemote source={preprocessMdx(release.content)} components={mdxComponents} />
+                    <MDXRemote
+                      source={preprocessMdx(release.content)}
+                      components={mdxComponents}
+                      options={{
+                        mdxOptions: {
+                          remarkPlugins: [remarkGfm],
+                        },
+                      }}
+                    />
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-white/5 flex justify-end">

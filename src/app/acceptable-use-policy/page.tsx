@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { mdxComponents } from "../../components/MdxComponents";
 import type { Metadata } from "next";
 
@@ -65,7 +66,15 @@ export default function AcceptableUsePolicyPage() {
       />
       <div className="py-8 max-w-3xl mx-auto selection:bg-zinc-800 selection:text-white">
         <article className="max-w-none">
-          <MDXRemote source={content} components={mdxComponents} />
+          <MDXRemote
+            source={content}
+            components={mdxComponents}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkGfm],
+              },
+            }}
+          />
         </article>
       </div>
     </>

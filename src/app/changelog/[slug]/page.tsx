@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { supabase } from "@/utils/supabase/static";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { mdxComponents, preprocessMdx } from "@/components/MdxComponents";
 import Link from "next/link";
 import { cache } from "react";
@@ -257,7 +258,15 @@ export default async function ChangelogDetailPage({ params, searchParams }: Chan
         </header>
 
         <div className="text-zinc-300 font-sans select-text release-notes-content">
-          <MDXRemote source={preprocessMdx(release.content)} components={mdxComponents} />
+          <MDXRemote
+            source={preprocessMdx(release.content)}
+            components={mdxComponents}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkGfm],
+              },
+            }}
+          />
         </div>
       </article>
 
