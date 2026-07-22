@@ -1083,13 +1083,16 @@ export default function PricingClient() {
                           Contact Sales
                         </a>
                       ) : (
-                        <button 
-                          className={`w-full min-h-[44px] lg:min-h-0 py-3 lg:py-1.5 text-xs font-semibold ${
+                        <a 
+                          href="https://app.abram.network"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`w-full text-center block rounded-full min-h-[44px] lg:min-h-0 py-3 lg:py-1.5 text-xs font-semibold cursor-pointer transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-white/50 ${
                             isPrimaryCard ? "btn-primary" : "btn-glass"
                           }`}
                         >
                           Get Started
-                        </button>
+                        </a>
                       )}
                     </div>
                   </div>
