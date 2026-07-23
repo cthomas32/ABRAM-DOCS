@@ -36,6 +36,37 @@ export function getResendClient(): Resend | null {
   return new Resend(apiKey);
 }
 
+// Canonical Resend segment IDs (overridable via environment).
+const MARKETING_SEGMENT_ID = process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
+const APPLICATION_SEGMENT_ID = process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8";
+
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// Friendly aliases the content writer / API may supply instead of a raw segment UUID.
+const SEGMENT_ALIASES: Record<string, string> = {
+  marketing: MARKETING_SEGMENT_ID,
+  marketing_list: MARKETING_SEGMENT_ID,
+  general: MARKETING_SEGMENT_ID,
+  application: APPLICATION_SEGMENT_ID,
+  application_list: APPLICATION_SEGMENT_ID,
+  app: APPLICATION_SEGMENT_ID,
+};
+
+/**
+ * Resolves a segment identifier to a valid Resend segment UUID.
+ * Accepts a canonical UUID (any custom Resend segment) or a known friendly alias
+ * such as "application_list". Returns null if the value cannot be resolved to a UUID,
+ * so callers can fail fast with a clear message instead of passing garbage to Resend
+ * (which returns an opaque "Something went wrong").
+ */
+export function resolveSegmentId(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  const value = raw.trim();
+  if (UUID_REGEX.test(value)) return value;
+  const alias = SEGMENT_ALIASES[value.toLowerCase()];
+  return alias || null;
+}
+
 /**
  * Validates if the Resend API key is configured.
  * Useful for checking connectivity from admin dashboards.
@@ -273,9 +304,11 @@ export async function createDraftCampaign(input: CreateDraftCampaignInput) {
   } else {
     const audienceType = input.metadata?.audience_type || 'segment';
     if (audienceType === 'segment') {
-      segmentId = input.segmentId || process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
+      // Normalize to a valid segment UUID, accepting friendly aliases (e.g. "application_list").
+      // Fall back to the Marketing segment when no usable value is provided.
+      segmentId = resolveSegmentId(input.segmentId) || MARKETING_SEGMENT_ID;
       if (input.recipientsCount === undefined) {
-        if (segmentId === (process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8")) {
+        if (segmentId === APPLICATION_SEGMENT_ID) {
           const { count } = await supabase
             .from("subscribers")
             .select("*", { count: "exact", head: true })
@@ -448,6 +481,16 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
       const audienceType = lockedCampaign.metadata?.audience_type || 'segment';
 
       if (audienceType === 'segment' && lockedCampaign.segment_id) {
+        // Validate the segment before touching Resend. An invalid value (e.g. a placeholder
+        // slug like "application_list") otherwise reaches Resend and comes back as an opaque
+        // "Something went wrong", flipping the campaign to failed with no actionable reason.
+        const resolvedSegmentId = resolveSegmentId(lockedCampaign.segment_id);
+        if (!resolvedSegmentId) {
+          throw new Error(
+            `Invalid broadcast segment "${lockedCampaign.segment_id}". Expected a Resend segment ID (UUID) or a known list. Edit the campaign's audience and try again.`
+          );
+        }
+
         // 4. Create the Broadcast in Resend
         const broadcastResponse = await resend.broadcasts.create({
           name: lockedCampaign.title,
@@ -455,7 +498,7 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
           subject: lockedCampaign.subject,
           text: lockedCampaign.text_content || "",
           html: lockedCampaign.html_content || "",
-          segmentId: lockedCampaign.segment_id,
+          segmentId: resolvedSegmentId,
         });
 
         if (broadcastResponse.error) {
