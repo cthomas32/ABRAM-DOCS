@@ -11,7 +11,7 @@ keywords:
 
 # Privacy Policy
 
-**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+**Effective Date:** July 27, 2026 | **Last Updated:** July 27, 2026
 Thomas Abram, LLC | [privacy@abram.network](mailto:privacy@abram.network)
 
 ---

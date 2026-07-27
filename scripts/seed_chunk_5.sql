@@ -12,7 +12,7 @@ description: Acceptable Use Policy for the ABRAM creative intelligence platform.
 
 # Acceptable Use Policy
 
-**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+**Effective Date:** July 27, 2026 | **Last Updated:** July 27, 2026
 Thomas Abram, LLC | [legal@abram.network](mailto:legal@abram.network)
 
 ---
@@ -135,7 +135,7 @@ description: Privacy Policy for the ABRAM creative intelligence platform.
 
 # Privacy Policy
 
-**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+**Effective Date:** July 27, 2026 | **Last Updated:** July 27, 2026
 Thomas Abram, LLC | [privacy@abram.network](mailto:privacy@abram.network)
 
 ---
@@ -421,7 +421,7 @@ description: Terms of Use for the ABRAM creative intelligence platform.
 
 # Terms of Use
 
-**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+**Effective Date:** July 27, 2026 | **Last Updated:** July 27, 2026
 Thomas Abram, LLC | [legal@abram.network](mailto:legal@abram.network)
 
 ---
