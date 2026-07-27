@@ -11,14 +11,14 @@ keywords:
 
 # Acceptable Use Policy
 
-**Effective Date:** June 23, 2026 | **Last Updated:** June 23, 2026
-Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
+**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+Thomas Abram, LLC | [legal@abram.network](mailto:legal@abram.network)
 
 ---
 
 ## 1. Purpose and Relationship to the Terms of Use
 
-This Acceptable Use Policy ("AUP" or "Policy") sets out specific rules for how you may and may not use the ABRAM Network platform (the "Platform"). It is incorporated by reference into the ABRAM Terms of Use and forms part of the agreement between you and Thomas Abram, Inc. ("ABRAM," "we," "us," or "our").
+This Acceptable Use Policy ("AUP" or "Policy") sets out specific rules for how you may and may not use the ABRAM Network platform (the "Platform"). It is incorporated by reference into the ABRAM Terms of Use and forms part of the agreement between you and Thomas Abram, LLC ("ABRAM," "we," "us," or "our").
 
 We publish this Policy separately from the Terms of Use so that we can update specific security and safety rules, including new AI abuse patterns, as they emerge, without requiring a full renegotiation of our Terms of Use or any signed agreement. Material changes affecting your rights will be communicated in accordance with Section 19 of the Terms of Use.
 
@@ -101,11 +101,11 @@ ABRAM may update this Policy to address new abuse patterns, security risks, or p
 
 ## 10. Contact
 
-**Thomas Abram, Inc.**
+**Thomas Abram, LLC**
 
 Email: [legal@abram.network](mailto:legal@abram.network)
 Address: Washington, DC
 
 ---
 
-© 2026 Thomas Abram, Inc. All rights reserved.
+© 2026 Thomas Abram, LLC. All rights reserved.

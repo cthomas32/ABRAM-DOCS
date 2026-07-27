@@ -11,14 +11,14 @@ keywords:
 
 # Privacy Policy
 
-**Effective Date:** June 23, 2026 | **Last Updated:** June 23, 2026
-Thomas Abram, Inc. | [privacy@abram.network](mailto:privacy@abram.network)
+**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+Thomas Abram, LLC | [privacy@abram.network](mailto:privacy@abram.network)
 
 ---
 
 ## 1. Overview
 
-Thomas Abram, Inc. ("ABRAM," "we," "us," or "our") operates the ABRAM creative intelligence platform. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our Platform.
+Thomas Abram, LLC ("ABRAM," "we," "us," or "our") operates the ABRAM creative intelligence platform. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our Platform.
 
 We comply with applicable privacy laws, including the GDPR (EU/EEA), UK GDPR, CCPA (California), and applicable US state privacy laws.
 
@@ -255,7 +255,7 @@ We will notify you of material changes via email and/or in-app notification at l
 
 ## 14. Contact & Data Controller
 
-**Data Controller: Thomas Abram, Inc.**
+**Data Controller: Thomas Abram, LLC**
 
 | Contact | Email |
 |---|---|
@@ -265,10 +265,10 @@ We will notify you of material changes via email and/or in-app notification at l
 
 **Address:** Washington, DC
 
-**EU Data Protection Representative (GDPR Article 27):** Thomas Abram, Inc. is in the process of appointing an EU representative. In the interim, contact privacy@abram.network.
+**EU Data Protection Representative (GDPR Article 27):** Thomas Abram, LLC is in the process of appointing an EU representative. In the interim, contact privacy@abram.network.
 
 For GDPR-related complaints, EU/EEA users may contact their national Data Protection Authority (edpb.europa.eu). UK users may contact the ICO at ico.org.uk.
 
 ---
 
-© 2026 Thomas Abram, Inc. All rights reserved.
+© 2026 Thomas Abram, LLC. All rights reserved.

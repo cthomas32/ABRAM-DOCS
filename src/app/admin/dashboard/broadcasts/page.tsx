@@ -131,7 +131,7 @@ const TEMPLATES = [
                         You are receiving this because you subscribed to updates from ABRAM.
                       </p>
                       <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 6px 0 0 0;">
-                        Thomas Abram, Inc. &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
+                        Thomas Abram, LLC &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
                       </p>
                     </td>
                   </tr>
@@ -226,7 +226,7 @@ const TEMPLATES = [
                         You are receiving this because you subscribed to updates from ABRAM.
                       </p>
                       <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 6px 0 0 0;">
-                        Thomas Abram, Inc. &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
+                        Thomas Abram, LLC &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
                       </p>
                     </td>
                   </tr>
@@ -297,7 +297,7 @@ const TEMPLATES = [
                         You are receiving this because you subscribed to updates from ABRAM.
                       </p>
                       <p style="font-size: 11px; color: #71717A; line-height: 1.6; margin: 6px 0 0 0;">
-                        Thomas Abram, Inc. &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
+                        Thomas Abram, LLC &bull; Washington, DC &bull; <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" class="link-hover" style="color: #3B82F6; text-decoration: underline;">Unsubscribe</a> from this list.
                       </p>
                     </td>
                   </tr>

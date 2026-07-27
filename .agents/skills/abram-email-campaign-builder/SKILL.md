@@ -127,5 +127,5 @@ To prevent email clients from overriding the pill borders (`border-radius: 9999p
 - **Personalization tags**:
   - First Name: `{{{contact.first_name|there}}}` (resolved at delivery time).
   - Unsubscribe Link: `{{{RESEND_UNSUBSCRIBE_URL}}}`.
-- **Legal Footer Requirement**: Every footer **must** include: **Thomas Abram, Inc. • Washington, DC**.
+- **Legal Footer Requirement**: Every footer **must** include: **Thomas Abram, LLC • Washington, DC**.
 - **No Direct Send**: Campaigns must **always** be inserted with `status: 'draft'`. Bypassing this or triggering sends directly is prohibited.

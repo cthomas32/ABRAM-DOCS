@@ -12,14 +12,14 @@ description: Acceptable Use Policy for the ABRAM creative intelligence platform.
 
 # Acceptable Use Policy
 
-**Effective Date:** June 23, 2026 | **Last Updated:** June 23, 2026
-Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
+**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+Thomas Abram, LLC | [legal@abram.network](mailto:legal@abram.network)
 
 ---
 
 ## 1. Purpose and Relationship to the Terms of Use
 
-This Acceptable Use Policy ("AUP" or "Policy") sets out specific rules for how you may and may not use the ABRAM Network platform (the "Platform"). It is incorporated by reference into the ABRAM Terms of Use and forms part of the agreement between you and Thomas Abram, Inc. ("ABRAM," "we," "us," or "our").
+This Acceptable Use Policy ("AUP" or "Policy") sets out specific rules for how you may and may not use the ABRAM Network platform (the "Platform"). It is incorporated by reference into the ABRAM Terms of Use and forms part of the agreement between you and Thomas Abram, LLC ("ABRAM," "we," "us," or "our").
 
 We publish this Policy separately from the Terms of Use so that we can update specific security and safety rules, including new AI abuse patterns, as they emerge, without requiring a full renegotiation of our Terms of Use or any signed agreement. Material changes affecting your rights will be communicated in accordance with Section 19 of the Terms of Use.
 
@@ -102,14 +102,14 @@ ABRAM may update this Policy to address new abuse patterns, security risks, or p
 
 ## 10. Contact
 
-**Thomas Abram, Inc.**
+**Thomas Abram, LLC**
 
 Email: [legal@abram.network](mailto:legal@abram.network)
 Address: Washington, DC
 
 ---
 
-© 2026 Thomas Abram, Inc. All rights reserved.
+© 2026 Thomas Abram, LLC. All rights reserved.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,
@@ -135,14 +135,14 @@ description: Privacy Policy for the ABRAM creative intelligence platform.
 
 # Privacy Policy
 
-**Effective Date:** June 23, 2026 | **Last Updated:** June 23, 2026
-Thomas Abram, Inc. | [privacy@abram.network](mailto:privacy@abram.network)
+**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+Thomas Abram, LLC | [privacy@abram.network](mailto:privacy@abram.network)
 
 ---
 
 ## 1. Overview
 
-Thomas Abram, Inc. ("ABRAM," "we," "us," or "our") operates the ABRAM creative intelligence platform. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our Platform.
+Thomas Abram, LLC ("ABRAM," "we," "us," or "our") operates the ABRAM creative intelligence platform. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our Platform.
 
 We comply with applicable privacy laws, including the GDPR (EU/EEA), UK GDPR, CCPA (California), and applicable US state privacy laws.
 
@@ -379,7 +379,7 @@ We will notify you of material changes via email and/or in-app notification at l
 
 ## 14. Contact & Data Controller
 
-**Data Controller: Thomas Abram, Inc.**
+**Data Controller: Thomas Abram, LLC**
 
 | Contact | Email |
 |---|---|
@@ -389,13 +389,13 @@ We will notify you of material changes via email and/or in-app notification at l
 
 **Address:** Washington, DC
 
-**EU Data Protection Representative (GDPR Article 27):** Thomas Abram, Inc. is in the process of appointing an EU representative. In the interim, contact privacy@abram.network.
+**EU Data Protection Representative (GDPR Article 27):** Thomas Abram, LLC is in the process of appointing an EU representative. In the interim, contact privacy@abram.network.
 
 For GDPR-related complaints, EU/EEA users may contact their national Data Protection Authority (edpb.europa.eu). UK users may contact the ICO at ico.org.uk.
 
 ---
 
-© 2026 Thomas Abram, Inc. All rights reserved.
+© 2026 Thomas Abram, LLC. All rights reserved.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,
@@ -421,8 +421,8 @@ description: Terms of Use for the ABRAM creative intelligence platform.
 
 # Terms of Use
 
-**Effective Date:** June 23, 2026 | **Last Updated:** July 14, 2026
-Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
+**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+Thomas Abram, LLC | [legal@abram.network](mailto:legal@abram.network)
 
 ---
 
@@ -432,7 +432,7 @@ By accessing or using the ABRAM Network platform (the "Platform," available at a
 
 If you are accessing the Platform on behalf of an organization (a "Company Account"), you represent that you have authority to bind that organization, and these Terms apply to both you individually and the organization.
 
-These Terms constitute a legally binding agreement between you and Thomas Abram, Inc. ("ABRAM," "we," "us," or "our").
+These Terms constitute a legally binding agreement between you and Thomas Abram, LLC ("ABRAM," "we," "us," or "our").
 
 ---
 
@@ -605,7 +605,7 @@ ABRAM will respond to valid notices by removing or disabling access to the ident
 
 ### 7.6 ABRAM Platform IP
 
-All Platform code, design, interfaces, trademarks, logos, proprietary workflows, and technology developed by Thomas Abram, Inc. remain the exclusive property of Thomas Abram, Inc. Third-party AI models and technology integrated into the Platform (such as Anthropic''s Claude) remain the property of their respective owners.
+All Platform code, design, interfaces, trademarks, logos, proprietary workflows, and technology developed by Thomas Abram, LLC remain the exclusive property of Thomas Abram, LLC. Third-party AI models and technology integrated into the Platform (such as Anthropic''s Claude) remain the property of their respective owners.
 
 ---
 
@@ -791,7 +791,7 @@ ABRAM may update these Terms from time to time. We will notify you of material c
 
 ## 20. Contact
 
-**Thomas Abram, Inc.**
+**Thomas Abram, LLC**
 
 Email: legal@abram.network  
 Address: Washington, DC  
@@ -799,7 +799,7 @@ Website: abram.network
 
 ---
 
-© 2026 Thomas Abram, Inc. All rights reserved.
+© 2026 Thomas Abram, LLC. All rights reserved.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,

@@ -478,7 +478,7 @@ export async function broadcastPublishedEntry(entryId: string, type: "blog" | "c
                         <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
                           <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
                             You are receiving this because you subscribed to updates from ABRAM.<br>
-                            Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
+                            Thomas Abram, LLC • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
                           </p>
                         </td>
                       </tr>
@@ -590,7 +590,7 @@ export async function broadcastPublishedEntry(entryId: string, type: "blog" | "c
                         <td align="center" style="padding:16px 0 0; border-top: 1px solid #1a1a1a;">
                           <p style="margin:0;font-size:12px;color:#555555;line-height:1.6;">
                             You are receiving this because you subscribed to updates from ABRAM.<br>
-                            Thomas Abram, Inc. • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
+                            Thomas Abram, LLC • Washington, DC • <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#888888;text-decoration:underline;">Unsubscribe</a> from this list.
                           </p>
                         </td>
                       </tr>

@@ -11,8 +11,8 @@ keywords:
 
 # Terms of Use
 
-**Effective Date:** June 23, 2026 | **Last Updated:** July 14, 2026
-Thomas Abram, Inc. | [legal@abram.network](mailto:legal@abram.network)
+**Effective Date:** June 23, 2026 | **Last Updated:** July 27, 2026
+Thomas Abram, LLC | [legal@abram.network](mailto:legal@abram.network)
 
 ---
 
@@ -22,7 +22,7 @@ By accessing or using the ABRAM Network platform (the "Platform," available at a
 
 If you are accessing the Platform on behalf of an organization (a "Company Account"), you represent that you have authority to bind that organization, and these Terms apply to both you individually and the organization.
 
-These Terms constitute a legally binding agreement between you and Thomas Abram, Inc. ("ABRAM," "we," "us," or "our").
+These Terms constitute a legally binding agreement between you and Thomas Abram, LLC ("ABRAM," "we," "us," or "our").
 
 ---
 
@@ -195,7 +195,7 @@ ABRAM will respond to valid notices by removing or disabling access to the ident
 
 ### 7.6 ABRAM Platform IP
 
-All Platform code, design, interfaces, trademarks, logos, proprietary workflows, and technology developed by Thomas Abram, Inc. remain the exclusive property of Thomas Abram, Inc. Third-party AI models and technology integrated into the Platform (such as Anthropic's Claude) remain the property of their respective owners.
+All Platform code, design, interfaces, trademarks, logos, proprietary workflows, and technology developed by Thomas Abram, LLC remain the exclusive property of Thomas Abram, LLC. Third-party AI models and technology integrated into the Platform (such as Anthropic's Claude) remain the property of their respective owners.
 
 ---
 
@@ -381,7 +381,7 @@ ABRAM may update these Terms from time to time. We will notify you of material c
 
 ## 20. Contact
 
-**Thomas Abram, Inc.**
+**Thomas Abram, LLC**
 
 Email: legal@abram.network  
 Address: Washington, DC  
@@ -389,4 +389,4 @@ Website: abram.network
 
 ---
 
-© 2026 Thomas Abram, Inc. All rights reserved.
+© 2026 Thomas Abram, LLC. All rights reserved.
