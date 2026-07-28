@@ -240,7 +240,14 @@ You may not deliberately move a relationship formed through the Platform off-Pla
 
 ### 8.7 Processing Fee
 
-ABRAM charges a platform processing fee on payments made between users through the Platform (the "Processing Fee"). The Processing Fee rate depends on the payment recipient's subscription plan, and certain plans include a monthly payment-volume allowance on which no Processing Fee is charged. Current rates and allowances are published on the ABRAM pricing page, and the applicable fee is shown on each invoice or quote before payment.
+ABRAM charges a platform processing fee on payments made between users through the Platform (the "Processing Fee"). The Processing Fee rate depends on the payment recipient's subscription plan, and certain plans include a monthly payment-volume allowance on which no Processing Fee is charged. Current rates and allowances are published on the ABRAM pricing page.
+
+**Who bears the Processing Fee.** The payment recipient chooses, for each invoice or quote, whether to pass the Processing Fee through to the paying party or to absorb it:
+
+- **Passed through** — the Processing Fee is added to the amount billed and is itemized on the invoice or quote, so the paying party sees it before paying.
+- **Absorbed** — the paying party owes only the amount the recipient billed, and the Processing Fee is deducted from the recipient's proceeds.
+
+In both cases the Processing Fee is the same amount and is disclosed to the party who bears it before the payment is completed.
 
 **The Processing Fee is non-refundable.** Once a payment is completed, the Processing Fee has been earned by ABRAM for facilitating the transaction and is not returned — including where the underlying payment is later fully or partially refunded by the recipient, or where the payment is disputed — except to the extent a refund of the fee is required by applicable law. Stripe's own payment processing fees are separate from the Processing Fee and are governed by the recipient's agreement with Stripe.
 
