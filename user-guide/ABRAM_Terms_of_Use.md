@@ -212,15 +212,19 @@ Access to certain Platform features requires a paid subscription. Subscription f
 
 **Downgrades:** Plan downgrades and seat reductions take effect at the end of the current billing period. You retain your current plan and seat count until then, and no partial refunds or credits are issued for the reduced portion.
 
+**Price changes:** We will give you at least **30 days' advance notice**, by email to the address on your account, before any increase to your subscription price takes effect. An increase applies only to billing periods beginning after that notice period, and you may cancel at any time before it takes effect.
+
 ### 8.2 Payment Processing
 
 All subscription payments are processed via Stripe. By providing payment information, you authorize ABRAM to charge your payment method on a recurring basis. ABRAM does not store raw payment card information.
 
-Payments between users (invoices, quotes, and purchase orders) are processed via Stripe directly on the payment recipient's connected Stripe account. The recipient is the merchant of record for those transactions and is responsible for Stripe's payment processing fees, refunds, and dispute responses, per Section 4.1 and the Stripe Connected Account Agreement they accept when connecting their account.
+Payments between users (invoices, quotes, and purchase orders) are processed via Stripe directly on the payment recipient's connected Stripe account. The recipient is the merchant of record for those transactions and is responsible for Stripe's payment processing fees, refunds, and dispute responses, per Section 4.1.
+
+**Stripe Connected Account Agreement.** If you connect a Stripe account in order to receive payments through the Platform, you enter into a direct agreement with Stripe, Inc. Payment processing services for you are provided by Stripe and are subject to the **Stripe Connected Account Agreement**, available at [https://stripe.com/legal/connect-account](https://stripe.com/legal/connect-account), including the Stripe Terms of Service (collectively, the "Stripe Services Agreement"). That agreement is **incorporated into these Terms by reference**. By connecting a Stripe account or continuing to receive payments through the Platform, you agree to be bound by the Stripe Services Agreement, as it may be modified by Stripe from time to time. As a condition of ABRAM enabling payment processing services through Stripe, you agree to provide ABRAM accurate and complete information about you and your business, and you authorize ABRAM to share it, and transaction information related to your use of the payment processing services provided by Stripe, with Stripe.
 
 ### 8.3 Contractor Payouts
 
-Users receiving payments must connect a valid Stripe account to receive funds through the Platform. Funds from user-to-user payments settle directly to the recipient's own Stripe account. ABRAM is not responsible for delays caused by Stripe's processing timelines, bank holds, account verification requirements, or incorrect banking information provided by users.
+Users receiving payments must connect a valid Stripe account to receive funds through the Platform. Funds from user-to-user payments settle directly to the recipient's own Stripe account. ABRAM is not responsible for delays caused by Stripe's processing timelines, bank holds, account verification requirements, or incorrect banking information provided by users. Payout timing, holds, reserves, and account verification are governed by the Stripe Services Agreement referenced in Section 8.2, between you and Stripe.
 
 ### 8.4 Taxes
 
@@ -240,7 +244,15 @@ ABRAM charges a platform processing fee on payments made between users through t
 
 **The Processing Fee is non-refundable.** Once a payment is completed, the Processing Fee has been earned by ABRAM for facilitating the transaction and is not returned — including where the underlying payment is later fully or partially refunded by the recipient, or where the payment is disputed — except to the extent a refund of the fee is required by applicable law. Stripe's own payment processing fees are separate from the Processing Fee and are governed by the recipient's agreement with Stripe.
 
-ABRAM may change Processing Fee rates and allowances prospectively. Changes apply only to payments initiated after the change takes effect, never retroactively.
+**Statutory rights are not affected.** Nothing in this Section or in Section 8.1 limits any refund or cancellation right you have that cannot be waived by agreement. Without limiting that general statement, and where applicable to you:
+
+- **Consumers in the EU and UK** may have a statutory right to withdraw from a distance contract within 14 days, subject to the exceptions for digital services that have already been fully performed with your prior consent.
+- **California subscribers** retain the cancellation and refund rights provided by California's Automatic Renewal Law, including the right to cancel an automatically renewing subscription and to receive the notices that law requires.
+- Consumers in other jurisdictions retain any equivalent non-waivable cancellation, withdrawal, or refund rights available to them under local law.
+
+Where such a right applies, we will honor it regardless of the general terms above. If you believe a statutory right entitles you to a refund, contact [legal@abram.network](mailto:legal@abram.network).
+
+ABRAM may change Processing Fee rates and allowances prospectively. Changes apply only to payments initiated after the change takes effect, never retroactively. Where a change would increase the Processing Fee applicable to you, we will publish the revised rates on the pricing page and, for subscribers, provide the same 30 days' advance notice described in Section 8.1.
 
 ---
 
