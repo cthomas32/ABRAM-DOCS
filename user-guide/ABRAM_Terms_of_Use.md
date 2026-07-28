@@ -11,7 +11,7 @@ keywords:
 
 # Terms of Use
 
-**Effective Date:** July 27, 2026 | **Last Updated:** July 27, 2026
+**Effective Date:** July 27, 2026 | **Last Updated:** July 28, 2026
 Thomas Abram, LLC | [legal@abram.network](mailto:legal@abram.network)
 
 ---
@@ -65,11 +65,12 @@ Each individual member of a Company Account must also individually accept these 
 
 ### 4.1 No Payment Liability
 
-ABRAM provides payment infrastructure (including Stripe-powered invoicing and payouts) as a convenience to facilitate transactions between Clients and Contractors. ABRAM is not responsible for:
+ABRAM provides payment infrastructure (including Stripe-powered invoicing and payouts) as a convenience to facilitate transactions between Clients and Contractors. Payments between users are processed directly on the payment recipient's own Stripe account: **the payment recipient — not ABRAM — is the merchant of record** for each transaction. This means refunds, chargebacks, and payment disputes for user-to-user transactions are matters between the paying and receiving parties and are managed by the recipient through their own Stripe account. ABRAM is not responsible for:
 
 - A Client's failure to pay a Contractor;
 - A Contractor's failure to deliver services;
 - Disputes over the quality, scope, or completion of work;
+- Issuing, funding, or guaranteeing refunds for transactions between users;
 - Chargeback or fraud losses arising from transactions between users.
 
 ### 4.2 No Employment Relationship
@@ -215,13 +216,15 @@ Access to certain Platform features requires a paid subscription. Subscription f
 
 All subscription payments are processed via Stripe. By providing payment information, you authorize ABRAM to charge your payment method on a recurring basis. ABRAM does not store raw payment card information.
 
+Payments between users (invoices, quotes, and purchase orders) are processed via Stripe directly on the payment recipient's connected Stripe account. The recipient is the merchant of record for those transactions and is responsible for Stripe's payment processing fees, refunds, and dispute responses, per Section 4.1 and the Stripe Connected Account Agreement they accept when connecting their account.
+
 ### 8.3 Contractor Payouts
 
-Contractors must connect a valid Stripe Connect account to receive payouts through the Platform. ABRAM is not responsible for delays caused by Stripe's processing timelines, bank holds, or incorrect banking information provided by users.
+Users receiving payments must connect a valid Stripe account to receive funds through the Platform. Funds from user-to-user payments settle directly to the recipient's own Stripe account. ABRAM is not responsible for delays caused by Stripe's processing timelines, bank holds, account verification requirements, or incorrect banking information provided by users.
 
 ### 8.4 Taxes
 
-You are responsible for all applicable taxes arising from your use of the Platform and any transactions you enter into through it. ABRAM may collect and remit certain taxes where required by law.
+You are responsible for all applicable taxes arising from your use of the Platform and any transactions you enter into through it. For ABRAM subscription and credit purchases, ABRAM may calculate, collect, and remit sales tax, VAT, or similar transaction taxes where required by law; any such tax is shown at checkout. For transactions between users, the transacting parties are solely responsible for determining, collecting, and remitting any applicable taxes.
 
 ### 8.5 AI Credits
 
@@ -230,6 +233,14 @@ Paid plans include a monthly allowance of AI credits, which reset at the start o
 ### 8.6 No Circumventing Platform Fees
 
 You may not deliberately move a relationship formed through the Platform off-Platform for the purpose of avoiding ABRAM's processing fees, within 12 months of that relationship being formed or last engaged through the Platform. This rule exists to keep fees fair for everyone, not to prevent you from working together — if a Contractor and Client mutually decide to continue their relationship outside the Platform for reasons unrelated to fee avoidance, that is not a violation of this Policy.
+
+### 8.7 Processing Fee
+
+ABRAM charges a platform processing fee on payments made between users through the Platform (the "Processing Fee"). The Processing Fee rate depends on the payment recipient's subscription plan, and certain plans include a monthly payment-volume allowance on which no Processing Fee is charged. Current rates and allowances are published on the ABRAM pricing page, and the applicable fee is shown on each invoice or quote before payment.
+
+**The Processing Fee is non-refundable.** Once a payment is completed, the Processing Fee has been earned by ABRAM for facilitating the transaction and is not returned — including where the underlying payment is later fully or partially refunded by the recipient, or where the payment is disputed — except to the extent a refund of the fee is required by applicable law. Stripe's own payment processing fees are separate from the Processing Fee and are governed by the recipient's agreement with Stripe.
+
+ABRAM may change Processing Fee rates and allowances prospectively. Changes apply only to payments initiated after the change takes effect, never retroactively.
 
 ---
 

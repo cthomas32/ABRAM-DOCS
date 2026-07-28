@@ -120,6 +120,7 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "financial_dashboard", name: "Client-Contractor Financial Dashboard" },
       { id: "po_holds", name: "Purchase Order (PO) 7-day Card Holds" },
       { id: "budgeting_access", name: "Advanced Budgeting Access" },
+      { id: "payment_processing_fee", name: "Payment Processing Fee" },
       { id: "refunds_disputes", name: "Refunds & Dispute Handling" },
       { id: "automated_payouts", name: "Automated Payouts" },
       { id: "financial_export", name: "Financial Data Export (CSV/PDF)" },
@@ -178,6 +179,7 @@ const PLANS: Plan[] = [
       financial_dashboard: true,
       po_holds: false,
       budgeting_access: "Trial (5 lines/expenses)",
+      payment_processing_fee: "3%",
       refunds_disputes: true,
       automated_payouts: true,
       financial_export: false,
@@ -240,6 +242,7 @@ const PLANS: Plan[] = [
       financial_dashboard: true,
       po_holds: false,
       budgeting_access: "Trial (5 lines/expenses)",
+      payment_processing_fee: "3%",
       refunds_disputes: true,
       automated_payouts: true,
       financial_export: false,
@@ -302,6 +305,7 @@ const PLANS: Plan[] = [
       financial_dashboard: true,
       po_holds: true,
       budgeting_access: "Full Access",
+      payment_processing_fee: "1% · first $10k/mo free",
       refunds_disputes: true,
       automated_payouts: true,
       financial_export: true,
@@ -370,6 +374,7 @@ const PLANS: Plan[] = [
       financial_dashboard: true,
       po_holds: true,
       budgeting_access: "Full Access",
+      payment_processing_fee: "0.89% · first $50k/mo free",
       refunds_disputes: true,
       automated_payouts: true,
       financial_export: true,
@@ -440,6 +445,7 @@ const PLANS: Plan[] = [
       financial_dashboard: true,
       po_holds: true,
       budgeting_access: "Full Access",
+      payment_processing_fee: "0.5% · first $100k/mo free",
       refunds_disputes: true,
       automated_payouts: true,
       financial_export: true,
@@ -509,6 +515,7 @@ const PLANS: Plan[] = [
       financial_dashboard: true,
       po_holds: true,
       budgeting_access: "Full Access",
+      payment_processing_fee: "Custom rate",
       refunds_disputes: true,
       automated_payouts: true,
       financial_export: true,
@@ -578,7 +585,8 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   financial_dashboard: "Your production finances in one view — budgets, pending invoices, approved expenses, and payout history.",
   po_holds: "Pre-authorize and hold project budgets on client cards for 7 days to guarantee payment before production kick-off.",
   budgeting_access: "Advanced Budgeting limits: trial access (up to 5 line items and 5 expenses) for Free/Solo Lite; unlimited items and expenses for higher tiers.",
-  refunds_disputes: "Payment disputes and refunds are handled by ABRAM's platform team — we reverse transfers and application fees correctly on connected-account charges so you're never left covering a payee's cut of a refunded payment.",
+  payment_processing_fee: "ABRAM's fee on user-to-user payments, based on the payee's plan tier. Rates drop and a monthly fee-free allowance kicks in as you upgrade — only the volume above your allowance is charged. This is separate from Stripe's own card-processing fees.",
+  refunds_disputes: "Payees are the merchant of record on their own Stripe account, so refunds and disputes are handled directly from their Stripe dashboard — not by ABRAM. ABRAM's payment processing fee is non-refundable once a payment completes.",
   automated_payouts: "Trigger a contractor or crew payout directly from a completed payment record; funds move via Stripe to their connected account with no manual bank transfer.",
   financial_export: "Export budgets, expenses, invoices, and payout history to CSV or PDF for accounting, reconciliation, or sharing outside the platform.",
   budget_alerts: "Automatic threshold warnings when a project's spend approaches or exceeds its allocated budget, so overruns get caught before they happen.",
@@ -735,7 +743,7 @@ export default function PricingClient() {
             Transparent, scalable pricing.
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-zinc-400 max-w-2xl leading-relaxed">
-            Choose the right subscription for your creative operations. Dynamic seat configurations, clear credit top-ups, and flat transaction rates.
+            Choose the right subscription for your creative operations. Dynamic seat configurations, clear credit top-ups, and processing fees that shrink as you grow.
           </p>
         </section>
 
@@ -1268,6 +1276,10 @@ export default function PricingClient() {
               {
                 q: "Do you offer annual billing?",
                 a: "Yes — save with annual billing. Solo plans start at $17/mo billed annually. Use the monthly/annual toggle above to compare."
+              },
+              {
+                q: "What are the payment processing fees?",
+                a: "ABRAM charges a processing fee on user-to-user payments, computed on the payee's plan and applied only above a monthly fee-free allowance: 3% with no allowance on Free/Solo Lite, 1% with the first $10k/mo free on Solo Pro, 0.89% with the first $50k/mo free on Team, 0.5% with the first $100k/mo free on Studio, and a custom rate on Enterprise. Payees are the merchant of record on their own Stripe account, so Stripe's card-processing fees are paid by them directly, and refunds or disputes are handled from their own Stripe dashboard."
               }
             ].map((item) => (
               <div

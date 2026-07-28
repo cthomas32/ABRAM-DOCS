@@ -11,7 +11,7 @@ keywords:
 
 # Privacy Policy
 
-**Effective Date:** July 27, 2026 | **Last Updated:** July 27, 2026
+**Effective Date:** July 27, 2026 | **Last Updated:** July 28, 2026
 Thomas Abram, LLC | [privacy@abram.network](mailto:privacy@abram.network)
 
 ---
@@ -32,7 +32,7 @@ We comply with applicable privacy laws, including the GDPR (EU/EEA), UK GDPR, CC
 - **Professional profile:** Skills, experience, portfolio links, availability, hourly rates, location.
 - **Resume & documents:** Uploaded resume files (parsed by AI), certifications, portfolio materials.
 - **Project information:** Project briefs, deliverables, work orders, call sheets, run-of-shows.
-- **Financial information:** Bank account details (via Stripe), billing information, invoices, transaction records.
+- **Financial information:** Bank account details (via Stripe), billing information, billing address (used to calculate applicable sales tax on subscription purchases), invoices, transaction records. Payments between users are processed on the payment recipient's own Stripe account; identity and banking details you provide during Stripe onboarding are collected by Stripe as the account provider, not by ABRAM.
 - **Communications:** Messages, invitations, and notifications sent through the Platform.
 
 ### 2.2 Information Collected Automatically
