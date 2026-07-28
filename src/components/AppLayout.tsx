@@ -11,6 +11,7 @@ import SearchModal from "./SearchModal";
 import HomeFooter from "./home/HomeFooter";
 import MobileMenu from "./MobileMenu";
 import BackgroundGlow from "./BackgroundGlow";
+import CampaignNavbar from "./campaign/CampaignNavbar";
 import dynamic from "next/dynamic";
 
 const CookieConsent = dynamic(() => import("./CookieConsent"), {
@@ -28,8 +29,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const cleanPathname = pathname ? pathname.replace(/\/$/, "") || "/" : "/";
 
   const isAdminPage = cleanPathname.startsWith("/admin");
+  // Conversion pages: single goal, so they get a logo-only header with no
+  // navigation and no competing call to action.
+  const isCampaignPage = cleanPathname === "/start" || cleanPathname.startsWith("/start/");
   // Marketing routes that need clean, un-padded full width presentation
-  const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain" || cleanPathname === "/film-production" || cleanPathname.startsWith("/film-production/") || cleanPathname === "/agency" || cleanPathname.startsWith("/agency/") || cleanPathname === "/intelligence" || cleanPathname.startsWith("/intelligence/");
+  const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain" || cleanPathname === "/film-production" || cleanPathname.startsWith("/film-production/") || cleanPathname === "/agency" || cleanPathname.startsWith("/agency/") || cleanPathname === "/intelligence" || cleanPathname.startsWith("/intelligence/") || isCampaignPage;
   const isDocsPage = cleanPathname.startsWith("/docs");
 
   // Keyboard shortcut listener for search modal
@@ -49,6 +53,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="selection:bg-zinc-800 selection:text-white bg-[#0A0A0A]">
         {children}
       </div>
+    );
+  }
+
+  if (isCampaignPage) {
+    return (
+      <BackgroundGlow variant="premium" className="selection:bg-zinc-800 selection:text-white">
+        <CampaignNavbar />
+        <main className="flex-1 w-full">{children}</main>
+        <HomeFooter onCookieSettingsClick={() => setCookieSettingsOpen(true)} />
+        <CookieConsent isOpen={cookieSettingsOpen} onClose={() => setCookieSettingsOpen(false)} />
+      </BackgroundGlow>
     );
   }
 

@@ -403,8 +403,11 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
                     title="ABRAM Core AI"
                     className="flex items-start gap-3 p-2 min-h-11 rounded-xl border border-transparent hover:border-white/5 hover:bg-white/[0.03] transition-all duration-200 group text-left"
                   >
-                    <div className="p-2 rounded-lg bg-zinc-900 border border-white/5 shrink-0">
-                      <AbramMark size={14} />
+                    {/* The mark already carries its own tile, so it is sized to
+                        match the 30px icon tiles beside it rather than nested
+                        inside a second padded box. */}
+                    <div className="rounded-lg border border-white/5 overflow-hidden shrink-0 flex">
+                      <AbramMark size={30} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">

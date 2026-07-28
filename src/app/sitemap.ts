@@ -7,6 +7,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages = getAllDocPages();
 
   const DEFAULT_RELEASE_DATE = new Date('2026-06-23');
+  // Conversion landing pages under /start
+  const CAMPAIGN_PAGE_DATE = new Date('2026-07-28');
 
   // Track the latest overall modified date for the homepage and /docs index
   let latestModifiedOverall = new Date(DEFAULT_RELEASE_DATE);
@@ -273,6 +275,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}/pricing`,
       lastModified: DEFAULT_RELEASE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/start`,
+      lastModified: CAMPAIGN_PAGE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/start/filmmakers`,
+      lastModified: CAMPAIGN_PAGE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/start/agencies`,
+      lastModified: CAMPAIGN_PAGE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/start/post-production`,
+      lastModified: CAMPAIGN_PAGE_DATE,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },

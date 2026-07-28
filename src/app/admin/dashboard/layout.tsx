@@ -14,6 +14,7 @@ import {
   LogOut, 
   User, 
   LayoutDashboard,
+  Megaphone,
   Menu,
   X
 } from "lucide-react";
@@ -50,6 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const navLinks = [
     { id: "overview", label: "Overview", href: "/admin/dashboard", icon: LayoutDashboard },
+    { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone },
     { id: "docs", label: "Docs Editor", href: "/admin/dashboard/docs", icon: BookOpen },
     { id: "blog", label: "Blog Posts", href: "/admin/dashboard/blog", icon: Sparkles },
     { id: "changelog", label: "Release Notes", href: "/admin/dashboard/changelog", icon: Tag },

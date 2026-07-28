@@ -15,8 +15,9 @@ export const config = {
      * - sitemap.xml, robots.txt (dynamic metadata routes)
      * - llms.txt, llms-full.txt (static llms specifications)
      * - search-index.json (static search index)
+     * - api/track (landing page telemetry ingest, no session needed)
      * Feel free to modify this pattern to include more paths.
      */
-    "/((?!_next/static|_next/image|favicon.ico|sitemap\\.xml|robots\\.txt|llms\\.txt|llms-full\\.txt|search-index\\.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap\\.xml|robots\\.txt|llms\\.txt|llms-full\\.txt|search-index\\.json|api/track|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
