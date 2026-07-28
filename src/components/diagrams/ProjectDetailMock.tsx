@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import * as LucideIcons from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProjectDetailMock() {
@@ -205,7 +206,7 @@ export default function ProjectDetailMock() {
                       <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex items-center justify-between mb-2 relative z-10">
                         <div className="flex items-center gap-2">
-                          <LucideIcons.Sparkles className="w-3.5 h-3.5 text-fuchsia-400" />
+                          <AbramMark size={14} />
                           <span className="text-[10px] text-fuchsia-400/80 uppercase tracking-widest font-semibold">AI Update</span>
                         </div>
                         <button className="h-6 px-2 text-[10px] text-fuchsia-400 hover:text-fuchsia-300 font-medium hover:bg-fuchsia-400/10 rounded-md transition-colors flex items-center gap-1">
@@ -251,7 +252,7 @@ export default function ProjectDetailMock() {
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm font-semibold text-[#fafaf9]">Timeline Overview</h3>
                       <button className="bg-white/10 hover:bg-white/15 text-white rounded-full px-3 py-1 text-xs transition-colors flex items-center gap-1.5 font-medium border border-white/5">
-                        <LucideIcons.Sparkles size={12} className="text-fuchsia-400" />
+                        <AbramMark size={12} />
                         <span>AI Optimize</span>
                       </button>
                     </div>
@@ -405,7 +406,7 @@ export default function ProjectDetailMock() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-semibold text-white">Full Gantt Project Timeline</h3>
                     <button className="bg-white/10 hover:bg-white/15 text-white rounded-full px-3 py-1 text-xs transition-colors flex items-center gap-1.5 border border-white/5">
-                      <LucideIcons.Sparkles size={12} className="text-fuchsia-400" />
+                      <AbramMark size={12} />
                       <span>AI Schedule Optimize</span>
                     </button>
                   </div>
@@ -537,7 +538,7 @@ export default function ProjectDetailMock() {
                 <div className="space-y-2.5">
                   <div className="flex justify-between items-center text-[10px] text-gray-500 mb-1 px-1">
                     <span className="font-semibold uppercase tracking-wider">Document Storage</span>
-                    <span className="flex items-center gap-1 font-medium"><LucideIcons.Sparkles size={11} className="text-purple-400" /> AI Semantic Search Enabled</span>
+                    <span className="flex items-center gap-1 font-medium"><AbramMark size={11} /> AI Semantic Search Enabled</span>
                   </div>
 
                   {documents.map((doc) => (
@@ -553,7 +554,7 @@ export default function ProjectDetailMock() {
                       <div className="flex items-center gap-2.5 shrink-0 text-xs">
                         {doc.aiIndexed && (
                           <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center gap-0.5" title="Indexed for AI chatbot queries">
-                            <LucideIcons.Sparkles size={8} /> Indexed
+                            <AbramMark size={8} /> Indexed
                           </span>
                         )}
                         <span className="font-mono bg-white/[0.04] border border-white/[0.08] px-2 py-0.5 rounded text-[11px] text-gray-300">

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { 
   ArrowLeft, 
   Save, 
-  Sparkles, 
+  ListChecks, 
   AlertTriangle, 
   CheckCircle, 
   Eye, 
@@ -551,65 +551,71 @@ function BlogEditorContent() {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Navbar Sub Header */}
-      <div className="bg-[#0C0C0C] border-b border-white/5 px-6 py-4 flex items-center justify-between shrink-0 z-10">
-        <div className="flex items-center gap-3">
-          <Link href="/admin/dashboard/blog" className="btn-glass px-3 py-1.5 flex items-center gap-1.5 text-xs font-semibold rounded-full font-sans">
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Blog List</span>
-          </Link>
-          <span className="text-zinc-600 text-xs">/</span>
-          <span className="text-xs font-semibold text-zinc-400 truncate max-w-xs">{title || `Edit Post`}</span>
-        </div>
+      <div className="bg-[#0C0C0C] border-b border-white/5 px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center gap-x-3 gap-y-2 shrink-0 z-10">
+        <Link href="/admin/dashboard/blog" className="btn-glass px-3 h-9 flex items-center gap-1.5 text-xs font-semibold rounded-full font-sans shrink-0">
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Blog List</span>
+        </Link>
+        <span className="text-zinc-600 text-xs hidden sm:inline">/</span>
+        <span className="hidden sm:block text-xs font-semibold text-zinc-400 truncate max-w-xs">{title || `Edit Post`}</span>
 
-        <div className="flex items-center gap-2">
-          <div className="flex bg-white/[0.04] p-1 rounded-full border border-white/10 mr-2">
-            <button 
-              onClick={() => setPreviewMode("edit")} 
-              className={`p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "edit" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+        <div className="flex items-center gap-2 ml-auto shrink-0">
+          <div className="flex bg-white/[0.04] p-1 rounded-full border border-white/10">
+            <button
+              onClick={() => setPreviewMode("edit")}
+              className={`p-2.5 sm:p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "edit" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
               title="Editor Only"
+              aria-label="Editor only"
             >
               <Code className="w-3.5 h-3.5" />
             </button>
-            <button 
-              onClick={() => setPreviewMode("split")} 
+            <button
+              onClick={() => setPreviewMode("split")}
               className={`hidden md:inline-flex p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "split" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
               title="Split Screen"
+              aria-label="Split screen"
             >
               <Columns className="w-3.5 h-3.5" />
             </button>
-            <button 
-              onClick={() => setPreviewMode("preview")} 
-              className={`p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "preview" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+            <button
+              onClick={() => setPreviewMode("preview")}
+              className={`p-2.5 sm:p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "preview" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
               title="Preview Only"
+              aria-label="Preview only"
             >
               <Eye className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <button 
+          <button
             onClick={handleSave}
             disabled={saving}
-            className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+            className="btn-primary h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-            <span>Save Post</span>
+            <span>Save<span className="hidden sm:inline"> Post</span></span>
           </button>
         </div>
+
+        {/* Post title gets its own line on narrow screens */}
+        <span className="sm:hidden w-full text-[11px] font-semibold text-zinc-400 truncate">
+          {title || `Edit Post`}
+        </span>
       </div>
 
       {/* Editor Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Side Editing Pane */}
-        <div className={`flex-1 flex flex-col h-full bg-[#0E0E0E] overflow-hidden ${previewMode === "preview" ? "hidden" : ""}`}>
+        <div className={`flex-1 flex flex-col h-full bg-[#0E0E0E] overflow-y-auto md:overflow-hidden ${previewMode === "preview" ? "hidden" : ""}`}>
           {loading ? (
             <div className="flex-1 flex flex-col items-center justify-center gap-3 text-zinc-500">
               <Loader2 className="w-6 h-6 animate-spin" />
               <span className="text-xs font-sans">Loading post details...</span>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col h-full overflow-hidden animate-fade-in">
+            <div className="flex flex-col md:flex-1 md:h-full md:overflow-hidden animate-fade-in">
               {/* Form Metadata Fields */}
-              <div className="p-5 border-b border-white/5 bg-zinc-950/20 space-y-4 shrink-0 overflow-y-auto max-h-[60%]">
+              <div className="p-4 sm:p-5 border-b border-white/5 bg-zinc-950/20 space-y-4 shrink-0 md:overflow-y-auto md:max-h-[60%]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Post Title</label>
@@ -800,14 +806,14 @@ function BlogEditorContent() {
               </div>
 
               {/* Markdown Body Textarea */}
-              <div className="flex-1 flex flex-col relative overflow-hidden">
+              <div className="flex flex-col relative md:flex-1 md:overflow-hidden">
                 <div className="bg-zinc-950 px-4 py-2 border-b border-white/5 flex gap-2 items-center justify-between shrink-0">
                   <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Article Content (Markdown)</span>
                 </div>
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="flex-1 w-full bg-[#0E0E0E] text-zinc-300 font-mono text-xs p-6 focus:outline-none resize-none leading-relaxed overflow-y-auto"
+                  className="w-full min-h-[55vh] md:min-h-0 md:flex-1 bg-[#0E0E0E] text-zinc-300 font-mono text-xs p-4 sm:p-6 focus:outline-none resize-none leading-relaxed md:overflow-y-auto"
                   placeholder="# Article title..."
                 />
               </div>
@@ -824,7 +830,7 @@ function BlogEditorContent() {
           {/* SEO Checklist Audit Panel */}
           <div className={`p-5 border-b border-white/8 space-y-4 shrink-0 bg-black/20 ${previewMode === "preview" ? "hidden" : ""}`}>
             <h3 className="text-xs font-semibold tracking-wider text-zinc-300 uppercase flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
+              <ListChecks className="w-3.5 h-3.5 text-white" />
               SEO & AEO Quality Checker
             </h3>
 
@@ -912,7 +918,7 @@ function BlogEditorContent() {
       </div>
 
       {/* Toast notifications */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-[calc(100%-3rem)] pointer-events-none">
+      <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div

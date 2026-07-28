@@ -5,19 +5,59 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { signOut as signOutAction } from "../actions";
-import { 
-  Sparkles, 
-  BookOpen, 
-  Tag, 
-  Users, 
-  Mail, 
-  LogOut, 
-  User, 
+import {
+  Newspaper,
+  BookOpen,
+  Tag,
+  Users,
+  Mail,
+  LogOut,
+  User,
   LayoutDashboard,
+  Link as LinkIcon,
   Megaphone,
   Menu,
-  X
+  X,
+  ChevronRight
 } from "lucide-react";
+
+const NAV_GROUPS = [
+  {
+    id: "main",
+    label: null as string | null,
+    links: [
+      { id: "overview", label: "Overview", href: "/admin/dashboard", icon: LayoutDashboard, hint: "Marketing telemetry" },
+    ],
+  },
+  {
+    id: "content",
+    label: "Content",
+    links: [
+      { id: "docs", label: "Docs Editor", href: "/admin/dashboard/docs", icon: BookOpen, hint: "Help centre guides" },
+      { id: "blog", label: "Blog Posts", href: "/admin/dashboard/blog", icon: Newspaper, hint: "Articles & announcements" },
+      { id: "changelog", label: "Release Notes", href: "/admin/dashboard/changelog", icon: Tag, hint: "Version changelogs" },
+    ],
+  },
+  {
+    id: "audience",
+    label: "Audience",
+    links: [
+      { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone, hint: "Landing page funnels" },
+      { id: "links", label: "Link Hub", href: "/admin/dashboard/links", icon: LinkIcon, hint: "Your one bio link" },
+      { id: "subscribers", label: "Subscribers", href: "/admin/dashboard/subscribers", icon: Users, hint: "Newsletter contacts" },
+      { id: "broadcasts", label: "Email Broadcasts", href: "/admin/dashboard/broadcasts", icon: Mail, hint: "Compose & send" },
+    ],
+  },
+];
+
+const ALL_LINKS = NAV_GROUPS.flatMap((group) => group.links);
+
+function isLinkActive(href: string, pathname: string | null) {
+  const cleanPath = pathname ? pathname.replace(/\/$/, "") : "";
+  const cleanHref = href.replace(/\/$/, "");
+  if (cleanHref === "/admin/dashboard") return cleanPath === "/admin/dashboard";
+  return cleanPath === cleanHref || cleanPath.startsWith(cleanHref + "/");
+}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -29,6 +69,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     fetchUser();
   }, []);
+
+  // Close the mobile drawer whenever the route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll while the mobile drawer is open
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mobileMenuOpen]);
+
+  // Escape closes the drawer
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileMenuOpen]);
 
   const fetchUser = async () => {
     try {
@@ -49,36 +114,36 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   };
 
-  const navLinks = [
-    { id: "overview", label: "Overview", href: "/admin/dashboard", icon: LayoutDashboard },
-    { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone },
-    { id: "docs", label: "Docs Editor", href: "/admin/dashboard/docs", icon: BookOpen },
-    { id: "blog", label: "Blog Posts", href: "/admin/dashboard/blog", icon: Sparkles },
-    { id: "changelog", label: "Release Notes", href: "/admin/dashboard/changelog", icon: Tag },
-    { id: "subscribers", label: "Subscribers", href: "/admin/dashboard/subscribers", icon: Users },
-    { id: "broadcasts", label: "Email Broadcasts", href: "/admin/dashboard/broadcasts", icon: Mail },
-  ];
+  // The label of the section currently open, shown in the mobile header
+  const activeLink = ALL_LINKS.find((link) => isLinkActive(link.href, pathname));
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-zinc-100 font-sans flex flex-col md:flex-row relative">
-      {/* Mobile Top Header */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-40 h-16 bg-black/60 backdrop-blur-md border-b border-white/5 px-4 flex items-center justify-between">
-        <span className="font-bold tracking-tight text-white text-sm flex items-center gap-2">
-          ABRAM Marketing Engine
-        </span>
-        <button 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-zinc-400 hover:text-white"
+      {/* Mobile Top Header — shows where you are, not every place you could go */}
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-black/70 backdrop-blur-xl border-b border-white/5 pl-4 pr-2 flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <span className="block text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-500">
+            ABRAM Admin
+          </span>
+          <span className="block text-sm font-bold tracking-tight text-white truncate">
+            {activeLink?.label || "Dashboard"}
+          </span>
+        </div>
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          aria-label="Open navigation menu"
+          aria-expanded={mobileMenuOpen}
+          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full text-zinc-300 hover:text-white active:bg-white/[0.08] transition-colors"
         >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          <Menu className="w-5 h-5" />
         </button>
       </header>
 
       {/* Left Navigation Sidebar (Desktop) */}
       <aside className="hidden md:flex w-64 border-r border-white/5 bg-zinc-950/40 flex-col h-screen sticky top-0 justify-between shrink-0 p-6">
-        <div className="space-y-6">
+        <div className="space-y-6 min-h-0 overflow-y-auto">
           <div className="flex flex-col gap-1.5 pb-4 border-b border-white/5">
-            <span className="font-bold tracking-tight text-white text-sm flex items-center gap-2">
+            <span className="font-bold tracking-tight text-white text-sm">
               ABRAM Marketing Engine
             </span>
             <span className="text-[9px] bg-white/[0.04] border border-white/10 px-2 py-0.5 rounded text-zinc-400 font-mono w-max">
@@ -86,33 +151,38 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </span>
           </div>
 
-          <nav className="flex flex-col gap-1.5">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const cleanPath = pathname ? pathname.replace(/\/$/, "") : "";
-              const cleanHref = link.href.replace(/\/$/, "");
-              const isActive = cleanHref === "/admin/dashboard"
-                ? cleanPath === "/admin/dashboard"
-                : cleanPath === cleanHref || cleanPath.startsWith(cleanHref + "/");
-              return (
-                <Link
-                  key={link.id}
-                  href={link.href}
-                  className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-xs font-semibold select-none transition-all duration-200 ${
-                    isActive
-                      ? "bg-white text-black font-bold border border-white"
-                      : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
+          <nav className="flex flex-col gap-5">
+            {NAV_GROUPS.map((group) => (
+              <div key={group.id} className="flex flex-col gap-1.5">
+                {group.label && (
+                  <span className="text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-600 px-4 mb-0.5">
+                    {group.label}
+                  </span>
+                )}
+                {group.links.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = isLinkActive(link.href, pathname);
+                  return (
+                    <Link
+                      key={link.id}
+                      href={link.href}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-xs font-semibold select-none transition-all duration-200 ${
+                        isActive
+                          ? "bg-white text-black font-bold border border-white"
+                          : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <span>{link.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
           </nav>
         </div>
 
-        <div className="flex flex-col gap-3 pt-4 border-t border-white/5">
+        <div className="flex flex-col gap-3 pt-4 border-t border-white/5 shrink-0">
           <div className="flex items-center gap-2 px-2 text-zinc-400 text-xs truncate">
             <User className="w-4 h-4 text-zinc-500 shrink-0" />
             <span className="truncate">{currentUserEmail}</span>
@@ -127,47 +197,89 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Navigation Sheet — full-screen list, one tap per destination */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-30 bg-black/95 pt-20 p-6 flex flex-col justify-between">
-          <nav className="flex flex-col gap-3">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const cleanPath = pathname ? pathname.replace(/\/$/, "") : "";
-              const cleanHref = link.href.replace(/\/$/, "");
-              const isActive = cleanHref === "/admin/dashboard"
-                ? cleanPath === "/admin/dashboard"
-                : cleanPath === cleanHref || cleanPath.startsWith(cleanHref + "/");
-              return (
-                <Link
-                  key={link.id}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-5 py-3 rounded-full text-sm font-semibold select-none transition-all duration-200 ${
-                    isActive
-                      ? "bg-white text-black font-bold"
-                      : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <Icon className="w-5 h-5 shrink-0" />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+        <div className="md:hidden fixed inset-0 z-[60] flex flex-col">
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          />
 
-          <div className="flex flex-col gap-4 pt-4 border-t border-white/5">
-            <div className="flex items-center gap-2 px-2 text-zinc-400 text-sm">
-              <User className="w-5 h-5 text-zinc-500 shrink-0" />
-              <span>{currentUserEmail}</span>
+          <div className="relative mt-auto max-h-[92vh] flex flex-col bg-[#0C0C0C] border-t border-white/10 rounded-t-3xl shadow-2xl">
+            {/* Grab handle + close */}
+            <div className="shrink-0 px-5 pt-3 pb-2">
+              <div className="w-10 h-1 rounded-full bg-white/15 mx-auto mb-4" />
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500">
+                  Go to
+                </span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close navigation menu"
+                  className="w-11 h-11 -mr-2 flex items-center justify-center rounded-full text-zinc-400 hover:text-white active:bg-white/[0.08] transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
-            <button
-              onClick={handleSignOut}
-              className="btn-glass flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-full w-full"
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Sign Out</span>
-            </button>
+
+            <nav className="flex-1 overflow-y-auto overscroll-contain px-3 pb-2">
+              {NAV_GROUPS.map((group) => (
+                <div key={group.id} className="mb-2">
+                  {group.label && (
+                    <span className="block text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-600 px-3 pt-4 pb-2">
+                      {group.label}
+                    </span>
+                  )}
+                  {group.links.map((link) => {
+                    const Icon = link.icon;
+                    const isActive = isLinkActive(link.href, pathname);
+                    return (
+                      <Link
+                        key={link.id}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center gap-3.5 px-3 py-3 rounded-2xl min-h-[56px] transition-colors ${
+                          isActive ? "bg-white/[0.06]" : "active:bg-white/[0.04]"
+                        }`}
+                      >
+                        <span
+                          className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
+                            isActive
+                              ? "bg-white text-black border-white"
+                              : "bg-white/[0.03] text-zinc-400 border-white/8"
+                          }`}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className={`block text-sm font-semibold truncate ${isActive ? "text-white" : "text-zinc-200"}`}>
+                            {link.label}
+                          </span>
+                          <span className="block text-[11px] text-zinc-500 truncate">{link.hint}</span>
+                        </span>
+                        <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
+                      </Link>
+                    );
+                  })}
+                </div>
+              ))}
+            </nav>
+
+            <div className="shrink-0 border-t border-white/5 px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-zinc-400 text-xs min-w-0">
+                <User className="w-4 h-4 text-zinc-500 shrink-0" />
+                <span className="truncate">{currentUserEmail}</span>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="btn-glass flex items-center justify-center gap-2 px-4 h-10 text-xs font-semibold rounded-full shrink-0"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

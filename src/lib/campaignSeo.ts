@@ -111,7 +111,7 @@ export function campaignJsonLd(
           price: "0",
           priceCurrency: "USD",
           description:
-            "Free plan with one seat, one active project, digital call sheets and view-only schedules.",
+            "Free plan with one seat, two active projects, digital call sheets and view-only schedules.",
         },
       },
     ],

@@ -10,12 +10,15 @@ import {
   Trash2, 
   ExternalLink,
   CheckCircle,
-  FileText
+  FileText,
+  MoreHorizontal,
+  Send
 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import ActionSheet, { type SheetAction } from "@/components/admin/ActionSheet";
 
 interface ReleaseNote {
   id: string;
@@ -41,6 +44,8 @@ export default function ChangelogManagerPage() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [publishingId, setPublishingId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; id: string | null } | null>(null);
+  // Release whose mobile action sheet is open
+  const [sheetRelease, setSheetRelease] = useState<ReleaseNote | null>(null);
 
   const supabase = createClient();
   const router = useRouter();
@@ -152,6 +157,62 @@ export default function ChangelogManagerPage() {
     return matchesSearch && matchesStatus;
   });
 
+  const releaseSlug = (release: ReleaseNote) =>
+    release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined";
+
+  const buildReleaseActions = (release: ReleaseNote): SheetAction[] => {
+    const actions: SheetAction[] = [
+      {
+        id: "edit",
+        label: "Edit release",
+        hint: "Open the markdown editor",
+        icon: FileText,
+        href: `/admin/dashboard/changelog/edit?id=${release.id}`,
+      },
+    ];
+
+    if (release.status === "draft") {
+      actions.push(
+        {
+          id: "publish",
+          label: "Publish now",
+          hint: "Make these notes live",
+          icon: Send,
+          onClick: () => handlePublish(release.id),
+          disabled: publishingId === release.id,
+        },
+        {
+          id: "preview",
+          label: "Preview draft",
+          hint: "Open in a new tab",
+          icon: ExternalLink,
+          href: `/changelog/${releaseSlug(release)}?preview=true`,
+          external: true,
+        }
+      );
+    } else {
+      actions.push({
+        id: "view",
+        label: "View public changelog",
+        hint: "Open in a new tab",
+        icon: ExternalLink,
+        href: `/changelog/${releaseSlug(release)}`,
+        external: true,
+      });
+    }
+
+    actions.push({
+      id: "delete",
+      label: "Delete release",
+      hint: "This cannot be undone",
+      icon: Trash2,
+      danger: true,
+      onClick: () => setConfirmDelete({ isOpen: true, id: release.id }),
+    });
+
+    return actions;
+  };
+
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
       <div className="space-y-6">
@@ -168,7 +229,7 @@ export default function ChangelogManagerPage() {
           </div>
           <button
             onClick={handleCreateRelease}
-            className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer"
+            className="btn-primary h-11 sm:h-9 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>New Release</span>
@@ -176,7 +237,7 @@ export default function ChangelogManagerPage() {
         </div>
 
         {/* Filter / Search Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
           <div className="relative w-full sm:max-w-xs">
             <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
@@ -184,10 +245,10 @@ export default function ChangelogManagerPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by title or version..."
-              className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-9 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-white/10 transition-all duration-200"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-9 pr-4 py-2.5 sm:py-1.5 text-xs text-white focus:outline-none focus:border-white/10 transition-all duration-200"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="grid grid-cols-3 sm:flex gap-2 shrink-0">
             {([
               { id: "all", label: "All Status" },
               { id: "draft", label: "Drafts" },
@@ -196,7 +257,7 @@ export default function ChangelogManagerPage() {
               <button
                 key={opt.id}
                 onClick={() => setStatusFilter(opt.id)}
-                className={`px-3.5 py-1 rounded-full text-[10px] font-semibold transition-all cursor-pointer ${
+                className={`px-2 sm:px-3.5 min-h-[40px] sm:min-h-0 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   statusFilter === opt.id
                     ? "bg-white/10 text-white border border-white/10"
                     : "text-zinc-500 hover:text-zinc-300 border border-transparent"
@@ -221,11 +282,15 @@ export default function ChangelogManagerPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredReleases.map((release) => (
-              <div 
+              <div
                 key={release.id}
-                className="glass-panel p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-250 flex flex-col justify-between hover:bg-white/[0.01]"
+                className="glass-panel rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-250 flex flex-col justify-between hover:bg-white/[0.01] relative"
               >
-                <div className="space-y-3">
+                {/* Tapping the card opens the editor — the row of tools stays off small screens */}
+                <Link
+                  href={`/admin/dashboard/changelog/edit?id=${release.id}`}
+                  className="block p-5 space-y-3 rounded-2xl"
+                >
                   <div className="flex justify-between items-center gap-2">
                     <span className={`text-[9px] px-2 py-0.5 rounded border font-semibold ${
                       release.status === "published" 
@@ -234,7 +299,7 @@ export default function ChangelogManagerPage() {
                     }`}>
                       {release.status}
                     </span>
-                    <span className="text-[10px] font-bold text-white font-mono bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/5">
+                    <span className="text-[10px] font-bold text-white font-mono bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/5 sm:mr-0 mr-9">
                       v{release.version}
                     </span>
                   </div>
@@ -246,8 +311,8 @@ export default function ChangelogManagerPage() {
                       {release.content.replace(/[#*`\-]/g, "").substring(0, 120)}...
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 text-[9px] text-zinc-500 pt-1">
-                    <Clock className="w-3 h-3 text-zinc-600" />
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[9px] text-zinc-500 pt-1">
+                    <Clock className="w-3 h-3 text-zinc-600 shrink-0" />
                     <span>Created: {new Date(release.created_at).toLocaleDateString()}</span>
                     {release.published_at && (
                       <>
@@ -256,12 +321,21 @@ export default function ChangelogManagerPage() {
                       </>
                     )}
                   </div>
-                </div>
+                </Link>
 
-                <div className="pt-4 mt-4 border-t border-white/5 flex gap-2">
+                {/* Small screens: one control for every secondary action */}
+                <button
+                  onClick={() => setSheetRelease(release)}
+                  aria-label={`Actions for ${release.title}`}
+                  className="sm:hidden absolute top-3.5 right-3.5 w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 border border-white/8 bg-white/[0.03] active:bg-white/[0.08] transition-colors"
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+
+                <div className="hidden sm:flex mx-5 mb-5 pt-4 border-t border-white/5 flex-wrap gap-2">
                   <Link
                     href={`/admin/dashboard/changelog/edit?id=${release.id}`}
-                    className="btn-glass flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
+                    className="btn-glass flex-1 min-w-[110px] min-h-[40px] sm:min-h-0 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     <span>Edit Release</span>
@@ -271,7 +345,7 @@ export default function ChangelogManagerPage() {
                       <button
                         onClick={() => handlePublish(release.id)}
                         disabled={publishingId === release.id}
-                        className="btn-primary flex-1 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
+                        className="btn-primary flex-1 min-w-[90px] min-h-[40px] sm:min-h-0 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
                       >
                         {publishingId === release.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                         <span>Publish</span>
@@ -279,7 +353,7 @@ export default function ChangelogManagerPage() {
                       <Link
                         href={`/changelog/${release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}?preview=true`}
                         target="_blank"
-                        className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
+                        className="btn-glass px-3 py-1.5 min-w-[44px] min-h-[40px] sm:min-h-0 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
                         title="Preview Draft Release"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
@@ -289,7 +363,7 @@ export default function ChangelogManagerPage() {
                     <Link
                       href={`/changelog/${release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}`}
                       target="_blank"
-                      className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
+                      className="btn-glass px-3 py-1.5 min-w-[44px] min-h-[40px] sm:min-h-0 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
                       title="View Public Changelog"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -297,7 +371,7 @@ export default function ChangelogManagerPage() {
                   )}
                   <button
                     onClick={() => setConfirmDelete({ isOpen: true, id: release.id })}
-                    className="btn-glass px-3 py-1.5 rounded-full flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/20 cursor-pointer"
+                    className="btn-glass px-3 py-1.5 min-w-[44px] min-h-[40px] sm:min-h-0 rounded-full flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/20 cursor-pointer"
                     title="Delete release"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -307,6 +381,15 @@ export default function ChangelogManagerPage() {
             ))}
           </div>
         )}
+
+        {/* Mobile action sheet — secondary actions for the tapped release */}
+        <ActionSheet
+          open={!!sheetRelease}
+          onClose={() => setSheetRelease(null)}
+          title={sheetRelease?.title || ""}
+          subtitle={sheetRelease ? `v${sheetRelease.version} \u00b7 ${sheetRelease.status}` : undefined}
+          actions={sheetRelease ? buildReleaseActions(sheetRelease) : []}
+        />
 
         {/* Delete Confirmation Modal */}
         <AnimatePresence>
@@ -335,13 +418,13 @@ export default function ChangelogManagerPage() {
                 <div className="flex gap-3 w-full">
                   <button
                     onClick={() => setConfirmDelete(null)}
-                    className="btn-glass flex-1 h-10 text-xs font-semibold rounded-full cursor-pointer"
+                    className="btn-glass flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={executeDelete}
-                    className="btn-danger flex-1 h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="btn-danger flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Delete</span>
@@ -353,7 +436,7 @@ export default function ChangelogManagerPage() {
         </AnimatePresence>
 
         {/* Toast Notifications */}
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-[calc(100%-3rem)] pointer-events-none">
+        <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">
           <AnimatePresence>
             {toasts.map((t) => (
               <motion.div

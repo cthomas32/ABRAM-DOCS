@@ -11,17 +11,24 @@ import {
   Gauge,
   Inbox,
   Layers,
+  MessageSquare,
   Package,
   Receipt,
   ScanText,
   Share2,
-  Sparkles,
+  ShieldCheck,
   Users,
   Wallet,
 } from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 import { buildSignupUrl, type BenefitIcon, type CampaignVariant } from "@/lib/campaigns";
 import { useCampaignTracking } from "./useCampaignTracking";
 import CampaignVisual from "./CampaignVisual";
+
+/** The brand mark stands in for any AI icon. Never use a generic sparkle. */
+function AbramIcon({ className = "" }: { className?: string }) {
+  return <AbramMark size={16} className={`rounded-[3px] ${className}`} />;
+}
 
 const ICONS: Record<BenefitIcon, React.ComponentType<{ className?: string }>> = {
   scan: ScanText,
@@ -35,7 +42,9 @@ const ICONS: Record<BenefitIcon, React.ComponentType<{ className?: string }>> = 
   share: Share2,
   receipt: Receipt,
   layers: Layers,
-  sparkles: Sparkles,
+  abram: AbramIcon,
+  message: MessageSquare,
+  shield: ShieldCheck,
 };
 
 const fadeUp = {
@@ -270,13 +279,29 @@ export default function CampaignLanding({ variant }: { variant: CampaignVariant 
       {/* PROOF BAR: single horizontal row                              */}
       {/* ============================================================ */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-6xl mx-auto rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md px-5 py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {variant.proofPoints.map((point) => (
-            <div key={point} className="flex items-center gap-2.5">
-              <Check className="w-3.5 h-3.5 text-[#8ECAFF] shrink-0" />
-              <span className="text-xs text-zinc-300 break-words text-pretty">{point}</span>
-            </div>
-          ))}
+        <div className="max-w-6xl mx-auto rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md px-5 py-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {variant.proofPoints.map((point) => (
+              <div key={point} className="flex items-center gap-2.5">
+                <Check className="w-3.5 h-3.5 text-[#8ECAFF] shrink-0" />
+                <span className="text-xs text-zinc-300 break-words text-pretty">{point}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Plan availability, stated plainly so a free CTA never reads as
+              though every feature above is included at no cost. */}
+          <p className="mt-4 pt-4 border-t border-white/5 text-xs text-zinc-500 leading-relaxed text-pretty">
+            {variant.planNote}{" "}
+            <a
+              href="/pricing"
+              onClick={() => track("cta_click", "plan-note-pricing")}
+              className="text-zinc-400 underline decoration-zinc-700 hover:text-white hover:decoration-zinc-400 transition-colors"
+            >
+              See what each plan includes
+            </a>
+            .
+          </p>
         </div>
       </section>
 

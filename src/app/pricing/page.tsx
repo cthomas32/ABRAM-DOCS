@@ -86,7 +86,7 @@ export default function PricingPage() {
                       'name': 'Free Tier',
                       'price': '0',
                       'priceCurrency': 'USD',
-                      'description': 'For independent creative contractors and crew members. Includes 1 seat, 1 active project, digital call sheets, and view-only schedules.'
+                      'description': 'For independent creative contractors and crew members. Includes 1 seat, 2 active projects, digital call sheets, and view-only schedules.'
                     },
                     {
                       '@type': 'Offer',

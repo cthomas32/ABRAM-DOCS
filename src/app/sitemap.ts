@@ -303,6 +303,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/start/resource-management`,
+      lastModified: CAMPAIGN_PAGE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/start/ai-assistant`,
+      lastModified: CAMPAIGN_PAGE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/links`,
+      lastModified: CAMPAIGN_PAGE_DATE,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/alternatives/studiobinder`,
       lastModified: DEFAULT_RELEASE_DATE,
       changeFrequency: 'monthly' as const,

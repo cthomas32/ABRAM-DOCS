@@ -115,6 +115,8 @@ keywords:
 - **Natural Language Representation**: Describe all fields, parameters, and tables in plain English (e.g., use `Serial Number` or `Daily Rate` instead of `serial_number` or `daily_rate`).
 - **No Supabase or GitHub Branding**: Never mention "Supabase" or "GitHub" in the documentation text. Rephrase these references using generic terms like "the platform" or "the system".
 - **Clean Formatting**: Format any UI status values or dropdown settings using capitalized words without code styling/backticks unless specifically representing literal code in an agent-only context (e.g. use `Reserved` or `In Use` instead of `reserved` or `in_use`).
+- **ABRAM Is Always Uppercase**: When referring to the platform or the assistant in any writing, always write **ABRAM**. Never "Abram" or "abram", in body copy, headings, metadata, UI labels, or mockup text.
+- **Never Use the Sparkles Icon**: The ABRAM mark is the AI icon. Never use `Sparkles` or any other generic AI glyph to stand in for ABRAM, the assistant, or an AI feature. Import and use `AbramMark` from `src/components/AbramMark.tsx` instead.
 - **No Real Brand Names**: Never use real-world brand names (such as "Nike", "Adidas", "Apple", "Google", "Netflix", "Sony", "Dolby", "Spotify", "A24", "RED", etc.) in templates, mockups, documentation, or code examples. Always use fictitious, placeholder brand names (e.g., "Helix", "Nebula", "Sensa", "Onyx", "Aura", "Spire", "Vesper", "Apex", "Vortex", etc.).
 
 ### 7. Formatting Tables (Standard Markdown vs. HTML Tables)

@@ -31,7 +31,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isAdminPage = cleanPathname.startsWith("/admin");
   // Conversion pages: single goal, so they get a logo-only header with no
   // navigation and no competing call to action.
-  const isCampaignPage = cleanPathname === "/start" || cleanPathname.startsWith("/start/");
+  const isCampaignPage =
+    cleanPathname === "/start" ||
+    cleanPathname.startsWith("/start/") ||
+    cleanPathname === "/links";
   // Marketing routes that need clean, un-padded full width presentation
   const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain" || cleanPathname === "/film-production" || cleanPathname.startsWith("/film-production/") || cleanPathname === "/agency" || cleanPathname.startsWith("/agency/") || cleanPathname === "/intelligence" || cleanPathname.startsWith("/intelligence/") || isCampaignPage;
   const isDocsPage = cleanPathname.startsWith("/docs");

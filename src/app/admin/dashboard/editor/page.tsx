@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { 
   ArrowLeft, 
   Save, 
-  Sparkles, 
+  ListChecks, 
   AlertTriangle, 
   CheckCircle, 
   Eye, 
@@ -254,61 +254,84 @@ function EditorContent() {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Top Navbar */}
-      <div className="bg-[#0C0C0C] border-b border-white/5 px-6 py-4 flex items-center justify-between shrink-0 z-10">
-        <div className="flex items-center gap-3">
-          <Link href="/admin/dashboard" className="btn-glass px-3.5 py-1.5 flex items-center gap-1.5 text-xs font-semibold rounded-full">
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Dashboard</span>
-          </Link>
-          <span className="text-zinc-600 text-xs">/</span>
-          <span className="text-xs font-bold text-white tracking-tight uppercase">Content & AEO Editor</span>
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="bg-[#0C0C0C] border-b border-white/5 px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center gap-x-3 gap-y-2 shrink-0 z-10">
+        <Link href="/admin/dashboard" className="btn-glass px-3.5 h-9 flex items-center gap-1.5 text-xs font-semibold rounded-full shrink-0">
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Dashboard</span>
+        </Link>
+        <span className="text-zinc-600 text-xs hidden lg:inline">/</span>
+        <span className="hidden lg:inline text-xs font-bold text-white tracking-tight uppercase">Content &amp; AEO Editor</span>
+
+        <div className="flex items-center gap-2 ml-auto shrink-0">
           {selectedFile && (
-            <div className="flex bg-white/[0.04] p-1 rounded-full border border-white/10 mr-2">
-              <button 
-                onClick={() => setPreviewMode("edit")} 
-                className={`p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "edit" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+            <div className="flex bg-white/[0.04] p-1 rounded-full border border-white/10">
+              <button
+                onClick={() => setPreviewMode("edit")}
+                className={`p-2.5 sm:p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "edit" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
                 title="Editor Only"
+                aria-label="Editor only"
               >
                 <Code className="w-3.5 h-3.5" />
               </button>
-              <button 
-                onClick={() => setPreviewMode("split")} 
+              <button
+                onClick={() => setPreviewMode("split")}
                 className={`hidden md:inline-flex p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "split" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
                 title="Split Screen"
+                aria-label="Split screen"
               >
                 <Columns className="w-3.5 h-3.5" />
               </button>
-              <button 
-                onClick={() => setPreviewMode("preview")} 
-                className={`p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "preview" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+              <button
+                onClick={() => setPreviewMode("preview")}
+                className={`p-2.5 sm:p-1.5 rounded-full transition-all cursor-pointer ${previewMode === "preview" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
                 title="Preview Only"
+                aria-label="Preview only"
               >
                 <Eye className="w-3.5 h-3.5" />
               </button>
             </div>
           )}
-          
+
           <button
             onClick={() => setShowCreateModal(true)}
-            className="btn-glass h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5"
+            className="btn-glass h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            <span>New File</span>
+            <span>New<span className="hidden sm:inline"> File</span></span>
           </button>
 
           {selectedFile && (
-            <button 
+            <button
               onClick={handleSave}
               disabled={saving}
-              className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5"
+              className="btn-primary h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5"
             >
               {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-              <span>Save Changes</span>
+              <span>Save<span className="hidden sm:inline"> Changes</span></span>
             </button>
           )}
         </div>
+      </div>
+
+      {/* Mobile document picker — the sidebar list below is desktop-only */}
+      <div className="md:hidden bg-zinc-950/40 border-b border-white/5 px-4 py-2.5 flex items-center gap-2 shrink-0">
+        <FileText className="w-4 h-4 text-zinc-500 shrink-0" />
+        <select
+          value={selectedFile}
+          onChange={(e) => setSelectedFile(e.target.value)}
+          aria-label="Select a document to edit"
+          disabled={loadingArticles}
+          className="flex-1 min-w-0 h-10 bg-[#121212] border border-white/8 rounded-full px-3 text-xs text-white focus:outline-none focus:border-white/20 cursor-pointer"
+        >
+          <option value="">
+            {loadingArticles ? "Loading files..." : "Select a document..."}
+          </option>
+          {articles.map((art) => (
+            <option key={art.path} value={art.path}>
+              {art.title} ({art.status})
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Main Workspace */}
@@ -351,17 +374,17 @@ function EditorContent() {
         {selectedFile ? (
           <div className="flex-1 flex overflow-hidden">
             {/* Editor Workspace */}
-            <div className={`flex-1 flex flex-col h-full bg-[#0E0E0E] overflow-hidden ${previewMode === "preview" ? "hidden" : ""}`}>
+            <div className={`flex-1 flex flex-col h-full bg-[#0E0E0E] overflow-y-auto md:overflow-hidden ${previewMode === "preview" ? "hidden" : ""}`}>
               {loadingContent ? (
                 <div className="flex-1 flex flex-col items-center justify-center gap-3 text-zinc-500">
                   <Loader2 className="w-6 h-6 animate-spin" />
                   <span className="text-xs">Loading content...</span>
                 </div>
               ) : (
-                <div className="flex-1 flex flex-col h-full overflow-hidden">
+                <div className="flex flex-col md:flex-1 md:h-full md:overflow-hidden">
                   {/* Frontmatter Metadata Panel */}
-                  <div className="p-5 border-b border-white/5 bg-zinc-950/30 space-y-4 shrink-0 overflow-y-auto max-h-[60%]">
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 sm:p-5 border-b border-white/5 bg-zinc-950/30 space-y-4 shrink-0 md:overflow-y-auto md:max-h-[60%]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest block mb-1">Page Title</label>
                         <input
@@ -400,8 +423,8 @@ function EditorContent() {
                       />
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="col-span-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="sm:col-span-2">
                         <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest block mb-1">Keywords</label>
                         <input
                           type="text"
@@ -437,12 +460,12 @@ function EditorContent() {
                   </div>
 
                   {/* Body Textarea */}
-                  <div className="flex-1 flex flex-col relative overflow-hidden">
-                    <div className="bg-zinc-950 px-4 py-2 border-b border-white/5 flex gap-2 items-center justify-between shrink-0">
+                  <div className="flex flex-col relative md:flex-1 md:overflow-hidden">
+                    <div className="bg-zinc-950 px-4 py-2 border-b border-white/5 flex flex-wrap gap-2 items-center justify-between shrink-0">
                       <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest">MDX / Markdown Content</span>
-                      <button 
+                      <button
                         onClick={insertAgentOnly}
-                        className="btn-glass px-2.5 py-1 text-[9px] font-semibold rounded-full flex items-center gap-1.5 hover:text-white"
+                        className="btn-glass px-2.5 min-h-[32px] py-1 text-[9px] font-semibold rounded-full flex items-center gap-1.5 hover:text-white shrink-0"
                       >
                         <Cpu className="w-3.5 h-3.5 text-zinc-400" />
                         <span>Wrap AgentOnly</span>
@@ -452,7 +475,7 @@ function EditorContent() {
                       id="editor-textarea"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      className="flex-1 w-full bg-[#0E0E0E] text-zinc-300 font-mono text-xs p-6 focus:outline-none resize-none leading-relaxed overflow-y-auto"
+                      className="w-full min-h-[55vh] md:min-h-0 md:flex-1 bg-[#0E0E0E] text-zinc-300 font-mono text-xs p-4 sm:p-6 focus:outline-none resize-none leading-relaxed md:overflow-y-auto"
                       placeholder="# Headline..."
                     />
                   </div>
@@ -467,7 +490,7 @@ function EditorContent() {
               {/* Quality Audit Dashboard */}
               <div className="p-5 border-b border-white/8 space-y-4 shrink-0 bg-black/25">
                 <h3 className="text-xs font-semibold tracking-wider text-zinc-300 uppercase flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-white" />
+                  <ListChecks className="w-3.5 h-3.5 text-white" />
                   SEO & AEO Audit
                 </h3>
 
@@ -556,11 +579,13 @@ function EditorContent() {
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 gap-2 text-center bg-[#0C0C0C]">
+          <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 gap-2 text-center bg-[#0C0C0C] p-6 min-h-[50vh]">
             <FileText className="w-8 h-8 text-zinc-700 mb-1" />
             <span className="text-xs font-semibold text-zinc-400">Select or Create a Document</span>
             <p className="text-[11px] text-zinc-500 max-w-xs leading-relaxed">
-              Choose an article from the left sidebar list or click "New File" to draft new customer-facing user-guide documentation.
+              <span className="hidden md:inline">Choose an article from the sidebar list</span>
+              <span className="md:hidden">Choose an article from the picker above</span>
+              {" "}or tap &ldquo;New&rdquo; to draft new customer-facing user-guide documentation.
             </p>
           </div>
         )}
@@ -581,7 +606,7 @@ function EditorContent() {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="w-full max-w-md p-6 rounded-2xl border border-white/5 glass-panel relative z-10 space-y-4"
+              className="w-full max-w-md p-5 sm:p-6 rounded-2xl border border-white/5 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
             >
               <h3 className="text-sm font-bold text-white tracking-tight">Create Documentation File</h3>
               <form onSubmit={handleCreateArticle} className="space-y-4">
@@ -608,18 +633,18 @@ function EditorContent() {
                     className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10"
                   />
                 </div>
-                <div className="flex justify-end gap-2 pt-2">
+                <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
                   <button
                     type="button"
                     onClick={() => setShowCreateModal(false)}
-                    className="btn-glass h-9 px-4 text-xs font-semibold rounded-full"
+                    className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={creating}
-                    className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                    className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5"
                   >
                     {creating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                     <span>Create Document</span>
@@ -632,7 +657,7 @@ function EditorContent() {
       </AnimatePresence>
 
       {/* Toast Notifications */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-[calc(100%-3rem)] pointer-events-none">
+      <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div

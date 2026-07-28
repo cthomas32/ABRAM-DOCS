@@ -18,6 +18,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import CollapsibleCard from "@/components/admin/CollapsibleCard";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -155,6 +156,8 @@ const PAGES = [
   { slug: "start-filmmakers", label: "Filmmakers", path: "/start/filmmakers" },
   { slug: "start-agencies", label: "Agencies", path: "/start/agencies" },
   { slug: "start-post", label: "Post production", path: "/start/post-production" },
+  { slug: "start-resources", label: "Resources", path: "/start/resource-management" },
+  { slug: "start-assistant", label: "AI assistant", path: "/start/ai-assistant" },
 ];
 
 const LINK_PAGES = PAGES.filter((page) => page.slug !== null);
@@ -292,7 +295,7 @@ export default function CampaignAnalyticsPage() {
           <button
             onClick={fetchAnalytics}
             disabled={refreshing}
-            className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
+            className="btn-glass px-4 min-h-[40px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${refreshing ? "animate-spin" : ""}`} />
             <span>{refreshing ? "Updating..." : "Refresh"}</span>
@@ -306,7 +309,7 @@ export default function CampaignAnalyticsPage() {
               <button
                 key={range.days}
                 onClick={() => setDays(range.days)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                className={`px-4 min-h-[40px] sm:min-h-0 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer ${
                   days === range.days
                     ? "bg-white text-black"
                     : "bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-white"
@@ -319,7 +322,21 @@ export default function CampaignAnalyticsPage() {
 
           <div className="hidden sm:block w-px h-5 bg-white/10" />
 
-          <div className="flex gap-1.5 flex-wrap">
+          {/* Phones get a picker instead of five more chips */}
+          <select
+            value={pageFilter ?? ""}
+            onChange={(event) => setPageFilter(event.target.value || null)}
+            aria-label="Filter by landing page"
+            className="sm:hidden w-full h-11 bg-[#121212] border border-white/10 rounded-full px-4 text-xs font-semibold text-white focus:outline-none focus:border-white/20 cursor-pointer"
+          >
+            {PAGES.map((page) => (
+              <option key={page.label} value={page.slug ?? ""}>
+                {page.label}
+              </option>
+            ))}
+          </select>
+
+          <div className="hidden sm:flex gap-1.5 flex-wrap">
             {PAGES.map((page) => (
               <button
                 key={page.label}
@@ -341,7 +358,7 @@ export default function CampaignAnalyticsPage() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 font-sans"
+          className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 font-sans"
         >
           {kpis.map((kpi) => {
             const Icon = kpi.icon;
@@ -349,7 +366,7 @@ export default function CampaignAnalyticsPage() {
               <motion.div
                 key={kpi.label}
                 variants={itemVariants}
-                className="glass-panel p-5 rounded-2xl flex flex-col justify-between h-32 border-white/8 select-none"
+                className="glass-panel p-4 sm:p-5 rounded-2xl flex flex-col justify-between h-28 sm:h-32 border-white/8 select-none"
               >
                 <div className="flex justify-between items-start gap-2">
                   <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider break-words">
@@ -358,7 +375,7 @@ export default function CampaignAnalyticsPage() {
                   <Icon className="w-4 h-4 text-zinc-400 shrink-0" />
                 </div>
                 <div className="mt-4">
-                  <span className="text-2xl font-bold text-white tracking-tight font-mono block">
+                  <span className="text-xl sm:text-2xl font-bold text-white tracking-tight font-mono block">
                     {kpi.value}
                   </span>
                   <span className="text-[9px] text-zinc-500 font-medium">{kpi.hint}</span>
@@ -434,7 +451,7 @@ function FunnelCard({ funnel }: { funnel: Funnel }) {
   ];
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8 h-full">
+    <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 h-full">
       <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans">
         Conversion Funnel
       </h2>
@@ -473,7 +490,7 @@ function FunnelCard({ funnel }: { funnel: Funnel }) {
 function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
   if (!rows || rows.length === 0) {
     return (
-      <div className="glass-panel p-6 rounded-2xl border-white/8 h-full flex flex-col">
+      <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 h-full flex flex-col">
         <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans">
           Daily Traffic
         </h2>
@@ -487,7 +504,7 @@ function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
   const maxVisits = Math.max(...rows.map((row) => row.visits), 1);
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8 h-full">
+    <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 h-full">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans">
           Daily Traffic
@@ -535,14 +552,11 @@ function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
 
 function SourceTable({ rows }: { rows: SourceRow[] }) {
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8">
-      <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans mb-1">
-        Traffic by Source
-      </h2>
-      <p className="text-[10px] text-zinc-500 mb-4">
-        Where visitors came from, and how many made it to sign-up.
-      </p>
-
+    <CollapsibleCard
+      title="Traffic by Source"
+      subtitle="Where visitors came from, and how many made it to sign-up."
+      badge={rows.length ? `${rows.length}` : undefined}
+    >
       {rows.length === 0 ? (
         <p className="text-xs text-zinc-600 py-6 text-center">No traffic recorded yet.</p>
       ) : (
@@ -574,18 +588,17 @@ function SourceTable({ rows }: { rows: SourceRow[] }) {
           </table>
         </div>
       )}
-    </div>
+    </CollapsibleCard>
   );
 }
 
 function PageTable({ rows }: { rows: PageRow[] }) {
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8">
-      <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans mb-1">
-        Performance by Page
-      </h2>
-      <p className="text-[10px] text-zinc-500 mb-4">Which landing page converts best.</p>
-
+    <CollapsibleCard
+      title="Performance by Page"
+      subtitle="Which landing page converts best."
+      badge={rows.length ? `${rows.length}` : undefined}
+    >
       {rows.length === 0 ? (
         <p className="text-xs text-zinc-600 py-6 text-center">No page visits recorded yet.</p>
       ) : (
@@ -617,7 +630,7 @@ function PageTable({ rows }: { rows: PageRow[] }) {
           </table>
         </div>
       )}
-    </div>
+    </CollapsibleCard>
   );
 }
 
@@ -625,14 +638,11 @@ function CampaignTable({ rows }: { rows: CampaignRow[] }) {
   if (!rows || rows.length === 0) return null;
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8">
-      <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans mb-1">
-        Tagged Campaigns
-      </h2>
-      <p className="text-[10px] text-zinc-500 mb-4">
-        Broken out by the campaign and content tags on your links, so individual posts can be compared.
-      </p>
-
+    <CollapsibleCard
+      title="Tagged Campaigns"
+      subtitle="Broken out by the campaign and content tags on your links, so individual posts can be compared."
+      badge={`${rows.length}`}
+    >
       <div className="overflow-x-auto">
         <p className="text-[9px] text-zinc-600 mb-2 md:hidden">Swipe to view &rarr;</p>
         <table className="w-full text-[11px] min-w-[520px]">
@@ -658,7 +668,7 @@ function CampaignTable({ rows }: { rows: CampaignRow[] }) {
           </tbody>
         </table>
       </div>
-    </div>
+    </CollapsibleCard>
   );
 }
 
@@ -678,7 +688,7 @@ function BreakdownCard({
   total: number;
 }) {
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8">
+    <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans">
           {title}
@@ -732,15 +742,10 @@ function LinkBuilder() {
   };
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8">
-      <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans mb-1">
-        Tracked Link Builder
-      </h2>
-      <p className="text-[10px] text-zinc-500 mb-4">
-        Copy a tagged link before you post. Every visit that arrives on it lands in the tables above,
-        attributed to the right channel.
-      </p>
-
+    <CollapsibleCard
+      title="Tracked Link Builder"
+      subtitle="Copy a tagged link before you post, so every visit is attributed to the right channel."
+    >
       <div className="mb-5">
         <label
           htmlFor="campaign-tag"
@@ -753,7 +758,7 @@ function LinkBuilder() {
           value={campaign}
           onChange={(event) => setCampaign(event.target.value)}
           placeholder="july-callsheet-clip"
-          className="w-full sm:max-w-sm rounded-full bg-white/[0.04] border border-white/10 px-4 py-2 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white/20 transition-all"
+          className="w-full sm:max-w-sm rounded-full bg-white/[0.04] border border-white/10 px-4 h-11 sm:h-auto sm:py-2 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white/20 transition-all"
         />
       </div>
 
@@ -802,7 +807,7 @@ function LinkBuilder() {
           </div>
         ))}
       </div>
-    </div>
+    </CollapsibleCard>
   );
 }
 
@@ -812,14 +817,11 @@ function LinkBuilder() {
 
 function RecentVisitors({ rows }: { rows: RecentRow[] }) {
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8">
-      <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans mb-1">
-        Recent Visitors
-      </h2>
-      <p className="text-[10px] text-zinc-500 mb-4">
-        The last 60 sessions. No personal data is stored against a visit beyond a coarse country code.
-      </p>
-
+    <CollapsibleCard
+      title="Recent Visitors"
+      subtitle="The last 60 sessions. No personal data is stored against a visit beyond a coarse country code."
+      badge={rows.length ? `${rows.length}` : undefined}
+    >
       {rows.length === 0 ? (
         <p className="text-xs text-zinc-600 py-6 text-center">No visits recorded yet.</p>
       ) : (
@@ -883,6 +885,6 @@ function RecentVisitors({ rows }: { rows: RecentRow[] }) {
           </table>
         </div>
       )}
-    </div>
+    </CollapsibleCard>
   );
 }

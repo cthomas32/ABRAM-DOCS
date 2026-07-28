@@ -207,7 +207,15 @@ Use CSS utility classes defined in `globals.css`:
 6. **Consistent heading weights** — `font-bold` for H1, `font-semibold` for H2–H4, `font-medium` for Display.
 7. **leading-7 for body text** — All paragraph body text uses `leading-7`. Card/secondary text uses `leading-relaxed`.
 8. **Dark mode only** — This app is always dark. No light-mode prefixed classes needed unless explicitly required for prose elements.
+9. **ABRAM is always uppercase** — When referring to the platform or the assistant in any user-facing writing, always write **ABRAM**, never "Abram" or "abram". This applies to page copy, metadata, UI labels, and mockup text.
+10. **Never use the Sparkles icon** — The ABRAM mark IS the AI icon. Never use `Sparkles` (or any other generic AI glyph) to represent ABRAM, AI features, or the assistant. Use the `AbramMark` component instead:
+    ```tsx
+    import AbramMark from "@/components/AbramMark";
+
+    <AbramMark size={16} />
+    ```
+    The mark already carries its own dark rounded tile, so never nest it inside a second padded, background-filled box — size it to match the icon tiles beside it instead.
 
 ---
 
-*Last updated: June 2026*
+*Last updated: July 2026*

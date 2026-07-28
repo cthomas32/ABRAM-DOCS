@@ -9,11 +9,11 @@ import {
   ChevronDown, 
   ChevronUp, 
   Plus, 
-  Sparkles, 
   Users,
   User,
   ArrowRight
 } from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 
 // --- Types ---
 
@@ -1061,7 +1061,7 @@ export default function PricingClient() {
   
                       {/* AI Credits Badge */}
                       <div className="mb-6 lg:mb-4 p-3 lg:p-2.5 rounded-xl bg-zinc-950/30 border border-white/5 flex items-center gap-2 lg:gap-1">
-                        <Sparkles className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-zinc-400 shrink-0" />
+                        <AbramMark size={16} className="shrink-0" />
                         <div className="flex flex-col">
                           <span className="text-[10px] lg:text-[9px] text-zinc-500 uppercase tracking-wider font-semibold">AI Credits</span>
                           <span className="text-xs lg:text-xs text-zinc-200 font-medium font-mono leading-tight">{getDynamicAICredits(plan)}</span>

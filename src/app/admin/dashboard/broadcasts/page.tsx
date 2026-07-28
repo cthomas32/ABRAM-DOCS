@@ -13,6 +13,8 @@ import {
   Send,
   BarChart2,
   ChevronRight,
+  ChevronLeft,
+  MoreHorizontal,
   AlertCircle,
   Check,
   Edit
@@ -29,6 +31,7 @@ import {
   sendTestEmailAction
 } from "../../resend-actions";
 import { AnimatePresence, motion } from "framer-motion";
+import ActionSheet, { type SheetAction } from "@/components/admin/ActionSheet";
 
 interface Campaign {
   id: string;
@@ -327,6 +330,8 @@ interface Subscriber {
 export default function BroadcastsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+  // Campaign whose mobile action sheet is open
+  const [sheetCampaign, setSheetCampaign] = useState<Campaign | null>(null);
   const [logs, setLogs] = useState<CampaignLog[]>([]);
   const [loadingCampaigns, setLoadingCampaigns] = useState(true);
   const [loadingLogs, setLoadingLogs] = useState(false);
@@ -771,6 +776,49 @@ export default function BroadcastsPage() {
 
   const stats = getSelectedCampaignStats();
 
+  /** Loads a sent campaign back into the composer as a fresh copy. */
+  const openCampaignAsCopy = (campaign: Campaign) => {
+    setTitleInput(`[Copy] ${campaign.title}`);
+    setSubjectInput(campaign.subject || "");
+    setHtmlContentInput(campaign.html_content || campaign.content || "");
+    setTextContentInput(campaign.text_content || "");
+    const meta = campaign.metadata || {};
+    if (meta.audience_type === "subscribers") {
+      setAudienceType("subscribers");
+      setSelectedSubscribers(meta.emails || []);
+      setSegmentIdInput("8324468f-0399-4c05-9b98-3e17e76ffa41");
+    } else if (meta.audience_type === "manual") {
+      setAudienceType("manual");
+      setManualEmailsInput((meta.emails || []).join(", "));
+      setSegmentIdInput("8324468f-0399-4c05-9b98-3e17e76ffa41");
+    } else {
+      setAudienceType("segment");
+      setSegmentIdInput(campaign.segment_id || "8324468f-0399-4c05-9b98-3e17e76ffa41");
+    }
+    setEditingCampaignId(null);
+    setShowComposeModal(true);
+  };
+
+  const buildCampaignActions = (campaign: Campaign): SheetAction[] => [
+    {
+      id: "edit-resend",
+      label: "Edit & resend",
+      hint: "Open a copy in the composer",
+      icon: Edit,
+      onClick: () => openCampaignAsCopy(campaign),
+    },
+    {
+      id: "resend",
+      label: "Resend same audience",
+      hint: "Dispatch again to the original recipients",
+      icon: RefreshCw,
+      onClick: () => {
+        setResendConfirmInput("");
+        setShowResendModal(true);
+      },
+    },
+  ];
+
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
       <div className="space-y-6 max-w-[90rem] mx-auto pb-12">
@@ -800,7 +848,7 @@ export default function BroadcastsPage() {
               // Pre-load editorial template
               handleApplyTemplate("editorial");
             }}
-            className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+            className="btn-primary h-11 sm:h-9 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Compose Broadcast</span>
@@ -832,19 +880,19 @@ export default function BroadcastsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {showComposeModal ? (
             <div className="lg:col-span-12 space-y-6 animate-fadeIn">
-              <div className="glass-panel p-6 rounded-2xl border border-white/5 space-y-6">
+              <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-white/5 space-y-6">
                 {/* Editor Header */}
-                <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                  <div>
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-white/5 pb-4">
+                  <div className="min-w-0">
                     <h3 className="text-sm font-bold text-white tracking-tight font-sans flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-zinc-400" />
-                      {editingCampaignId ? "Edit Campaign Draft" : "Compose Manual Newsletter Campaign"}
+                      <Mail className="w-4 h-4 text-zinc-400 shrink-0" />
+                      <span>{editingCampaignId ? "Edit Campaign Draft" : "Compose Manual Newsletter Campaign"}</span>
                     </h3>
                     <p className="text-xs text-zinc-500 mt-1 font-sans">
                       Create or modify your newsletter campaign, select recipients, and review rendering side-by-side.
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2 shrink-0">
                     <button
                       type="button"
                       onClick={() => {
@@ -1149,7 +1197,7 @@ export default function BroadcastsPage() {
                     </span>
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 border border-white/5 rounded-2xl overflow-hidden bg-zinc-950/20">
                       {/* Left Editor Pane (6 Columns) */}
-                      <div className="lg:col-span-6 flex flex-col border-b lg:border-b-0 lg:border-r border-white/5 h-[500px] lg:h-[600px]">
+                      <div className="lg:col-span-6 flex flex-col border-b lg:border-b-0 lg:border-r border-white/5 h-[400px] sm:h-[500px] lg:h-[600px]">
                         {/* Editor Tabs */}
                         <div className="flex items-center justify-between bg-zinc-950/40 px-3 py-2 border-b border-white/5">
                           <div className="flex bg-white/[0.02] border border-white/5 p-0.5 rounded-full">
@@ -1172,7 +1220,7 @@ export default function BroadcastsPage() {
                               Plain Text
                             </button>
                           </div>
-                          <span className="text-[10px] text-zinc-500 font-mono">
+                          <span className="hidden sm:inline text-[10px] text-zinc-500 font-mono">
                             {editorTab === "html" ? "live layout mode" : "fallback text mode"}
                           </span>
                         </div>
@@ -1308,12 +1356,12 @@ export default function BroadcastsPage() {
                       </div>
 
                       {/* Right Preview Pane (6 Columns) */}
-                      <div className="lg:col-span-6 flex flex-col h-[500px] lg:h-[600px]">
+                      <div className="lg:col-span-6 flex flex-col h-[400px] sm:h-[500px] lg:h-[600px]">
                         <div className="bg-zinc-950/40 px-3 py-2 border-b border-white/5 flex items-center justify-between">
                           <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
                             Live Preview
                           </span>
-                          <span className="text-[10px] text-zinc-500 font-mono">
+                          <span className="hidden sm:inline text-[10px] text-zinc-500 font-mono">
                             {editorTab === "html" ? "HTML Output" : "Plain Text Output"}
                           </span>
                         </div>
@@ -1376,7 +1424,7 @@ export default function BroadcastsPage() {
           ) : (
             <>
               {/* Campaigns List (5 Columns) */}
-              <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-4">
+              <div className={`lg:col-span-5 space-y-4 lg:sticky lg:top-4 ${selectedCampaign ? "hidden lg:block" : ""}`}>
             <div className="flex items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
               <div className="relative w-full">
                 <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -1451,9 +1499,17 @@ export default function BroadcastsPage() {
           </div>
 
           {/* Campaign Analytics / Log Viewer (7 Columns) */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className={`lg:col-span-7 space-y-6 ${selectedCampaign ? "" : "hidden lg:block"}`}>
             {selectedCampaign ? (
               <div className="space-y-6">
+                {/* Small screens drill in to one campaign at a time */}
+                <button
+                  onClick={() => setSelectedCampaign(null)}
+                  className="lg:hidden btn-glass h-10 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <span>All campaigns</span>
+                </button>
                 {selectedCampaign.status === "draft" ? (
                   <div className="space-y-6 animate-fadeIn">
                     {/* Draft Review Header */}
@@ -1475,7 +1531,7 @@ export default function BroadcastsPage() {
                             <span className="font-semibold text-zinc-300">Subject:</span> {selectedCampaign.subject}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2 shrink-0">
+                        <div className="flex flex-wrap items-center gap-2 shrink-0">
                           <button
                             onClick={() => {
                               // Pre-populate input states with selected campaign details
@@ -1503,7 +1559,7 @@ export default function BroadcastsPage() {
                               setEditingCampaignId(selectedCampaign.id);
                               setShowComposeModal(true);
                             }}
-                            className="btn-glass h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                            className="btn-glass h-11 sm:h-9 flex-1 sm:flex-none px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans"
                           >
                             <Edit className="w-4 h-4 text-zinc-400" />
                             <span>Edit Draft</span>
@@ -1514,10 +1570,10 @@ export default function BroadcastsPage() {
                               setConfirmInput("");
                               setShowConfirmModal(true);
                             }}
-                            className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans bg-red-600 hover:bg-red-500 text-white border-red-600/30 shrink-0"
+                            className="btn-primary h-11 sm:h-9 flex-1 sm:flex-none px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans bg-red-600 hover:bg-red-500 text-white border-red-600/30 shrink-0"
                           >
                             <Send className="w-4 h-4" />
-                            <span>Approve & Dispatch</span>
+                            <span>Approve &amp; Dispatch</span>
                           </button>
                         </div>
                       </div>
@@ -1545,7 +1601,7 @@ export default function BroadcastsPage() {
                     </div>
 
                     {/* Preview Area */}
-                    <div className="glass-panel border border-white/5 rounded-2xl overflow-hidden flex flex-col h-[550px]">
+                    <div className="glass-panel border border-white/5 rounded-2xl overflow-hidden flex flex-col h-[420px] sm:h-[550px]">
                       <div className="p-4 border-b border-white/5 bg-zinc-950/40 flex items-center justify-between">
                         <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
                           Campaign Content Preview
@@ -1614,36 +1670,25 @@ export default function BroadcastsPage() {
                         </div>
                         {/* Action buttons */}
                         <div className="flex flex-wrap items-center gap-2 shrink-0">
+                          {/* Small screens: everything except the content toggle lives in a sheet */}
+                          <button
+                            onClick={() => setSheetCampaign(selectedCampaign)}
+                            aria-label="Campaign actions"
+                            className="sm:hidden btn-glass h-10 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                          >
+                            <MoreHorizontal className="w-4 h-4" />
+                            <span>Actions</span>
+                          </button>
                           <button
                             onClick={() => setShowSentPreview(v => !v)}
-                            className="btn-glass h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                            className="btn-glass h-10 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <BarChart2 className="w-3.5 h-3.5 text-zinc-400" />
                             <span>{showSentPreview ? "Hide Content" : "View Content"}</span>
                           </button>
                           <button
-                            onClick={() => {
-                              setTitleInput(`[Copy] ${selectedCampaign.title}`);
-                              setSubjectInput(selectedCampaign.subject || "");
-                              setHtmlContentInput(selectedCampaign.html_content || selectedCampaign.content || "");
-                              setTextContentInput(selectedCampaign.text_content || "");
-                              const meta = selectedCampaign.metadata || {};
-                              if (meta.audience_type === "subscribers") {
-                                setAudienceType("subscribers");
-                                setSelectedSubscribers(meta.emails || []);
-                                setSegmentIdInput("8324468f-0399-4c05-9b98-3e17e76ffa41");
-                              } else if (meta.audience_type === "manual") {
-                                setAudienceType("manual");
-                                setManualEmailsInput((meta.emails || []).join(", "));
-                                setSegmentIdInput("8324468f-0399-4c05-9b98-3e17e76ffa41");
-                              } else {
-                                setAudienceType("segment");
-                                setSegmentIdInput(selectedCampaign.segment_id || "8324468f-0399-4c05-9b98-3e17e76ffa41");
-                              }
-                              setEditingCampaignId(null);
-                              setShowComposeModal(true);
-                            }}
-                            className="btn-glass h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                            onClick={() => openCampaignAsCopy(selectedCampaign)}
+                            className="hidden sm:flex btn-glass h-9 px-4 text-xs font-semibold rounded-full items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <Edit className="w-3.5 h-3.5 text-zinc-400" />
                             <span>Edit &amp; Resend</span>
@@ -1653,7 +1698,7 @@ export default function BroadcastsPage() {
                               setResendConfirmInput("");
                               setShowResendModal(true);
                             }}
-                            className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                            className="hidden sm:flex btn-primary h-9 px-4 text-xs font-semibold rounded-full items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <RefreshCw className="w-3.5 h-3.5" />
                             <span>Resend Same Audience</span>
@@ -1722,7 +1767,7 @@ export default function BroadcastsPage() {
                               </button>
                             </div>
                           </div>
-                          <div className="h-[500px] bg-zinc-950/20">
+                          <div className="h-[400px] sm:h-[500px] bg-zinc-950/20">
                             {previewTab === "html" ? (
                               <iframe
                                 sandbox="allow-same-origin"
@@ -1807,7 +1852,8 @@ export default function BroadcastsPage() {
                         </div>
                       ) : (
                         <div className="overflow-x-auto">
-                          <table className="w-full text-left border-collapse">
+                          <p className="text-[9px] text-zinc-600 px-4 pt-3 md:hidden">Swipe to view &rarr;</p>
+                          <table className="w-full text-left border-collapse min-w-[420px]">
                             <thead>
                               <tr className="border-b border-white/5 text-[9px] uppercase tracking-widest text-zinc-500 bg-zinc-950/20">
                                 <th className="py-2.5 px-4 font-bold">Recipient</th>
@@ -1848,7 +1894,7 @@ export default function BroadcastsPage() {
                 )}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-24 border border-dashed border-white/5 rounded-2xl text-zinc-500 font-sans gap-2">
+              <div className="hidden lg:flex flex-col items-center justify-center py-24 border border-dashed border-white/5 rounded-2xl text-zinc-500 font-sans gap-2">
                 <Mail className="w-8 h-8 text-zinc-600" />
                 <span className="text-xs">Select a campaign from the ledger to load delivery metrics and webhooks log tracking.</span>
               </div>
@@ -1857,6 +1903,15 @@ export default function BroadcastsPage() {
           </>
           )}
         </div>
+
+        {/* Mobile action sheet — resend options for the selected campaign */}
+        <ActionSheet
+          open={!!sheetCampaign}
+          onClose={() => setSheetCampaign(null)}
+          title={sheetCampaign?.title || ""}
+          subtitle={sheetCampaign?.subject}
+          actions={sheetCampaign ? buildCampaignActions(sheetCampaign) : []}
+        />
 
         {/* Safety Confirmation Modal (draft → send) */}
         <AnimatePresence>
@@ -1873,7 +1928,7 @@ export default function BroadcastsPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-md p-6 rounded-2xl border border-red-500/20 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
+                className="w-full max-w-md p-5 sm:p-6 rounded-2xl border border-red-500/20 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider w-fit font-sans">
                   <AlertTriangle className="w-3.5 h-3.5" />
@@ -1912,7 +1967,7 @@ export default function BroadcastsPage() {
                   />
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2">
+                <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
                   <button
                     type="button"
                     disabled={approving}
@@ -1920,7 +1975,7 @@ export default function BroadcastsPage() {
                       setShowConfirmModal(false);
                       setConfirmInput("");
                     }}
-                    className="btn-glass h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
+                    className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -1928,7 +1983,7 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleApproveAndSend}
                     disabled={approving || confirmInput !== "CONFIRM SEND"}
-                    className="btn-primary h-9 px-5 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans bg-red-600 hover:bg-red-500 text-white border-red-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans bg-red-600 hover:bg-red-500 text-white border-red-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {approving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                     <span>Approve &amp; Send Immediately</span>
@@ -1954,7 +2009,7 @@ export default function BroadcastsPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-sm p-6 rounded-2xl border border-white/10 glass-panel relative z-10 space-y-4"
+                className="w-full max-w-sm p-5 sm:p-6 rounded-2xl border border-white/10 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
@@ -1988,12 +2043,12 @@ export default function BroadcastsPage() {
                   />
                 </div>
 
-                <div className="flex justify-end gap-2 pt-1">
+                <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-1">
                   <button
                     type="button"
                     disabled={sendingTestEmail}
                     onClick={() => setShowTestEmailModal(false)}
-                    className="btn-glass h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
+                    className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -2001,7 +2056,7 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleSendTestEmail}
                     disabled={sendingTestEmail || !testEmailAddress.includes("@")}
-                    className="btn-primary h-9 px-5 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {sendingTestEmail ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -2031,7 +2086,7 @@ export default function BroadcastsPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-md p-6 rounded-2xl border border-yellow-500/20 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
+                className="w-full max-w-md p-5 sm:p-6 rounded-2xl border border-yellow-500/20 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex items-center gap-2 text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider w-fit font-sans">
                   <RefreshCw className="w-3.5 h-3.5" />
@@ -2064,12 +2119,12 @@ export default function BroadcastsPage() {
                   />
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2">
+                <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
                   <button
                     type="button"
                     disabled={resending}
                     onClick={() => { setShowResendModal(false); setResendConfirmInput(""); }}
-                    className="btn-glass h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
+                    className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -2077,7 +2132,7 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleResendSameAudience}
                     disabled={resending || resendConfirmInput !== "CONFIRM SEND"}
-                    className="btn-primary h-9 px-5 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans bg-yellow-600 hover:bg-yellow-500 text-white border-yellow-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans bg-yellow-600 hover:bg-yellow-500 text-white border-yellow-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {resending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                     <span>{resending ? "Resending..." : "Confirm Resend"}</span>
@@ -2089,7 +2144,7 @@ export default function BroadcastsPage() {
         </AnimatePresence>
 
         {/* Toast Notifications */}
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-[calc(100%-3rem)] pointer-events-none">
+        <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">
           <AnimatePresence>
             {toasts.map((toast) => (
               <motion.div

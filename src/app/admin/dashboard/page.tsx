@@ -268,7 +268,7 @@ export default function DashboardOverviewPage() {
           <button 
             onClick={fetchRealMetrics}
             disabled={refreshing}
-            className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
+            className="btn-glass px-4 min-h-[40px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${refreshing ? "animate-spin" : ""}`} />
             <span>{refreshing ? "Updating..." : "Refresh Telemetry"}</span>
@@ -280,7 +280,7 @@ export default function DashboardOverviewPage() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-sans"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 font-sans"
         >
           {kpis.map((kpi, idx) => {
             const Icon = kpi.icon;
@@ -288,7 +288,7 @@ export default function DashboardOverviewPage() {
               <motion.div key={idx} variants={itemVariants}>
                 <Link 
                   href={kpi.route}
-                  className="glass-panel glass-panel-hover p-5 rounded-2xl flex flex-col justify-between h-32 border-white/8 hover:border-white/25 select-none"
+                  className="glass-panel glass-panel-hover p-4 sm:p-5 rounded-2xl flex flex-col justify-between h-28 sm:h-32 border-white/8 hover:border-white/25 select-none"
                 >
                   <div className="flex justify-between items-start">
                     <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">
@@ -296,11 +296,11 @@ export default function DashboardOverviewPage() {
                     </span>
                     <Icon className="w-4 h-4 text-zinc-400" />
                   </div>
-                  <div className="mt-4 flex items-baseline justify-between">
-                    <span className="text-2xl font-bold text-white tracking-tight font-mono">
+                  <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                    <span className="text-xl sm:text-2xl font-bold text-white tracking-tight font-mono">
                       {kpi.value}
                     </span>
-                    <span className="text-[9px] font-bold text-green-400 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/10">
+                    <span className="text-[9px] font-bold text-green-400 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/10 w-max">
                       {kpi.change}
                     </span>
                   </div>
@@ -352,10 +352,10 @@ export default function DashboardOverviewPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-sans">
             
             {/* Google Analytics Integration Card */}
-            <div className="glass-panel glass-panel-hover p-6 rounded-2xl border-white/8 flex flex-col justify-between">
+            <div className="glass-panel glass-panel-hover p-4 sm:p-6 rounded-2xl border-white/8 flex flex-col justify-between">
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <div className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
@@ -367,7 +367,7 @@ export default function DashboardOverviewPage() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-[11px] border-t border-white/5 pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 text-[11px] border-t border-white/5 pt-4">
                   <div>
                     <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream Name</span>
                     <span className="text-zinc-300 font-medium">ABRAM Landing Page</span>
@@ -386,7 +386,7 @@ export default function DashboardOverviewPage() {
                       href="https://abram.network" 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="text-zinc-300 hover:text-white underline decoration-zinc-700 hover:decoration-zinc-400 transition-colors"
+                      className="text-zinc-300 hover:text-white underline decoration-zinc-700 hover:decoration-zinc-400 transition-colors break-all"
                     >
                       https://abram.network
                     </a>
@@ -399,7 +399,7 @@ export default function DashboardOverviewPage() {
                   href="https://analytics.google.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                  className="btn-glass px-4 min-h-[40px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
                 >
                   <span>Launch GA Console</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -408,10 +408,10 @@ export default function DashboardOverviewPage() {
             </div>
 
             {/* Resend Email Engine Integration Card */}
-            <div className="glass-panel glass-panel-hover p-6 rounded-2xl border-white/8 flex flex-col justify-between">
+            <div className="glass-panel glass-panel-hover p-4 sm:p-6 rounded-2xl border-white/8 flex flex-col justify-between">
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <div className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
@@ -423,7 +423,7 @@ export default function DashboardOverviewPage() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-[11px] border-t border-white/5 pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 text-[11px] border-t border-white/5 pt-4">
                   <div>
                     <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Service Provider</span>
                     <span className="text-zinc-300 font-medium">Resend Inc.</span>
@@ -448,7 +448,7 @@ export default function DashboardOverviewPage() {
                   href="https://resend.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                  className="btn-glass px-4 min-h-[40px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
                 >
                   <span>Launch Resend Console</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -502,15 +502,15 @@ function TrailingTrendsChart({ data }: { data: SparklinePoint[] }) {
   const signupsArea = `${signupsPath} L ${getCoords(data.length - 1, 0, maxSignups).x} ${height - padding} L ${getCoords(0, 0, maxSignups).x} ${height - padding} Z`;
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8 space-y-4 shadow-xl">
-      <div className="flex justify-between items-center">
-        <div className="space-y-1">
+    <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <div className="space-y-1 min-w-0">
           <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
-            Traffic & Audience Growth
+            Traffic &amp; Audience Growth
           </span>
           <p className="text-[11px] text-zinc-500">Comparing page views and newsletter sign-ups over 30 days</p>
         </div>
-        <div className="flex items-center gap-4 text-[10px] font-semibold">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[10px] font-semibold shrink-0">
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 bg-zinc-300 rounded-full" />
             <span className="text-zinc-300">Page Views</span>
@@ -565,7 +565,7 @@ function TrailingTrendsChart({ data }: { data: SparklinePoint[] }) {
 
 function TopContentGrid({ items }: { items: ContentPerformance[] }) {
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8 space-y-4 shadow-xl h-full flex flex-col justify-between">
+    <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl h-full flex flex-col justify-between">
       <div>
         <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
           Top Content Engagement
@@ -612,7 +612,7 @@ function TopContentGrid({ items }: { items: ContentPerformance[] }) {
 
 function CampaignsStatusList({ items }: { items: CampaignPerformance[] }) {
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8 space-y-4 shadow-xl h-full flex flex-col justify-between">
+    <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl h-full flex flex-col justify-between">
       <div>
         <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
           Active Campaign Telemetry
@@ -670,7 +670,7 @@ function ListSegmentationCard({ marketingCount, appCount }: { marketingCount: nu
   const appPct = total > 0 ? ((appCount / total) * 100).toFixed(0) : '0';
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border-white/8 space-y-5 shadow-xl h-full flex flex-col justify-between">
+    <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-5 shadow-xl h-full flex flex-col justify-between">
       <div>
         <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
           List Segmentation
@@ -686,16 +686,16 @@ function ListSegmentationCard({ marketingCount, appCount }: { marketingCount: nu
         </div>
 
         <div className="space-y-3 text-xs pt-2">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap justify-between items-center gap-x-3 gap-y-1">
+            <div className="flex items-center gap-2 min-w-0">
               <span className="w-2.5 h-2.5 bg-zinc-300 rounded-full shrink-0" />
               <span className="text-zinc-400">Marketing Newsletter List</span>
             </div>
             <span className="font-mono text-white font-semibold">{marketingCount.toLocaleString()} ({marketingPct}%)</span>
           </div>
 
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap justify-between items-center gap-x-3 gap-y-1">
+            <div className="flex items-center gap-2 min-w-0">
               <span className="w-2.5 h-2.5 bg-[#8ECAFF] rounded-full shrink-0" />
               <span className="text-zinc-400">Application Updates List</span>
             </div>

@@ -362,7 +362,7 @@ export default function SubscribersPage() {
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+            className="btn-primary h-11 sm:h-9 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans shrink-0"
           >
             <UserPlus className="w-4 h-4" />
             <span>Add Subscriber</span>
@@ -398,17 +398,17 @@ export default function SubscribersPage() {
 
         {/* Integration Panel */}
         <div className="glass-panel p-5 rounded-2xl border border-white/5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-zinc-400" />
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <Globe className="w-4 h-4 text-zinc-400 shrink-0" />
               <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
                 Resend Integration Status
               </span>
             </div>
-            <button 
+            <button
               onClick={checkResend}
               disabled={checkingResend}
-              className="text-[10px] text-zinc-500 hover:text-zinc-300 flex items-center gap-1 cursor-pointer font-sans"
+              className="text-[10px] text-zinc-500 hover:text-zinc-300 flex items-center gap-1 cursor-pointer font-sans shrink-0 min-h-[36px] sm:min-h-0"
             >
               <RefreshCw className={`w-3 h-3 ${checkingResend ? "animate-spin" : ""}`} />
               <span>Verify API</span>
@@ -416,15 +416,15 @@ export default function SubscribersPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className={`text-[10px] px-2 py-0.5 rounded border font-semibold ${
+            <div className="flex items-start sm:items-center gap-3 min-w-0">
+              <span className={`text-[10px] px-2 py-0.5 rounded border font-semibold shrink-0 ${
                 resendStatus.status === "Connected" 
                   ? "bg-green-500/10 border-green-500/20 text-green-400" 
                   : "bg-red-500/10 border-red-500/20 text-red-400"
               }`}>
                 {resendStatus.status}
               </span>
-              <p className="text-xs text-zinc-400 font-sans leading-relaxed">
+              <p className="text-xs text-zinc-400 font-sans leading-relaxed break-words min-w-0">
                 {resendStatus.message || "Verifying Resend authorization keys..."}
               </p>
             </div>
@@ -433,7 +433,7 @@ export default function SubscribersPage() {
               <button
                 onClick={handleSyncContacts}
                 disabled={syncingContacts || checkingResend}
-                className="btn-glass h-8 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans transition-all duration-200"
+                className="btn-glass h-11 sm:h-8 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans transition-all duration-200 shrink-0"
               >
                 {syncingContacts ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -448,21 +448,23 @@ export default function SubscribersPage() {
 
         {/* Filter / Search Bar */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
-          {/* Tab switches */}
-          <div className="flex bg-white/[0.02] border border-white/5 p-0.5 rounded-full shrink-0">
-            {(["all", "marketing", "application"] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1.5 rounded-full text-[10px] font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer font-sans ${
-                  activeTab === tab
-                    ? "bg-white text-black"
-                    : "text-zinc-400 hover:text-white"
-                }`}
-              >
-                {tab === "all" ? "All Contacts" : tab === "marketing" ? "Marketing List" : "Application List"}
-              </button>
-            ))}
+          {/* Tab switches — scroll horizontally rather than overflow the viewport */}
+          <div className="w-full md:w-auto md:shrink-0 -mx-1 px-1 overflow-x-auto">
+            <div className="inline-flex bg-white/[0.02] border border-white/5 p-0.5 rounded-full">
+              {(["all", "marketing", "application"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-3 sm:px-4 min-h-[38px] md:min-h-0 py-1.5 rounded-full text-[10px] font-semibold tracking-wider uppercase whitespace-nowrap transition-all duration-200 cursor-pointer font-sans ${
+                    activeTab === tab
+                      ? "bg-white text-black"
+                      : "text-zinc-400 hover:text-white"
+                  }`}
+                >
+                  {tab === "all" ? "All Contacts" : tab === "marketing" ? "Marketing List" : "Application List"}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Search field */}
@@ -474,7 +476,7 @@ export default function SubscribersPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search name, email, or Resend ID..."
-                className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-9 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-white/10 transition-all duration-200 font-sans"
+                className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-9 pr-4 py-2.5 md:py-1.5 text-xs text-white focus:outline-none focus:border-white/10 transition-all duration-200 font-sans"
               />
             </div>
             <div className="text-[10px] text-zinc-500 font-sans font-medium shrink-0">
@@ -684,7 +686,7 @@ export default function SubscribersPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-md p-6 rounded-2xl border border-white/5 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
+                className="w-full max-w-md p-5 sm:p-6 rounded-2xl border border-white/5 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
               >
                 <h3 className="text-sm font-bold text-white tracking-tight font-sans flex items-center gap-2">
                   <UserPlus className="w-4 h-4 text-zinc-400" />
@@ -702,7 +704,7 @@ export default function SubscribersPage() {
                       className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10 font-sans"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">First Name</label>
                       <input
@@ -725,7 +727,7 @@ export default function SubscribersPage() {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Job Title</label>
                       <input
@@ -795,18 +797,18 @@ export default function SubscribersPage() {
                     </div>
                   </div>
 
-                  <div className="flex justify-end gap-2 pt-2">
+                  <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
                     <button
                       type="button"
                       onClick={() => setShowAddModal(false)}
-                      className="btn-glass h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans"
+                      className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="btn-primary h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                      className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans"
                     >
                       {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                       <span>Register Contact</span>
@@ -819,7 +821,7 @@ export default function SubscribersPage() {
         </AnimatePresence>
 
         {/* Toast Notifications */}
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-[calc(100%-3rem)] pointer-events-none">
+        <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">
           <AnimatePresence>
             {toasts.map((toast) => (
               <motion.div

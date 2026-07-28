@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Boxes,
   CalendarDays,
   Check,
   Clock,
@@ -12,6 +13,7 @@ import {
   ShieldCheck,
   SkipForward,
 } from "lucide-react";
+import AbramMark from "@/components/AbramMark";
 import type { VisualKind } from "@/lib/campaigns";
 
 /**
@@ -215,6 +217,131 @@ function CapacityVisual() {
         <div className="mt-4 rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2 text-[10px] text-zinc-400">
           Colourist is over by 4 days in week 3.
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Inventory                                                           */
+/* ------------------------------------------------------------------ */
+
+const ASSETS = [
+  { id: "CAM-001", name: "Sensa FX9 Body #1", cat: "Camera", util: 84, state: "ok" },
+  { id: "LNS-014", name: "24-70mm Zoom", cat: "Lens", util: 61, state: "ok" },
+  { id: "VEH-003", name: "Grip Truck", cat: "Vehicle", util: 97, state: "clash" },
+  { id: "AUD-008", name: "Boom Kit A", cat: "Audio", util: 22, state: "idle" },
+];
+
+function InventoryVisual() {
+  return (
+    <div className={PANEL}>
+      <WindowChrome title="Resources / Inventory" />
+
+      <div className="p-4 sm:p-5">
+        <div className="flex items-end justify-between gap-4 mb-4">
+          <div>
+            <p className="text-[9px] font-medium tracking-widest uppercase text-zinc-500">
+              Assets tracked
+            </p>
+            <p className="text-2xl font-semibold tracking-tight text-white font-mono">248</p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-[10px] text-zinc-400">
+            <Boxes className="w-3 h-3 text-[#8ECAFF]" />
+            12 kits
+          </span>
+        </div>
+
+        <div className="space-y-1.5">
+          {ASSETS.map((asset) => (
+            <div
+              key={asset.id}
+              className={`flex items-center gap-3 rounded-lg border px-3 py-2 ${
+                asset.state === "clash"
+                  ? "border-amber-500/25 bg-amber-500/[0.06]"
+                  : "border-white/5 bg-white/[0.02]"
+              }`}
+            >
+              <span className="text-[9px] font-mono text-zinc-600 w-14 shrink-0">{asset.id}</span>
+              <span className="text-[11px] text-zinc-200 flex-1 min-w-0 truncate">{asset.name}</span>
+              <span className="text-[9px] text-zinc-500 shrink-0 hidden xs:inline">{asset.cat}</span>
+              <span
+                className={`text-[10px] font-mono shrink-0 w-9 text-right ${
+                  asset.state === "clash"
+                    ? "text-amber-300/90"
+                    : asset.state === "idle"
+                      ? "text-zinc-600"
+                      : "text-zinc-300"
+                }`}
+              >
+                {asset.util}%
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-[10px] text-amber-300/90">
+          Grip Truck is already out on Nebula. Booking blocked.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Assistant                                                           */
+/* ------------------------------------------------------------------ */
+
+function ChatVisual() {
+  return (
+    <div className={PANEL}>
+      <WindowChrome title="ABRAM / Assistant" />
+
+      <div className="p-4 sm:p-5">
+        <div className="flex justify-end mb-3">
+          <p className="max-w-[80%] rounded-2xl rounded-br-sm bg-white/[0.06] border border-white/10 px-3 py-2 text-[11px] text-zinc-200">
+            Book the A-camera kit for the Nebula shoot next Tuesday and put Leo on it.
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="flex items-center gap-2 mb-3">
+            <AbramMark size={12} />
+            <span className="text-[9px] font-semibold tracking-widest uppercase text-zinc-400">
+              Action Plan
+            </span>
+            <span className="ml-auto text-[9px] text-zinc-600">Awaiting approval</span>
+          </div>
+
+          <div className="space-y-1.5">
+            {[
+              "Book A-Camera Kit (6 items) for Tue 12 Aug",
+              "Assign Leo Vance as operator",
+              "Update the Nebula work order dates",
+            ].map((step, index) => (
+              <div key={step} className="flex items-start gap-2.5">
+                <span className="text-[9px] font-mono text-zinc-600 mt-0.5 shrink-0">
+                  {index + 1}
+                </span>
+                <span className="text-[11px] text-zinc-300 leading-snug text-pretty">{step}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 pt-3 border-t border-white/5 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white text-black text-[10px] font-semibold px-3 py-1.5">
+              <Check className="w-3 h-3" />
+              Approve
+            </span>
+            <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] text-zinc-300 text-[10px] font-medium px-3 py-1.5">
+              Edit
+            </span>
+          </div>
+        </div>
+
+        <p className="mt-3 text-[10px] text-zinc-600">
+          Nothing is created or changed until you approve.
+        </p>
       </div>
     </div>
   );
@@ -516,6 +643,8 @@ export default function CampaignVisual({
       {kind === "review" ? <ReviewVisual /> : null}
       {kind === "runofshow" ? <RunOfShowVisual /> : null}
       {kind === "portal" ? <PortalVisual /> : null}
+      {kind === "inventory" ? <InventoryVisual /> : null}
+      {kind === "chat" ? <ChatVisual /> : null}
     </div>
   );
 }
