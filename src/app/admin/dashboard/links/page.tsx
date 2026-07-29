@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowDown,
@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
+  GripVertical,
   Heading,
   Layers,
   Link2,
@@ -26,6 +27,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { Reorder, useDragControls } from "framer-motion";
 import { createClient } from "@/utils/supabase/client";
 import {
   DEFAULT_SETTINGS,
@@ -257,28 +259,42 @@ export default function LinkHubAdminPage() {
     load();
   };
 
-  /** Swap sort_order with the neighbour so the move survives a reload. */
-  const move = async (index: number, direction: -1 | 1) => {
+  /**
+   * Writes the running order back as evenly spaced numbers.
+   *
+   * Renumbering everything rather than swapping pairs keeps a block that
+   * was dragged across the whole list correct in one go, and leaves gaps
+   * so a later insert does not need a rewrite.
+   */
+  const persistOrder = async (ordered: LinkHubLink[]) => {
+    const changed = ordered
+      .map((link, index) => ({ link, sort_order: (index + 1) * 10 }))
+      .filter(({ link, sort_order }) => link.sort_order !== sort_order);
+
+    if (changed.length === 0) return;
+
+    const supabase = createClient();
+    const results = await Promise.all(
+      changed.map(({ link, sort_order }) =>
+        supabase.from("link_hub_links").update({ sort_order }).eq("id", link.id),
+      ),
+    );
+
+    const failed = results.find((result) => result.error);
+    if (failed?.error) setError(failed.error.message);
+    load();
+  };
+
+  /** Arrow buttons stay as the keyboard and assistive route. */
+  const move = (index: number, direction: -1 | 1) => {
     const target = index + direction;
     if (target < 0 || target >= links.length) return;
 
-    const a = links[index];
-    const b = links[target];
-    const supabase = createClient();
-
-    setLinks((prev) => {
-      const next = [...prev];
-      next[index] = b;
-      next[target] = a;
-      return next;
-    });
-
-    const [resA, resB] = await Promise.all([
-      supabase.from("link_hub_links").update({ sort_order: b.sort_order }).eq("id", a.id),
-      supabase.from("link_hub_links").update({ sort_order: a.sort_order }).eq("id", b.id),
-    ]);
-    if (resA.error || resB.error) setError(resA.error?.message || resB.error?.message || null);
-    load();
+    const next = [...links];
+    const [moved] = next.splice(index, 1);
+    next.splice(target, 0, moved);
+    setLinks(next);
+    persistOrder(next);
   };
 
   const saveSettings = async () => {
@@ -499,6 +515,8 @@ export default function LinkHubAdminPage() {
                   onPatch={patchLink}
                   onRemove={removeLink}
                   onMove={move}
+                  onLocalReorder={setLinks}
+                  onPersistOrder={persistOrder}
                 />
               )}
             </div>
@@ -534,6 +552,8 @@ function ContentTab({
   onPatch,
   onRemove,
   onMove,
+  onLocalReorder,
+  onPersistOrder,
 }: {
   links: LinkHubLink[];
   busy: boolean;
@@ -553,7 +573,20 @@ function ContentTab({
   onPatch: (id: string, patch: Partial<LinkHubLink>) => void;
   onRemove: (id: string) => void;
   onMove: (index: number, direction: -1 | 1) => void;
+  onLocalReorder: (next: LinkHubLink[]) => void;
+  onPersistOrder: (next: LinkHubLink[]) => void;
 }) {
+  // Reordering is handled by framer-motion's Reorder primitive: it owns
+  // the drag physics, the spring animation as neighbours move aside, and
+  // touch behaviour, all of which a hand-rolled version got wrong.
+  const linksRef = useRef(links);
+  useEffect(() => {
+    linksRef.current = links;
+  }, [links]);
+
+  /** Written once the block is dropped, not on every position change. */
+  const commitOrder = () => onPersistOrder(linksRef.current);
+
   return (
     <Panel
       title="Blocks"
@@ -614,177 +647,338 @@ function ContentTab({
           Nothing here yet. Add the first block above.
         </p>
       ) : (
-        <div className="space-y-2">
-          {links.map((block, index) => {
-            const isEditing = editingId === block.id;
-            const state = scheduleState(block);
-
-            return (
-              <div
-                key={block.id}
-                className={`rounded-xl border px-3 sm:px-4 py-3 transition-all ${
-                  state === "live"
-                    ? "border-white/8 bg-white/[0.02]"
-                    : "border-white/5 bg-white/[0.01] opacity-70"
-                }`}
-              >
-                {isEditing ? (
-                  <div className="space-y-3">
-                    <BlockForm
-                      blockType={block.block_type}
-                      draft={editDraft}
-                      setDraft={setEditDraft}
-                    />
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={onCancelEdit}
-                        className="btn-glass px-4 py-1.5 text-xs rounded-full"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={() => onSaveEdit(block)}
-                        disabled={busy}
-                        className="btn-primary px-4 py-1.5 text-xs rounded-full flex items-center gap-1.5 disabled:opacity-50"
-                      >
-                        <Save className="w-3.5 h-3.5" />
-                        Save
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  // Below sm the row wraps: identity on the first line, the
-                  // controls on their own line, so nothing gets squeezed.
-                  <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 sm:flex-nowrap">
-                    <div className="flex flex-col gap-0.5 shrink-0">
-                      <button
-                        onClick={() => onMove(index, -1)}
-                        disabled={index === 0}
-                        aria-label="Move up"
-                        className="w-6 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
-                      >
-                        <ArrowUp className="w-3 h-3" />
-                      </button>
-                      <button
-                        onClick={() => onMove(index, 1)}
-                        disabled={index === links.length - 1}
-                        aria-label="Move down"
-                        className="w-6 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
-                      >
-                        <ArrowDown className="w-3 h-3" />
-                      </button>
-                    </div>
-
-                    <span className="text-zinc-400 shrink-0">
-                      {block.block_type === "header" ? (
-                        <Heading className="w-4 h-4" />
-                      ) : (
-                        <LinkHubIcon icon={block.icon} className="w-4 h-4" />
-                      )}
-                    </span>
-
-                    <div className="flex-1 min-w-[140px]">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-xs font-semibold text-zinc-100 break-words">
-                          {block.label}
-                        </span>
-                        {block.block_type !== "link" ? (
-                          <Badge>{BLOCK_LABELS[block.block_type].name}</Badge>
-                        ) : null}
-                        {block.is_featured ? <Badge>Featured</Badge> : null}
-                        {block.highlight && block.highlight !== "none" ? (
-                          <Badge>{block.highlight}</Badge>
-                        ) : null}
-                        {state === "scheduled" ? <Badge tone="blue">Scheduled</Badge> : null}
-                        {state === "expired" ? <Badge tone="amber">Ended</Badge> : null}
-                        {state === "hidden" ? <Badge tone="muted">Hidden</Badge> : null}
-                      </div>
-                      {block.block_type === "header" ? null : (
-                        <p className="text-[10px] text-zinc-600 font-mono truncate mt-0.5">
-                          {block.url}
-                        </p>
-                      )}
-                      {block.starts_at || block.ends_at ? (
-                        <p className="text-[9px] text-zinc-600 mt-1 flex items-center gap-1">
-                          <Clock className="w-2.5 h-2.5" />
-                          {block.starts_at ? new Date(block.starts_at).toLocaleString() : "now"}
-                          {" to "}
-                          {block.ends_at ? new Date(block.ends_at).toLocaleString() : "no end"}
-                        </p>
-                      ) : null}
-                    </div>
-
-                    {block.block_type !== "header" ? (
-                      <span
-                        className="hidden sm:flex items-center gap-1.5 text-[10px] text-zinc-500 font-mono shrink-0"
-                        title="Clicks all time"
-                      >
-                        <MousePointerClick className="w-3 h-3" />
-                        {block.clicks}
-                      </span>
-                    ) : null}
-
-                    <div className="flex items-center gap-0.5 shrink-0 ml-auto">
-                      {block.block_type === "link" ? (
-                        <IconButton
-                          label={block.is_featured ? "Unfeature" : "Feature"}
-                          active={block.is_featured}
-                          onClick={() => onPatch(block.id, { is_featured: !block.is_featured })}
-                        >
-                          <Star className="w-3.5 h-3.5" />
-                        </IconButton>
-                      ) : null}
-                      <IconButton
-                        label={block.is_active ? "Hide" : "Show"}
-                        active={block.is_active}
-                        onClick={() => onPatch(block.id, { is_active: !block.is_active })}
-                      >
-                        {block.is_active ? (
-                          <Eye className="w-3.5 h-3.5" />
-                        ) : (
-                          <EyeOff className="w-3.5 h-3.5" />
-                        )}
-                      </IconButton>
-                      <button
-                        onClick={() => onStartEdit(block)}
-                        className="px-2.5 py-1 rounded-full text-[10px] font-semibold text-zinc-400 hover:text-white hover:bg-white/5 cursor-pointer min-h-[28px]"
-                      >
-                        Edit
-                      </button>
-
-                      {confirmDeleteId === block.id ? (
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => onRemove(block.id)}
-                            className="btn-danger px-2.5 py-1 text-[10px]"
-                          >
-                            Delete
-                          </button>
-                          <button
-                            onClick={() => setConfirmDeleteId(null)}
-                            className="px-2 py-1 text-[10px] text-zinc-500 hover:text-white cursor-pointer"
-                          >
-                            No
-                          </button>
-                        </div>
-                      ) : (
-                        <IconButton
-                          label="Delete"
-                          onClick={() => setConfirmDeleteId(block.id)}
-                          danger
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </IconButton>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+        <Reorder.Group
+          as="div"
+          axis="y"
+          values={links}
+          onReorder={onLocalReorder}
+          className="flex flex-col gap-2"
+        >
+          {links.map((block, index) => (
+            <BlockRow
+              key={block.id}
+              block={block}
+              index={index}
+              total={links.length}
+              busy={busy}
+              isEditing={editingId === block.id}
+              editDraft={editDraft}
+              setEditDraft={setEditDraft}
+              confirmDeleteId={confirmDeleteId}
+              setConfirmDeleteId={setConfirmDeleteId}
+              onStartEdit={onStartEdit}
+              onCancelEdit={onCancelEdit}
+              onSaveEdit={onSaveEdit}
+              onPatch={onPatch}
+              onRemove={onRemove}
+              onMove={onMove}
+              onDropped={commitOrder}
+            />
+          ))}
+        </Reorder.Group>
       )}
     </Panel>
+  );
+}
+
+/**
+ * One row in the blocks list.
+ *
+ * Extracted so each row can own its own drag controls: dragging starts
+ * from the handle only, leaving the buttons and fields inside the row
+ * clickable.
+ */
+function BlockRow({
+  block,
+  index,
+  total,
+  busy,
+  isEditing,
+  editDraft,
+  setEditDraft,
+  confirmDeleteId,
+  setConfirmDeleteId,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onPatch,
+  onRemove,
+  onMove,
+  onDropped,
+}: {
+  block: LinkHubLink;
+  index: number;
+  total: number;
+  busy: boolean;
+  isEditing: boolean;
+  editDraft: Draft;
+  setEditDraft: React.Dispatch<React.SetStateAction<Draft>>;
+  confirmDeleteId: string | null;
+  setConfirmDeleteId: (id: string | null) => void;
+  onStartEdit: (block: LinkHubLink) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: (block: LinkHubLink) => void;
+  onPatch: (id: string, patch: Partial<LinkHubLink>) => void;
+  onRemove: (id: string) => void;
+  onMove: (index: number, direction: -1 | 1) => void;
+  onDropped: () => void;
+}) {
+  const controls = useDragControls();
+  const [dragging, setDragging] = useState(false);
+  const state = scheduleState(block);
+
+  return (
+    <Reorder.Item
+      as="div"
+      value={block}
+      // Only the handle starts a drag, so the row's own controls still work.
+      dragListener={false}
+      dragControls={controls}
+      onDragStart={() => setDragging(true)}
+      onDragEnd={() => {
+        setDragging(false);
+        onDropped();
+      }}
+      animate={{ scale: dragging ? 1.015 : 1 }}
+      transition={{ type: "spring", stiffness: 600, damping: 40 }}
+      // Reorder manages its own stacking while dragging; this only gives
+      // it a positioned box to work against.
+      style={{ position: "relative" }}
+      className={`rounded-xl border px-3 sm:px-4 py-3 ${
+        dragging
+          ? "border-white/25 bg-zinc-900 shadow-2xl shadow-black/60 cursor-grabbing"
+          : state === "live"
+            ? "border-white/8 bg-white/[0.02]"
+            : "border-white/5 bg-white/[0.01] opacity-70"
+      }`}
+    >
+      {isEditing ? (
+        <div className="space-y-3">
+          <BlockForm blockType={block.block_type} draft={editDraft} setDraft={setEditDraft} />
+          <div className="flex justify-end gap-2">
+            <button onClick={onCancelEdit} className="btn-glass px-4 py-1.5 text-xs rounded-full">
+              Cancel
+            </button>
+            <button
+              onClick={() => onSaveEdit(block)}
+              disabled={busy}
+              className="btn-primary px-4 py-1.5 text-xs rounded-full flex items-center gap-1.5 disabled:opacity-50"
+            >
+              <Save className="w-3.5 h-3.5" />
+              Save
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          {/* Identity line. On a phone the controls move to their own bar
+              below, so the label and address keep the full width. */}
+          <div className="flex items-start gap-2.5 sm:gap-3">
+            <div
+              onPointerDown={(event) => controls.start(event)}
+              role="button"
+              tabIndex={-1}
+              aria-label="Drag to reorder"
+              title="Drag to reorder"
+              // touch-none stops the browser scrolling the page instead of
+              // dragging when the handle is held on a phone.
+              className={`touch-none select-none shrink-0 w-8 h-11 sm:w-7 sm:h-10 -ml-1 flex items-center justify-center rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-white/5 active:bg-white/10 ${
+                dragging ? "cursor-grabbing text-white bg-white/10" : "cursor-grab"
+              }`}
+            >
+              <GripVertical className="w-4 h-4" />
+            </div>
+
+            <span className="text-zinc-400 shrink-0 mt-1">
+              {block.block_type === "header" ? (
+                <Heading className="w-4 h-4" />
+              ) : (
+                <LinkHubIcon icon={block.icon} className="w-4 h-4" />
+              )}
+            </span>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-xs font-semibold text-zinc-100 break-words">
+                  {block.label}
+                </span>
+                {block.block_type !== "link" ? (
+                  <Badge>{BLOCK_LABELS[block.block_type].name}</Badge>
+                ) : null}
+                {block.is_featured ? <Badge>Featured</Badge> : null}
+                {block.highlight && block.highlight !== "none" ? (
+                  <Badge>{block.highlight}</Badge>
+                ) : null}
+                {state === "scheduled" ? <Badge tone="blue">Scheduled</Badge> : null}
+                {state === "expired" ? <Badge tone="amber">Ended</Badge> : null}
+                {state === "hidden" ? <Badge tone="muted">Hidden</Badge> : null}
+              </div>
+
+              {block.block_type === "header" ? null : (
+                <p className="text-[10px] text-zinc-600 font-mono truncate mt-0.5">{block.url}</p>
+              )}
+
+              {block.starts_at || block.ends_at ? (
+                <p className="text-[9px] text-zinc-600 mt-1 flex items-center gap-1">
+                  <Clock className="w-2.5 h-2.5 shrink-0" />
+                  <span className="truncate">
+                    {block.starts_at ? new Date(block.starts_at).toLocaleString() : "now"}
+                    {" to "}
+                    {block.ends_at ? new Date(block.ends_at).toLocaleString() : "no end"}
+                  </span>
+                </p>
+              ) : null}
+            </div>
+
+            {/* Desktop controls sit inline with the label. */}
+            <div className="hidden sm:flex items-center gap-2 shrink-0">
+              <div className="flex flex-col gap-0.5">
+                <button
+                  onClick={() => onMove(index, -1)}
+                  disabled={index === 0}
+                  aria-label="Move up"
+                  className="w-6 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
+                >
+                  <ArrowUp className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={() => onMove(index, 1)}
+                  disabled={index === total - 1}
+                  aria-label="Move down"
+                  className="w-6 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
+                >
+                  <ArrowDown className="w-3 h-3" />
+                </button>
+              </div>
+
+              {block.block_type !== "header" ? (
+                <span
+                  className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-mono"
+                  title="Clicks all time"
+                >
+                  <MousePointerClick className="w-3 h-3" />
+                  {block.clicks}
+                </span>
+              ) : null}
+
+              <Controls
+                block={block}
+                confirmDeleteId={confirmDeleteId}
+                setConfirmDeleteId={setConfirmDeleteId}
+                onStartEdit={onStartEdit}
+                onPatch={onPatch}
+                onRemove={onRemove}
+              />
+            </div>
+          </div>
+
+          {/* Phone control bar, so nothing is squeezed into a narrow row. */}
+          <div className="sm:hidden flex items-center gap-1 mt-2.5 pt-2.5 border-t border-white/5">
+            <button
+              onClick={() => onMove(index, -1)}
+              disabled={index === 0}
+              aria-label="Move up"
+              className="w-9 h-9 flex items-center justify-center rounded-full text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
+            >
+              <ArrowUp className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => onMove(index, 1)}
+              disabled={index === total - 1}
+              aria-label="Move down"
+              className="w-9 h-9 flex items-center justify-center rounded-full text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
+            >
+              <ArrowDown className="w-3.5 h-3.5" />
+            </button>
+
+            {block.block_type !== "header" ? (
+              <span
+                className="flex items-center gap-1 text-[10px] text-zinc-500 font-mono ml-1"
+                title="Clicks all time"
+              >
+                <MousePointerClick className="w-3 h-3" />
+                {block.clicks}
+              </span>
+            ) : null}
+
+            <div className="ml-auto flex items-center gap-0.5">
+              <Controls
+                block={block}
+                confirmDeleteId={confirmDeleteId}
+                setConfirmDeleteId={setConfirmDeleteId}
+                onStartEdit={onStartEdit}
+                onPatch={onPatch}
+                onRemove={onRemove}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </Reorder.Item>
+  );
+}
+
+/** The per-block actions, shared by the desktop row and the phone bar. */
+function Controls({
+  block,
+  confirmDeleteId,
+  setConfirmDeleteId,
+  onStartEdit,
+  onPatch,
+  onRemove,
+}: {
+  block: LinkHubLink;
+  confirmDeleteId: string | null;
+  setConfirmDeleteId: (id: string | null) => void;
+  onStartEdit: (block: LinkHubLink) => void;
+  onPatch: (id: string, patch: Partial<LinkHubLink>) => void;
+  onRemove: (id: string) => void;
+}) {
+  return (
+    <>
+      {block.block_type === "link" ? (
+        <IconButton
+          label={block.is_featured ? "Unfeature" : "Feature"}
+          active={block.is_featured}
+          onClick={() => onPatch(block.id, { is_featured: !block.is_featured })}
+        >
+          <Star className="w-3.5 h-3.5" />
+        </IconButton>
+      ) : null}
+
+      <IconButton
+        label={block.is_active ? "Hide" : "Show"}
+        active={block.is_active}
+        onClick={() => onPatch(block.id, { is_active: !block.is_active })}
+      >
+        {block.is_active ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+      </IconButton>
+
+      <button
+        onClick={() => onStartEdit(block)}
+        className="px-2.5 rounded-full text-[10px] font-semibold text-zinc-400 hover:text-white hover:bg-white/5 cursor-pointer min-h-[32px]"
+      >
+        Edit
+      </button>
+
+      {confirmDeleteId === block.id ? (
+        <div className="flex items-center gap-1">
+          <button onClick={() => onRemove(block.id)} className="btn-danger px-2.5 py-1 text-[10px]">
+            Delete
+          </button>
+          <button
+            onClick={() => setConfirmDeleteId(null)}
+            className="px-2 py-1 text-[10px] text-zinc-500 hover:text-white cursor-pointer"
+          >
+            No
+          </button>
+        </div>
+      ) : (
+        <IconButton label="Delete" onClick={() => setConfirmDeleteId(block.id)} danger>
+          <Trash2 className="w-3.5 h-3.5" />
+        </IconButton>
+      )}
+    </>
   );
 }
 
