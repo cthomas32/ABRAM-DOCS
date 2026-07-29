@@ -65,9 +65,9 @@ export default function ExploreSection() {
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={{ once: true, margin: "0px", amount: 0.2 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="text-center max-w-2xl mx-auto mb-14 md:mb-20"
         >
@@ -89,11 +89,11 @@ export default function ExploreSection() {
             return (
               <motion.div
                 key={suite.overline}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, margin: "0px", amount: 0.1 }}
                 transition={{ duration: 0.6, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative flex flex-col rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-7 md:p-8 hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
+                className="group relative flex flex-col rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-7 md:p-8 hover:border-white/10 hover:bg-zinc-900/30 transition-colors transition-shadow duration-300 shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transform-gpu"
               >
                 {/* Viewfinder brackets */}
                 <div className="absolute top-0 left-0 w-[6px] h-[6px] border-l border-t border-white/5 group-hover:border-white/15 transition-colors duration-300" />

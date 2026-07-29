@@ -61,7 +61,7 @@ export default function LinkHubList({ links }: { links: LinkHubLink[] }) {
               delay: Math.min(index * 0.04, 0.3),
               ease: [0.22, 1, 0.36, 1],
             }}
-            className={`group relative flex items-center gap-4 rounded-2xl border px-5 py-4 min-h-[64px] transition-all duration-200 cursor-pointer ${
+            className={`group relative flex items-center gap-4 rounded-2xl border px-5 py-4 min-h-[64px] transition-colors duration-200 cursor-pointer transform-gpu ${
               link.is_featured
                 ? "border-white/15 bg-white text-black hover:bg-zinc-200"
                 : "border-white/8 bg-zinc-950/40 backdrop-blur-md text-white hover:border-white/20 hover:bg-zinc-900/50"

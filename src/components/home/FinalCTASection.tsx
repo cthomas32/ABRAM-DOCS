@@ -11,13 +11,13 @@ export default function FinalCTASection() {
 
       {/* Wide Glass Banner — matches pillar card styling */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
+        viewport={{ once: true, margin: "0px", amount: 0.1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 w-full max-w-5xl mx-auto px-6"
       >
-        <div className="group relative rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md px-8 py-16 md:px-16 md:py-20 text-center flex flex-col items-center overflow-hidden hover:border-white/10 hover:bg-zinc-900/30 transition-all duration-300 shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+        <div className="group relative rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md px-8 py-16 md:px-16 md:py-20 text-center flex flex-col items-center overflow-hidden hover:border-white/10 hover:bg-zinc-900/30 transition-colors transition-shadow duration-300 shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transform-gpu">
           {/* Viewfinder brackets — matching pillar cards */}
           <div className="absolute top-0 left-0 w-[6px] h-[6px] border-l border-t border-white/5 group-hover:border-white/15 transition-colors duration-300" />
           <div className="absolute top-0 right-0 w-[6px] h-[6px] border-r border-t border-white/5 group-hover:border-white/15 transition-colors duration-300" />

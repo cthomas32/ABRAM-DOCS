@@ -102,9 +102,9 @@ export default function FAQSection() {
                 key={idx}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
+                viewport={{ once: true, margin: "0px", amount: 0.1 }}
                 transition={{ duration: 0.5, delay: idx * 0.05 }}
-                className="group rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md overflow-hidden hover:border-white/10 hover:bg-zinc-900/20 transition-all duration-300 shadow-sm"
+                className="group rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md overflow-hidden hover:border-white/10 hover:bg-zinc-900/20 transition-colors duration-300 shadow-sm transform-gpu"
               >
                 {/* Accordion Trigger Header */}
                 <button
