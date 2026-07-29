@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { signOut as signOutAction } from "../actions";
+import SessionGuard, { useSessionGuard } from "@/components/admin/SessionGuard";
 import {
   Newspaper,
   BookOpen,
@@ -60,10 +61,19 @@ function isLinkActive(href: string, pathname: string | null) {
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SessionGuard>
+      <DashboardChrome>{children}</DashboardChrome>
+    </SessionGuard>
+  );
+}
+
+function DashboardChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [currentUserEmail, setCurrentUserEmail] = useState<string>("ABRAM Team");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { markSigningOut } = useSessionGuard();
   const supabase = createClient();
 
   useEffect(() => {
@@ -107,6 +117,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   const handleSignOut = async () => {
+    markSigningOut();
     const result = await signOutAction();
     if (!result.error) {
       router.push("/admin");
@@ -166,10 +177,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Link
                       key={link.id}
                       href={link.href}
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-full text-[11px] font-semibold select-none transition-all duration-200 ${
+                      // The transparent border keeps active and inactive rows
+                      // the same height, so selecting one does not nudge the list.
+                      className={`flex items-center gap-2.5 px-3 py-2 rounded-full text-[11px] font-semibold select-none border transition-colors duration-200 ${
                         isActive
-                          ? "bg-white text-black font-bold border border-white"
-                          : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+                          ? "bg-white text-black font-bold border-white"
+                          : "border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5 shrink-0" />
