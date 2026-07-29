@@ -18,11 +18,11 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Copy,
-  Check
+  Copy
 } from "lucide-react";
 import { getSubscribers, manualAddSubscriber, checkResendIntegrationStatus, syncResendContacts } from "../../resend-actions";
 import { AnimatePresence, motion } from "framer-motion";
+import Modal from "@/components/admin/Modal";
 
 interface Subscriber {
   id: string;
@@ -396,30 +396,15 @@ export default function SubscribersPage() {
           </div>
         </div>
 
-        {/* Integration Panel */}
-        <div className="glass-panel p-5 rounded-2xl border border-white/5 space-y-4">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 min-w-0">
-              <Globe className="w-4 h-4 text-zinc-400 shrink-0" />
-              <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
-                Resend Integration Status
-              </span>
-            </div>
-            <button
-              onClick={checkResend}
-              disabled={checkingResend}
-              className="text-[10px] text-zinc-500 hover:text-zinc-300 flex items-center gap-1 cursor-pointer font-sans shrink-0 min-h-[36px] sm:min-h-0"
-            >
-              <RefreshCw className={`w-3 h-3 ${checkingResend ? "animate-spin" : ""}`} />
-              <span>Verify API</span>
-            </button>
-          </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Integration Panel — one line when healthy, the detail only shows
+            when something needs attention. */}
+        <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-white/5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-start sm:items-center gap-3 min-w-0">
+              <Globe className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5 sm:mt-0" />
               <span className={`text-[10px] px-2 py-0.5 rounded border font-semibold shrink-0 ${
-                resendStatus.status === "Connected" 
-                  ? "bg-green-500/10 border-green-500/20 text-green-400" 
+                resendStatus.status === "Connected"
+                  ? "bg-green-500/10 border-green-500/20 text-green-400"
                   : "bg-red-500/10 border-red-500/20 text-red-400"
               }`}>
                 {resendStatus.status}
@@ -429,20 +414,18 @@ export default function SubscribersPage() {
               </p>
             </div>
 
-            {resendStatus.status === "Connected" && (
-              <button
-                onClick={handleSyncContacts}
-                disabled={syncingContacts || checkingResend}
-                className="btn-glass h-11 sm:h-8 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans transition-all duration-200 shrink-0"
-              >
-                {syncingContacts ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <RefreshCw className="w-3.5 h-3.5" />
-                )}
-                <span>Sync Contacts from Resend</span>
-              </button>
-            )}
+            <button
+              onClick={resendStatus.status === "Connected" ? handleSyncContacts : checkResend}
+              disabled={syncingContacts || checkingResend}
+              className="btn-glass h-11 sm:h-8 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-50"
+            >
+              {syncingContacts || checkingResend ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <RefreshCw className="w-3.5 h-3.5" />
+              )}
+              <span>{resendStatus.status === "Connected" ? "Sync Contacts" : "Retry Connection"}</span>
+            </button>
           </div>
         </div>
 
@@ -672,27 +655,20 @@ export default function SubscribersPage() {
         )}
 
         {/* Add Subscriber Modal */}
-        <AnimatePresence>
-          {showAddModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setShowAddModal(false)}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-              />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-md p-5 sm:p-6 rounded-2xl border border-white/5 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
-              >
-                <h3 className="text-sm font-bold text-white tracking-tight font-sans flex items-center gap-2">
-                  <UserPlus className="w-4 h-4 text-zinc-400" />
-                  Add New Subscriber
-                </h3>
-                <form onSubmit={handleAddSubscriber} className="space-y-4">
+        <Modal
+          open={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          dismissable={!submitting}
+          labelledBy="add-subscriber-title"
+        >
+          <h3
+            id="add-subscriber-title"
+            className="text-sm font-bold text-white tracking-tight font-sans flex items-center gap-2"
+          >
+            <UserPlus className="w-4 h-4 text-zinc-400" />
+            Add New Subscriber
+          </h3>
+          <form onSubmit={handleAddSubscriber} className="space-y-4">
                   <div>
                     <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Email Address</label>
                     <input
@@ -808,17 +784,14 @@ export default function SubscribersPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans"
+                      className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50"
                     >
                       {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                       <span>Register Contact</span>
                     </button>
                   </div>
                 </form>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
+        </Modal>
 
         {/* Toast Notifications */}
         <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">

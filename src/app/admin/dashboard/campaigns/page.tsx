@@ -309,10 +309,10 @@ export default function CampaignAnalyticsPage() {
               <button
                 key={range.days}
                 onClick={() => setDays(range.days)}
-                className={`px-4 min-h-[40px] sm:min-h-0 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                className={`px-4 min-h-[40px] sm:min-h-[32px] rounded-full text-xs font-semibold border transition-colors duration-200 cursor-pointer ${
                   days === range.days
-                    ? "bg-white text-black"
-                    : "bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-white"
+                    ? "bg-white text-black border-white"
+                    : "bg-white/[0.04] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
                 }`}
               >
                 {range.label}
@@ -341,10 +341,10 @@ export default function CampaignAnalyticsPage() {
               <button
                 key={page.label}
                 onClick={() => setPageFilter(page.slug)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                className={`px-4 min-h-[32px] rounded-full text-xs font-semibold border transition-colors duration-200 cursor-pointer ${
                   pageFilter === page.slug
-                    ? "bg-white text-black"
-                    : "bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-white"
+                    ? "bg-white text-black border-white"
+                    : "bg-white/[0.04] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
                 }`}
               >
                 {page.label}
@@ -368,8 +368,10 @@ export default function CampaignAnalyticsPage() {
                 variants={itemVariants}
                 className="glass-panel p-4 sm:p-5 rounded-2xl flex flex-col justify-between h-28 sm:h-32 border-white/8 select-none"
               >
-                <div className="flex justify-between items-start gap-2">
-                  <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider break-words">
+                {/* Two lines are reserved whether the label wraps or not, so
+                    the values stay on one baseline across the row. */}
+                <div className="flex justify-between items-start gap-2 min-h-[2.2em]">
+                  <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider break-words leading-tight">
                     {kpi.label}
                   </span>
                   <Icon className="w-4 h-4 text-zinc-400 shrink-0" />
@@ -519,9 +521,10 @@ function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
         </div>
       </div>
 
+      {/* The cap stops two days of data rendering as two enormous slabs. */}
       <div className="mt-6 flex items-end gap-1 h-[160px] overflow-x-auto">
         {rows.map((row) => (
-          <div key={row.day} className="flex-1 min-w-[10px] flex flex-col items-center gap-1 group">
+          <div key={row.day} className="flex-1 min-w-[10px] max-w-[56px] flex flex-col items-center gap-1 group">
             <div className="w-full flex flex-col justify-end h-[140px] gap-0.5">
               {row.signups > 0 ? (
                 <div

@@ -3,22 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { motion } from "framer-motion";
-import { 
-  TrendingUp, 
-  Users, 
-  Eye, 
-  Mail, 
-  Percent, 
-  Loader2, 
+import {
+  Users,
+  Eye,
+  Mail,
+  Percent,
+  Loader2,
   AlertTriangle,
-  BookOpen,
-  Tag,
   ArrowRight,
-  RefreshCw,
-  Clock,
-  ExternalLink,
-  ChevronRight,
-  TrendingDown
+  RefreshCw
 } from "lucide-react";
 import Link from "next/link";
 
@@ -226,11 +219,37 @@ export default function DashboardOverviewPage() {
     ? ((metrics.subscribersCount / trafficVal) * 100).toFixed(1)
     : (isFallback ? "3.8" : "0.0");
 
+  // Each card states what it actually counts. There is no period-over-period
+  // baseline stored yet, so no card claims a trend it cannot back up.
   const kpis = [
-    { label: "Total Subscribers", value: metrics.subscribersCount.toLocaleString(), change: "+14.2% MoM", icon: Users, route: "/admin/dashboard/subscribers" },
-    { label: "Blog Views", value: (isFallback ? 45210 : metrics.totalViews).toLocaleString(), change: "+8.6% WoW", icon: Eye, route: "/admin/dashboard/blog" },
-    { label: "Email Campaigns", value: metrics.campaignsCount.toLocaleString(), change: "100% Sent", icon: Mail, route: "/admin/dashboard/broadcasts" },
-    { label: "Conversion Rate", value: `${calculatedConversion}%`, change: "+0.4% MoM", icon: Percent, route: "/admin/dashboard/subscribers" },
+    {
+      label: "Total Subscribers",
+      value: metrics.subscribersCount.toLocaleString(),
+      hint: `${metrics.marketingListCount.toLocaleString()} on the marketing list`,
+      icon: Users,
+      route: "/admin/dashboard/subscribers",
+    },
+    {
+      label: "Blog Views",
+      value: (isFallback ? 45210 : metrics.totalViews).toLocaleString(),
+      hint: `${(isFallback ? 38240 : metrics.totalReads).toLocaleString()} reads`,
+      icon: Eye,
+      route: "/admin/dashboard/blog",
+    },
+    {
+      label: "Email Campaigns",
+      value: metrics.campaignsCount.toLocaleString(),
+      hint: `${metrics.recentCampaigns.length} in the recent log`,
+      icon: Mail,
+      route: "/admin/dashboard/broadcasts",
+    },
+    {
+      label: "Conversion Rate",
+      value: `${calculatedConversion}%`,
+      hint: "Subscribers per estimated visit",
+      icon: Percent,
+      route: "/admin/dashboard/subscribers",
+    },
   ];
 
   return (
@@ -282,26 +301,26 @@ export default function DashboardOverviewPage() {
           animate="show"
           className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 font-sans"
         >
-          {kpis.map((kpi, idx) => {
+          {kpis.map((kpi) => {
             const Icon = kpi.icon;
             return (
-              <motion.div key={idx} variants={itemVariants}>
-                <Link 
+              <motion.div key={kpi.label} variants={itemVariants}>
+                <Link
                   href={kpi.route}
                   className="glass-panel glass-panel-hover p-4 sm:p-5 rounded-2xl flex flex-col justify-between h-28 sm:h-32 border-white/8 hover:border-white/25 select-none"
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start gap-2">
                     <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">
                       {kpi.label}
                     </span>
-                    <Icon className="w-4 h-4 text-zinc-400" />
+                    <Icon className="w-4 h-4 text-zinc-400 shrink-0" />
                   </div>
-                  <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                    <span className="text-xl sm:text-2xl font-bold text-white tracking-tight font-mono">
+                  <div className="mt-4">
+                    <span className="block text-xl sm:text-2xl font-bold text-white tracking-tight font-mono">
                       {kpi.value}
                     </span>
-                    <span className="text-[9px] font-bold text-green-400 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/10 w-max">
-                      {kpi.change}
+                    <span className="block text-[9px] text-zinc-500 font-medium truncate">
+                      {kpi.hint}
                     </span>
                   </div>
                 </Link>
@@ -356,10 +375,7 @@ export default function DashboardOverviewPage() {
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </div>
+                    <span className="h-2 w-2 rounded-full bg-green-500 shrink-0" />
                     <span className="font-bold text-white text-xs">Google Analytics</span>
                   </div>
                   <span className="text-[9px] bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-0.5 rounded font-mono font-bold">
@@ -412,10 +428,7 @@ export default function DashboardOverviewPage() {
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </div>
+                    <span className="h-2 w-2 rounded-full bg-green-500 shrink-0" />
                     <span className="font-bold text-white text-xs">Resend Email Engine</span>
                   </div>
                   <span className="text-[9px] bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-0.5 rounded font-mono font-bold">
@@ -516,7 +529,7 @@ function TrailingTrendsChart({ data }: { data: SparklinePoint[] }) {
             <span className="text-zinc-300">Page Views</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 bg-[#8ECAFF] rounded-full animate-pulse" />
+            <span className="w-3 h-0.5 bg-[#8ECAFF] rounded-full" />
             <span className="text-zinc-300">Newsletter Sign-ups</span>
           </div>
         </div>

@@ -32,6 +32,7 @@ import {
 } from "../../resend-actions";
 import { AnimatePresence, motion } from "framer-motion";
 import ActionSheet, { type SheetAction } from "@/components/admin/ActionSheet";
+import Modal from "@/components/admin/Modal";
 
 interface Campaign {
   id: string;
@@ -892,44 +893,8 @@ export default function BroadcastsPage() {
                       Create or modify your newsletter campaign, select recipients, and review rendering side-by-side.
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowComposeModal(false);
-                        setEditingCampaignId(null);
-                      }}
-                      className="btn-glass h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans"
-                    >
-                      Cancel
-                    </button>
-                    {htmlContentInput && (
-                      <button
-                        type="button"
-                        onClick={() => setShowTestEmailModal(true)}
-                        className="btn-glass h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
-                      >
-                        <Send className="w-3.5 h-3.5 text-zinc-400" />
-                        <span>Send Test</span>
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const form = document.getElementById("campaignFormInline") as HTMLFormElement;
-                        if (form) form.requestSubmit();
-                      }}
-                      disabled={submittingBroadcast}
-                      className="btn-primary h-9 px-5 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
-                    >
-                      {submittingBroadcast ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <Check className="w-3.5 h-3.5" />
-                      )}
-                      <span>Save Campaign Draft</span>
-                    </button>
-                  </div>
+                  {/* The composer's actions live in one sticky bar at the
+                      bottom of the form, so they are not repeated here. */}
                 </div>
 
                 {/* 1. Layout Selection */}
@@ -1232,49 +1197,49 @@ export default function BroadcastsPage() {
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("h1")}
-                              className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-white rounded text-[10px] transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               H1
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("h2")}
-                              className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-white rounded text-[10px] transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               H2
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("p")}
-                              className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-white rounded text-[10px] transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               Paragraph
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("a")}
-                              className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-white rounded text-[10px] transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               Link
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("cta")}
-                              className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-white rounded text-[10px] transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               CTA Button
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("bold")}
-                              className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-white rounded text-[10px] transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               Bold
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("ul")}
-                              className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-white rounded text-[10px] transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               List
                             </button>
@@ -1285,21 +1250,21 @@ export default function BroadcastsPage() {
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_first_name")}
-                              className="px-1.5 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono rounded text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               first_name
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_last_name")}
-                              className="px-1.5 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono rounded text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               last_name
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_unsubscribe")}
-                              className="px-1.5 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono rounded text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               unsubscribe_url
                             </button>
@@ -1310,21 +1275,21 @@ export default function BroadcastsPage() {
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_first_name")}
-                              className="px-1.5 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono rounded text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               first_name
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_last_name")}
-                              className="px-1.5 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono rounded text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               last_name
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_unsubscribe")}
-                              className="px-1.5 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono rounded text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               unsubscribe_url
                             </button>
@@ -1383,15 +1348,16 @@ export default function BroadcastsPage() {
                     </div>
                   </div>
 
-                  {/* Form Footer Actions */}
-                  <div className="flex flex-wrap justify-end gap-2 pt-3 border-t border-white/5">
+                  {/* Form Footer Actions — sticks to the bottom of the viewport
+                      so a long compose form never hides the save button. */}
+                  <div className="sticky bottom-0 -mx-4 sm:-mx-6 -mb-4 sm:-mb-6 px-4 sm:px-6 py-3 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 border-t border-white/8 bg-[#0A0A0A]/90 backdrop-blur-xl rounded-b-2xl">
                     <button
                       type="button"
                       onClick={() => {
                         setShowComposeModal(false);
                         setEditingCampaignId(null);
                       }}
-                      className="btn-glass h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans"
+                      className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full font-sans"
                     >
                       Cancel
                     </button>
@@ -1399,7 +1365,7 @@ export default function BroadcastsPage() {
                       <button
                         type="button"
                         onClick={() => setShowTestEmailModal(true)}
-                        className="btn-glass h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                        className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans"
                       >
                         <Send className="w-3.5 h-3.5 text-zinc-400" />
                         <span>Send Test Email</span>
@@ -1408,7 +1374,7 @@ export default function BroadcastsPage() {
                     <button
                       type="submit"
                       disabled={submittingBroadcast}
-                      className="btn-primary h-9 px-5 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                      className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50"
                     >
                       {submittingBroadcast ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1914,29 +1880,22 @@ export default function BroadcastsPage() {
         />
 
         {/* Safety Confirmation Modal (draft → send) */}
-        <AnimatePresence>
-          {showConfirmModal && selectedCampaign && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => !approving && setShowConfirmModal(false)}
-                className="fixed inset-0 bg-black/70 backdrop-blur-sm"
-              />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-md p-5 sm:p-6 rounded-2xl border border-red-500/20 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
-              >
+        <Modal
+          open={showConfirmModal && !!selectedCampaign}
+          onClose={() => setShowConfirmModal(false)}
+          dismissable={!approving}
+          labelledBy="confirm-send-title"
+          panelClassName="border-red-500/20"
+        >
+          {selectedCampaign && (
+            <>
                 <div className="flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider w-fit font-sans">
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span>Critical: Manual Dispatch Authorization</span>
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-bold text-white tracking-tight font-sans">
+                  <h3 id="confirm-send-title" className="text-sm font-bold text-white tracking-tight font-sans">
                     Confirm Email Campaign Send?
                   </h3>
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans">
@@ -1983,40 +1942,30 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleApproveAndSend}
                     disabled={approving || confirmInput !== "CONFIRM SEND"}
-                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans bg-red-600 hover:bg-red-500 text-white border-red-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans bg-red-600 hover:bg-red-500 text-white border-red-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {approving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                    {approving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                     <span>Approve &amp; Send Immediately</span>
                   </button>
                 </div>
-              </motion.div>
-            </div>
+            </>
           )}
-        </AnimatePresence>
+        </Modal>
 
         {/* Test Email Modal */}
-        <AnimatePresence>
-          {showTestEmailModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => !sendingTestEmail && setShowTestEmailModal(false)}
-                className="fixed inset-0 bg-black/70 backdrop-blur-sm"
-              />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-sm p-5 sm:p-6 rounded-2xl border border-white/10 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
-              >
+        <Modal
+          open={showTestEmailModal}
+          onClose={() => setShowTestEmailModal(false)}
+          dismissable={!sendingTestEmail}
+          size="sm"
+          labelledBy="test-email-title"
+        >
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
                     <Send className="w-4 h-4 text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white font-sans">Send Test Email</h3>
+                    <h3 id="test-email-title" className="text-sm font-bold text-white font-sans">Send Test Email</h3>
                     <p className="text-[10px] text-zinc-500 font-sans mt-0.5">Verify layout before sending to everyone</p>
                   </div>
                 </div>
@@ -2056,7 +2005,7 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleSendTestEmail}
                     disabled={sendingTestEmail || !testEmailAddress.includes("@")}
-                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {sendingTestEmail ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -2066,35 +2015,25 @@ export default function BroadcastsPage() {
                     <span>{sendingTestEmail ? "Sending..." : "Send Test"}</span>
                   </button>
                 </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
+        </Modal>
 
         {/* Resend Same Audience Confirmation Modal */}
-        <AnimatePresence>
-          {showResendModal && selectedCampaign && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => !resending && setShowResendModal(false)}
-                className="fixed inset-0 bg-black/70 backdrop-blur-sm"
-              />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-md p-5 sm:p-6 rounded-2xl border border-yellow-500/20 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
-              >
+        <Modal
+          open={showResendModal && !!selectedCampaign}
+          onClose={() => { setShowResendModal(false); setResendConfirmInput(""); }}
+          dismissable={!resending}
+          labelledBy="confirm-resend-title"
+          panelClassName="border-yellow-500/20"
+        >
+          {selectedCampaign && (
+            <>
                 <div className="flex items-center gap-2 text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider w-fit font-sans">
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Resend Authorization</span>
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-bold text-white tracking-tight font-sans">
+                  <h3 id="confirm-resend-title" className="text-sm font-bold text-white tracking-tight font-sans">
                     Resend to Same Audience?
                   </h3>
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans">
@@ -2132,16 +2071,15 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleResendSameAudience}
                     disabled={resending || resendConfirmInput !== "CONFIRM SEND"}
-                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans bg-yellow-600 hover:bg-yellow-500 text-white border-yellow-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans bg-yellow-600 hover:bg-yellow-500 text-white border-yellow-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {resending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                     <span>{resending ? "Resending..." : "Confirm Resend"}</span>
                   </button>
                 </div>
-              </motion.div>
-            </div>
+            </>
           )}
-        </AnimatePresence>
+        </Modal>
 
         {/* Toast Notifications */}
         <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">
