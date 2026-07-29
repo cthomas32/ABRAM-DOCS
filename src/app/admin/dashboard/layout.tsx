@@ -140,10 +140,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </header>
 
       {/* Left Navigation Sidebar (Desktop) */}
-      <aside className="hidden md:flex w-64 border-r border-white/5 bg-zinc-950/40 flex-col h-screen sticky top-0 justify-between shrink-0 p-6">
-        <div className="space-y-6 min-h-0 overflow-y-auto">
-          <div className="flex flex-col gap-1.5 pb-4 border-b border-white/5">
-            <span className="font-bold tracking-tight text-white text-sm">
+      <aside className="hidden md:flex w-[204px] xl:w-56 border-r border-white/5 bg-zinc-950/40 flex-col h-screen sticky top-0 justify-between shrink-0 px-3 py-5">
+        <div className="space-y-5 min-h-0 overflow-y-auto">
+          <div className="flex flex-col gap-1.5 px-2 pb-4 border-b border-white/5">
+            <span className="font-bold tracking-tight text-white text-[13px] leading-snug">
               ABRAM Marketing Engine
             </span>
             <span className="text-[9px] bg-white/[0.04] border border-white/10 px-2 py-0.5 rounded text-zinc-400 font-mono w-max">
@@ -151,11 +151,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </span>
           </div>
 
-          <nav className="flex flex-col gap-5">
+          <nav className="flex flex-col gap-4">
             {NAV_GROUPS.map((group) => (
               <div key={group.id} className="flex flex-col gap-1.5">
                 {group.label && (
-                  <span className="text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-600 px-4 mb-0.5">
+                  <span className="text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-600 px-3 mb-0.5">
                     {group.label}
                   </span>
                 )}
@@ -166,14 +166,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Link
                       key={link.id}
                       href={link.href}
-                      className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-xs font-semibold select-none transition-all duration-200 ${
+                      className={`flex items-center gap-2.5 px-3 py-2 rounded-full text-[11px] font-semibold select-none transition-all duration-200 ${
                         isActive
                           ? "bg-white text-black font-bold border border-white"
                           : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                       }`}
                     >
-                      <Icon className="w-4 h-4 shrink-0" />
-                      <span>{link.label}</span>
+                      <Icon className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{link.label}</span>
                     </Link>
                   );
                 })}
@@ -182,16 +182,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </nav>
         </div>
 
-        <div className="flex flex-col gap-3 pt-4 border-t border-white/5 shrink-0">
-          <div className="flex items-center gap-2 px-2 text-zinc-400 text-xs truncate">
-            <User className="w-4 h-4 text-zinc-500 shrink-0" />
-            <span className="truncate">{currentUserEmail}</span>
+        <div className="flex flex-col gap-2.5 pt-4 border-t border-white/5 shrink-0">
+          <div className="flex items-center gap-2 px-2 text-zinc-400 text-[11px] min-w-0">
+            <User className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+            <span className="truncate" title={currentUserEmail}>
+              {currentUserEmail}
+            </span>
           </div>
           <button
             onClick={handleSignOut}
-            className="btn-glass flex items-center justify-center gap-2 px-4 py-2 text-xs font-semibold rounded-full w-full"
+            className="btn-glass flex items-center justify-center gap-2 px-3 py-2 text-[11px] font-semibold rounded-full w-full"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out</span>
           </button>
         </div>

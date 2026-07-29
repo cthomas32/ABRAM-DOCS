@@ -42,6 +42,16 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
     };
   }, [isOpen]);
 
+  // Escape closes the menu, matching every other overlay on the site
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
   const toggleDropdown = (name: string) => {
     setOpenDropdown(prev => prev === name ? null : name);
   };
@@ -136,7 +146,10 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
             animate="open"
             exit="closed"
             variants={panelVariants}
-            className="relative w-full bg-zinc-950/98 backdrop-blur-[32px] border-b border-white/8 shadow-2xl pointer-events-auto flex flex-col px-6 py-8 md:px-8 max-h-full overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
+            className="relative w-full bg-zinc-950/98 backdrop-blur-[32px] border-b border-white/8 rounded-b-3xl shadow-2xl pointer-events-auto flex flex-col px-5 pt-6 pb-[max(2rem,env(safe-area-inset-bottom))] max-h-full overflow-y-auto overscroll-contain"
           >
             <div className="w-full max-w-md mx-auto">
               <nav className="flex flex-col gap-2.5">

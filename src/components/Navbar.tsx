@@ -496,7 +496,12 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             target="_blank"
             rel="noopener noreferrer"
             title="Get Started with ABRAM App"
-            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white"
+            // The open mobile menu carries its own call to action, and the
+            // header sits above it, so this one steps aside rather than
+            // floating over the panel.
+            className={`items-center gap-1.5 whitespace-nowrap rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white ${
+              mobileMenuOpen ? "hidden sm:inline-flex" : "inline-flex"
+            }`}
           >
             Get Started
             <ArrowUpRight className="h-3.5 w-3.5" />

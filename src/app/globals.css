@@ -318,3 +318,209 @@ body {
   background: rgba(255, 255, 255, 0.02);
 }
 
+
+/* ─────────────────────────────────────────────
+   Link Hub — themeable bio link page
+   Colours arrive as custom properties from
+   buildLinkHubTheme(), so these classes stay
+   fixed while the admin panel drives the look.
+   ───────────────────────────────────────────── */
+.lh-page {
+  color: var(--lh-text);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.lh-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--lh-btn-gap, 0.875rem);
+  width: 100%;
+  min-height: var(--lh-btn-h, 60px);
+  padding: var(--lh-btn-pad-y, 0.875rem) var(--lh-btn-pad-x, 1.125rem);
+  font-size: var(--lh-btn-font, 0.875rem);
+  border-radius: var(--lh-radius);
+  border: 1px solid var(--lh-btn-border);
+  background: var(--lh-btn-bg);
+  color: var(--lh-btn-fg);
+  box-shadow: var(--lh-btn-shadow);
+  backdrop-filter: var(--lh-btn-blur);
+  -webkit-backdrop-filter: var(--lh-btn-blur);
+  transition:
+    background-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  overflow: hidden;
+}
+.lh-btn:hover {
+  background: var(--lh-btn-bg-hover);
+  border-color: var(--lh-btn-border-hover, var(--lh-btn-border));
+  /* A single pixel of lift. Anything more reads as playful. */
+  transform: translateY(-1px);
+}
+.lh-btn:active {
+  transform: translateY(0);
+}
+
+/* Icons stay quiet so the label carries the button. */
+.lh-btn-icon {
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
+.lh-btn:hover .lh-btn-icon {
+  opacity: 0.85;
+}
+.lh-btn--featured .lh-btn-icon {
+  opacity: 0.75;
+}
+.lh-btn:focus-visible {
+  outline: 2px solid var(--lh-accent);
+  outline-offset: 3px;
+}
+
+/* Featured blocks invert to the accent colour so one link can lead. */
+.lh-btn--featured {
+  background: var(--lh-accent);
+  border-color: transparent;
+  color: var(--lh-accent-fg);
+}
+.lh-btn--featured:hover {
+  background: var(--lh-accent);
+  filter: brightness(1.08);
+}
+
+.lh-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: var(--lh-text);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+  cursor: pointer;
+}
+.lh-social:hover {
+  background: var(--lh-hairline);
+  transform: translateY(-2px);
+}
+.lh-social:focus-visible {
+  outline: 2px solid var(--lh-accent);
+  outline-offset: 2px;
+}
+
+/* Attention highlights, opt-in per link from the admin panel. */
+.lh-highlight-pulse {
+  animation: lh-pulse 2.4s ease-in-out infinite;
+}
+.lh-highlight-bounce {
+  animation: lh-bounce 2.8s ease-in-out infinite;
+}
+.lh-highlight-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--lh-btn-fg) 22%, transparent) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: lh-shine 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes lh-pulse {
+  0%,
+  100% {
+    box-shadow: var(--lh-btn-shadow);
+  }
+  50% {
+    box-shadow:
+      var(--lh-btn-shadow),
+      0 0 0 4px color-mix(in srgb, var(--lh-accent) 28%, transparent);
+  }
+}
+
+@keyframes lh-bounce {
+  0%,
+  82%,
+  100% {
+    transform: translateY(0);
+  }
+  88% {
+    transform: translateY(-5px);
+  }
+  94% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes lh-shine {
+  0% {
+    transform: translateX(-120%);
+  }
+  55%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lh-highlight-pulse,
+  .lh-highlight-bounce,
+  .lh-highlight-shine::after {
+    animation: none;
+  }
+  .lh-btn:hover {
+    transform: none;
+  }
+}
+
+/* Button label scales with the chosen button size. */
+.lh-btn-label {
+  font-size: var(--lh-btn-font, 0.875rem);
+}
+.lh-btn-desc {
+  font-size: calc(var(--lh-btn-font, 0.875rem) - 0.125rem);
+}
+.lh-thumb {
+  width: var(--lh-thumb, 44px);
+  height: var(--lh-thumb, 44px);
+}
+
+/* Background picture layers: blurred and darkened independently of the
+   content, so text stays readable over any photograph.
+
+   The wrapper is sticky with an equal negative margin, which pins the
+   picture to the top of whatever is scrolling while taking up no space
+   in the flow. Unlike position: fixed this also works inside the admin
+   preview frame, so the picture holds still there too. */
+.lh-bg-lock {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: var(--lh-vh, 100dvh);
+  margin-bottom: calc(var(--lh-vh, 100dvh) * -1);
+  overflow: hidden;
+  pointer-events: none;
+}
+.lh-bg-image {
+  position: absolute;
+  /* Overscanned so the blur does not bleed transparent edges inwards. */
+  inset: calc(var(--lh-bg-blur, 0px) * -2.5);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(var(--lh-bg-blur, 0px));
+}
+.lh-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--lh-bg-overlay, 0.55));
+}

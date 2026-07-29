@@ -29,12 +29,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const cleanPathname = pathname ? pathname.replace(/\/$/, "") || "/" : "/";
 
   const isAdminPage = cleanPathname.startsWith("/admin");
+  // The link hub is the one URL that goes in a social bio. It renders
+  // bare: no header, no footer, no consent banner competing with the
+  // links themselves.
+  const isBarePage = cleanPathname === "/links";
   // Conversion pages: single goal, so they get a logo-only header with no
   // navigation and no competing call to action.
-  const isCampaignPage =
-    cleanPathname === "/start" ||
-    cleanPathname.startsWith("/start/") ||
-    cleanPathname === "/links";
+  const isCampaignPage = cleanPathname === "/start" || cleanPathname.startsWith("/start/");
   // Marketing routes that need clean, un-padded full width presentation
   const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain" || cleanPathname === "/film-production" || cleanPathname.startsWith("/film-production/") || cleanPathname === "/agency" || cleanPathname.startsWith("/agency/") || cleanPathname === "/intelligence" || cleanPathname.startsWith("/intelligence/") || isCampaignPage;
   const isDocsPage = cleanPathname.startsWith("/docs");
@@ -56,6 +57,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="selection:bg-zinc-800 selection:text-white bg-[#0A0A0A]">
         {children}
       </div>
+    );
+  }
+
+  if (isBarePage) {
+    return (
+      <div className="selection:bg-zinc-800 selection:text-white min-h-screen">{children}</div>
     );
   }
 
