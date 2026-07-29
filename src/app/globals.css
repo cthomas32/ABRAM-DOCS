@@ -25,6 +25,7 @@
   
   --animate-laser-travel: laser-travel 6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
   --animate-breathe: breathe 10s ease-in-out infinite;
+  --animate-fadeIn: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root {
@@ -47,7 +48,14 @@ body {
 
 /* ─────────────────────────────────────────────
    Button System — See DESIGN.md for full spec
+
+   These live in the `components` layer on purpose. Tailwind's utilities sit
+   in a later layer, so `px-3`, `h-9` or `rounded-lg` written next to a
+   `.btn-*` class wins. Unlayered, the padding below would silently beat
+   every size utility in the app and squash small buttons.
    ───────────────────────────────────────────── */
+
+@layer components {
 
 /* Primary (Solid White) — Main CTAs only */
 .btn-primary {
@@ -143,6 +151,8 @@ body {
 }
 .btn-danger:hover {
   background: rgba(239, 68, 68, 0.20);
+}
+
 }
 
 /* ─────────────────────────────────────────────
@@ -289,6 +299,18 @@ body {
   50% {
     opacity: 1;
     transform: scale(1.08) translate3d(0, -10px, 0);
+  }
+}
+
+/* Used by admin panels that swap a section in place. */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

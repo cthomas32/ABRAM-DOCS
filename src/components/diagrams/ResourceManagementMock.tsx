@@ -682,7 +682,7 @@ export default function ResourceManagementMock() {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between mb-2 md:hidden">
                         <span className="text-[10px] text-zinc-500 uppercase font-semibold">Inventory Pool</span>
-                        <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                        <span className="text-[10px] text-zinc-400 font-mono">Swipe to view →</span>
                       </div>
                       <div className="overflow-x-auto rounded-2xl border border-white/5 bg-[#121212]/30">
                         <div className="min-w-[750px]">
@@ -927,7 +927,7 @@ export default function ResourceManagementMock() {
 
                   <div className="flex items-center justify-between mb-2 md:hidden">
                     <span className="text-[10px] text-zinc-500 uppercase font-semibold">Calendar Timeline</span>
-                    <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                    <span className="text-[10px] text-zinc-400 font-mono">Swipe to view →</span>
                   </div>
 
                   {/* Scrollable calendar grid container */}

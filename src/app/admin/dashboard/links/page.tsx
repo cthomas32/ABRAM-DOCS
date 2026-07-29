@@ -20,7 +20,6 @@ import {
   MousePointerClick,
   Palette,
   Plus,
-  RefreshCw,
   Save,
   Share2,
   Star,
@@ -41,11 +40,13 @@ import {
   type LinkHubLink,
   type LinkHubSettings,
 } from "@/lib/linkHub";
+import { useSessionGuard } from "@/components/admin/SessionGuard";
 import LinkHubIcon from "@/components/links/LinkHubIcon";
 import LinkHubAnalyticsPanel from "@/components/links/admin/LinkHubAnalyticsPanel";
 import LinkHubDesignPanel from "@/components/links/admin/LinkHubDesignPanel";
 import LinkHubPreview from "@/components/links/admin/LinkHubPreview";
 import ImageField from "@/components/links/admin/ImageField";
+import Modal from "@/components/admin/Modal";
 import {
   Choice,
   Field,
@@ -128,10 +129,26 @@ export default function LinkHubAdminPage() {
   const [editDraft, setEditDraft] = useState<Draft>(EMPTY_DRAFT);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
+  const { reportError } = useSessionGuard();
+
   const flash = (message: string) => {
     setNotice(message);
     setTimeout(() => setNotice(null), 2500);
   };
+
+  /**
+   * Surfaces a failed query. A lapsed session is handled by the guard,
+   * which takes over the screen, so it is not also shown as a red bar
+   * saying something like "JWT expired".
+   */
+  const fail = useCallback(
+    (queryError: { code?: string | null; message?: string | null } | null | undefined) => {
+      if (!queryError) return;
+      if (reportError(queryError)) return;
+      setError(queryError.message || "Something went wrong.");
+    },
+    [reportError],
+  );
 
   const load = useCallback(async () => {
     const supabase = createClient();
@@ -141,7 +158,7 @@ export default function LinkHubAdminPage() {
     ]);
 
     if (linksResult.error) {
-      setError(linksResult.error.message);
+      fail(linksResult.error);
     } else {
       setError(null);
       setLinks(((linksResult.data as LinkHubLink[]) || []).map(normalizeLink));
@@ -151,7 +168,7 @@ export default function LinkHubAdminPage() {
       setDirty(false);
     }
     setLoading(false);
-  }, []);
+  }, [fail]);
 
   useEffect(() => {
     load();
@@ -209,7 +226,7 @@ export default function LinkHubAdminPage() {
       .insert({ ...payload, block_type: draftType, sort_order: nextOrder });
 
     setBusy(false);
-    if (insertError) return setError(insertError.message);
+    if (insertError) return fail(insertError);
 
     setError(null);
     setDraft(EMPTY_DRAFT);
@@ -230,7 +247,7 @@ export default function LinkHubAdminPage() {
       .eq("id", block.id);
 
     setBusy(false);
-    if (updateError) return setError(updateError.message);
+    if (updateError) return fail(updateError);
 
     setError(null);
     setEditingId(null);
@@ -244,7 +261,7 @@ export default function LinkHubAdminPage() {
       .from("link_hub_links")
       .update({ ...patch, updated_at: new Date().toISOString() })
       .eq("id", id);
-    if (updateError) return setError(updateError.message);
+    if (updateError) return fail(updateError);
     load();
   };
 
@@ -254,7 +271,7 @@ export default function LinkHubAdminPage() {
     const { error: deleteError } = await supabase.from("link_hub_links").delete().eq("id", id);
     setBusy(false);
     setConfirmDeleteId(null);
-    if (deleteError) return setError(deleteError.message);
+    if (deleteError) return fail(deleteError);
     flash("Block removed.");
     load();
   };
@@ -281,7 +298,7 @@ export default function LinkHubAdminPage() {
     );
 
     const failed = results.find((result) => result.error);
-    if (failed?.error) setError(failed.error.message);
+    if (failed?.error) fail(failed.error);
     load();
   };
 
@@ -332,7 +349,7 @@ export default function LinkHubAdminPage() {
       const column = missingColumn(updateError.message);
       if (!column || !(column in payload)) {
         setBusy(false);
-        return setError(updateError.message);
+        return fail(updateError);
       }
       delete payload[column];
     }
@@ -353,6 +370,10 @@ export default function LinkHubAdminPage() {
 
   /* ---------------------------------------------------------------- */
 
+  const deleteTarget = useMemo(
+    () => links.find((link) => link.id === confirmDeleteId) || null,
+    [links, confirmDeleteId],
+  );
   const liveCount = useMemo(
     () => links.filter((link) => scheduleState(link) === "live").length,
     [links],
@@ -398,10 +419,11 @@ export default function LinkHubAdminPage() {
             </p>
           </div>
 
+          {/* Every write reloads the list, so there is no manual refresh here. */}
           <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
             <button
               onClick={copyUrl}
-              className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2"
+              className="btn-glass h-10 sm:h-8 px-4 text-xs font-semibold rounded-full flex items-center gap-2"
             >
               {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
               {copied ? "Copied" : "Copy link"}
@@ -410,18 +432,11 @@ export default function LinkHubAdminPage() {
               href={PUBLIC_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2"
+              className="btn-glass h-10 sm:h-8 px-4 text-xs font-semibold rounded-full flex items-center gap-2"
             >
               <ExternalLink className="w-3 h-3" />
               View page
             </a>
-            <button
-              onClick={load}
-              className="btn-glass px-4 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2"
-            >
-              <RefreshCw className="w-3 h-3" />
-              Refresh
-            </button>
           </div>
         </div>
 
@@ -486,7 +501,6 @@ export default function LinkHubAdminPage() {
                   draftType={draftType}
                   editingId={editingId}
                   editDraft={editDraft}
-                  confirmDeleteId={confirmDeleteId}
                   setDraft={setDraft}
                   setDraftType={(type) => {
                     setDraftType(type);
@@ -513,7 +527,6 @@ export default function LinkHubAdminPage() {
                   onAdd={addBlock}
                   onSaveEdit={saveEdit}
                   onPatch={patchLink}
-                  onRemove={removeLink}
                   onMove={move}
                   onLocalReorder={setLinks}
                   onPersistOrder={persistOrder}
@@ -526,6 +539,45 @@ export default function LinkHubAdminPage() {
             </div>
           </div>
         )}
+
+        <Modal
+          open={!!confirmDeleteId}
+          onClose={() => setConfirmDeleteId(null)}
+          dismissable={!busy}
+          size="sm"
+          labelledBy="delete-block-title"
+          panelClassName="border-red-500/20"
+        >
+          <div className="flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 id="delete-block-title" className="text-sm font-bold text-white tracking-tight mb-2">
+              Remove this block?
+            </h3>
+            <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
+              {deleteTarget
+                ? `"${deleteTarget.label}" will disappear from your public link page straight away. This cannot be undone.`
+                : "This cannot be undone."}
+            </p>
+            <div className="flex gap-3 w-full">
+              <button
+                onClick={() => setConfirmDeleteId(null)}
+                className="btn-glass flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => confirmDeleteId && removeLink(confirmDeleteId)}
+                disabled={busy}
+                className="btn-danger flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 disabled:opacity-50"
+              >
+                {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                <span>Remove</span>
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );
@@ -540,7 +592,6 @@ function ContentTab({
   draftType,
   editingId,
   editDraft,
-  confirmDeleteId,
   setDraft,
   setDraftType,
   setEditDraft,
@@ -550,7 +601,6 @@ function ContentTab({
   onAdd,
   onSaveEdit,
   onPatch,
-  onRemove,
   onMove,
   onLocalReorder,
   onPersistOrder,
@@ -561,7 +611,6 @@ function ContentTab({
   draftType: LinkBlockType | null;
   editingId: string | null;
   editDraft: Draft;
-  confirmDeleteId: string | null;
   setDraft: React.Dispatch<React.SetStateAction<Draft>>;
   setDraftType: (type: LinkBlockType | null) => void;
   setEditDraft: React.Dispatch<React.SetStateAction<Draft>>;
@@ -571,7 +620,6 @@ function ContentTab({
   onAdd: () => void;
   onSaveEdit: (block: LinkHubLink) => void;
   onPatch: (id: string, patch: Partial<LinkHubLink>) => void;
-  onRemove: (id: string) => void;
   onMove: (index: number, direction: -1 | 1) => void;
   onLocalReorder: (next: LinkHubLink[]) => void;
   onPersistOrder: (next: LinkHubLink[]) => void;
@@ -664,13 +712,11 @@ function ContentTab({
               isEditing={editingId === block.id}
               editDraft={editDraft}
               setEditDraft={setEditDraft}
-              confirmDeleteId={confirmDeleteId}
               setConfirmDeleteId={setConfirmDeleteId}
               onStartEdit={onStartEdit}
               onCancelEdit={onCancelEdit}
               onSaveEdit={onSaveEdit}
               onPatch={onPatch}
-              onRemove={onRemove}
               onMove={onMove}
               onDropped={commitOrder}
             />
@@ -696,13 +742,11 @@ function BlockRow({
   isEditing,
   editDraft,
   setEditDraft,
-  confirmDeleteId,
   setConfirmDeleteId,
   onStartEdit,
   onCancelEdit,
   onSaveEdit,
   onPatch,
-  onRemove,
   onMove,
   onDropped,
 }: {
@@ -713,13 +757,11 @@ function BlockRow({
   isEditing: boolean;
   editDraft: Draft;
   setEditDraft: React.Dispatch<React.SetStateAction<Draft>>;
-  confirmDeleteId: string | null;
   setConfirmDeleteId: (id: string | null) => void;
   onStartEdit: (block: LinkHubLink) => void;
   onCancelEdit: () => void;
   onSaveEdit: (block: LinkHubLink) => void;
   onPatch: (id: string, patch: Partial<LinkHubLink>) => void;
-  onRemove: (id: string) => void;
   onMove: (index: number, direction: -1 | 1) => void;
   onDropped: () => void;
 }) {
@@ -863,11 +905,9 @@ function BlockRow({
 
               <Controls
                 block={block}
-                confirmDeleteId={confirmDeleteId}
                 setConfirmDeleteId={setConfirmDeleteId}
                 onStartEdit={onStartEdit}
                 onPatch={onPatch}
-                onRemove={onRemove}
               />
             </div>
           </div>
@@ -904,11 +944,9 @@ function BlockRow({
             <div className="ml-auto flex items-center gap-0.5">
               <Controls
                 block={block}
-                confirmDeleteId={confirmDeleteId}
                 setConfirmDeleteId={setConfirmDeleteId}
                 onStartEdit={onStartEdit}
                 onPatch={onPatch}
-                onRemove={onRemove}
               />
             </div>
           </div>
@@ -921,18 +959,14 @@ function BlockRow({
 /** The per-block actions, shared by the desktop row and the phone bar. */
 function Controls({
   block,
-  confirmDeleteId,
   setConfirmDeleteId,
   onStartEdit,
   onPatch,
-  onRemove,
 }: {
   block: LinkHubLink;
-  confirmDeleteId: string | null;
   setConfirmDeleteId: (id: string | null) => void;
   onStartEdit: (block: LinkHubLink) => void;
   onPatch: (id: string, patch: Partial<LinkHubLink>) => void;
-  onRemove: (id: string) => void;
 }) {
   return (
     <>
@@ -961,23 +995,11 @@ function Controls({
         Edit
       </button>
 
-      {confirmDeleteId === block.id ? (
-        <div className="flex items-center gap-1">
-          <button onClick={() => onRemove(block.id)} className="btn-danger px-2.5 py-1 text-[10px]">
-            Delete
-          </button>
-          <button
-            onClick={() => setConfirmDeleteId(null)}
-            className="px-2 py-1 text-[10px] text-zinc-500 hover:text-white cursor-pointer"
-          >
-            No
-          </button>
-        </div>
-      ) : (
-        <IconButton label="Delete" onClick={() => setConfirmDeleteId(block.id)} danger>
-          <Trash2 className="w-3.5 h-3.5" />
-        </IconButton>
-      )}
+      {/* Confirmation is a dialog, not an inline swap: replacing one button
+          with two used to shove the rest of the row sideways. */}
+      <IconButton label="Delete" onClick={() => setConfirmDeleteId(block.id)} danger>
+        <Trash2 className="w-3.5 h-3.5" />
+      </IconButton>
     </>
   );
 }

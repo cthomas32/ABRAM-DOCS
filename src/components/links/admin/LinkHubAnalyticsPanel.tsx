@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Eye, Loader2, MousePointerClick, Share2, Users } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import { useSessionGuard } from "@/components/admin/SessionGuard";
 import LinkHubIcon from "../LinkHubIcon";
 import { Panel } from "./LinkHubFields";
 
@@ -47,6 +48,7 @@ export default function LinkHubAnalyticsPanel() {
   const [data, setData] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { reportError } = useSessionGuard();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -55,14 +57,15 @@ export default function LinkHubAnalyticsPanel() {
       p_days: days,
     });
     if (rpcError) {
-      setError(rpcError.message);
+      // A lapsed session is taken over by the guard rather than shown here.
+      if (!reportError(rpcError)) setError(rpcError.message);
       setData(null);
     } else {
       setError(null);
       setData(result as Analytics);
     }
     setLoading(false);
-  }, [days]);
+  }, [days, reportError]);
 
   useEffect(() => {
     load();

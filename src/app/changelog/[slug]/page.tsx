@@ -221,7 +221,7 @@ export default async function ChangelogDetailPage({ params, searchParams }: Chan
       {release.status === "draft" && (
         <div className="bg-yellow-500/5 border border-yellow-500/15 text-yellow-400/90 p-4 rounded-2xl flex items-center justify-between gap-4 font-sans text-xs shadow-md">
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 shrink-0" />
             <span>You are viewing a draft version of this release note.</span>
           </div>
           <span className="text-[9px] uppercase font-bold tracking-widest text-yellow-500/60 shrink-0">Preview Mode</span>

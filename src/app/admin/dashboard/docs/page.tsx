@@ -14,6 +14,7 @@ import Link from "next/link";
 import { getArticlesList, createNewArticle } from "../../editor-actions";
 import { AnimatePresence, motion } from "framer-motion";
 import ActionSheet, { type SheetAction } from "@/components/admin/ActionSheet";
+import Modal from "@/components/admin/Modal";
 
 interface Toast {
   id: string;
@@ -85,6 +86,10 @@ export default function DocsManagerPage() {
     return matchesSearch && matchesStatus;
   });
 
+  /**
+   * The overflow menu carries every secondary action, so the card itself
+   * only ever shows the one thing you actually reach for.
+   */
   const buildArticleActions = (art: any): SheetAction[] => {
     const actions: SheetAction[] = [
       {
@@ -109,6 +114,9 @@ export default function DocsManagerPage() {
 
     return actions;
   };
+
+  const publishedHref = (path: string) =>
+    path === "index.mdx" ? "/docs" : `/docs/${path.replace(/\.(md|mdx)$/, "")}`;
 
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
@@ -183,12 +191,13 @@ export default function DocsManagerPage() {
                 key={art.path}
                 className="glass-panel rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-250 flex flex-col justify-between hover:bg-white/[0.01] relative"
               >
-                {/* Tapping the card opens the editor — the row of tools stays off small screens */}
+                {/* Tapping the card opens the editor. The right padding keeps
+                    the content clear of the overflow button in the corner. */}
                 <Link
                   href={`/admin/dashboard/docs/edit?file=${art.path}`}
-                  className="block p-5 space-y-3 rounded-2xl"
+                  className="block p-5 pr-14 space-y-3 rounded-2xl"
                 >
-                  <div className="flex justify-between items-start gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className={`text-[9px] px-2 py-0.5 rounded border font-semibold shrink-0 ${
                       art.status === "draft"
                         ? "bg-zinc-800/20 border-zinc-700/30 text-zinc-400"
@@ -196,7 +205,7 @@ export default function DocsManagerPage() {
                     }`}>
                       {art.status}
                     </span>
-                    <span className="text-[10px] text-zinc-600 font-mono tracking-tighter break-all text-right min-w-0 mr-9 sm:mr-0">
+                    <span className="text-[10px] text-zinc-600 font-mono tracking-tighter break-all min-w-0">
                       {art.path.replace("user-guide/", "")}
                     </span>
                   </div>
@@ -207,29 +216,30 @@ export default function DocsManagerPage() {
                   </div>
                 </Link>
 
-                {/* Small screens: one control for every secondary action */}
+                {/* One control for every secondary action, at every width */}
                 <button
                   onClick={() => setSheetArticle(art)}
-                  aria-label={`Actions for ${art.title}`}
-                  className="sm:hidden absolute top-3.5 right-3.5 w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 border border-white/8 bg-white/[0.03] active:bg-white/[0.08] transition-colors"
+                  aria-label={`More actions for ${art.title}`}
+                  className="absolute top-3.5 right-3.5 w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 border border-white/8 bg-white/[0.03] hover:text-white hover:bg-white/[0.07] active:bg-white/[0.1] transition-colors"
                 >
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
 
-                <div className="hidden sm:flex mx-5 mb-5 pt-4 border-t border-white/5 flex-wrap gap-2">
+                <div className="flex mx-5 mb-5 pt-4 border-t border-white/5 gap-2">
                   <Link
                     href={`/admin/dashboard/docs/edit?file=${art.path}`}
-                    className="btn-glass flex-1 min-w-[120px] min-h-[40px] sm:min-h-0 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
+                    className="btn-glass flex-1 h-10 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     <span>Edit Markdown</span>
                   </Link>
                   {art.status === "published" && (
                     <Link
-                      href={art.path === "index.mdx" ? "/docs" : `/docs/${art.path.replace(/\.(md|mdx)$/, "")}`}
+                      href={publishedHref(art.path)}
                       target="_blank"
-                      className="btn-glass px-3 py-1.5 min-w-[44px] min-h-[40px] sm:min-h-0 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
+                      className="btn-glass w-10 h-10 sm:w-8 sm:h-8 px-0 rounded-full flex items-center justify-center text-zinc-400 hover:text-white shrink-0"
                       title="View public live page"
+                      aria-label="View public live page"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                     </Link>
@@ -250,69 +260,58 @@ export default function DocsManagerPage() {
         />
 
         {/* Creation Modal */}
-        <AnimatePresence>
-          {showCreateModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setShowCreateModal(false)}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+        <Modal
+          open={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          dismissable={!creating}
+          labelledBy="create-doc-title"
+        >
+          <h3 id="create-doc-title" className="text-sm font-bold text-white tracking-tight">
+            Create Documentation File
+          </h3>
+          <form onSubmit={handleCreateArticle} className="space-y-4">
+            <div>
+              <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">File Name</label>
+              <input
+                type="text"
+                required
+                value={newFileName}
+                onChange={(e) => setNewFileName(e.target.value)}
+                placeholder="e.g. 1.6-talent-schedules.md"
+                className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10"
               />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="w-full max-w-md p-5 sm:p-6 rounded-2xl border border-white/5 glass-panel relative z-10 space-y-4 max-h-[90vh] overflow-y-auto"
-              >
-                <h3 className="text-sm font-bold text-white tracking-tight">Create Documentation File</h3>
-                <form onSubmit={handleCreateArticle} className="space-y-4">
-                  <div>
-                    <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">File Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={newFileName}
-                      onChange={(e) => setNewFileName(e.target.value)}
-                      placeholder="e.g. 1.6-talent-schedules.md"
-                      className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10"
-                    />
-                    <span className="text-[9px] text-zinc-500 mt-1 block">Format: [SectionNum]-[slug-name].md</span>
-                  </div>
-                  <div>
-                    <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Article Title</label>
-                    <input
-                      type="text"
-                      required
-                      value={newFileTitle}
-                      onChange={(e) => setNewFileTitle(e.target.value)}
-                      placeholder="e.g. Talent shift coordination"
-                      className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10"
-                    />
-                  </div>
-                  <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowCreateModal(false)}
-                      className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={creating}
-                      className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5"
-                    >
-                      {creating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                      <span>Create File</span>
-                    </button>
-                  </div>
-                </form>
-              </motion.div>
+              <span className="text-[9px] text-zinc-500 mt-1 block">Format: [SectionNum]-[slug-name].md</span>
             </div>
-          )}
-        </AnimatePresence>
+            <div>
+              <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Article Title</label>
+              <input
+                type="text"
+                required
+                value={newFileTitle}
+                onChange={(e) => setNewFileTitle(e.target.value)}
+                placeholder="e.g. Talent shift coordination"
+                className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10"
+              />
+            </div>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowCreateModal(false)}
+                className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={creating}
+                className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 disabled:opacity-50"
+              >
+                {creating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                <span>Create File</span>
+              </button>
+            </div>
+          </form>
+        </Modal>
 
         {/* Toast Container */}
         <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">

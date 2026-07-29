@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import AgencyIntakeMockup from "@/components/agency/AgencyIntakeMockup";
+import ScopeMockups from "@/components/home/ScopeMockups";
 import AgencyClientPortalMockup from "@/components/agency/AgencyClientPortalMockup";
 
 export function ChapterHeader({
@@ -66,7 +66,7 @@ export function ScopeChapter() {
           number="01"
           overline="SCOPE"
           title="Turn any idea into a film, campaign, or project."
-          body="Upload a brief. ABRAM maps the work, drafts milestones, and prices the estimate."
+          body="Bring any brief or script into ABRAM. Instantly map deliverables, match roster availability, and lock quotes before day one."
         />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -74,7 +74,7 @@ export function ScopeChapter() {
           viewport={{ once: true, margin: "0px", amount: 0.1 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <AgencyIntakeMockup />
+          <ScopeMockups />
         </motion.div>
         <ChapterFooterLinks
           links={[

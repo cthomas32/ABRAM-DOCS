@@ -489,8 +489,6 @@ We are scoping a premium fashion campaign video shoot. Require a 4-person crew: 
               className="flex flex-col items-center justify-center py-12 space-y-6"
             >
               <div className="relative flex items-center justify-center">
-                {/* Spinning/pulsing elements */}
-                <div className="w-16 h-16 rounded-full border border-white/5 animate-ping absolute" />
                 <div className="w-12 h-12 rounded-full border-t-2 border-white animate-spin" />
                 <AbramMark size={20} className="absolute" />
               </div>

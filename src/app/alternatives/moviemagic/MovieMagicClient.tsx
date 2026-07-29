@@ -14,6 +14,7 @@ import {
   Wallet,
 } from "lucide-react";
 import AbramMark from "@/components/AbramMark";
+import ScriptBreakdownMockup from "@/components/film-production/ScriptBreakdownMockup";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 type Faq = { q: string; a: string };
@@ -22,79 +23,75 @@ const differentiators = [
   {
     icon: Cloud,
     title: "Cloud collaboration for the whole team",
-    body:
-      "ABRAM runs in the browser so producers, coordinators, and accountants work in the same project at the same time from any location. Movie Magic Budgeting is a single-user desktop application where one person owns the file at a time.",
-    points: ["Simultaneous multi-user editing", "Remote access with no install"],
+    body: "ABRAM runs entirely in your browser so producers, coordinators, and accountants work in the same project simultaneously without single-user desktop files.",
+    points: ["Real-time multi-user editing", "Zero-install web architecture"],
   },
   {
     icon: GitMerge,
     title: "Schedule and budget in one project",
-    body:
-      "The stripboard, call sheets, and budget share the same production in ABRAM. Movie Magic sells Scheduling and Budgeting as separate products without native end-to-end data sharing, which usually means re-entering information between them.",
-    points: ["One source of truth per production", "Fewer manual handoffs between tools"],
+    body: "The stripboard, call sheets, and budget share one project in ABRAM. Movie Magic sells Scheduling and Budgeting as separate desktop products.",
+    points: ["Single source of truth per production", "Zero manual re-entry between tools"],
   },
   {
     icon: PieChart,
-    title: "Budget variance against actuals",
-    body:
-      "ABRAM tracks spend against your approved budget, raises risk alerts, and calibrates future estimates from real actuals. This gives you cost-to-complete visibility inside the same platform.",
-    points: ["Live variance and risk alerts", "Estimates that learn from your data"],
+    title: "Live budget variance against actuals",
+    body: "Track spend against approved budgets, receive automated risk alerts, and calibrate future cost estimates from real production actuals.",
+    points: ["Real-time cost variance & alerts", "Estimates that calibrate over time"],
   },
   {
     icon: Wallet,
-    title: "Payouts, invoicing, and client portals",
-    body:
-      "ABRAM pays crew from approved milestones, invoices clients, and shares token-based portals where clients approve quotes and pay, extending well beyond scheduling and budgeting.",
-    points: ["Milestone crew payouts", "Client quote approval and payment"],
+    title: "Payouts, invoicing & client portals",
+    body: "Pay freelance crew from approved milestones, invoice clients, and share secure approval links directly from the same workspace.",
+    points: ["Stripe milestone crew payouts", "Token-based client quote approval"],
   },
 ];
 
 const comparison = [
   {
-    feature: "Stripboard and Day-out-of-Days",
-    abram: "Cloud stripboard, Day-out-of-Days, and run of show",
-    them: "Industry-standard desktop scheduling with recognized formats",
+    feature: "Stripboard & Day-out-of-Days",
+    abram: "Cloud stripboard, Day-out-of-Days, and live run of show",
+    them: "Industry-standard desktop scheduling",
     abramYes: true,
     themYes: true,
   },
   {
     feature: "Detailed line-item budgeting",
-    abram: "Budget tracking with variance, risk alerts, and calibration",
-    them: "Deep, specialist budgeting trusted on large union features",
+    abram: "Budget tracking with live variance, risk alerts & calibration",
+    them: "Deep union film budgeting desktop app",
     abramYes: true,
     themYes: true,
   },
   {
     feature: "Real-time multi-user collaboration",
-    abram: "Whole team works in the same project at once",
-    them: "Single-user desktop file, one editor at a time",
+    abram: "Entire team works in the same cloud project simultaneously",
+    them: "Single-user desktop files (one editor at a time)",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Connected schedule and budget",
-    abram: "Schedule, call sheets, and budget share one project",
-    them: "Scheduling and Budgeting sold and run separately",
+    feature: "Connected schedule & budget",
+    abram: "Schedule, call sheets, and budget share one live dataset",
+    them: "Scheduling and Budgeting sold as separate products",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Crew payouts and invoicing",
+    feature: "Crew payouts & client billing",
     abram: "Milestone crew payouts and client invoicing built in",
-    them: "Not part of the scheduling or budgeting products",
+    them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "Client approval portal",
-    abram: "Token-based portals with quote approval and payment",
+    abram: "Token-based client portals with quote approval & payment",
     them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "AI production copilot",
-    abram: "ABRAM Core turns briefs into work packages and executes actions with approval",
+    abram: "ABRAM Core parses briefs, generates schedules, and automates tasks",
     them: "Not offered",
     abramYes: true,
     themYes: false,
@@ -104,18 +101,18 @@ const comparison = [
 const migration = [
   {
     step: "1",
-    title: "Rebuild the schedule in the cloud",
-    body: "Recreate your shooting schedule on the ABRAM stripboard so the whole team can view and edit it live, with call sheets reading directly from it.",
+    title: "Rebuild schedule in the cloud",
+    body: "Import screenplays and set up your stripboard in ABRAM so the entire team can collaborate live.",
   },
   {
     step: "2",
-    title: "Attach the budget to the same project",
-    body: "Set up your budget inside the production so variance and risk alerts track against actuals, ending the re-entry between separate scheduling and budgeting files.",
+    title: "Connect project budget",
+    body: "Attach your budget to track live variance and actuals, eliminating manual data copying.",
   },
   {
     step: "3",
-    title: "Add payouts and client access",
-    body: "Turn on crew payouts and share a token-based client portal so approvals, invoicing, and payment run alongside the schedule and budget.",
+    title: "Enable payouts & portals",
+    body: "Activate milestone payouts and client portals for seamless approval and payment workflows.",
   },
 ];
 
@@ -136,10 +133,10 @@ export default function MovieMagicClient({ faqs }: { faqs: Faq[] }) {
               Movie Magic Alternative
             </motion.span>
             <motion.h1 variants={revealVariants} custom={0.1} className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans">
-              ABRAM puts your schedule, budget, and call sheets in one cloud workspace your whole team can open at the same time.
+              Put Schedules, Budgets & Call Sheets in One Cloud Workspace
             </motion.h1>
             <motion.p variants={revealVariants} custom={0.2} className="text-base sm:text-lg md:text-xl leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans">
-              Move from single-user desktop files to a connected production platform where the schedule feeds the budget and every update reaches the crew.
+              Upgrade from single-user desktop files to a real-time cloud platform where schedules automatically update budgets and sync with the crew.
             </motion.p>
             <motion.div variants={revealVariants} custom={0.3} className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
               <Link href="/pricing" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
@@ -147,24 +144,30 @@ export default function MovieMagicClient({ faqs }: { faqs: Faq[] }) {
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link href="/film-production/scheduling-budgeting" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
-                <span>See scheduling and budgeting</span>
+                <span>See scheduling & budgeting</span>
               </Link>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Where Movie Magic is strong */}
+      {/* Script Breakdown Visual Mockup Section */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="rounded-2xl border border-white/8 bg-zinc-950/30 backdrop-blur-md p-6 md:p-8">
-            <h2 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-3">Where Movie Magic is strong</h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-              Movie Magic Scheduling and Movie Magic Budgeting are the entrenched industry standard for professional film and television. Their stripboards and budget top-sheets are the formats studios, unions, and completion bond companies expect, and many line producers and accountants know the software deeply. For large union features that demand those exact deliverables, Movie Magic is a proven specialist. Teams tend to seek an alternative when they want cloud collaboration, a connected schedule and budget, and finance that reaches all the way to crew and client payments.
-            </p>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+              AI SCRIPT PARSING & BREAKDOWN
+            </span>
+            <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-white font-sans">
+              Automated Screenplay Element Extraction in Under 60 Seconds
+            </h2>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-zinc-950/60 backdrop-blur-md p-4 sm:p-6 shadow-2xl">
+            <ScriptBreakdownMockup />
           </div>
         </div>
       </section>
+
 
       {/* Differentiators */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">

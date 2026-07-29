@@ -19,6 +19,7 @@ import { createClient } from "@/utils/supabase/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import ActionSheet, { type SheetAction } from "@/components/admin/ActionSheet";
+import Modal from "@/components/admin/Modal";
 
 interface ReleaseNote {
   id: string;
@@ -160,28 +161,13 @@ export default function ChangelogManagerPage() {
   const releaseSlug = (release: ReleaseNote) =>
     release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined";
 
-  const buildReleaseActions = (release: ReleaseNote): SheetAction[] => {
-    const actions: SheetAction[] = [
-      {
-        id: "edit",
-        label: "Edit release",
-        hint: "Open the markdown editor",
-        icon: FileText,
-        href: `/admin/dashboard/changelog/edit?id=${release.id}`,
-      },
-    ];
-
-    if (release.status === "draft") {
-      actions.push(
-        {
-          id: "publish",
-          label: "Publish now",
-          hint: "Make these notes live",
-          icon: Send,
-          onClick: () => handlePublish(release.id),
-          disabled: publishingId === release.id,
-        },
-        {
+  /**
+   * The overflow menu carries every secondary action, so the card itself
+   * only ever shows the one or two things you actually reach for.
+   */
+  const buildReleaseActions = (release: ReleaseNote): SheetAction[] => [
+    release.status === "draft"
+      ? {
           id: "preview",
           label: "Preview draft",
           hint: "Open in a new tab",
@@ -189,29 +175,23 @@ export default function ChangelogManagerPage() {
           href: `/changelog/${releaseSlug(release)}?preview=true`,
           external: true,
         }
-      );
-    } else {
-      actions.push({
-        id: "view",
-        label: "View public changelog",
-        hint: "Open in a new tab",
-        icon: ExternalLink,
-        href: `/changelog/${releaseSlug(release)}`,
-        external: true,
-      });
-    }
-
-    actions.push({
+      : {
+          id: "view",
+          label: "View public changelog",
+          hint: "Open in a new tab",
+          icon: ExternalLink,
+          href: `/changelog/${releaseSlug(release)}`,
+          external: true,
+        },
+    {
       id: "delete",
       label: "Delete release",
       hint: "This cannot be undone",
       icon: Trash2,
       danger: true,
       onClick: () => setConfirmDelete({ isOpen: true, id: release.id }),
-    });
-
-    return actions;
-  };
+    },
+  ];
 
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
@@ -286,20 +266,21 @@ export default function ChangelogManagerPage() {
                 key={release.id}
                 className="glass-panel rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-250 flex flex-col justify-between hover:bg-white/[0.01] relative"
               >
-                {/* Tapping the card opens the editor — the row of tools stays off small screens */}
+                {/* Tapping the card opens the editor. The right padding keeps
+                    the content clear of the overflow button in the corner. */}
                 <Link
                   href={`/admin/dashboard/changelog/edit?id=${release.id}`}
-                  className="block p-5 space-y-3 rounded-2xl"
+                  className="block p-5 pr-14 space-y-3 rounded-2xl"
                 >
-                  <div className="flex justify-between items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className={`text-[9px] px-2 py-0.5 rounded border font-semibold ${
-                      release.status === "published" 
-                        ? "bg-green-500/10 border-green-500/20 text-green-400" 
+                      release.status === "published"
+                        ? "bg-green-500/10 border-green-500/20 text-green-400"
                         : "bg-zinc-800/20 border-zinc-700/30 text-zinc-400"
                     }`}>
                       {release.status}
                     </span>
-                    <span className="text-[10px] font-bold text-white font-mono bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/5 sm:mr-0 mr-9">
+                    <span className="text-[10px] font-bold text-white font-mono bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/5">
                       v{release.version}
                     </span>
                   </div>
@@ -323,59 +304,37 @@ export default function ChangelogManagerPage() {
                   </div>
                 </Link>
 
-                {/* Small screens: one control for every secondary action */}
+                {/* One control for every secondary action, at every width */}
                 <button
                   onClick={() => setSheetRelease(release)}
-                  aria-label={`Actions for ${release.title}`}
-                  className="sm:hidden absolute top-3.5 right-3.5 w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 border border-white/8 bg-white/[0.03] active:bg-white/[0.08] transition-colors"
+                  aria-label={`More actions for ${release.title}`}
+                  className="absolute top-3.5 right-3.5 w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 border border-white/8 bg-white/[0.03] hover:text-white hover:bg-white/[0.07] active:bg-white/[0.1] transition-colors"
                 >
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
 
-                <div className="hidden sm:flex mx-5 mb-5 pt-4 border-t border-white/5 flex-wrap gap-2">
+                <div className="flex mx-5 mb-5 pt-4 border-t border-white/5 gap-2">
                   <Link
                     href={`/admin/dashboard/changelog/edit?id=${release.id}`}
-                    className="btn-glass flex-1 min-w-[110px] min-h-[40px] sm:min-h-0 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
+                    className="btn-glass flex-1 h-10 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
                   >
                     <FileText className="w-3.5 h-3.5" />
-                    <span>Edit Release</span>
+                    <span>Edit</span>
                   </Link>
-                  {release.status === "draft" ? (
-                    <>
-                      <button
-                        onClick={() => handlePublish(release.id)}
-                        disabled={publishingId === release.id}
-                        className="btn-primary flex-1 min-w-[90px] min-h-[40px] sm:min-h-0 py-1.5 text-[10px] font-bold rounded-full flex items-center justify-center gap-1 cursor-pointer"
-                      >
-                        {publishingId === release.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                        <span>Publish</span>
-                      </button>
-                      <Link
-                        href={`/changelog/${release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}?preview=true`}
-                        target="_blank"
-                        className="btn-glass px-3 py-1.5 min-w-[44px] min-h-[40px] sm:min-h-0 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
-                        title="Preview Draft Release"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </Link>
-                    </>
-                  ) : (
-                    <Link
-                      href={`/changelog/${release.version?.toLowerCase().replace(/[^a-z0-9-_]+/g, "-") || "undefined"}`}
-                      target="_blank"
-                      className="btn-glass px-3 py-1.5 min-w-[44px] min-h-[40px] sm:min-h-0 rounded-full flex items-center justify-center text-zinc-400 hover:text-white"
-                      title="View Public Changelog"
+                  {release.status === "draft" && (
+                    <button
+                      onClick={() => handlePublish(release.id)}
+                      disabled={publishingId === release.id}
+                      className="btn-primary flex-1 h-10 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </Link>
+                      {publishingId === release.id ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Send className="w-3.5 h-3.5" />
+                      )}
+                      <span>Publish</span>
+                    </button>
                   )}
-                  <button
-                    onClick={() => setConfirmDelete({ isOpen: true, id: release.id })}
-                    className="btn-glass px-3 py-1.5 min-w-[44px] min-h-[40px] sm:min-h-0 rounded-full flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/20 cursor-pointer"
-                    title="Delete release"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
                 </div>
               </div>
             ))}
@@ -392,48 +351,40 @@ export default function ChangelogManagerPage() {
         />
 
         {/* Delete Confirmation Modal */}
-        <AnimatePresence>
-          {confirmDelete && confirmDelete.isOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setConfirmDelete(null)}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-              />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-sm p-6 rounded-2xl border border-white/5 glass-panel flex flex-col items-center text-center relative z-10"
-              >
-                <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4">
-                  <Trash2 className="w-6 h-6 animate-pulse" />
-                </div>
-                <h3 className="text-sm font-bold text-white tracking-tight mb-2">Delete Release Notes?</h3>
-                <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
-                  This action cannot be undone. The release record will be permanently deleted from the database.
-                </p>
-                <div className="flex gap-3 w-full">
-                  <button
-                    onClick={() => setConfirmDelete(null)}
-                    className="btn-glass flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={executeDelete}
-                    className="btn-danger flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              </motion.div>
+        <Modal
+          open={!!confirmDelete?.isOpen}
+          onClose={() => setConfirmDelete(null)}
+          size="sm"
+          labelledBy="delete-release-title"
+          panelClassName="border-red-500/20"
+        >
+          <div className="flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4">
+              <Trash2 className="w-6 h-6" />
             </div>
-          )}
-        </AnimatePresence>
+            <h3 id="delete-release-title" className="text-sm font-bold text-white tracking-tight mb-2">
+              Delete Release Notes?
+            </h3>
+            <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
+              This action cannot be undone. The release record will be permanently deleted from the database.
+            </p>
+            <div className="flex gap-3 w-full">
+              <button
+                onClick={() => setConfirmDelete(null)}
+                className="btn-glass flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={executeDelete}
+                className="btn-danger flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+        </Modal>
 
         {/* Toast Notifications */}
         <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3 sm:max-w-sm pointer-events-none">

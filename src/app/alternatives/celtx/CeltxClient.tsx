@@ -14,6 +14,7 @@ import {
   Layers,
 } from "lucide-react";
 import AbramMark from "@/components/AbramMark";
+import ScriptBreakdownMockup from "@/components/film-production/ScriptBreakdownMockup";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 type Faq = { q: string; a: string };
@@ -21,80 +22,76 @@ type Faq = { q: string; a: string };
 const differentiators = [
   {
     icon: Scissors,
-    title: "Breakdown that drives the production",
-    body:
-      "ABRAM turns AI script breakdown into scheduling, budget lines, and client-ready quotes on the same production. Elements you tag once carry through the whole workflow.",
-    points: ["AI breakdown of characters and elements", "One dataset from script to schedule"],
+    title: "AI breakdown that drives production",
+    body: "ABRAM turns screenplay breakdown into schedules, budget items, and client quotes on the same platform. Tag elements once and they sync everywhere.",
+    points: ["Automated AI element extraction", "Single dataset from script to payout"],
   },
   {
     icon: PieChart,
-    title: "Deeper budget tracking",
-    body:
-      "ABRAM tracks budget variance, raises risk alerts as spend moves, and calibrates future estimates from your real actuals, extending well past pre-production planning.",
-    points: ["Live variance and risk alerts", "Estimates that learn from your data"],
+    title: "Deep budget variance tracking",
+    body: "Track live budget variance, get overage risk alerts, and calibrate future estimates from real actuals beyond basic pre-production planning.",
+    points: ["Live budget variance tracking", "Calibrated estimates based on actuals"],
   },
   {
     icon: Wallet,
-    title: "Crew payouts and client portals",
-    body:
-      "ABRAM pays crew from approved milestones, invoices clients, and shares token-based portals where clients approve quotes and pay without a login.",
-    points: ["Milestone crew payouts", "Client quote approval and payment"],
+    title: "Crew payouts & client portals",
+    body: "Pay freelance crew from approved milestone work orders and share token-based client portals where clients approve quotes and pay.",
+    points: ["Stripe Connect milestone payouts", "Zero-account client quote sign-offs"],
   },
   {
     icon: Layers,
-    title: "One platform across tiers",
-    body:
-      "ABRAM keeps scheduling, budgeting, payouts, and client workflows in a single platform, so capabilities stay together as a production grows.",
-    points: ["Scheduling, finance, and clients together", "AI brief intake to start fast"],
+    title: "Unified workspace",
+    body: "Keep screenplay breakdown, stripboards, budgets, crew payouts, and client approvals together in a single agile platform.",
+    points: ["Single workspace across all stages", "AI brief intake for fast setup"],
   },
 ];
 
 const comparison = [
   {
-    feature: "Scriptwriting and storyboarding",
-    abram: "Focused on production management around the script",
-    them: "Strong dedicated screenwriting and storyboarding tools",
+    feature: "Screenwriting & storyboarding",
+    abram: "Focused on production logistics and financial operations around the script",
+    them: "Strong dedicated screenwriting and visual storyboarding tools",
     abramYes: false,
     themYes: true,
   },
   {
     feature: "Script breakdown",
-    abram: "AI-assisted breakdown that flows into scheduling and budget",
-    them: "Tagged breakdown and reports for pre-production",
+    abram: "AI-assisted breakdown that feeds schedules, stripboards, and budgets",
+    them: "Manual tagged breakdown sheets for pre-production",
     abramYes: true,
     themYes: true,
   },
   {
-    feature: "Shooting schedule",
-    abram: "Stripboard, Day-out-of-Days, and call sheets",
-    them: "Scheduling and shot planning tools",
+    feature: "Shooting schedule & stripboard",
+    abram: "Stripboard, Day-out-of-Days, and union rest period alerts",
+    them: "Basic shot planning and pre-production calendars",
     abramYes: true,
     themYes: true,
   },
   {
-    feature: "Budget tracking with variance",
-    abram: "Variance, risk alerts, and calibration from actuals",
-    them: "Budget management focused on pre-production planning",
+    feature: "Budget variance tracking",
+    abram: "Live variance alerts, cost risk detection, and estimate calibration",
+    them: "Basic budget templates (pre-production focused)",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Crew payouts and invoicing",
+    feature: "Crew payouts & invoicing",
     abram: "Milestone crew payouts and client invoicing built in",
-    them: "Not part of the product",
+    them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "Client approval portal",
-    abram: "Token-based portals with quote approval and payment",
+    abram: "Token-based client portals for quote approvals & payments",
     them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "AI production copilot",
-    abram: "ABRAM Core turns briefs into work packages and executes actions with approval",
+    abram: "ABRAM Core turns briefs and screenplays into work packages and schedules",
     them: "Not offered",
     abramYes: true,
     themYes: false,
@@ -104,18 +101,18 @@ const comparison = [
 const migration = [
   {
     step: "1",
-    title: "Bring your breakdown into ABRAM",
-    body: "Import or run an AI breakdown of your script so characters, props, and elements populate the production and feed the schedule directly.",
+    title: "Import your screenplay",
+    body: "Parse PDF or FDX screenplays with AI to automatically extract characters, locations, and props.",
   },
   {
     step: "2",
-    title: "Attach the budget and schedule",
-    body: "Build the shooting schedule on the stripboard and connect a budget so variance and risk alerts track against actuals as the production moves.",
+    title: "Connect stripboard & budget",
+    body: "Build shooting schedules on the stripboard and track live budget variance as actual costs land.",
   },
   {
     step: "3",
-    title: "Turn on payouts and client access",
-    body: "Enable crew payouts and share a token-based client portal so approvals, invoicing, and payment run in the same platform as your creative work.",
+    title: "Enable payouts & client portals",
+    body: "Set up milestone crew payouts and send token-based approval links to clients.",
   },
 ];
 
@@ -136,10 +133,10 @@ export default function CeltxClient({ faqs }: { faqs: Faq[] }) {
               Celtx Alternative
             </motion.span>
             <motion.h1 variants={revealVariants} custom={0.1} className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans">
-              ABRAM carries your script breakdown all the way into budgets, crew payouts, and client-ready approvals.
+              From Script Breakdown to Live Budgets, Crew Payouts & Client Sign-Offs
             </motion.h1>
             <motion.p variants={revealVariants} custom={0.2} className="text-base sm:text-lg md:text-xl leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans">
-              Keep writing and breaking down scripts, and run the money, the crew, and the client relationship from the same platform.
+              Connect your screenplays directly to shooting schedules, live budget variance alerts, crew payouts, and client approvals.
             </motion.p>
             <motion.div variants={revealVariants} custom={0.3} className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
               <Link href="/pricing" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
@@ -154,17 +151,23 @@ export default function CeltxClient({ faqs }: { faqs: Faq[] }) {
         </div>
       </section>
 
-      {/* Where Celtx is strong */}
+      {/* Script Breakdown Visual Mockup Section */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="rounded-2xl border border-white/8 bg-zinc-950/30 backdrop-blur-md p-6 md:p-8">
-            <h2 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-3">Where Celtx is strong</h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-              Celtx is a capable, affordable script-first suite with genuinely good scriptwriting, storyboarding, breakdown, and collaborative pre-production, which has earned it a large following among indie filmmakers and students. If your center of gravity is writing and planning the shoot, Celtx does that well. Teams look for an alternative when they need deeper budget tracking, crew payments, and client-facing approvals in the same place, and when capabilities feel spread across separate tiers.
-            </p>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+              AUTOMATED SCRIPT PARSER
+            </span>
+            <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-white font-sans">
+              Parse Screenplays into Tagged Shooting Lists in Seconds
+            </h2>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-zinc-950/60 backdrop-blur-md p-4 sm:p-6 shadow-2xl">
+            <ScriptBreakdownMockup />
           </div>
         </div>
       </section>
+
 
       {/* Differentiators */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
