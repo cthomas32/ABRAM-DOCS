@@ -73,7 +73,7 @@ export default function ProgressFlow({ steps }: ProgressFlowProps) {
               className={`flex-1 min-w-0 glass-panel ${borderClass} ${bgClass} ${glowClass} rounded-xl p-5 border relative overflow-hidden transition-all duration-200 flex flex-col gap-3`}
             >
               {isActive && (
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 animate-pulse" />
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500" />
               )}
 
               <div className="flex items-center justify-between gap-3">

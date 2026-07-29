@@ -378,7 +378,7 @@ export default function ProjectDetailMock() {
                               {t.status === "Completed" ? (
                                 <LucideIcons.CheckCircle2 size={15} className="text-green-500 shrink-0" />
                               ) : t.status === "In Progress" ? (
-                                <LucideIcons.Clock size={15} className="text-blue-400 shrink-0 animate-pulse" />
+                                <LucideIcons.Clock size={15} className="text-blue-400 shrink-0" />
                               ) : (
                                 <LucideIcons.Circle size={15} className="text-zinc-700 shrink-0" />
                               )}
@@ -498,7 +498,7 @@ export default function ProjectDetailMock() {
 
                   <div className="flex items-center justify-between mb-2 md:hidden">
                     <span className="text-[10px] text-zinc-500 uppercase font-semibold">Financial Ledger</span>
-                    <span className="text-[10px] text-zinc-400 font-mono animate-pulse">Swipe to view →</span>
+                    <span className="text-[10px] text-zinc-400 font-mono">Swipe to view →</span>
                   </div>
                   <div className="border border-white/5 bg-[#121212] rounded-2xl overflow-hidden">
                     <div className="overflow-x-auto">

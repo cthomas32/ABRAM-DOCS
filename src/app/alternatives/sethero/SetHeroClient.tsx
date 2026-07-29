@@ -14,6 +14,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import AbramMark from "@/components/AbramMark";
+import CallSheetMockup from "@/components/film-production/CallSheetMockup";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 type Faq = { q: string; a: string };
@@ -21,80 +22,76 @@ type Faq = { q: string; a: string };
 const differentiators = [
   {
     icon: Scissors,
-    title: "Script breakdown feeding the schedule",
-    body:
-      "ABRAM turns AI script breakdown into scheduling and budget lines, so the elements behind a call sheet come from the same production data rather than separate entry.",
-    points: ["AI breakdown of characters and elements", "Breakdown that drives the schedule"],
+    title: "Script breakdown tied to schedule",
+    body: "ABRAM converts screenplay element extraction into live schedules and budgets, so call sheet data stays connected to the source.",
+    points: ["Automated script parsing", "Connected schedule & breakdown"],
   },
   {
     icon: PieChart,
-    title: "Budget tracking with variance",
-    body:
-      "ABRAM tracks budget variance, raises risk alerts as spend moves, and calibrates future estimates from real actuals, giving cost visibility that a call sheet tool leaves out.",
-    points: ["Live variance and risk alerts", "Estimates that learn from your data"],
+    title: "Budget tracking with live variance",
+    body: "Track live budget variance, get overrun alerts, and calibrate future cost estimates while building call sheets.",
+    points: ["Live budget variance tracking", "Automated cost risk detection"],
   },
   {
     icon: Wallet,
-    title: "Crew payouts and client portals",
-    body:
-      "ABRAM pays crew from approved milestones, invoices clients, and shares token-based portals where clients approve quotes and pay, all alongside your call sheets.",
-    points: ["Milestone crew payouts", "Client quote approval and payment"],
+    title: "Crew payouts & client portals",
+    body: "Pay freelance crew from approved milestone work orders and send token-based approval links to clients.",
+    points: ["Stripe Connect milestone payouts", "Client quote approvals with zero login"],
   },
   {
     icon: ShieldCheck,
-    title: "Union rest tracking",
-    body:
-      "ABRAM watches wrap-to-call turnaround on the schedule and warns coordinators when a rest window falls short of the threshold you set, before a call sheet goes out.",
-    points: ["Turnaround warnings on the schedule", "Configurable thresholds per contract"],
+    title: "Union rest period telemetry",
+    body: "ABRAM monitors wrap-to-call turnaround on the schedule and alerts coordinators before a call sheet goes out.",
+    points: ["SAG-AFTRA / DGA turnaround alerts", "Configurable rest period thresholds"],
   },
 ];
 
 const comparison = [
   {
-    feature: "Professional call sheets",
-    abram: "Live call sheets linked to the schedule, sent by email and Slack",
-    them: "Excellent call sheets with SMS and email delivery tracking",
+    feature: "Digital call sheets",
+    abram: "Live call sheets linked to schedule with email/Slack dispatch & one-click RSVP",
+    them: "Call sheets with SMS and email delivery tracking",
     abramYes: true,
     themYes: true,
   },
   {
-    feature: "Delivery and confirmation tracking",
-    abram: "One-click confirmation with crew notifications",
+    feature: "Delivery & RSVP tracking",
+    abram: "One-click RSVP confirmation with real-time crew alerts",
     them: "Tracks delivery, opens, and confirmations",
     abramYes: true,
     themYes: true,
   },
   {
-    feature: "Shooting schedule and stripboard",
-    abram: "Stripboard, Day-out-of-Days, and run of show",
+    feature: "Shooting schedule & stripboard",
+    abram: "Stripboard, Day-out-of-Days, and rest period violation alerts",
     them: "Stripboards and shooting schedules",
     abramYes: true,
     themYes: true,
   },
   {
-    feature: "Script breakdown",
-    abram: "AI-assisted breakdown that feeds scheduling and budget",
-    them: "Focused on call sheets and scheduling",
+    feature: "AI script breakdown",
+    abram: "AI-assisted breakdown that feeds schedules and budget items",
+    them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Budget tracking with variance",
-    abram: "Variance, risk alerts, and calibration from actuals",
-    them: "Basic budgeting for smaller projects",
+    feature: "Budget variance tracking",
+    abram: "Live budget variance, overrun alerts, and cost-to-complete",
+    them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Crew payouts and client portals",
-    abram: "Milestone payouts, invoicing, and token-based portals",
-    them: "Not part of the product",
+    feature: "Crew payouts & client portals",
+    abram: "Milestone crew payouts, client invoicing, and portals",
+    them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "AI production copilot",
-    abram: "ABRAM Core turns briefs into work packages and executes actions with approval",
+    abram: "ABRAM Core automates logistics, call sheet drafting, and updates",
     them: "Not offered",
     abramYes: true,
     themYes: false,
@@ -104,18 +101,18 @@ const comparison = [
 const migration = [
   {
     step: "1",
-    title: "Recreate your call sheet workflow",
-    body: "Build your productions in ABRAM so call sheets read from the live schedule and reach crew by email and Slack with one-click confirmation.",
+    title: "Set up live call sheet dispatch",
+    body: "Build call sheets linked directly to your shooting schedule with automated email and Slack notifications.",
   },
   {
     step: "2",
-    title: "Add breakdown, budget, and union tracking",
-    body: "Run an AI script breakdown, attach a budget so variance and risk alerts track against actuals, and set union rest thresholds on the schedule.",
+    title: "Add script breakdown & budgets",
+    body: "Parse scripts with AI, populate stripboard schedules, and track live budget variance.",
   },
   {
     step: "3",
-    title: "Turn on payouts and client access",
-    body: "Enable crew payouts and share a token-based client portal so approvals, invoicing, and payment run in the same platform as your call sheets.",
+    title: "Enable crew payouts",
+    body: "Pay crew from approved milestone work orders and manage client sign-offs in one place.",
   },
 ];
 
@@ -136,10 +133,10 @@ export default function SetHeroClient({ faqs }: { faqs: Faq[] }) {
               SetHero Alternative
             </motion.span>
             <motion.h1 variants={revealVariants} custom={0.1} className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans">
-              ABRAM surrounds your call sheets with script breakdown, budget tracking, crew payouts, and client approvals in one platform.
+              Connect Digital Call Sheets to Live Budgets, Stripboards & Payouts
             </motion.h1>
             <motion.p variants={revealVariants} custom={0.2} className="text-base sm:text-lg md:text-xl leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans">
-              Send the same professional call sheets your crew expects, and manage the entire production and its finances in the same place.
+              Send clean call sheets with weather, maps, and one-click RSVP tracking, backed by an end-to-end production operating system.
             </motion.p>
             <motion.div variants={revealVariants} custom={0.3} className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
               <Link href="/pricing" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
@@ -154,17 +151,23 @@ export default function SetHeroClient({ faqs }: { faqs: Faq[] }) {
         </div>
       </section>
 
-      {/* Where SetHero is strong */}
+      {/* Digital Call Sheet Visual Section */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="rounded-2xl border border-white/8 bg-zinc-950/30 backdrop-blur-md p-6 md:p-8">
-            <h2 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-3">Where SetHero is strong</h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-              SetHero makes some of the best call sheets in the business, with professional layouts, SMS and email distribution, and delivery, open, and confirmation tracking that crews love. Its interface is easy and fast, which is why it is a popular pick for indie and commercial shoots that mainly need call sheets and scheduling. Teams look for an alternative when they want script breakdown, deeper budgeting, crew payments, and client approvals in the same platform, especially on larger or union productions.
-            </p>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+              CONNECTED DIGITAL CALL SHEETS
+            </span>
+            <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-white font-sans">
+              Live Weather, Location Maps, Turnaround Warnings & Instant RSVP
+            </h2>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-zinc-950/60 backdrop-blur-md p-4 sm:p-6 shadow-2xl">
+            <CallSheetMockup />
           </div>
         </div>
       </section>
+
 
       {/* Differentiators */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">

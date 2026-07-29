@@ -258,16 +258,6 @@ export default function AgencyClientPortalMockup() {
                       >
                         <div className="flex items-start justify-between gap-3 w-full">
                           <div className="flex items-center gap-2.5 min-w-0">
-                            {/* StatusDot */}
-                            <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                              project.status === "Review Drafts"
-                                ? "bg-amber-400"
-                                : project.status === "Completed"
-                                ? "bg-emerald-400"
-                                : project.status === "Awaiting Payment"
-                                ? "bg-red-400"
-                                : "bg-blue-400"
-                            }`} />
                             <span className="text-xs sm:text-sm text-zinc-100 font-semibold truncate font-sans">
                               {project.title}
                             </span>
@@ -333,15 +323,6 @@ export default function AgencyClientPortalMockup() {
                           }}
                           className="flex items-center gap-3.5 px-3 py-3 rounded-xl hover:bg-white/[0.04] transition-colors group cursor-pointer text-left w-full"
                         >
-                          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                            project.status === "Review Drafts"
-                              ? "bg-amber-400"
-                              : project.status === "Completed"
-                              ? "bg-emerald-400"
-                              : project.status === "Awaiting Payment"
-                              ? "bg-red-400"
-                              : "bg-blue-400"
-                          }`} />
                           <div className="min-w-0 flex-1">
                             <span className="block text-xs sm:text-sm text-zinc-100 font-semibold truncate font-sans">
                               {project.title}

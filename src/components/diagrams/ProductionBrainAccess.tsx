@@ -12,7 +12,7 @@ export default function ProductionBrainAccess() {
         whileHover={{ y: -2, borderColor: "rgba(168, 85, 247, 0.4)" }}
         className="glass-panel border border-purple-500/20 bg-purple-950/10 shadow-[0_0_25px_rgba(168,85,247,0.12)] rounded-xl p-5 max-w-md w-full flex items-center gap-4 relative overflow-hidden transition-all duration-200"
       >
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 to-pink-500" />
         <div className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 shrink-0 text-purple-400">
           <LucideIcons.Database size={24} />
         </div>

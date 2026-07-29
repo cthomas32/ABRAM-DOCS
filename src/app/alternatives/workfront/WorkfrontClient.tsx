@@ -14,6 +14,7 @@ import {
   Wallet,
 } from "lucide-react";
 import AbramMark from "@/components/AbramMark";
+import AgencyClientPortalMockup from "@/components/agency/AgencyClientPortalMockup";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 type Faq = { q: string; a: string };
@@ -21,81 +22,77 @@ type Faq = { q: string; a: string };
 const differentiators = [
   {
     icon: Gauge,
-    title: "Usable on the first day",
-    body:
-      "Workfront reviewers often describe a steep learning curve and consultant-led rollouts that run for months. ABRAM is designed to be productive right away, with an AI brief intake that turns a brief into work packages and estimates.",
-    points: ["No multi-month implementation", "AI brief intake to start fast"],
+    title: "Usable on day one",
+    body: "Skip multi-month consultant rollouts. ABRAM's AI brief intake turns creative briefs into work packages and estimates in minutes.",
+    points: ["Zero multi-month onboarding", "AI brief intake to launch immediately"],
   },
   {
     icon: Tag,
-    title: "Pricing you can read up front",
-    body:
-      "Adobe keeps Workfront pricing quote-based across its Select, Prime, and Ultimate tiers. ABRAM publishes its pricing so you can evaluate cost before you talk to anyone.",
-    points: ["Published plans, no quote required", "Right-sized for small and mid teams"],
+    title: "Transparent, published pricing",
+    body: "No sales calls or hidden enterprise tiers. ABRAM publishes simple, predictable plans right on the site.",
+    points: ["Transparent pricing tiers", "Right-sized for studios and agile agencies"],
   },
   {
     icon: Film,
-    title: "Built for production, not generic work",
-    body:
-      "ABRAM ships film-grade scheduling with stripboard, Day-out-of-Days, run of show, script breakdown, and call sheets with union rest tracking. These production workflows sit outside a general work management platform.",
-    points: ["Stripboard, DooD, and call sheets", "Union rest tracking on the schedule"],
+    title: "Purpose-built for production sets",
+    body: "Includes stripboard scheduling, script breakdown, call sheets, and union rest window tracking out of the box.",
+    points: ["Native stripboard & call sheets", "SAG-AFTRA / DGA turnaround alerts"],
   },
   {
     icon: Wallet,
-    title: "Finance and clients in the same place",
-    body:
-      "ABRAM connects budgets to crew payouts and client-facing approvals, so a production runs from brief to payment without stitching together separate systems.",
-    points: ["Budget variance and risk alerts", "Client portals with quote approval and payment"],
+    title: "Integrated finance & client portals",
+    body: "Connect budget variance tracking directly to Stripe crew payouts and token-based client approval links.",
+    points: ["Live budget variance tracking", "Client approval portals with instant payments"],
   },
 ];
 
 const comparison = [
   {
-    feature: "Enterprise work management",
-    abram: "Work packages, milestones, and task tracking for productions",
-    them: "Deep, highly configurable enterprise work management",
+    feature: "Creative work management",
+    abram: "Work packages, milestones, and asset tracking for productions",
+    them: "Configurable enterprise ticket queues and work management",
     abramYes: true,
     themYes: true,
   },
   {
-    feature: "Proofing and portfolio planning at scale",
-    abram: "Focused on production coordination and delivery",
-    them: "Strong proofing, resource, and portfolio planning for large orgs",
+    feature: "Strategic portfolio governance",
+    abram: "Focused on production delivery and financial actuals",
+    them: "Heavy corporate portfolio governance for enterprise marketing",
     abramYes: false,
     themYes: true,
   },
   {
     feature: "Time to first value",
     abram: "Usable on day one with AI brief intake",
-    them: "Commonly a multi-month, consultant-led rollout",
+    them: "Commonly a multi-month consultant-led rollout",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Published pricing",
-    abram: "Plans published for direct evaluation",
-    them: "Quote-based across Select, Prime, and Ultimate",
+    feature: "Transparent pricing",
+    abram: "Published plans available immediately online",
+    them: "Quote-based custom sales pricing",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Film-native scheduling and call sheets",
+    feature: "Film & video production tools",
     abram: "Stripboard, Day-out-of-Days, and union rest tracking",
-    them: "General work management, not film specific",
+    them: "General ticket management (not production-native)",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Crew payouts and client portals",
-    abram: "Milestone payouts, invoicing, and token-based portals",
-    them: "Not part of the core product",
+    feature: "Crew payouts & client portals",
+    abram: "Milestone payouts, invoicing, and zero-login client portals",
+    them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "AI production copilot",
-    abram: "ABRAM Core turns briefs into work packages and executes actions with approval",
-    them: "Automation via Workfront Fusion, not a production copilot",
+    abram: "ABRAM Core parses briefs and automates operational tasks",
+    them: "Basic integration rules via Workfront Fusion",
     abramYes: true,
     themYes: false,
   },
@@ -104,18 +101,18 @@ const comparison = [
 const migration = [
   {
     step: "1",
-    title: "Start with a live brief",
-    body: "Drop a brief into ABRAM and let the AI intake build the initial work packages and a rough estimate, so a project is structured in minutes rather than after a rollout.",
+    title: "Upload your brief",
+    body: "Drop a creative brief into ABRAM to automatically generate work packages and estimates in minutes.",
   },
   {
     step: "2",
-    title: "Add the production layer",
-    body: "Bring in scheduling, call sheets, and script breakdown so coordinators work in tools designed for set instead of generic task boards.",
+    title: "Activate production set tools",
+    body: "Deploy stripboard scheduling, call sheets, and crew rosters tailored specifically for production teams.",
   },
   {
     step: "3",
-    title: "Connect budget, crew, and clients",
-    body: "Attach budgets, enable crew payouts, and share client portals so approvals and payment run in the same platform your team already uses.",
+    title: "Connect client portals & payouts",
+    body: "Enable Stripe payouts and share client approval portals for frictionless billing.",
   },
 ];
 
@@ -136,10 +133,10 @@ export default function WorkfrontClient({ faqs }: { faqs: Faq[] }) {
               Adobe Workfront Alternative
             </motion.span>
             <motion.h1 variants={revealVariants} custom={0.1} className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans">
-              ABRAM gives production teams enterprise-grade coordination they can run on the first day, with pricing published up front.
+              Agile Creative Operations Without the Enterprise Complexity
             </motion.h1>
             <motion.p variants={revealVariants} custom={0.2} className="text-base sm:text-lg md:text-xl leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans">
-              Skip the multi-month rollout and per-seat quotes, and manage briefs, schedules, budgets, and client approvals in a platform built for how productions actually work.
+              Skip multi-month consultant implementations. Manage briefs, schedules, budgets, and client approvals in a system built for creative sets.
             </motion.p>
             <motion.div variants={revealVariants} custom={0.3} className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
               <Link href="/pricing" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
@@ -147,24 +144,30 @@ export default function WorkfrontClient({ faqs }: { faqs: Faq[] }) {
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link href="/intelligence" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
-                <span>Explore the intelligence suite</span>
+                <span>Explore intelligence suite</span>
               </Link>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Where Workfront is strong */}
+      {/* Agency Client Portal Visual Section */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="rounded-2xl border border-white/8 bg-zinc-950/30 backdrop-blur-md p-6 md:p-8">
-            <h2 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-3">Where Adobe Workfront is strong</h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-              Adobe Workfront is a powerful, highly configurable work management platform for large enterprises. Its proofing and review, strategic portfolio planning, resource management, and governance are built for big marketing organizations, and it fits naturally into the wider Adobe ecosystem through Workfront Fusion. For an enterprise standardizing hundreds of users on one system, that depth is a genuine strength. Production teams look for an alternative when they want faster adoption, published pricing, and film-specific workflows.
-            </p>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+              FRICTIONLESS CLIENT PORTALS & APPROVALS
+            </span>
+            <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-white font-sans">
+              Token-Based Client Portals for Fast Quote Approval & Sign-Off
+            </h2>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-zinc-950/60 backdrop-blur-md p-4 sm:p-6 shadow-2xl">
+            <AgencyClientPortalMockup />
           </div>
         </div>
       </section>
+
 
       {/* Differentiators */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">

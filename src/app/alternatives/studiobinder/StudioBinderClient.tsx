@@ -14,6 +14,7 @@ import {
   MonitorSmartphone,
 } from "lucide-react";
 import AbramMark from "@/components/AbramMark";
+import CallSheetMockup from "@/components/film-production/CallSheetMockup";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 type Faq = { q: string; a: string };
@@ -22,41 +23,37 @@ const differentiators = [
   {
     icon: PieChart,
     title: "Native budget tracking",
-    body:
-      "StudioBinder reviewers regularly ask for built-in budgeting. ABRAM tracks budget variance, raises risk alerts as spend moves, and calibrates future estimates from your real production actuals.",
+    body: "ABRAM tracks live budget variance, raises risk alerts before overruns land, and calibrates future estimates directly from real production actuals.",
     points: [
       "Live variance against approved budgets",
-      "Budget risk alerts before overruns land",
+      "Automated risk alerts for overruns",
     ],
   },
   {
     icon: Wallet,
     title: "Crew payouts and invoicing",
-    body:
-      "ABRAM pays freelance crew directly from approved milestones and issues client invoices from the same workspace, so scheduling and finance stay connected.",
+    body: "Pay freelance crew directly from approved milestones and issue client invoices from the same workspace without extra software.",
     points: [
-      "Milestone-based payouts to crew",
-      "Client invoicing without a separate tool",
+      "Milestone-based payouts via Stripe",
+      "Client invoicing without external tools",
     ],
   },
   {
     icon: ShieldCheck,
     title: "Union rest tracking",
-    body:
-      "ABRAM watches wrap-to-call turnaround on the schedule and warns coordinators when a rest window falls short of the threshold you set for SAG-AFTRA, DGA, or IATSE.",
+    body: "ABRAM monitors wrap-to-call turnaround on the schedule and alerts coordinators when rest windows violate SAG-AFTRA, DGA, or IATSE rules.",
     points: [
       "Turnaround warnings on the stripboard",
-      "Configurable thresholds per contract",
+      "Configurable thresholds per union contract",
     ],
   },
   {
     icon: MonitorSmartphone,
     title: "Client approval portals",
-    body:
-      "Token-based portals let clients review and approve a quote and pay, all without creating a login, keeping approvals and billing inside your production system.",
+    body: "Token-based portals let clients review quotes, sign off on deliverables, and submit payments without creating an account.",
     points: [
-      "Quote approval with no client account",
-      "Payment collected on the same link",
+      "Quote approval with zero account setup",
+      "Instant payments on the same secure link",
     ],
   },
 ];
@@ -64,49 +61,49 @@ const differentiators = [
 const comparison = [
   {
     feature: "Digital call sheets",
-    abram: "Live call sheets linked to the schedule, sent by email and Slack with one-click confirmation",
-    them: "Polished, industry-standard call sheet templates sent by email",
+    abram: "Live call sheets linked to schedule with email/Slack dispatch & one-click RSVP",
+    them: "Polished call sheet templates sent via email",
     abramYes: true,
     themYes: true,
   },
   {
-    feature: "Shooting schedule and stripboard",
-    abram: "Stripboard, Day-out-of-Days, and run of show with turnaround alerts",
-    them: "Visual shooting schedules and calendar tools",
+    feature: "Shooting schedule & stripboard",
+    abram: "Interactive stripboard, Day-out-of-Days, and rest period violation alerts",
+    them: "Visual shooting schedules and calendar views",
     abramYes: true,
     themYes: true,
   },
   {
     feature: "Script breakdown",
-    abram: "AI-assisted breakdown of characters, props, and elements",
+    abram: "AI-assisted breakdown of characters, props, locations, and elements",
     them: "Manual click-and-tag breakdown workspace",
     abramYes: true,
     themYes: true,
   },
   {
     feature: "Budget tracking",
-    abram: "Native variance, risk alerts, and estimate calibration from actuals",
-    them: "Commonly requested by reviewers, handled in outside tools",
+    abram: "Native budget variance, risk alerts, and cost-to-complete tracking",
+    them: "Not built in (requires external tools)",
     abramYes: true,
     themYes: false,
   },
   {
-    feature: "Crew payouts and invoicing",
+    feature: "Crew payouts & invoicing",
     abram: "Milestone crew payouts and client invoicing built in",
-    them: "Planning focused, payments in external accounting",
+    them: "Planning only (payments handled in separate tools)",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "Client approval portal",
-    abram: "Token-based portals with quote approval and payment",
-    them: "Not a core focus of the product",
+    abram: "Token-based portals for quote approvals and payments",
+    them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "AI production copilot",
-    abram: "ABRAM Core turns briefs into work packages and executes actions with approval",
+    abram: "ABRAM Core parses briefs, builds work packages, and automates logistics",
     them: "Not offered",
     abramYes: true,
     themYes: false,
@@ -116,18 +113,18 @@ const comparison = [
 const migration = [
   {
     step: "1",
-    title: "Bring across your projects and contacts",
-    body: "Import your active productions and crew contacts, then rebuild your shooting schedule on the stripboard where call sheets read from it directly.",
+    title: "Import active productions & roster",
+    body: "Import your active projects and crew contacts, then set up your shooting schedule on the live stripboard.",
   },
   {
     step: "2",
-    title: "Layer in budget and payments",
-    body: "Attach a budget to each project so variance and risk alerts start tracking, and connect crew payouts so approved milestones pay out from the same place.",
+    title: "Connect budget & payouts",
+    body: "Attach budgets to projects to track live variance and enable automated milestone payouts to crew.",
   },
   {
     step: "3",
-    title: "Invite clients to the portal",
-    body: "Share a token-based portal link so clients approve quotes and pay, closing the loop between production and billing without new logins.",
+    title: "Share client portals",
+    body: "Send token-based portal links for fast quote approvals and payments without new logins.",
   },
 ];
 
@@ -153,10 +150,10 @@ export default function StudioBinderClient({ faqs }: { faqs: Faq[] }) {
               StudioBinder Alternative
             </motion.span>
             <motion.h1 variants={revealVariants} custom={0.1} className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans">
-              ABRAM turns your call sheets and schedules into a full production system that also tracks budgets, pays crew, and gets client sign-off.
+              Connect Your Call Sheets to Live Budgets, Crew Payouts & Client Sign-Offs
             </motion.h1>
             <motion.p variants={revealVariants} custom={0.2} className="text-base sm:text-lg md:text-xl leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans">
-              Keep the polished call sheets you expect from StudioBinder, and add the budget tracking, crew payouts, and client approvals that usually live in separate tools.
+              Keep the clean call sheets you expect from StudioBinder, and add the native budgeting, crew payouts, and client portals that usually live in separate tools.
             </motion.p>
             <motion.div variants={revealVariants} custom={0.3} className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
               <Link href="/pricing" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
@@ -171,14 +168,19 @@ export default function StudioBinderClient({ faqs }: { faqs: Faq[] }) {
         </div>
       </section>
 
-      {/* Where StudioBinder is strong */}
+      {/* Visual Call Sheet Component Section */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="rounded-2xl border border-white/8 bg-zinc-950/30 backdrop-blur-md p-6 md:p-8">
-            <h2 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-3">Where StudioBinder is strong</h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-              StudioBinder earns its reputation for clean, professional call sheets, shot lists, storyboards, and shooting schedules in an approachable cloud interface. Reviewers consistently praise how quickly a coordinator can build and send a call sheet. If your workflow ends at pre-production planning, StudioBinder covers it well. Teams tend to look for an alternative once they also need budgeting, crew payments, and client billing in the same place.
-            </p>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+              LIVE CALL SHEET WORKFLOW
+            </span>
+            <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-white font-sans">
+              Call Sheets That Automatically Update with Your Schedule & Budget
+            </h2>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-zinc-950/60 backdrop-blur-md p-4 sm:p-6 shadow-2xl">
+            <CallSheetMockup />
           </div>
         </div>
       </section>
@@ -187,8 +189,8 @@ export default function StudioBinderClient({ faqs }: { faqs: Faq[] }) {
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 max-w-2xl mx-auto">
-            <h2 className="text-xl font-semibold tracking-tight text-zinc-50 font-sans mb-3">Where teams outgrow StudioBinder</h2>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">These are the capabilities ABRAM adds around your existing scheduling and call sheet workflow.</p>
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-50 font-sans mb-3">Where Teams Outgrow StudioBinder</h2>
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">Key capabilities ABRAM unifies around your scheduling workflow.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {differentiators.map((d, i) => (
@@ -213,6 +215,7 @@ export default function StudioBinderClient({ faqs }: { faqs: Faq[] }) {
           </div>
         </div>
       </section>
+
 
       {/* Comparison table */}
       <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">

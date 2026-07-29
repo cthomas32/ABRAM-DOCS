@@ -224,7 +224,6 @@ export default function CallSheetMockup() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-amber-500" />
               <span className="font-sans text-[9px] tracking-widest text-zinc-400 font-semibold uppercase">
                 ABRAM PRODUCTION ENGINE // ACTIVE RUN-OF-SHOW
               </span>
@@ -896,7 +895,7 @@ export default function CallSheetMockup() {
       {/* Bottom Footer Info bar */}
       <div className="p-3 border-t border-white/5 bg-zinc-950/40 flex justify-between items-center text-[9px] font-sans text-zinc-500">
         <div>ABRAM Roster Sync & AI Generation Engine</div>
-        <div>v2.0-stable</div>
+        <div>ABRAM Network</div>
       </div>
     </div>
   );

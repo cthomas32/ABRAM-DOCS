@@ -206,7 +206,7 @@ export default function NewsletterSignup({
                         setIsAlreadySubscribed(false);
                       }}
                       disabled={status === "loading"}
-                      className={`w-full h-11 px-4 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/40 rounded-full border transition-all duration-200 outline-none disabled:opacity-50 ${
+                      className={`w-full h-9 px-3.5 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/40 rounded-full border transition-all duration-200 outline-none disabled:opacity-50 ${
                         status === "error"
                           ? "border-red-500/30 focus:border-red-500/50 focus:ring-red-500/20"
                           : "border-white/5 hover:border-white/10 focus:border-white/20 focus:ring-white/20"
@@ -217,7 +217,7 @@ export default function NewsletterSignup({
                   <button
                     type="submit"
                     disabled={status === "loading" || !email}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white text-black text-xs font-semibold px-6 h-11 hover:bg-zinc-200 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white text-black text-xs font-semibold px-4 h-9 hover:bg-zinc-200 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                   >
                     {status === "loading" ? (
                       <>
@@ -318,7 +318,7 @@ export default function NewsletterSignup({
                       value={profileFirstName}
                       onChange={(e) => setProfileFirstName(e.target.value)}
                       disabled={submittingDetails}
-                      className="w-full h-10 px-4 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/50 rounded-full border border-white/5 focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all duration-200 disabled:opacity-50"
+                      className="w-full h-9 px-3.5 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/50 rounded-full border border-white/5 focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all duration-200 disabled:opacity-50"
                     />
                   </div>
 
@@ -337,7 +337,7 @@ export default function NewsletterSignup({
                       value={profileLastName}
                       onChange={(e) => setProfileLastName(e.target.value)}
                       disabled={submittingDetails}
-                      className="w-full h-10 px-4 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/50 rounded-full border border-white/5 focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all duration-200 disabled:opacity-50"
+                      className="w-full h-9 px-3.5 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/50 rounded-full border border-white/5 focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all duration-200 disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -358,7 +358,7 @@ export default function NewsletterSignup({
                     value={jobTitle}
                     onChange={(e) => setJobTitle(e.target.value)}
                     disabled={submittingDetails}
-                    className="w-full h-10 px-4 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/50 rounded-full border border-white/5 focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all duration-200 disabled:opacity-50"
+                    className="w-full h-9 px-3.5 text-xs text-zinc-100 placeholder-zinc-600 bg-zinc-950/50 rounded-full border border-white/5 focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all duration-200 disabled:opacity-50"
                   />
                 </div>
 
@@ -377,7 +377,7 @@ export default function NewsletterSignup({
                       value={companySize}
                       onChange={(e) => setCompanySize(e.target.value)}
                       disabled={submittingDetails}
-                      className="w-full h-10 px-4 pr-10 text-xs text-zinc-100 bg-zinc-950/50 rounded-full border border-white/5 focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 font-sans"
+                      className="w-full h-9 px-3.5 pr-10 text-xs text-zinc-100 bg-zinc-950/50 rounded-full border border-white/5 focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 font-sans"
                     >
                       <option value="" className="bg-zinc-950 text-zinc-500 font-sans">Select company size...</option>
                       <option value="1" className="bg-zinc-950 text-zinc-200 font-sans">1 (Solo)</option>
@@ -408,7 +408,7 @@ export default function NewsletterSignup({
                   <button
                     type="submit"
                     disabled={submittingDetails}
-                    className="btn-primary w-full h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none"
+                    className="btn-primary w-full h-9 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none"
                   >
                     {submittingDetails ? (
                       <>

@@ -26,7 +26,7 @@ import type { VisualKind } from "@/lib/campaigns";
  */
 
 const PANEL =
-  "relative rounded-2xl border border-white/8 bg-zinc-950/60 backdrop-blur-md overflow-hidden shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)]";
+  "relative rounded-2xl border border-white/8 bg-zinc-950/60 backdrop-blur-md overflow-hidden shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)] h-full flex flex-col justify-between";
 
 function WindowChrome({ title }: { title: string }) {
   return (
@@ -57,7 +57,7 @@ function CallSheetVisual() {
     <div className={PANEL}>
       <WindowChrome title="Call Sheet / Day 12" />
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div className="flex items-start justify-between gap-3 mb-4">
           <div>
             <p className="text-[9px] font-medium tracking-widest uppercase text-zinc-500">
@@ -123,7 +123,7 @@ function ScheduleVisual() {
     <div className={PANEL}>
       <WindowChrome title="Schedule / Nebula Spot" />
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div className="flex items-center gap-2 mb-4">
           <CalendarDays className="w-3.5 h-3.5 text-zinc-500" />
           <span className="text-[10px] font-medium tracking-wide text-zinc-400">
@@ -188,7 +188,7 @@ function CapacityVisual() {
     <div className={PANEL}>
       <WindowChrome title="Capacity / Next 4 weeks" />
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div className="flex items-baseline gap-2 mb-4">
           <span className="text-2xl font-semibold tracking-tight text-white font-mono">76%</span>
           <span className="text-[10px] text-zinc-500">team utilisation</span>
@@ -238,7 +238,7 @@ function InventoryVisual() {
     <div className={PANEL}>
       <WindowChrome title="Resources / Inventory" />
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div className="flex items-end justify-between gap-4 mb-4">
           <div>
             <p className="text-[9px] font-medium tracking-widest uppercase text-zinc-500">
@@ -297,7 +297,7 @@ function ChatVisual() {
     <div className={PANEL}>
       <WindowChrome title="ABRAM / Assistant" />
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div className="flex justify-end mb-3">
           <p className="max-w-[80%] rounded-2xl rounded-br-sm bg-white/[0.06] border border-white/10 px-3 py-2 text-[11px] text-zinc-200">
             Book the A-camera kit for the Nebula shoot next Tuesday and put Leo on it.
@@ -371,10 +371,10 @@ function RunOfShowVisual() {
     <div className={PANEL}>
       <WindowChrome title="Run of Show / Live" />
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div className="flex items-center justify-between gap-3 mb-4">
           <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-wide text-[#8ECAFF]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#8ECAFF] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#8ECAFF]" />
             GO LIVE
           </span>
           <div className="text-right">
@@ -443,7 +443,7 @@ function PortalVisual() {
     <div className={PANEL}>
       <WindowChrome title="Client Portal / Vesper Studios" />
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div className="flex items-center gap-2 mb-4">
           <ShieldCheck className="w-3.5 h-3.5 text-[#8ECAFF]" />
           <span className="text-[10px] text-zinc-400">Secure link, no account needed</span>
@@ -509,7 +509,7 @@ function ReviewVisual() {
     <div className={PANEL}>
       <WindowChrome title="Deliverable / Hero Film 60s" />
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div className="flex items-start justify-between gap-3 mb-4">
           <div>
             <p className="text-[9px] font-medium tracking-widest uppercase text-zinc-500">
@@ -563,11 +563,11 @@ function ReviewVisual() {
 /* Margin                                                              */
 /* ------------------------------------------------------------------ */
 
-const BUDGET_LINES = [
-  { label: "Crew", planned: 42000, committed: 39400 },
-  { label: "Equipment", planned: 18000, committed: 18900 },
-  { label: "Locations", planned: 9500, committed: 7200 },
-  { label: "Post", planned: 24000, committed: 21100 },
+const SCOPE_BUDGET_LINES = [
+  { label: "Crew Roster", planned: 42000, committed: 39400 },
+  { label: "Equipment Kits", planned: 18500, committed: 18000 },
+  { label: "Locations & Permits", planned: 9500, committed: 7200 },
+  { label: "Post & Deliverables", planned: 24000, committed: 22000 },
 ];
 
 function money(value: number): string {
@@ -577,48 +577,87 @@ function money(value: number): string {
 function MarginVisual() {
   return (
     <div className={PANEL}>
-      <WindowChrome title="Budget / Nebula Spot" />
+      <WindowChrome title="ABRAM / Smart Scope Engine" />
 
-      <div className="p-4 sm:p-5">
-        <div className="flex items-end justify-between gap-4 mb-5">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+        {/* Top Header with radial glowing ring meter */}
+        <div className="flex items-center justify-between gap-3 mb-4 rounded-xl border border-white/8 bg-white/[0.02] p-3.5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#8ECAFF]/10 rounded-full blur-xl pointer-events-none" />
+          
           <div>
-            <p className="text-[9px] font-medium tracking-widest uppercase text-zinc-500">
-              Committed
-            </p>
-            <p className="text-2xl font-semibold tracking-tight text-white font-mono">$86.6k</p>
+            <div className="flex items-center gap-1.5 mb-1">
+              <AbramMark size={12} />
+              <span className="text-[9px] font-semibold tracking-widest uppercase text-zinc-400 font-sans">
+                Scope Engine
+              </span>
+            </div>
+            <p className="text-2xl font-bold tracking-tight text-white font-mono">$28,400</p>
+            <p className="text-[9px] text-zinc-500 font-sans mt-0.5">Quoted & Margin Locked</p>
           </div>
-          <div className="text-right">
-            <p className="text-[9px] font-medium tracking-widest uppercase text-zinc-500">Margin</p>
-            <p className="text-lg font-semibold tracking-tight text-[#8ECAFF] font-mono">+7.1%</p>
+
+          {/* Radial ring progress display */}
+          <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
+            <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
+              <path
+                className="text-white/10"
+                strokeWidth="3"
+                stroke="currentColor"
+                fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+              <path
+                className="text-emerald-400"
+                strokeDasharray="100, 100"
+                strokeDashoffset="18"
+                strokeWidth="3"
+                strokeLinecap="round"
+                stroke="currentColor"
+                fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+            </svg>
+            <span className="absolute text-[10px] font-mono font-bold text-emerald-400">82%</span>
           </div>
         </div>
 
-        <div className="space-y-3">
-          {BUDGET_LINES.map((line) => {
-            const over = line.committed > line.planned;
-            const ratio = Math.min(100, (line.committed / line.planned) * 100);
-            return (
-              <div key={line.label}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] text-zinc-300">{line.label}</span>
-                  <span className="text-[10px] font-mono text-zinc-500">
-                    {money(line.committed)}
-                    <span className="text-zinc-600"> / {money(line.planned)}</span>
-                  </span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-white/[0.04] overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${over ? "bg-amber-400/70" : "bg-[#8ECAFF]/60"}`}
-                    style={{ width: `${ratio}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
+        {/* Visual Flow Nodes: Brief -> Roster -> Payout */}
+        <div className="space-y-2 relative">
+          <div className="flex items-center gap-2.5 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+            <span className="w-2 h-2 rounded-full bg-[#8ECAFF] shrink-0 animate-pulse" />
+            <span className="text-[11px] font-medium text-zinc-200 font-sans flex-1 min-w-0 truncate">
+              Brief Scoped ➔ 3 Deliverables Extracted
+            </span>
+            <span className="text-[9px] font-mono text-[#8ECAFF] shrink-0 font-semibold">Step 1</span>
+          </div>
+
+          <div className="flex items-center gap-2.5 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+            <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+            <span className="text-[11px] font-medium text-zinc-200 font-sans flex-1 min-w-0 truncate">
+              Roster Matched ➔ 4 Crew Assigned
+            </span>
+            <span className="text-[9px] font-mono text-amber-400 shrink-0 font-semibold">Step 2</span>
+          </div>
+
+          <div className="flex items-center gap-2.5 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+            <span className="text-[11px] font-medium text-zinc-200 font-sans flex-1 min-w-0 truncate">
+              Invoice Generated ➔ Payout Linked
+            </span>
+            <span className="text-[9px] font-mono text-emerald-400 shrink-0 font-semibold">Step 3</span>
+          </div>
         </div>
 
-        <div className="mt-4 rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2 text-[10px] text-zinc-400">
-          Equipment is $900 over plan. Flagged on day 4.
+        {/* Glowing Action & Status Callout */}
+        <div className="mt-4 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.07] px-3 py-2.5 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <span className="text-[10px] text-emerald-300 font-sans truncate">
+              Client Approved • Ready to Launch
+            </span>
+          </div>
+          <span className="px-2 py-0.5 rounded-full bg-emerald-400 text-black font-semibold text-[9px] font-mono shrink-0">
+            Active
+          </span>
         </div>
       </div>
     </div>
