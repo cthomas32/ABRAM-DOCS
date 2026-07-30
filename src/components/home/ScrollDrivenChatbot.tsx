@@ -42,11 +42,11 @@ export default function ScrollDrivenChatbot({ activeFeature, onSequenceComplete,
 
     const t2 = setTimeout(() => {
       setStep(2); // Show agent operations
-    }, 1000);
+    }, 250);
 
     const t3 = setTimeout(() => {
       setStep(3); // Show assistant response and start typing
-    }, 2500);
+    }, 600);
 
     return () => {
       clearTimeout(t1);
@@ -221,17 +221,18 @@ function TypewriterText({ text, onComplete, scrollRef }: { text: string; onCompl
     let i = 0;
     const interval = setInterval(() => {
       if (i < text.length) {
-        setDisplayed(text.slice(0, i + 1));
-        i++;
+        setDisplayed(text.slice(0, i + 2));
+        i += 2;
         // Auto-scroll as it types
         if (scrollRef.current) {
           scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
       } else {
+        setDisplayed(text);
         clearInterval(interval);
         onCompleteRef.current();
       }
-    }, 15); // Fast typing speed
+    }, 8); // Ultra-fast, snappy typing speed
 
     return () => clearInterval(interval);
   }, [text, scrollRef]);
