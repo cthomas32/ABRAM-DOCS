@@ -86,14 +86,14 @@ export default function PricingPage() {
                       'name': 'Free Tier',
                       'price': '0',
                       'priceCurrency': 'USD',
-                      'description': 'For independent creative contractors and crew members. Includes 1 seat, 2 active projects, digital call sheets, and view-only schedules.'
+                      'description': 'For independent creative contractors and crew members. Includes 1 seat, 1 active project, watermarked digital call sheets, 500 MB storage, and view-only schedules.'
                     },
                     {
                       '@type': 'Offer',
                       'name': 'Solo Lite',
                       'price': '19',
                       'priceCurrency': 'USD',
-                      'description': 'For independent producers. Includes unlimited projects, 30 resource items, 300 AI credits, and 3 GB storage.'
+                      'description': 'For independent producers. Includes up to 3 active projects, 30 resource items, 300 AI credits, and 3 GB storage.'
                     },
                     {
                       '@type': 'Offer',
@@ -187,8 +187,8 @@ export default function PricingPage() {
               <td>$0</td>
               <td>Read-Only</td>
               <td>Trial (Max 5 line items / 5 expenses)</td>
-              <td>Welcome Bonus (250 one-time)</td>
-              <td>1 GB</td>
+              <td>Welcome Bonus (80 one-time, 30-day expiry)</td>
+              <td>500 MB</td>
               <td>Not included</td>
             </tr>
             <tr>
@@ -223,7 +223,7 @@ export default function PricingPage() {
               <td>Per-seat billing</td>
               <td>Full Access</td>
               <td>Full Access</td>
-              <td>Custom allocation</td>
+              <td>1,000 credits per seat / month</td>
               <td>15 GB</td>
               <td>50 clients</td>
             </tr>
