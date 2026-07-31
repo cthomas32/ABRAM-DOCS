@@ -25,7 +25,7 @@ export default function FAQSection() {
       question: "How much does ABRAM cost?",
       answer: (
         <p className="text-zinc-400 text-sm md:text-base leading-7">
-          ABRAM offers flexible, usage-based tiers starting with a free option for small teams and independent creators. Paid tiers scale based on seat count, credit consumption (used for AI-assisted brief parsing, script breakdowns, and talent matchmaking), and advanced calendar integrations. For larger studios and enterprise requirements, we offer custom packages with dedicated support and single sign-on (SSO/SCIM).
+          ABRAM offers flexible, usage-based tiers starting with a free option for small teams and independent creators. Paid tiers scale based on seat count, credit consumption (used for AI-assisted brief parsing and talent matchmaking), and advanced calendar integrations. For larger studios and enterprise requirements, we offer custom packages with dedicated support and single sign-on (SSO/SCIM).
         </p>
       )
     },

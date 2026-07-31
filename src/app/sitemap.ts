@@ -380,6 +380,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'yearly' as const,
       priority: 0.2,
     },
+    {
+      url: `${baseUrl}/accessibility`,
+      lastModified: DEFAULT_RELEASE_DATE,
+      changeFrequency: 'yearly' as const,
+      priority: 0.2,
+    },
   ];
 
   return [

@@ -149,6 +149,9 @@ export default function HomeFooter({
           <Link href="/acceptable-use-policy" title="Acceptable Use Policy" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Acceptable Use Policy
           </Link>
+          <Link href="/accessibility" title="Accessibility Statement" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+            Accessibility
+          </Link>
           <button
             onClick={onCookieSettingsClick}
             type="button"

@@ -106,13 +106,6 @@ const FEATURES_SCHEMA: Category[] = [
     ]
   },
   {
-    category: "Marketplace",
-    features: [
-      { id: "storefront_listings", name: "Storefront Listings" },
-      { id: "project_applications", name: "Monthly Project Applications" }
-    ]
-  },
-  {
     category: "Financials & Payments",
     features: [
       { id: "quotes_estimates", name: "Quotes & Estimates" },
@@ -173,8 +166,6 @@ const PLANS: Plan[] = [
       frameio_integration: false,
       client_portal: false,
       client_portal_messaging: false,
-      storefront_listings: "1 Listing",
-      project_applications: "10 / month",
       quotes_estimates: false,
       stripe_express: true,
       invoicing: "3 / month",
@@ -236,8 +227,6 @@ const PLANS: Plan[] = [
       frameio_integration: false,
       client_portal: false,
       client_portal_messaging: false,
-      storefront_listings: "3 Listings",
-      project_applications: "30 / month",
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "10 / month",
@@ -299,8 +288,6 @@ const PLANS: Plan[] = [
       frameio_integration: true,
       client_portal: "5 clients",
       client_portal_messaging: true,
-      storefront_listings: "Unlimited",
-      project_applications: "Unlimited",
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "Unlimited",
@@ -368,8 +355,6 @@ const PLANS: Plan[] = [
       frameio_integration: true,
       client_portal: "15 clients",
       client_portal_messaging: true,
-      storefront_listings: "Unlimited",
-      project_applications: "Unlimited",
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "Unlimited",
@@ -439,8 +424,6 @@ const PLANS: Plan[] = [
       frameio_integration: true,
       client_portal: "50 clients",
       client_portal_messaging: true,
-      storefront_listings: "Unlimited",
-      project_applications: "Unlimited",
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "Unlimited",
@@ -510,8 +493,6 @@ const PLANS: Plan[] = [
       frameio_integration: true,
       client_portal: "Unlimited",
       client_portal_messaging: true,
-      storefront_listings: "Unlimited",
-      project_applications: "Unlimited",
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "Unlimited",
@@ -578,10 +559,6 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   client_portal: "Secure client portal access to share schedules, media approvals, quotes, and invoices. Limits specify the maximum number of active client accounts.",
   client_portal_messaging: "Two-way messaging thread between your team and each client directly inside their client portal.",
 
-  // Marketplace
-  storefront_listings: "The number of public storefront/service listings you can publish in the ABRAM marketplace directory.",
-  project_applications: "The number of project applications you can submit per month through the marketplace directory.",
-
   // Financials & Payments
   quotes_estimates: "Create and send itemized quotes and estimates to clients or contractors, with accept/decline tracking.",
   stripe_express: "Get crew paid fast — contractors securely link bank accounts for direct payouts in a simple dashboard.",
@@ -631,7 +608,6 @@ export default function PricingClient() {
     "Intake & Project Setup": true,
     "Crewing & Utilization": true,
     "Integrations & Collaboration": true,
-    "Marketplace": true,
     "Financials & Payments": true
   });
 
