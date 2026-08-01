@@ -80,7 +80,7 @@ All pages are hosted canonical resources under https://abram.network/docs.
 - [Internal Talent Search](https://abram.network/docs/user-guide/4.1-internal-talent-search): Roster directories and keyword searching.
 - [AI Matchmaking](https://abram.network/docs/user-guide/4.2-ai-matchmaking-suggestions): Suitability index parameters and holds.
 - [RSVP & Invites](https://abram.network/docs/user-guide/4.3-inviting-and-crew-rsvp): Inviting thresholds and communication dispatch.
-- [Stripe Express Setup](https://abram.network/docs/user-guide/5.1-freelancer-stripe-setup): Payout setup and onboard verification.
+- [Stripe Payouts Setup](https://abram.network/docs/user-guide/5.1-freelancer-stripe-setup): Payout setup and onboard verification.
 - [Invoicing & Payouts](https://abram.network/docs/user-guide/5.2-invoicing-and-payouts): Tiered processing fees, pre-auth holds, and milestones.
 - [Ledger & AI Credits](https://abram.network/docs/user-guide/5.3-billing-ledger-and-ai-credits): Ledger updates and top-up packs.
 

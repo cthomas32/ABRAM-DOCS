@@ -1085,14 +1085,14 @@ When it''s time to actually run the show, switch into **Go Live** mode. This tur
 INSERT INTO public.help_docs (slug, title, sidebar_title, description, keywords, content)
       VALUES (
         'user-guide/5.1-freelancer-stripe-setup',
-        'Freelancer Stripe Express Onboarding and Payouts',
-        'Freelancer Stripe Express Setup',
-        'Onboard solo freelancers and prime freelancer orgs to Stripe Express on ABRAM, verify identity, and configure bank accounts or debit cards for payouts.',
-        '{"ABRAM","ABRAM Network","stripe","freelancer","producer","ai","brief","payout","invoice","permissions","onboarding","billing","express","setup"}'::text[],
+        'Setting Up Stripe Payouts',
+        'Setting Up Stripe Payouts',
+        'Onboard solo freelancers and prime freelancer orgs to Stripe on ABRAM, verify identity, and configure bank accounts or debit cards for payouts.',
+        '{"ABRAM","ABRAM Network","stripe","freelancer","producer","ai","brief","payout","invoice","permissions","onboarding","billing","payouts","setup"}'::text[],
         '---
-title: ''Freelancer Stripe Express Onboarding and Payouts''
-sidebarTitle: Freelancer Stripe Express Setup
-description: ''Onboard solo freelancers and prime freelancer orgs to Stripe Express on ABRAM, verify identity, and configure bank accounts or debit cards for payouts.''
+title: ''Setting Up Stripe Payouts''
+sidebarTitle: Setting Up Stripe Payouts
+description: ''Onboard solo freelancers and prime freelancer orgs to Stripe on ABRAM, verify identity, and configure bank accounts or debit cards for payouts.''
 keywords:
   - ABRAM
   - ABRAM Network
@@ -1106,18 +1106,18 @@ keywords:
   - permissions
   - onboarding
   - billing
-  - express
+  - payouts
   - setup
 ---
-# Section 5.1: Freelancer Stripe Express Setup
+# Section 5.1: Setting Up Stripe Payouts
 
-This guide explains how solo freelancers and prime freelancer organizations onboard to **Stripe Express** through the ABRAM Network to verify their identity and configure bank accounts or debit cards for payout routing.
+This guide explains how solo freelancers and prime freelancer organizations onboard to **Stripe** through the ABRAM Network to verify their identity and configure bank accounts or debit cards for payout routing.
 
 ---
 
-## 1. Overview of Stripe Express Onboarding
+## 1. Overview of Stripe Onboarding
 
-ABRAM uses Stripe Connect (Express) to route invoice payments securely and directly to freelancers. When a producer pays an invoice or authorizes a Purchase Order (PO), Stripe splits the platform processing fee and immediately routes the remaining funds to the freelancer''s connected bank account or debit card.
+ABRAM uses Stripe Connect to route invoice payments securely and directly to freelancers. You get a full Stripe account of your own, which you sign in to at dashboard.stripe.com with your own Stripe credentials. When a producer pays an invoice or authorizes a Purchase Order (PO), Stripe splits the platform processing fee and immediately routes the remaining funds to the freelancer''s connected bank account or debit card.
 
 > [!IMPORTANT]
 > - **Onboarding is mandatory** to receive automatic payouts.
@@ -1140,9 +1140,9 @@ If a contractor has not completed their Stripe onboarding, clients can still pay
 1. Click **Get Started** on the setup card.
    * *Note: Only organization owners or admins can manage the organization''s payout account. Other members can''t initiate or edit this setup.*
 2. ABRAM will securely register your profile with Stripe in the background. A loading spinner will appear briefly.
-3. You will be redirected automatically to the Stripe-hosted onboarding wizard in the same browser tab, where you complete a Stripe Express account setup.
+3. You will be redirected automatically to the Stripe-hosted onboarding wizard in the same browser tab, where you complete your Stripe account setup.
 
-### Step 3: Complete the Stripe Express Form
+### Step 3: Complete the Stripe Onboarding Form
 On the Stripe-hosted onboarding portal, you must provide:
 1. **Verification Details**: Enter your phone number and email to receive a Stripe verification code.
 2. **Business Details**:
@@ -1176,14 +1176,14 @@ The **Stripe Connect Status** card indicates your verification state:
 
 Once your Stripe Connect account status is **Active**, the setup card shows an **Open Stripe Dashboard** button.
 
-Clicking this button takes you to Stripe Express where you can:
+Clicking this button takes you to your Stripe dashboard, where you sign in with your own Stripe credentials and can:
 * View pending and historical payout transfers.
 * Track the exact arrival date of payouts in transit.
 * Update your bank account or debit card information.
 * View and download annual tax documents (such as Form 1099-NEC).
 
-### Minimum Balance for Payout Requests
-To request a payout, your available balance must be at least **$10**. If your balance is below this threshold, keep accumulating earnings from paid invoices until you reach the minimum before requesting a transfer.
+### Payouts Are Automatic
+There is no payout request in ABRAM and no minimum balance to reach. Payments settle straight to your own Stripe account, and Stripe sends the money on to your bank or debit card on your payout schedule. Change that schedule, or your bank details, from your Stripe dashboard.
 
 ---
 
@@ -1345,18 +1345,15 @@ Freelancers and Organizations can track their earnings on the **Payouts** tab of
 * **Total Earnings**: The total value of all paid invoices since account creation.
 * **Total Payouts**: Funds successfully transferred to your bank/debit card.
 * **Pending**: Funds currently held by Stripe or in transit to your bank.
-* **Available**: Cleared funds ready for manual transfer.
+* **Available**: A legacy held balance. Under automatic payouts this is normally $0.
 
-### Requesting a Payout
-If you have a positive **Available Balance**:
-1. Click **Request Payout**.
-2. Enter the amount to transfer (minimum $10.00).
-3. Click **Confirm**. Stripe Express will schedule the transfer. You can trace its progress and estimated arrival date under **Payout History**.
+### Payouts Are Automatic
+There is nothing to request. Payments settle straight to your own Stripe account, and Stripe transfers the money to your bank or debit card on your payout schedule. You can trace progress and estimated arrival dates under **Payout History**, and change your payout schedule or bank details from your Stripe dashboard. If **Available** shows a non-zero figure, it is a legacy balance from before automatic payouts — contact support to have it released.
 
-### Payout Routing & Onboarding Safety Net
+### Payout Routing & Onboarding Requirement
 When payouts are executed, the system automatically routes them using the following rules:
 * **Routing Priority**: Payouts are routed to the contractor''s primary organization Stripe account. If the contractor belongs to multiple organizations, the platform routes the payout to the most appropriate business account based on their organizational roles.
-* **Onboarding Safety Net**: If you have not completed Stripe onboarding, clients can still pay your invoices. The platform temporarily holds the payment securely on the platform account. Once you complete your Stripe setup, the platform automatically releases and transfers the held funds to your connected bank account.
+* **Onboarding Requirement**: Stripe onboarding must be finished before you can be paid. Until your Stripe account is enabled for charges, clients cannot pay your invoices at all — nothing is held on ABRAM''s behalf, because payments are captured directly onto your own Stripe account.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,

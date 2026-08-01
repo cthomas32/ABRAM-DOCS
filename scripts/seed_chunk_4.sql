@@ -993,7 +993,7 @@ This guide compiles answers to the most common questions and provides step-by-st
 ### Q: Why did my invoice approval fail?
 **A**: If you receive an error when attempting to approve or submit an invoice:
 1. Ensure the linked project and work package are active (status is not Completed or Cancelled).
-2. Verify that your Stripe Express account status is **Active**.
+2. Verify that your Stripe account status is **Active**.
 3. Check if the producer has a valid payment method on file or has completed the checkout session.
 
 ---

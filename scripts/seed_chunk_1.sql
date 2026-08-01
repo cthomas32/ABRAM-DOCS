@@ -311,7 +311,7 @@ This guide defines key terms, concepts, and acronyms used throughout the ABRAM N
 * **Context-Aware Document Search**: The AI technology that enables the chatbot to review, search, and answer questions about uploaded project briefs and resumes.
 * **Recurring Calendar Rule (RRULE)**: The standard pattern used by digital calendars (like Google and Outlook) to specify repeating events.
 * **SSN (Social Security Number) & EIN (Employer Identification Number)**: Tax identifiers required by Stripe Connect to verify the identity of individual freelancers (SSN) or registered business entities (EIN) before transferring payouts.
-* **Stripe Express Connect**: The onboarding portal and account type used by freelancers to link bank accounts, verify identity details (SSN/EIN), and receive direct automated payouts.
+* **Stripe Connect**: The onboarding portal and connected-account model used by freelancers to link bank accounts, verify identity details (SSN/EIN), and receive direct automated payouts. Each payee gets a full Stripe account of their own, signed in to at dashboard.stripe.com.
 * **Form 1099-NEC**: The US tax form used to report non-employee compensation. ABRAM and Stripe Connect utilize verified SSN/EIN details to generate and distribute these tax documents automatically at the end of the fiscal year.
 * **Frame.io Workspace**: The collaborative video review integration that auto-provisions shared review links and frame-accurate comments for media deliverables directly inside the project view.
 '

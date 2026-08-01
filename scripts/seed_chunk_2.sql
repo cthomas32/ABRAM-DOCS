@@ -61,7 +61,7 @@ For the full breakdown of plan tiers, the three-pool credit structure, top-up pa
 
 The **Payouts** tab is where you connect your **Stripe** payout account so you can get paid for your work on ABRAM.
 
-For the step-by-step onboarding flow, account statuses, and how payouts are routed, see **[Section 5.1: Freelancer Stripe Express Setup](./5.1-freelancer-stripe-setup)**.
+For the step-by-step onboarding flow, account statuses, and how payouts are routed, see **[Section 5.1: Setting Up Stripe Payouts](./5.1-freelancer-stripe-setup)**.
 
 ---
 

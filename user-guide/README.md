@@ -61,7 +61,7 @@ Learn how to find talent, receive AI recommendations, and schedule freelancer ca
  
 ### 💳 [Section 5: Payments, Billing & Financials](./5.1-freelancer-stripe-setup.md)
 Manage your payment methods, producer checkout sessions, billing, and AI credits.
-* **[5.1 Freelancer Stripe Express Setup](./5.1-freelancer-stripe-setup.md)**: Step-by-step Stripe Express onboarding, bank setup, and verification troubleshooting.
+* **[5.1 Setting Up Stripe Payouts](./5.1-freelancer-stripe-setup.md)**: Step-by-step Stripe onboarding, bank setup, and verification troubleshooting.
 * **[5.2 Invoicing & Payouts](./5.2-invoicing-and-payouts.mdx)**: Building PDF invoices, submitting invoices for approval, and tracking Stripe checkout payout flows.
 * **[5.3 Billing Ledger & AI Credits](./5.3-billing-ledger-and-ai-credits.mdx)**: Monitoring the organization's credit balance, consuming credits for AI tasks, and ledger transactions.
 * **[5.4 Billing & Payments](./5.4-billing-and-payments.md)**: Configuring payment cards, ACH transfers, and managing automated re-authorizations for Stripe holds.

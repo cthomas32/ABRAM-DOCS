@@ -128,7 +128,7 @@ export default function PricingPage() {
                     'name': 'What payment methods does ABRAM support for payouts?',
                     'acceptedAnswer': {
                       '@type': 'Answer',
-                      'text': 'ABRAM integrates with Stripe Express to manage onboarding and payouts. Creative professionals can link their bank account or debit card directly to receive secure payouts. If identity setup is not complete, client payments are held securely until onboarding finishes.'
+                      'text': 'ABRAM integrates with Stripe Connect to manage onboarding and payouts. Creative professionals link their bank account or debit card to a full Stripe account of their own to receive secure, automatic payouts. Identity setup must be finished before you can be paid: clients cannot pay an invoice until the payee completes Stripe onboarding and their account is enabled for charges.'
                     }
                   },
                   {

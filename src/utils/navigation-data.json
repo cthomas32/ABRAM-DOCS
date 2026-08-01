@@ -345,7 +345,7 @@
       "5.1-freelancer-stripe-setup"
     ],
     "path": "user-guide/5.1-freelancer-stripe-setup",
-    "title": "Freelancer Stripe Express Setup",
+    "title": "Setting Up Stripe Payouts",
     "group": "Payments & Financials",
     "groupIcon": "credit-card",
     "product": "Help Center"

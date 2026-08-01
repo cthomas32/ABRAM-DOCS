@@ -126,15 +126,12 @@ Freelancers and Organizations can track their earnings on the **Payouts** tab of
 * **Total Earnings**: The total value of all paid invoices since account creation.
 * **Total Payouts**: Funds successfully transferred to your bank/debit card.
 * **Pending**: Funds currently held by Stripe or in transit to your bank.
-* **Available**: Cleared funds ready for manual transfer.
+* **Available**: A legacy held balance. Under automatic payouts this is normally $0.
 
-### Requesting a Payout
-If you have a positive **Available Balance**:
-1. Click **Request Payout**.
-2. Enter the amount to transfer (minimum $10.00).
-3. Click **Confirm**. Stripe Express will schedule the transfer. You can trace its progress and estimated arrival date under **Payout History**.
+### Payouts Are Automatic
+There is nothing to request. Payments settle straight to your own Stripe account, and Stripe transfers the money to your bank or debit card on your payout schedule. You can trace progress and estimated arrival dates under **Payout History**, and change your payout schedule or bank details from your Stripe dashboard. If **Available** shows a non-zero figure, it is a legacy balance from before automatic payouts — contact support to have it released.
 
-### Payout Routing & Onboarding Safety Net
+### Payout Routing & Onboarding Requirement
 When payouts are executed, the system automatically routes them using the following rules:
 * **Routing Priority**: Payouts are routed to the contractor's primary organization Stripe account. If the contractor belongs to multiple organizations, the platform routes the payout to the most appropriate business account based on their organizational roles.
-* **Onboarding Safety Net**: If you have not completed Stripe onboarding, clients can still pay your invoices. The platform temporarily holds the payment securely on the platform account. Once you complete your Stripe setup, the platform automatically releases and transfers the held funds to your connected bank account.
+* **Onboarding Requirement**: Stripe onboarding must be finished before you can be paid. Until your Stripe account is enabled for charges, clients cannot pay your invoices at all — nothing is held on ABRAM's behalf, because payments are captured directly onto your own Stripe account.

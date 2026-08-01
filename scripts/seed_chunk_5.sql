@@ -881,7 +881,7 @@ Learn how to find talent, receive AI recommendations, and schedule freelancer ca
  
 ### 💳 [Section 5: Payments, Billing & Financials](./5.1-freelancer-stripe-setup.md)
 Manage your payment methods, producer checkout sessions, billing, and AI credits.
-* **[5.1 Freelancer Stripe Express Setup](./5.1-freelancer-stripe-setup.md)**: Step-by-step Stripe Express onboarding, bank setup, and verification troubleshooting.
+* **[5.1 Setting Up Stripe Payouts](./5.1-freelancer-stripe-setup.md)**: Step-by-step Stripe onboarding, bank setup, and verification troubleshooting.
 * **[5.2 Invoicing & Payouts](./5.2-invoicing-and-payouts.mdx)**: Building PDF invoices, submitting invoices for approval, and tracking Stripe checkout payout flows.
 * **[5.3 Billing Ledger & AI Credits](./5.3-billing-ledger-and-ai-credits.mdx)**: Monitoring the organization''s credit balance, consuming credits for AI tasks, and ledger transactions.
 * **[5.4 Billing & Payments](./5.4-billing-and-payments.md)**: Configuring payment cards, ACH transfers, and managing automated re-authorizations for Stripe holds.
@@ -1059,7 +1059,7 @@ description: ''Freelancer guide to building your ABRAM profile, importing your r
 As a creative contractor, specialized operator, or designer on the ABRAM Network, your primary focus is keeping your profile updated, syncing your calendar availability, accepting work invites, and submitting invoices for payouts.
 
 ```
-[Sign In] ──> [Import Resume & Skills] ──> [Stripe Connect Express] ──> [Calendar Sync] ──> [RSVP & Get Paid]
+[Sign In] ──> [Import Resume & Skills] ──> [Stripe Payout Setup] ──> [Calendar Sync] ──> [RSVP & Get Paid]
 ```
 
 ---
@@ -1095,9 +1095,9 @@ Producers search the network using specialized skills and rankings. Keeping your
 
 ---
 
-## 3. Configuring Stripe Express Payouts
+## 3. Configuring Stripe Payouts
 
-To receive payments directly to your bank account or debit card, you must connect to Stripe Connect Express.
+To receive payments directly to your bank account or debit card, you must connect a Stripe account through Stripe Connect. The account is yours: you sign in to it at dashboard.stripe.com with your own Stripe credentials.
 
 1. Go to **Financials** in the sidebar.
 2. Look for the **Payout Setup** card and click **Get Started**.
@@ -1161,9 +1161,9 @@ You will receive an email containing a link to a secure, public page. **No login
 4. Click **Send Invoice** or approve the **Purchase Order** sent by the producer.
 5. Once the payment is authorized and captured via Stripe, the invoice is marked **Paid**.
 
-### Request Payout
-1. In the **Payouts** tab, review your **Available Balance**.
-2. Click **Request Payout** (minimum $10.00). Stripe Express will transfer the funds directly to your bank account or debit card.
+### Getting Paid Out
+1. In the **Payouts** tab, review your earnings and payout history.
+2. There is nothing to request. Payouts are automatic: payments settle to your own Stripe account and Stripe sends them to your bank account or debit card on your Stripe payout schedule. Manage that schedule and your bank details from your Stripe dashboard.
 '
       ) ON CONFLICT (slug) DO UPDATE SET
         title = EXCLUDED.title,

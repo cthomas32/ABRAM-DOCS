@@ -109,7 +109,7 @@ const FEATURES_SCHEMA: Category[] = [
     category: "Financials & Payments",
     features: [
       { id: "quotes_estimates", name: "Quotes & Estimates" },
-      { id: "stripe_express", name: "Stripe Express Onboarding" },
+      { id: "stripe_express", name: "Stripe Payouts Onboarding" },
       { id: "invoicing", name: "Invoice Generation & Stripe Payouts" },
       { id: "financial_dashboard", name: "Client-Contractor Financial Dashboard" },
       { id: "po_holds", name: "Purchase Order (PO) 7-day Card Holds" },
