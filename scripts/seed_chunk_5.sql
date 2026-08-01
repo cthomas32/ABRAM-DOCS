@@ -1001,7 +1001,7 @@ Once your project is created and role slots are defined, you can recruit your cr
 
 ### Step 1: Open Matchmaking Suggestions
 1. Select the project and click the **Find Matches** button in the upper right.
-2. The AI Matchmaking Engine ranks internal roster and external marketplace candidates using a **Match Score (0-100)**.
+2. The AI Matchmaking Engine ranks candidates from your **internal roster** using a **Match Score (0-100)**. Suggesting candidates from the wider ABRAM marketplace is planned as a future capability.
 3. Review candidate details, including **Match Reasonings** (e.g., *"Strong software skills, available during date range"*) and **Concerns** (e.g., *"Hourly rate exceeds target budget by 10%"*).
 
 ### Step 2: Send Invitations
@@ -1157,7 +1157,7 @@ You will receive an email containing a link to a secure, public page. **No login
 ### Build Your Invoice
 1. Go to **Financials** > **Invoices** and click **Create Invoice**.
 2. **Autofill**: Select the active project. The builder automatically imports your approved timesheet hours, contract rates, and unbilled expenses.
-3. **Review Fees**: Review the line items. ABRAM displays the subtotal, the flat **5% payment processing fee**, and the total payout.
+3. **Review Fees**: Review the line items. ABRAM displays the subtotal, the **processing fee**, and the total payout. The fee rate is tiered on your own plan and applies only to monthly payment volume above your plan''s fee-free allowance — 3% with no allowance on Free and Solo Lite, 1% after the first $10k/mo on Solo Pro, 0.89% after the first $50k/mo on Team, 0.5% after the first $100k/mo on Studio, and a custom rate on Enterprise. No tax is added: you are the merchant of record on your own Stripe account.
 4. Click **Send Invoice** or approve the **Purchase Order** sent by the producer.
 5. Once the payment is authorized and captured via Stripe, the invoice is marked **Paid**.
 

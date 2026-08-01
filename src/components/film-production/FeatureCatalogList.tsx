@@ -274,7 +274,7 @@ export default function FeatureCatalogList() {
                       </div>
                       <div className="p-3 rounded-lg border border-white/5 bg-white/[0.01]">
                         <span className="text-[9px] font-sans text-zinc-500 uppercase block">Active Fringe Rate</span>
-                        <span className="font-sans text-lg font-semibold text-emerald-400 mt-1 block">+18.5% (Escrowed)</span>
+                        <span className="font-sans text-lg font-semibold text-emerald-400 mt-1 block">+18.5% (Reserved)</span>
                       </div>
                     </div>
 

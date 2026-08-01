@@ -494,7 +494,7 @@ For hourly and day-rate work, actual hours are tracked and verified before payou
 The final phase of the order of operations routes payment from the producer to the freelancer.
 
 * **Invoice Generation**: Freelancers use the Invoice Builder to generate a professional PDF invoice. The builder pre-populates default lines with the approved timesheet hours, project contract rates, and any approved expenses.
-* **Processing Fee Preview**: The platform calculates a standard **5% Payment Processing Fee** on the subtotal.
+* **Processing Fee Preview**: The platform calculates the **Processing Fee** on the subtotal. The rate is tiered on the payee''s plan and applies only to monthly payment volume above that plan''s fee-free allowance — 3% with no allowance on Free and Solo Lite, 1% after the first $10k/mo on Solo Pro, 0.89% after the first $50k/mo on Team, 0.5% after the first $100k/mo on Studio, and a custom rate on Enterprise. No tax is added to user-to-user invoices.
 * **Purchase Order (PO) Approval**: Once the freelancer approves the Purchase Order, the system initiates the payment process.
 * **Payment Fulfillment**: The platform processes the payment using the funds held in the pre-authorized deposit (or requests authorization via a secure payment checkout link if no hold exists).
 * **Direct Earnings Payout**: Earnings are securely distributed. Freelancers who have connected their payment profile during onboarding receive their cleared funds directly in their verified bank account or debit card, completing the loop.

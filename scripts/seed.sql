@@ -490,7 +490,7 @@ For hourly and day-rate work, actual hours are tracked and verified before payou
 The final phase of the order of operations routes payment from the producer to the freelancer.
 
 * **Invoice Generation**: Freelancers use the Invoice Builder to generate a professional PDF invoice. The builder pre-populates default lines with the approved timesheet hours, project contract rates, and any approved expenses.
-* **Processing Fee Preview**: The platform calculates a standard **5% Payment Processing Fee** on the subtotal.
+* **Processing Fee Preview**: The platform calculates the **Processing Fee** on the subtotal. The rate is tiered on the payee''s plan and applies only to monthly payment volume above that plan''s fee-free allowance — 3% with no allowance on Free and Solo Lite, 1% after the first $10k/mo on Solo Pro, 0.89% after the first $50k/mo on Team, 0.5% after the first $100k/mo on Studio, and a custom rate on Enterprise. No tax is added to user-to-user invoices.
 * **Purchase Order (PO) Approval**: Once the freelancer approves the Purchase Order, the system initiates the payment process.
 * **Payment Fulfillment**: The platform processes the payment using the funds held in the pre-authorized deposit (or requests authorization via a secure payment checkout link if no hold exists).
 * **Direct Earnings Payout**: Earnings are securely distributed. Freelancers who have connected their payment profile during onboarding receive their cleared funds directly in their verified bank account or debit card, completing the loop.
@@ -4139,9 +4139,19 @@ Freelancers can generate invoices linked to projects or select ad-hoc producer e
 * Enter the **Description**, **Quantity**, and **Unit Price** for each item. You can add manual line items and expenses yourself, in addition to importing approved project expenses.
 * The system calculates the row totals and subtotal automatically.
 
-### Step 4: Fees and Taxes Preview
-ABRAM calculates fees in real time:
-* **Platform Fee**: A small platform processing fee is calculated on the subtotal and shown on the invoice before you submit it.
+### Step 4: Processing Fee Preview
+ABRAM calculates the fee in real time:
+* **Processing Fee**: The fee is calculated on the subtotal and shown on the invoice before you submit it. The rate is tiered on your own plan and applies only to monthly payment volume above your plan''s fee-free allowance:
+
+| Plan | Rate | Fee-free allowance |
+| --- | --- | --- |
+| Free / Solo Lite | 3% | None |
+| Solo Pro | 1% | First $10k/mo |
+| Team | 0.89% | First $50k/mo |
+| Studio | 0.5% | First $100k/mo |
+| Enterprise | Custom | Custom |
+
+* **No tax**: ABRAM does not add sales tax to invoices between users. You are the merchant of record on your own connected Stripe account, so any taxes you owe are yours to determine, collect, and remit.
 
 ### Step 5: Save or Send
 * **Save Draft**: Saves the invoice locally. You can edit or delete drafts at any time.
@@ -6470,7 +6480,7 @@ Once your project is created and role slots are defined, you can recruit your cr
 
 ### Step 1: Open Matchmaking Suggestions
 1. Select the project and click the **Find Matches** button in the upper right.
-2. The AI Matchmaking Engine ranks internal roster and external marketplace candidates using a **Match Score (0-100)**.
+2. The AI Matchmaking Engine ranks candidates from your **internal roster** using a **Match Score (0-100)**. Suggesting candidates from the wider ABRAM marketplace is planned as a future capability.
 3. Review candidate details, including **Match Reasonings** (e.g., *"Strong software skills, available during date range"*) and **Concerns** (e.g., *"Hourly rate exceeds target budget by 10%"*).
 
 ### Step 2: Send Invitations
@@ -6625,7 +6635,7 @@ You will receive an email containing a link to a secure, public page. **No login
 ### Build Your Invoice
 1. Go to **Financials** > **Invoices** and click **Create Invoice**.
 2. **Autofill**: Select the active project. The builder automatically imports your approved timesheet hours, contract rates, and unbilled expenses.
-3. **Review Fees**: Review the line items. ABRAM displays the subtotal, the flat **5% payment processing fee**, and the total payout.
+3. **Review Fees**: Review the line items. ABRAM displays the subtotal, the **processing fee**, and the total payout. The fee rate is tiered on your own plan and applies only to monthly payment volume above your plan''s fee-free allowance — 3% with no allowance on Free and Solo Lite, 1% after the first $10k/mo on Solo Pro, 0.89% after the first $50k/mo on Team, 0.5% after the first $100k/mo on Studio, and a custom rate on Enterprise. No tax is added: you are the merchant of record on your own Stripe account.
 4. Click **Send Invoice** or approve the **Purchase Order** sent by the producer.
 5. Once the payment is authorized and captured via Stripe, the invoice is marked **Paid**.
 
