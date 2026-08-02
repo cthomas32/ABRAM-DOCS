@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import HeroSection from "@/components/home/HeroSection";
 import PillarsSection from "@/components/home/PillarsSection";
-import BridgeSection from "@/components/home/BridgeSection";
 import AICopilotTeaser from "@/components/home/AICopilotTeaser";
 import ExploreSection from "@/components/home/ExploreSection";
 import ProductShowcase from "@/components/home/ProductShowcase";
@@ -190,7 +189,6 @@ export default function LandingPage() {
       <main id="landing-page-root">
         <HeroSection />
         <PillarsSection />
-        <BridgeSection />
         <ScopeChapter />
         <ProductShowcase />
         <DeliverChapter />

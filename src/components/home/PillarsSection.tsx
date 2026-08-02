@@ -510,7 +510,7 @@ export default function PillarsSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full py-24 md:py-36 bg-transparent overflow-hidden selection:bg-zinc-800 selection:text-white"
+      className="relative w-full py-16 md:py-36 bg-transparent overflow-hidden selection:bg-zinc-800 selection:text-white"
     >
       {/* Background glow structures with parallax scroll-drift - Seamless Navy Glow */}
       <motion.div
@@ -535,7 +535,7 @@ export default function PillarsSection() {
               transition: { duration: 0.8, ease: "easeOut" } 
             }
           }}
-          className="text-center max-w-3xl mx-auto px-4 mb-20"
+          className="text-center max-w-3xl mx-auto px-4 mb-0 md:mb-20"
         >
           <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4 font-sans">
             Every production runs on people.
@@ -545,8 +545,8 @@ export default function PillarsSection() {
           </p>
         </motion.div>
 
-        {/* 3-Column Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* 3-Column Card Grid (Hidden on mobile, visible on md screens and up) */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6">
           {pillars.map((pillar, i) => (
             <motion.div
               key={pillar.label}
