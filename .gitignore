@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# The shared employee brain (abram-network) is checked out into this workspace by the
+# scheduled content-ops workflow, which exposes it at ../abram-network via a symlink.
+# It is a whole other repository and must never be committed here.
+/abram-network
