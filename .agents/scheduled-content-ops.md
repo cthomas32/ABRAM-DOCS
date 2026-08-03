@@ -11,8 +11,9 @@ worth nothing. Copy that converts a reader who was misled is the worst of the th
 - **Prompt:** [`scheduled-content-ops.prompt.md`](./scheduled-content-ops.prompt.md) — what it
   actually does, phase by phase.
 - **Voice & claims SSOT:** [`brand-voice.md`](./brand-voice.md) — governs every published word.
-- **Workflow template:** [`scheduled-content-ops.workflow.yml`](./scheduled-content-ops.workflow.yml)
-  — **not installed by default.** See step 5.
+- **Workflow:** [`.github/workflows/scheduled-content-ops.yml`](../.github/workflows/scheduled-content-ops.yml)
+  — installed 2026-08-03. It began life as a template in this directory; that copy is deleted, so
+  there is one file and it cannot drift.
 - **Design context:** `abram-network` → `docs/design/ai-employees-next-hires.md` §2 and
   `docs/design/ai-employees.md`.
 
@@ -61,14 +62,8 @@ reports land in the triage channel.
 
 ### 5. Install the workflow
 
-```bash
-mkdir -p .github/workflows
-cp .agents/scheduled-content-ops.workflow.yml .github/workflows/scheduled-content-ops.yml
-```
-
-This is the first workflow in this repo, so `.github/` does not exist yet. It is a deliberate
-manual step: it installs a scheduled job that runs with service-role credentials and a cross-repo
-token, and that should be a decision made on purpose.
+~~Copy the template into `.github/workflows/`.~~ **Done 2026-08-03.** The workflow is installed at
+`.github/workflows/scheduled-content-ops.yml` — the first one in this repo.
 
 ### 6. Apply the snapshot migration
 
