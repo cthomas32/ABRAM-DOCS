@@ -14,6 +14,13 @@
 - **Search Modal**: [src/components/SearchModal.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/components/SearchModal.tsx) (client-side search popup using Flexsearch).
 - **Table of Contents Sidebar**: [src/components/TableOfContents.tsx](file:///Users/connorthomas/Documents/Development%20Projects/GitHub/ABRAM-DOCS/src/components/TableOfContents.tsx) (right-side page anchors).
 
+## Voice, claims, and the scheduled agent
+
+- **[.agents/brand-voice.md](./.agents/brand-voice.md) — the SSOT for every published word.** Read it before writing any page copy, meta description, article, changelog entry, or campaign draft. It governs the claims rule (every product claim traces to a merged PR or a number you measured — no customer counts, no testimonials, no invented metrics), the voice, the volume caps, and which surfaces may be edited versus only proposed. This file governs *what the words may say*; the rest of `AGENTS.md` governs *how the page is structured*.
+- **KIPP** is the scheduled content-ops agent that works in this repo weekly — see [.agents/scheduled-content-ops.md](./.agents/scheduled-content-ops.md). It is the fourth AI employee and the first outside `abram-network`; it reads the shared employee brain there and writes back to it.
+- **`node scripts/seo-audit.js --human`** is the fastest read on the state of the site: missing metadata, sitemap drift both directions, truncated descriptions, orphan pages, frontmatter gaps. Zero dependencies, no network calls, safe to run any time. Run it before and after any structural change.
+- **`node scripts/gsc-report.js --human`** pulls Search Console (striking-distance queries, low-CTR pages, content gaps, week-over-week movement) and snapshots it. Exits 78 when credentials are absent, which is a skip and not a failure.
+
 ---
 
 ## Styling System & Blur Settings
