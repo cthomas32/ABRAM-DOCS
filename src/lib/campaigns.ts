@@ -119,8 +119,8 @@ export const CAMPAIGN_VARIANTS: Record<CampaignSlug, CampaignVariant> = {
     label: "Start (general)",
 
     eyebrow: "FREE TO START",
-    headline: "Finish the job on time",
-    headlineAccent: "with the margin you planned",
+    headline: "Turn any idea into",
+    headlineAccent: "a film, campaign, or project",
     subhead:
       "One workspace for schedules, crew, call sheets, gear and budgets, so nothing slips between them.",
     primaryCta: "Create your free account",

@@ -8,7 +8,7 @@ const variant = CAMPAIGN_VARIANTS.start;
 const SEO = {
   title: "Get Started Free: Production Management in One Workspace",
   description:
-    "Finish the job on time with the margin you planned. Schedules, crew, call sheets, gear and budgets in one free workspace. No card required, and your first project can be live today.",
+    "Turn any idea into a film, campaign, or project. Schedules, crew, call sheets, gear and budgets in one free workspace. No card required, and your first project can be live today.",
   keywords: [
     "free production management",
     "production workspace",
