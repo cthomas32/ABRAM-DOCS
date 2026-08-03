@@ -69,14 +69,14 @@ jobs:
 
     steps:
       - name: Checkout ABRAM-DOCS
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           # Built-in GITHUB_TOKEN. Correct for PR-only mode, where a human merges. The agent runs
           # the audit and the build in this runner and records results in the PR body.
 
       - name: Checkout abram-network (read-only, for the shared employee brain)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: cthomas32/abram-network
           # Fine-grained PAT with `contents: read` on abram-network ONLY. This is Romilly's
@@ -89,7 +89,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
