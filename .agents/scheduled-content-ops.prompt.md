@@ -444,9 +444,41 @@ SKIPPED  14 long meta descriptions · "Platform Fee" in 3 places (2 legal)
 - The ammo pack (weekly mode) is the one section allowed to run long — it is the deliverable,
   not the report. Post it as a **second block in the same message**, after `SKIPPED`.
 
-Buttons on the PR blocks follow the shared control plane. **Every actions block needs a unique
-`block_id`** — without one, a single click strips every button in the message. This has already
-silently wiped a night's worth of buttons once.
+## Buttons — Approve / Deny on every PR you open
+
+Connor merges from Slack. A PR without buttons is a PR he has to go find, and the whole point
+is the fifteen-second approval. Attach an actions block to **each** PR line:
+
+```json
+{
+  "type": "actions",
+  "block_id": "kipp-pr-<PR_NUMBER>",
+  "elements": [
+    { "type": "button", "action_id": "agent_action", "style": "primary",
+      "text": { "type": "plain_text", "text": "Approve & merge" },
+      "value": "{\"v\":1,\"action\":\"approve_pr\",\"pr\":<PR_NUMBER>,\"repo\":\"cthomas32/ABRAM-DOCS\"}" },
+    { "type": "button", "action_id": "agent_action", "style": "danger",
+      "text": { "type": "plain_text", "text": "Deny" },
+      "value": "{\"v\":1,\"action\":\"deny_pr\",\"pr\":<PR_NUMBER>,\"repo\":\"cthomas32/ABRAM-DOCS\"}" }
+  ]
+}
+```
+
+Three things that will bite you, all of which have already cost a night's buttons once:
+
+- **`"repo":"cthomas32/ABRAM-DOCS"` is mandatory on every button you emit.** You are the only
+  employee outside `abram-network`. Omit it and the control plane falls back to `GH_REPO` and
+  tries to merge your PR number in the *product* repo — which is either a 404 or, far worse,
+  somebody else's PR. The value is allowlisted server-side, so a typo is refused rather than
+  guessed at.
+- **`block_id` must be unique per block** — `kipp-pr-<n>` gives you that for free. Without one,
+  a single click strips every button in the message.
+- **`action_id` must be `agent_action` on every button**, and Slack requires action ids to be
+  unique *within* a block — which is why Approve and Deny each need their own block if you ever
+  put more than two buttons in a row.
+
+Approve squash-merges and deletes the head branch. **Never stack a PR on an open one** — if you
+need a file from an unmerged branch, copy it byte-identical rather than branching off it.
 
 ## Then, immediately, write the brain
 
