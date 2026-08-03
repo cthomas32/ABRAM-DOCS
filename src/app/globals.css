@@ -81,6 +81,32 @@ body {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
 }
 
+/* Admin form field — the input/select/textarea counterpart to .btn-primary. The utility string
+   this replaces was already copy-pasted across the admin pages, so fields had drifted apart by a
+   border shade or a padding step depending on which page you were on. */
+.admin-input {
+  display: block;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem; /* text-xs */
+  color: white;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.admin-input::placeholder {
+  color: #71717a;
+}
+.admin-input:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+/* Native pickers render their control dark-on-dark without this. */
+.admin-input[type="date"] {
+  color-scheme: dark;
+}
+
 /* Glass (Default) — Most buttons */
 .btn-glass {
   display: inline-flex;

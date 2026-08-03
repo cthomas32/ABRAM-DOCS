@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   Link as LinkIcon,
   Megaphone,
+  BadgePercent,
   Menu,
   X,
   ChevronRight
@@ -45,6 +46,7 @@ const NAV_GROUPS = [
     links: [
       { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone, hint: "Landing page funnels" },
       { id: "links", label: "Link Hub", href: "/admin/dashboard/links", icon: LinkIcon, hint: "Your one bio link" },
+      { id: "promotions", label: "Promotions", href: "/admin/dashboard/promotions", icon: BadgePercent, hint: "Discount codes" },
       { id: "subscribers", label: "Subscribers", href: "/admin/dashboard/subscribers", icon: Users, hint: "Newsletter contacts" },
       { id: "broadcasts", label: "Email Broadcasts", href: "/admin/dashboard/broadcasts", icon: Mail, hint: "Compose & send" },
     ],
