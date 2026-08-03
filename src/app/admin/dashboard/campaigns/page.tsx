@@ -150,6 +150,18 @@ const RANGES = [
   { label: "90d", days: 90 },
 ];
 
+interface LinkPage {
+  slug: string;
+  label: string;
+  path: string;
+}
+
+interface LinkChannel {
+  source: string;
+  medium: string;
+  label: string;
+}
+
 const PAGES = [
   { slug: null as string | null, label: "All pages", path: "/start" },
   { slug: "start", label: "Start (general)", path: "/start" },
@@ -160,13 +172,21 @@ const PAGES = [
   { slug: "start-assistant", label: "AI assistant", path: "/start/ai-assistant" },
 ];
 
-const LINK_PAGES = PAGES.filter((page) => page.slug !== null);
+/* The link builder reads its pages and channels from the campaign_link_pages and
+   campaign_link_channels tables so a channel can be added or retired without a deploy.
+   These two arrays are the fallback used when the tables are empty or unreachable, and
+   they mirror the seeded rows. */
+const FALLBACK_LINK_PAGES: LinkPage[] = PAGES.filter((page) => page.slug !== null).map(
+  (page) => ({ slug: page.slug as string, label: page.label, path: page.path })
+);
 
-const LINK_CHANNELS = [
+const FALLBACK_LINK_CHANNELS: LinkChannel[] = [
   { source: "tiktok", medium: "social", label: "TikTok" },
   { source: "reddit", medium: "social", label: "Reddit" },
   { source: "instagram", medium: "social", label: "Instagram" },
   { source: "youtube", medium: "social", label: "YouTube" },
+  { source: "linkedin", medium: "social", label: "LinkedIn" },
+  { source: "x", medium: "social", label: "X" },
 ];
 
 const containerVariants = {
@@ -725,6 +745,44 @@ function BreakdownCard({
 function LinkBuilder() {
   const [campaign, setCampaign] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
+  const [pages, setPages] = useState<LinkPage[]>(FALLBACK_LINK_PAGES);
+  const [channels, setChannels] = useState<LinkChannel[]>(FALLBACK_LINK_CHANNELS);
+  const [fromDatabase, setFromDatabase] = useState(false);
+
+  /* Pages and channels live in the database so they can be edited without a deploy. If the
+     read fails or comes back empty the built-in defaults stay on screen. */
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      const supabase = createClient();
+      const [pageResult, channelResult] = await Promise.all([
+        supabase
+          .from("campaign_link_pages")
+          .select("slug,label,path")
+          .eq("active", true)
+          .order("sort_order", { ascending: true }),
+        supabase
+          .from("campaign_link_channels")
+          .select("source,medium,label")
+          .eq("active", true)
+          .order("sort_order", { ascending: true }),
+      ]);
+
+      if (cancelled) return;
+
+      const loadedPages = (pageResult.data as LinkPage[] | null) || [];
+      const loadedChannels = (channelResult.data as LinkChannel[] | null) || [];
+
+      if (loadedPages.length) setPages(loadedPages);
+      if (loadedChannels.length) setChannels(loadedChannels);
+      if (loadedPages.length && loadedChannels.length) setFromDatabase(true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const copy = async (url: string) => {
     try {
@@ -747,7 +805,11 @@ function LinkBuilder() {
   return (
     <CollapsibleCard
       title="Tracked Link Builder"
-      subtitle="Copy a tagged link before you post, so every visit is attributed to the right channel."
+      subtitle={
+        fromDatabase
+          ? "Copy a tagged link before you post, so every visit is attributed to the right channel. Pages and channels are read live from the database."
+          : "Copy a tagged link before you post, so every visit is attributed to the right channel. Showing the built-in defaults."
+      }
     >
       <div className="mb-5">
         <label
@@ -766,7 +828,7 @@ function LinkBuilder() {
       </div>
 
       <div className="space-y-5">
-        {LINK_PAGES.map((page) => (
+        {pages.map((page) => (
           <div key={page.slug}>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-[11px] font-semibold text-zinc-200">{page.label}</span>
@@ -782,7 +844,7 @@ function LinkBuilder() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-              {LINK_CHANNELS.map((channel) => {
+              {channels.map((channel) => {
                 const url = buildUrl(page.path, channel.source, channel.medium);
                 return (
                   <button
