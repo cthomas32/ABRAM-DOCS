@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   BadgePercent,
-  Check,
   ChevronRight,
   Copy,
   Loader2,
@@ -79,37 +79,6 @@ interface PromoCode {
   created_at: string;
 }
 
-const TIERS = [
-  { id: "solo_lite", label: "Solo Lite" },
-  { id: "solo_pro", label: "Solo Pro" },
-  { id: "team", label: "Team" },
-  { id: "studio", label: "Studio" },
-];
-
-const OFFER_TYPES: Array<{ id: OfferType; label: string; blurb: string }> = [
-  {
-    id: "percent_off",
-    label: "% off",
-    blurb: "The workhorse. Card is charged the reduced amount from day one.",
-  },
-  {
-    id: "months_free",
-    label: "Months free",
-    blurb:
-      "100% off for N months, card on file, converts automatically. Monthly billing only — on annual this would give away a whole year.",
-  },
-  {
-    id: "amount_off",
-    label: "$ off",
-    blurb: "A fixed amount off. Best on the first invoice for a specific dollar promise.",
-  },
-  {
-    id: "extended_trial",
-    label: "Extended trial",
-    blurb: "Free days with a card collected up front. Nothing is charged until the trial ends.",
-  },
-];
-
 async function callApi<T>(body: Record<string, unknown>): Promise<T> {
   const res = await fetch("/api/admin/promotions", {
     method: "POST",
@@ -137,7 +106,6 @@ export default function PromotionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Campaign | null>(null);
-  const [showNewCampaign, setShowNewCampaign] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   const notify = useCallback((message: string) => {
@@ -200,13 +168,13 @@ export default function PromotionsPage() {
               <RefreshCw className="w-3.5 h-3.5" />
               Refresh
             </button>
-            <button
-              onClick={() => setShowNewCampaign(true)}
+            <Link
+              href="/admin/dashboard/promotions/new"
               className="btn-primary h-9 px-4 text-xs font-semibold rounded-lg flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               New campaign
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -244,16 +212,6 @@ export default function PromotionsPage() {
           </div>
         )}
       </div>
-
-      <NewCampaignModal
-        open={showNewCampaign}
-        onClose={() => setShowNewCampaign(false)}
-        onCreated={async (name) => {
-          setShowNewCampaign(false);
-          notify(`${name} created as a draft. Mint codes, then activate it.`);
-          await load();
-        }}
-      />
 
       {selected && (
         <CampaignDetail
@@ -365,302 +323,6 @@ function Stat({ label, value }: { label: string; value: string }) {
       </span>
       <span className="text-lg font-bold tracking-tight text-white font-sans">{value}</span>
     </div>
-  );
-}
-
-// ─── new campaign ────────────────────────────────────────────────────────────
-
-function NewCampaignModal({
-  open,
-  onClose,
-  onCreated,
-}: {
-  open: boolean;
-  onClose: () => void;
-  onCreated: (name: string) => void;
-}) {
-  const [name, setName] = useState("");
-  const [offerType, setOfferType] = useState<OfferType>("percent_off");
-  const [percentOff, setPercentOff] = useState("50");
-  const [amountOff, setAmountOff] = useState("20");
-  const [months, setMonths] = useState("3");
-  const [trialDays, setTrialDays] = useState("30");
-  const [duration, setDuration] = useState<"once" | "repeating" | "forever">("repeating");
-  const [tiers, setTiers] = useState<string[]>([]);
-  const [annualAllowed, setAnnualAllowed] = useState(true);
-  const [newOnly, setNewOnly] = useState(true);
-  const [endsAt, setEndsAt] = useState("");
-  const [notes, setNotes] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
-
-  // Slug is derived, not typed: it is the join key to the marketing campaign of the same name, and
-  // a hand-typed one drifts the moment somebody capitalises differently.
-  const slug = useMemo(
-    () =>
-      name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "")
-        .slice(0, 63),
-    [name],
-  );
-
-  const monthsFree = offerType === "months_free";
-  const isForever = offerType !== "extended_trial" && duration === "forever";
-
-  const submit = async () => {
-    setSaving(true);
-    setErr(null);
-    try {
-      await callApi({
-        action: "create_campaign",
-        slug,
-        name: name.trim(),
-        offerType,
-        percentOff: offerType === "percent_off" ? Number(percentOff) : undefined,
-        amountOffCents: offerType === "amount_off" ? Math.round(Number(amountOff) * 100) : undefined,
-        durationInMonths: monthsFree
-          ? Number(months)
-          : duration === "repeating"
-            ? Number(months)
-            : undefined,
-        duration: monthsFree ? "repeating" : offerType === "extended_trial" ? undefined : duration,
-        trialDays: offerType === "extended_trial" ? Number(trialDays) : undefined,
-        eligibleTiers: tiers,
-        eligibleIntervals: monthsFree ? ["monthly"] : annualAllowed ? ["monthly", "annual"] : ["monthly"],
-        newCustomersOnly: newOnly,
-        endsAt: endsAt || undefined,
-        notes: notes.trim() || undefined,
-      });
-      onCreated(name.trim());
-      setName("");
-      setNotes("");
-    } catch (e) {
-      setErr((e as Error).message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const blocked =
-    !name.trim() || !slug || saving || (isForever && !endsAt);
-
-  return (
-    <Modal open={open} onClose={onClose} dismissable={!saving} size="md">
-      <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
-        <div>
-          <h2 className="text-base font-bold text-white font-sans">New campaign</h2>
-          <p className="text-xs text-zinc-500 mt-1 font-sans">
-            Created as a draft. Nothing is redeemable until you mint a code and activate it.
-          </p>
-        </div>
-
-        <Field label="Name">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Launch 2026 — 50% off Team"
-            className="admin-input"
-          />
-          {slug && <p className="text-[11px] text-zinc-600 mt-1 font-mono">{slug}</p>}
-        </Field>
-
-        <Field label="Offer">
-          <div className="grid grid-cols-2 gap-2">
-            {OFFER_TYPES.map((o) => (
-              <button
-                key={o.id}
-                type="button"
-                onClick={() => {
-                  setOfferType(o.id);
-                  if (o.id === "months_free") setDuration("repeating");
-                }}
-                className={`text-left rounded-lg border p-3 transition-colors ${
-                  offerType === o.id
-                    ? "border-white/25 bg-white/[0.06]"
-                    : "border-white/10 hover:bg-white/[0.03]"
-                }`}
-              >
-                <span className="text-xs font-medium text-white block">{o.label}</span>
-              </button>
-            ))}
-          </div>
-          <p className="text-[11px] text-zinc-500 mt-2 leading-relaxed">
-            {OFFER_TYPES.find((o) => o.id === offerType)?.blurb}
-          </p>
-        </Field>
-
-        {offerType === "percent_off" && (
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Percent off">
-              <input
-                type="number"
-                min={1}
-                max={100}
-                value={percentOff}
-                onChange={(e) => setPercentOff(e.target.value)}
-                className="admin-input"
-              />
-            </Field>
-            <Field label="Runs for">
-              <select
-                value={duration}
-                onChange={(e) => setDuration(e.target.value as typeof duration)}
-                className="admin-input"
-              >
-                <option value="once">The first invoice</option>
-                <option value="repeating">N months</option>
-                <option value="forever">The life of the subscription</option>
-              </select>
-            </Field>
-          </div>
-        )}
-
-        {offerType === "amount_off" && (
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Dollars off">
-              <input
-                type="number"
-                min={1}
-                value={amountOff}
-                onChange={(e) => setAmountOff(e.target.value)}
-                className="admin-input"
-              />
-            </Field>
-            <Field label="Runs for">
-              <select
-                value={duration}
-                onChange={(e) => setDuration(e.target.value as typeof duration)}
-                className="admin-input"
-              >
-                <option value="once">The first invoice</option>
-                <option value="repeating">N months</option>
-              </select>
-            </Field>
-          </div>
-        )}
-
-        {(monthsFree || duration === "repeating") && offerType !== "extended_trial" && (
-          <Field label="Months">
-            <input
-              type="number"
-              min={1}
-              max={24}
-              value={months}
-              onChange={(e) => setMonths(e.target.value)}
-              className="admin-input"
-            />
-          </Field>
-        )}
-
-        {offerType === "extended_trial" && (
-          <Field label="Trial days">
-            <input
-              type="number"
-              min={1}
-              max={90}
-              value={trialDays}
-              onChange={(e) => setTrialDays(e.target.value)}
-              className="admin-input"
-            />
-          </Field>
-        )}
-
-        <Field label="Plans">
-          <div className="flex flex-wrap gap-2">
-            {TIERS.map((t) => {
-              const on = tiers.includes(t.id);
-              return (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() =>
-                    setTiers((prev) =>
-                      prev.includes(t.id) ? prev.filter((x) => x !== t.id) : [...prev, t.id],
-                    )
-                  }
-                  className={`h-8 px-3 text-xs font-medium rounded-lg border transition-colors ${
-                    on ? "border-white/25 bg-white/[0.08] text-white" : "border-white/10 text-zinc-400"
-                  }`}
-                >
-                  {on && <Check className="w-3 h-3 inline mr-1" />}
-                  {t.label}
-                </button>
-              );
-            })}
-          </div>
-          <p className="text-[11px] text-zinc-600 mt-2">
-            {tiers.length === 0 ? "Any paid plan." : "Only the plans selected."}
-          </p>
-        </Field>
-
-        <div className="space-y-3">
-          {monthsFree ? (
-            <p className="text-[11px] text-zinc-500 leading-relaxed">
-              Monthly billing only. On an annual price, N months free discounts the single yearly
-              invoice — a whole year given away — so the product refuses it.
-            </p>
-          ) : (
-            <Toggle
-              on={annualAllowed}
-              onChange={setAnnualAllowed}
-              label="Valid on annual billing too"
-            />
-          )}
-          <Toggle
-            on={newOnly}
-            onChange={setNewOnly}
-            label="New customers only"
-            hint="Blocks anyone who has ever held a paid subscription. Leave on for acquisition; turn off for win-back and upgrade offers."
-          />
-        </div>
-
-        <Field label={isForever ? "Redeemable until (required)" : "Redeemable until"}>
-          <input
-            type="date"
-            value={endsAt}
-            onChange={(e) => setEndsAt(e.target.value)}
-            className="admin-input"
-          />
-          <p className="text-[11px] text-zinc-600 mt-1">
-            {isForever
-              ? "A lifetime discount must have a redemption deadline — otherwise it is a permanent hole in the price list."
-              : "After this date the code stops being redeemable. Discounts already running are unaffected."}
-          </p>
-        </Field>
-
-        <Field label="Notes">
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={2}
-            placeholder="Why this offer exists, and what would make you renew it."
-            className="admin-input resize-none"
-          />
-        </Field>
-
-        {err && <p className="text-xs text-zinc-300 leading-relaxed">{err}</p>}
-
-        <div className="flex justify-end gap-2 pt-1">
-          <button
-            onClick={onClose}
-            disabled={saving}
-            className="h-9 px-4 text-xs font-medium rounded-lg border border-white/10 text-zinc-400 hover:text-white transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => void submit()}
-            disabled={blocked}
-            className="btn-primary h-9 px-4 text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center gap-2"
-          >
-            {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-            Create draft
-          </button>
-        </div>
-      </div>
-    </Modal>
   );
 }
 
@@ -916,33 +578,5 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       </label>
       {children}
     </div>
-  );
-}
-
-function Toggle({
-  on,
-  onChange,
-  label,
-  hint,
-}: {
-  on: boolean;
-  onChange: (v: boolean) => void;
-  label: string;
-  hint?: string;
-}) {
-  return (
-    <button type="button" onClick={() => onChange(!on)} className="flex items-start gap-3 text-left w-full">
-      <span
-        className={`mt-0.5 h-4 w-4 rounded border shrink-0 flex items-center justify-center transition-colors ${
-          on ? "border-white/40 bg-white/15" : "border-white/15"
-        }`}
-      >
-        {on && <Check className="w-3 h-3 text-white" />}
-      </span>
-      <span className="min-w-0">
-        <span className="text-xs text-white font-sans block">{label}</span>
-        {hint && <span className="text-[11px] text-zinc-600 leading-relaxed block mt-0.5">{hint}</span>}
-      </span>
-    </button>
   );
 }
