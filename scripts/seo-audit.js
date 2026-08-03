@@ -77,6 +77,48 @@ function routeFromPageFile(file) {
 
 const isDynamicRoute = (route) => route.includes('[');
 
+/**
+ * A page whose whole job is `permanentRedirect('/somewhere-else')` is not public surface.
+ * It must NOT carry metadata, must NOT be in the sitemap (Google treats a redirecting
+ * sitemap URL as an error and it wastes crawl budget), and being unlinked is the point.
+ * Auditing one as if it were a real page produces four confident, wrong findings.
+ */
+function redirectTargetOf(src) {
+  const m = src.match(/\b(?:permanentRedirect|redirect)\(\s*(['"])(\/[^'"]*)\1/);
+  return m ? m[2] : null;
+}
+
+/**
+ * Metadata is often built by a helper — `export const metadata = campaignMetadata(v, SEO)`.
+ * The structural facts (is there a canonical, is there an openGraph block) then live in the
+ * helper, not the page, and a source-text check on the page alone reports them missing on
+ * pages that genuinely have them. So: resolve the helper's module and read it too.
+ *
+ * Only the imported helper is followed, and only for structural booleans — title and
+ * description strings are still read from the page, because those must stay page-specific.
+ */
+function helperSourceFor(file, src) {
+  const call = src.match(/export\s+const\s+metadata[^=]*=\s*([A-Za-z_$][\w$]*)\s*\(/);
+  if (!call) return '';
+  const fn = call[1];
+
+  const imp = src.match(new RegExp(`import\\s*\\{[^}]*\\b${fn}\\b[^}]*\\}\\s*from\\s*['"]([^'"]+)['"]`));
+  if (!imp) return '';
+
+  const spec = imp[1];
+  const base = spec.startsWith('@/')
+    ? path.join(ROOT, 'src', spec.slice(2))
+    : spec.startsWith('.')
+      ? path.resolve(path.dirname(file), spec)
+      : null;
+  if (!base) return ''; // a bare package specifier is not ours to resolve
+
+  for (const cand of [`${base}.ts`, `${base}.tsx`, path.join(base, 'index.ts')]) {
+    if (fs.existsSync(cand)) return read(cand);
+  }
+  return '';
+}
+
 /* --------------------------------------------------------- 1. route inventory */
 
 const pageFiles = walk(APP_DIR, (f) => path.basename(f) === 'page.tsx');
@@ -93,19 +135,23 @@ const routes = pageFiles.map((file) => {
   const hasStaticMetadata = /export\s+const\s+metadata\b/.test(combined);
   const hasGenerateMetadata = /export\s+(async\s+)?function\s+generateMetadata\b/.test(combined);
 
+  // Structural checks may look through a metadata helper; string checks may not.
+  const structural = combined + '\n' + helperSourceFor(file, combined);
+
   return {
     route,
     file: path.relative(ROOT, file),
     dynamic: isDynamicRoute(route),
     private: isPrivate(route),
+    redirectsTo: redirectTargetOf(src),
     hasStaticMetadata,
     hasGenerateMetadata,
     hasMetadata: hasStaticMetadata || hasGenerateMetadata,
-    hasCanonical: /alternates\s*:\s*\{[^}]*canonical/s.test(combined),
-    hasJsonLd: /application\/ld\+json/.test(src),
+    hasCanonical: /alternates\s*:\s*\{[^}]*canonical/s.test(structural),
+    hasJsonLd: /application\/ld\+json/.test(structural),
     title: firstStringField(combined, 'title'),
     description: firstStringField(combined, 'description'),
-    openGraph: /openGraph\s*:/.test(combined),
+    openGraph: /openGraph\s*:/.test(structural),
   };
 });
 
@@ -120,7 +166,18 @@ function firstStringField(src, field) {
   return m ? m[2].replace(/\\(['"])/g, '$1') : null;
 }
 
-const publicRoutes = routes.filter((r) => !r.private && !r.dynamic);
+// Redirect stubs are real routes but not public surface — see redirectTargetOf(). They are
+// held separately so the sitemap check can still catch one being listed, which is a genuine
+// problem, without every other check firing on a four-line file that is behaving correctly.
+const auditableRoutes = routes.filter((r) => !r.private && !r.dynamic);
+const publicRoutes = auditableRoutes.filter((r) => !r.redirectsTo);
+const redirectRoutes = auditableRoutes.filter((r) => r.redirectsTo);
+
+for (const r of redirectRoutes) {
+  report('info', 'redirect-route', r.route,
+    `Permanent redirect to ${r.redirectsTo}; excluded from metadata, sitemap, JSON-LD and orphan checks.`,
+    r.file);
+}
 
 /* ----------------------------------------------------- 2. metadata completeness */
 
@@ -201,9 +258,15 @@ if (!sitemapSrc) {
   }
   // The reverse: a sitemap entry whose page no longer exists is a soft 404 to Google.
   const known = new Set(publicRoutes.map((r) => r.route));
+  const redirecting = new Map(redirectRoutes.map((r) => [r.route, r.redirectsTo]));
   const dynamicPrefixes = ['/docs/', '/blog/', '/changelog/'];
   for (const s of sitemapRoutes) {
     if (known.has(s)) continue;
+    if (redirecting.has(s)) {
+      report('warn', 'sitemap-redirect', s,
+        `Sitemap lists a URL that permanently redirects to ${redirecting.get(s)}. Google reports these as sitemap errors and they spend crawl budget for nothing — list the destination instead.`);
+      continue;
+    }
     if (dynamicPrefixes.some((p) => s.startsWith(p))) continue; // DB-driven, resolved at build
     report('error', 'sitemap-orphan', s,
       'Sitemap lists a URL with no matching page.tsx — crawlers will hit a 404 from our own sitemap.');
@@ -214,12 +277,12 @@ if (!sitemapSrc) {
 
 // Feature and comparison pages are the ones that earn rich results. Legal and utility
 // pages are not worth the markup, so they are not asked for it.
-const RICH_RESULT_PREFIXES = ['/film-production', '/agency', '/intelligence', '/alternatives', '/pricing', '/production-brain'];
+const RICH_RESULT_PREFIXES = ['/film-production', '/agency', '/intelligence', '/alternatives', '/pricing'];
 for (const r of publicRoutes) {
   if (!RICH_RESULT_PREFIXES.some((p) => r.route === p || r.route.startsWith(p + '/'))) continue;
   if (!r.hasJsonLd) {
     report('warn', 'jsonld-missing', r.route,
-      'Feature/comparison page with no JSON-LD block, so it cannot earn a rich result. AGENTS.md §2 points at production-brain/page.tsx as the reference.',
+      'Feature/comparison page with no JSON-LD block, so it cannot earn a rich result. src/app/film-production/page.tsx is the reference implementation.',
       r.file);
   }
 }
@@ -273,6 +336,13 @@ const linkSources = [
   ...guideFiles,
 ];
 const inbound = new Map(publicRoutes.map((r) => [r.route, 0]));
+
+// A list rendered from data links its children as href={`/alternatives/${alt.slug}`}, so the
+// literal route never appears in the source. Collecting the static prefix of such a template
+// lets one map over a set of pages count as a link to each of them — otherwise every
+// data-driven hub reports all its children as orphans, which is the common case, not the edge.
+const linkPrefixes = new Set();
+
 for (const file of linkSources) {
   const src = read(file);
   const owner = path.basename(file) === 'page.tsx' ? routeFromPageFile(file) : null;
@@ -285,10 +355,19 @@ for (const file of linkSources) {
     const target = m[1].replace(/\/$/, '') || '/';
     if (inbound.has(target)) inbound.set(target, inbound.get(target) + 1);
   }
+  for (const m of src.matchAll(/href=\{\s*`(\/[^`$]*)\$\{/g)) {
+    if (m[1].endsWith('/')) linkPrefixes.add(m[1]);
+  }
 }
+
+// Credit a prefix only to its direct children: `/alternatives/` covers /alternatives/celtx
+// but not a deeper /alternatives/celtx/pricing, which would need its own link.
+const coveredByPrefix = (route) =>
+  [...linkPrefixes].some((p) => route.startsWith(p) && !route.slice(p.length).includes('/'));
+
 for (const [route, count] of inbound) {
   if (route === '/') continue;
-  if (count === 0) {
+  if (count === 0 && !coveredByPrefix(route)) {
     report('warn', 'orphan-page', route,
       'No page or article links to this route. It gets no internal authority and cannot be reached by browsing.');
   }
@@ -302,6 +381,7 @@ const summary = {
   counts: {
     pageFiles: pageFiles.length,
     publicRoutes: publicRoutes.length,
+    redirectRoutes: redirectRoutes.length,
     dynamicRoutes: routes.filter((r) => r.dynamic && !r.private).length,
     sitemapStaticEntries: sitemapRoutes.size,
     guideArticles: guideFiles.length,
