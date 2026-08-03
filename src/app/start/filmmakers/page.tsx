@@ -8,7 +8,7 @@ const variant = CAMPAIGN_VARIANTS["start-filmmakers"];
 const SEO = {
   title: "Free Production Software for Filmmakers and Producers",
   description:
-    "Get your evenings back and your shoot days on schedule. Script breakdown, shooting schedules, crew rosters, gear tracking and digital call sheets in one free workspace. No card required.",
+    "Get your evenings back and your shoot days on schedule. Script breakdown, shooting schedules, crew rosters and digital call sheets in one free workspace.",
   keywords: [
     "film production software free",
     "call sheet app",
