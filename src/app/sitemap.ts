@@ -321,6 +321,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/alternatives`,
+      lastModified: DEFAULT_RELEASE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/alternatives/studiobinder`,
       lastModified: DEFAULT_RELEASE_DATE,
       changeFrequency: 'monthly' as const,
