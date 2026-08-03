@@ -19,6 +19,15 @@ import { createClient } from "@/utils/supabase/server";
 const NETWORK_FUNCTIONS_URL = process.env.ABRAM_NETWORK_FUNCTIONS_URL || "";
 const PROMO_ADMIN_TOKEN = process.env.ABRAM_PROMO_ADMIN_TOKEN || "";
 
+/**
+ * The network project's PUBLISHABLE key. Supabase's edge gateway rejects a request with no
+ * `Authorization` header before the function ever runs (401 UNAUTHORIZED_NO_AUTH_HEADER), so this
+ * is required to get through the door — it is not what authorizes the call. The real gate is the
+ * signed-in session checked below plus `x-abram-promo-token`, both verified after the gateway lets
+ * the request past. This key is publishable by design and grants nothing on its own.
+ */
+const NETWORK_ANON_KEY = process.env.ABRAM_NETWORK_ANON_KEY || "";
+
 /** Actions this proxy is willing to forward. `validate` is deliberately absent: it belongs to a
  *  buyer in the product, needs their org context, and has no business being reachable from here. */
 const ALLOWED_ACTIONS = new Set([
@@ -41,11 +50,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!NETWORK_FUNCTIONS_URL || !PROMO_ADMIN_TOKEN) {
+  if (!NETWORK_FUNCTIONS_URL || !PROMO_ADMIN_TOKEN || !NETWORK_ANON_KEY) {
     return NextResponse.json(
       {
         error:
-          "Promotions are not configured. Set ABRAM_NETWORK_FUNCTIONS_URL and ABRAM_PROMO_ADMIN_TOKEN.",
+          "Promotions are not configured. Set ABRAM_NETWORK_FUNCTIONS_URL, " +
+          "ABRAM_PROMO_ADMIN_TOKEN and ABRAM_NETWORK_ANON_KEY.",
       },
       { status: 503 },
     );
@@ -68,6 +78,8 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${NETWORK_ANON_KEY}`,
+        apikey: NETWORK_ANON_KEY,
         "x-abram-promo-token": PROMO_ADMIN_TOKEN,
       },
       body: JSON.stringify(body),
