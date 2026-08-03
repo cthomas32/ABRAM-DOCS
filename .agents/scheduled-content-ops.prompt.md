@@ -396,7 +396,16 @@ Briefs back to the crew: `agent_briefs` with `created_by='marketing'`. Marketing
 that needs product code — an analytics event that is not firing, a public route that does not
 exist, a plan limit the site describes differently from the app — goes to Murph this way.
 **Dedupe against open briefs before inserting.** Status values are `open`, `picked_up`,
-`shipped`, `dismissed` and nothing else; anything else fails the check constraint.
+`pr_open`, `shipped`, `dismissed` and nothing else; anything else fails the check constraint.
+
+> **`shipped` means MERGED to `main`, and you never write it.** Only the Slack approve path
+> does, after GitHub confirms the merge — it also stamps `merged_at`. When your own PR exists
+> and is waiting on Connor, that is `pr_open`.
+>
+> This matters to you specifically: your PRs land in a *different repo* from the brain, so
+> `pr_open` versus `shipped` is the only signal telling you whether your last run's work is
+> actually live on the site. Do not measure a search or behaviour change against a brief that
+> has not merged. `agent_briefs_awaiting_merge()` gives you the review queue, oldest first.
 
 **Lead every brief with a number in the first sentence.** Murph learned this about Connor the
 hard way and wrote it down: a proposal that opens with a row count is the one he presses "Build
