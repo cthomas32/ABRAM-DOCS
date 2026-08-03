@@ -1,0 +1,189 @@
+# ---------------------------------------------------------------------------------------------
+# KIPP workflow — NOT INSTALLED YET.
+#
+# This is a template. To hire KIPP, copy it into place yourself:
+#
+#     mkdir -p .github/workflows
+#     cp .agents/scheduled-content-ops.workflow.yml .github/workflows/scheduled-content-ops.yml
+#
+# It is deliberately not written straight into .github/workflows/ — installing a scheduled job
+# that runs with service-role database credentials and a cross-repo PAT should be a decision you
+# make on purpose, not a side effect of an agent session. Add the secrets FIRST
+# (.agents/scheduled-content-ops.md has the checklist); until they exist the run is inert.
+# ---------------------------------------------------------------------------------------------
+
+name: KIPP — Content Ops & Search (agent-co)
+
+# Runs Claude Code (Opus 5) headless in the cloud on a schedule — no local machine needed.
+# It executes .agents/scheduled-content-ops.prompt.md: audit the public surface -> fix what is
+# broken or untrue -> open PRs -> draft the changelog -> hand Connor an ammo pack -> post to
+# Slack -> write the shared employee brain.
+#
+# It degrades gracefully: without Search Console credentials it still runs and still reports,
+# it just cannot see search demand.
+
+on:
+  # GitHub Actions cron is UTC and is BEST-EFFORT: runs are frequently delayed 10-45 min and can
+  # be dropped entirely under load. There is deliberately NO hour-guard — a self-rejecting guard
+  # is what killed every scheduled run on the product side once already (a delayed run landed
+  # outside its target hour, exited in seconds, and posted nothing). A delayed run still runs and
+  # still notifies.
+  #
+  # Weekly, Friday. A changelog is a weekly artifact and daily marketing is noise; unlike TARS
+  # there is no error queue forcing a daily cadence. Friday so the week's shipped work is
+  # complete and the ammo pack is in hand before the weekend, when Connor actually posts.
+  #
+  # 13:47 UTC is anchored to EDT (US summer). GitHub cron cannot observe daylight saving, so the
+  # LOCAL time drifts an hour across the year — an accepted trade for reliable delivery:
+  #   EDT (summer): 09:47 ET
+  #   EST (winter): 08:47 ET
+  # Minute :47 (not :00) dodges the top-of-the-hour congestion that GitHub drops runs at.
+  schedule:
+    - cron: '47 13 * * 5'
+
+  workflow_dispatch:
+    inputs:
+      run_mode:
+        description: "weekly = full pass · seo = technical lane only · ammo = Slack pack only, no PRs · brief = build one approved brief"
+        required: false
+        default: 'weekly'
+        type: choice
+        options: [weekly, seo, ammo, brief]
+      brief_id:
+        description: "agent_briefs id to build now (from the Slack 'Build this' button). Required when run_mode is brief."
+        required: false
+        type: string
+
+permissions:
+  contents: write         # branches only — the agent never pushes to main
+  pull-requests: write
+
+concurrency:
+  group: content-ops
+  cancel-in-progress: false
+
+jobs:
+  content-ops:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout ABRAM-DOCS
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Built-in GITHUB_TOKEN. Correct for PR-only mode, where a human merges. The agent runs
+          # the audit and the build in this runner and records results in the PR body.
+
+      - name: Checkout abram-network (read-only, for the shared employee brain)
+        uses: actions/checkout@v4
+        with:
+          repository: cthomas32/abram-network
+          # Fine-grained PAT with `contents: read` on abram-network ONLY. This is Romilly's
+          # access shape. KIPP reads .agents/brain/ and `git log origin/main` here and never
+          # writes — the prompt forbids it and this token could not push anyway.
+          token: ${{ secrets.NETWORK_REPO_READ_PAT }}
+          path: abram-network
+          # Full history: the agent reads commit subjects since its last run to build the
+          # changelog and to detect which shipped changes invalidated which help article.
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Configure git identity
+        # The NAME keeps provenance (PRs and git log still read as the agent). The EMAIL must be
+        # the repo owner's, because Vercel's Hobby plan blocks builds for commits authored by an
+        # address outside the account — a bot-authored commit silently fails to deploy.
+        run: |
+          git config --global user.name  "abram-agent-co[bot]"
+          git config --global user.email "connorthomas32@gmail.com"
+
+      - name: Run KIPP (agent-co) content-ops pass
+        id: contentops
+        env:
+          # Subscription auth (no metered API key). Generate once with `claude setup-token`
+          # (Pro/Max/Team/Enterprise; token lasts ~1 year) and store as CLAUDE_CODE_OAUTH_TOKEN.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # ABRAM-DOCS database — the ONLY Supabase project this repo may target (AGENTS.md).
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+          # abram-network database — the shared employee brain. The prompt restricts writes to
+          # abram_brain_events and agent_briefs; this key is capable of more, so that restriction
+          # is a prompt rule, not a credential boundary. Revisit if it ever proves insufficient.
+          NETWORK_SUPABASE_URL: ${{ secrets.NETWORK_SUPABASE_URL }}
+          NETWORK_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.NETWORK_SUPABASE_SERVICE_ROLE_KEY }}
+
+          # Google Search Console. OPTIONAL — scripts/gsc-report.js exits 78 ("not configured")
+          # when absent and the prompt treats 78 as a skip, not a failure. Everything else runs.
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_KIPP || secrets.SLACK_TRIAGE_WEBHOOK_URL }}
+          # Passed through to the agent's payload so a channel-overridable (classic) webhook
+          # routes here. Harmlessly ignored by a modern app webhook already bound to a channel.
+          SLACK_CHANNEL: '#kipp'
+
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          RUN_MODE: ${{ github.event.inputs.run_mode || 'weekly' }}
+          BRIEF_ID: ${{ github.event.inputs.brief_id }}
+          # Behaviour-analysis window. The Slack report's "last 28d" wording follows this value
+          # automatically — the prompt reads it rather than hardcoding a number.
+          LOOKBACK_DAYS: '28'
+
+        run: |
+          # Defensive: strip stray whitespace/newlines that secrets pick up when pasted. Tokens
+          # and URLs never contain whitespace, and an embedded newline silently breaks every
+          # curl and makes the auth header invalid. Done without echoing any value.
+          for v in CLAUDE_CODE_OAUTH_TOKEN SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY \
+                   NETWORK_SUPABASE_URL NETWORK_SUPABASE_SERVICE_ROLE_KEY \
+                   SLACK_WEBHOOK_URL GSC_SITE_URL; do
+            export "$v=$(printf '%s' "${!v}" | tr -d '[:space:]')"
+          done
+          # NOT stripped: GSC_SERVICE_ACCOUNT_JSON is a JSON document whose private_key contains
+          # real newlines. Stripping whitespace would corrupt the RSA key and break signing.
+
+          echo "Run mode: $RUN_MODE${BRIEF_ID:+ (brief $BRIEF_ID)}"
+          if [ -z "$GSC_SERVICE_ACCOUNT_JSON" ]; then
+            echo "Search Console: NOT configured — the run continues without search-demand data."
+          fi
+
+          # The agent reads the sibling checkout at ../abram-network relative to the repo root.
+          # actions/checkout placed it INSIDE the workspace at ./abram-network, so expose it
+          # where the prompt expects it. A symlink, not a copy — it must stay read-only.
+          ln -sfn "$GITHUB_WORKSPACE/abram-network" "$GITHUB_WORKSPACE/../abram-network"
+
+          # --strict-mcp-config with no --mcp-config loads ZERO MCP servers, so any committed
+          # .mcp.json is ignored and no auth prompt clutters the log. The agent reaches both
+          # databases with plain curl and the service-role keys instead.
+          claude -p "$(cat .agents/scheduled-content-ops.prompt.md)" \
+            --model claude-opus-5 \
+            --dangerously-skip-permissions \
+            --strict-mcp-config
+
+      - name: Slack fallback on failure
+        # Only fires if the step above crashed before the agent could post its own report. No
+        # duplicate risk: on success the agent posts exactly one message and this is skipped.
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_KIPP || secrets.SLACK_TRIAGE_WEBHOOK_URL }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          URL="$(printf '%s' "$SLACK_WEBHOOK_URL" | tr -d '[:space:]')"
+          [ -z "$URL" ] && { echo "No Slack webhook configured; nothing to notify."; exit 0; }
+          curl -s -X POST "$URL" \
+            -H 'Content-Type: application/json' \
+            -d "{\"text\":\":warning: KIPP (content ops) failed before it could report. <$RUN_URL|View run>\"}" \
+            > /dev/null
