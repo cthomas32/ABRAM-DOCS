@@ -146,7 +146,11 @@ async function supabase(pathname, init = {}) {
     },
   });
   if (!res.ok) throw new Error(`Supabase ${init.method || 'GET'} ${pathname} failed (${res.status}): ${await res.text()}`);
-  return res.status === 204 ? null : res.json();
+  // `Prefer: return=minimal` answers 201 with an EMPTY body, not 204, so keying off 204 alone
+  // sends an empty string to res.json() and throws "Unexpected end of JSON input" — after the
+  // write has already succeeded. Read the body once and let its emptiness decide.
+  const body = await res.text();
+  return body ? JSON.parse(body) : null;
 }
 
 /* ---------------------------------------------------------------- main */
