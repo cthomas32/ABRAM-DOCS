@@ -34,6 +34,26 @@ Concretely, KIPP may never write:
 When the honest version of a sentence is weaker, write the weaker sentence. A specific small
 true thing outperforms a vague large false one, and it is the only kind we can defend.
 
+### The one exception: a number somebody else published
+
+The rule above is about claims we make. A finding about the industry belongs to whoever
+published it, and quoting one is how we earn a reader who has never heard of us. It is allowed,
+under four conditions, and all four are load-bearing:
+
+1. **The publisher is named where the number is.** On the card, in the caption, in the body copy.
+   A figure floating over our logo reads as ours.
+2. **The link to the source travels with it** in the note on the post, or in the PR body for a
+   page. A reviewer has to be able to check it in ten seconds.
+3. **It stays a fact about the industry.** The moment a borrowed number is used to imply what
+   ABRAM does about it, it has become a product claim and §1 applies again in full. "Productions
+   lose eight hours a week to scheduling" is quotable. "ABRAM gives you those eight hours back"
+   is not, until we have measured it.
+4. **The year is on it** whenever the source is more than a year old. A 2023 rate survey quoted
+   bare in 2026 is a false present tense.
+
+A number we cannot source is a number we do not use, however good it sounds. The claims rule
+outranks the desire for a strong card every time.
+
 ## 2. Where facts come from
 
 | Fact | Source of truth | Never |
@@ -182,6 +202,41 @@ Two things this does **not** license:
 - **Seven posts on one channel.** One per channel per day, spread across the week, matched to
   the audience. Seven LinkedIn cards in seven days is one channel exhausted and the rest of the
   week still empty.
+
+### What the week is made of
+
+**At most half of any week may be about ABRAM.** This is enforced: `social-draft.js` counts the
+kinds standing on the days a run touches and refuses the run when the product share goes over
+half. Every post carries a `kind`, and there is no default.
+
+| Kind | What it is | What it is doing |
+|---|---|---|
+| `product` | ABRAM doing something. A screen, a shipped change, an outcome it gets you. | Converting the people who already follow us. |
+| `craft` | Useful with the product taken out. A definition, a checklist, the four places a shoot day quietly leaks time. | Earning the follow. This is the one that gets saved and sent to a colleague. |
+| `market` | A number or a finding about the industry, under the four conditions in §1. | Being worth quoting. A sourced figure gets shared by people who would never share an ad. |
+| `story` | How we think about production, what we are building, where we think the work is going. | Making us a person rather than a vendor. |
+| `article` | Sends the reader to something we wrote: a blog post or a help article. | Traffic, and the only kind of post that compounds. |
+
+The reasoning is worth holding rather than obeying. An account that only announces its own
+product is an account with no audience to announce to, and the reach that a product post needs
+is built by the posts that ask for nothing. The `craft` and `market` posts are what make the
+`product` posts land.
+
+**A week wants at least one `article` post, and there is usually more than one worth making.**
+A published piece already carries the argument, the specifics and the search value. A card in
+front of it costs one headline. Working the other way round is also right: an article that gets
+impressions and no clicks is a post waiting to be written, and so is one whose best paragraph
+has never been said anywhere else.
+
+Three ways a post-and-article pair goes wrong:
+
+- **The card answers the question the article answers.** Then there is no reason to click. The
+  card takes one idea out of the piece and stops, which is §3 (*leave them wanting the rest*)
+  applied to a link.
+- **The caption is the article's own opening paragraph.** The reader has now read the top of the
+  page in the feed. Say the thing the piece is too long to say quickly.
+- **Five posts pointing at the same piece in one week.** Spread them, change the angle each time,
+  and let a piece come back weeks later with a different idea pulled out of it.
 
 ## 6. What KIPP may change alone, and what it may only propose
 

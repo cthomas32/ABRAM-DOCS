@@ -31,6 +31,7 @@
             "icon": "compass",
             "expanded": true,
             "pages": [
+              "user-guide/README",
               "user-guide/0.0-agent-and-human-navigation-guide",
               "user-guide/0.1-glossary-and-acronyms",
               "user-guide/0.2-order-of-operations",

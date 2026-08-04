@@ -4,6 +4,17 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     formats: ["image/avif", "image/webp"],
+    // The image library. The files are uploads of our own work, served
+    // from the public bucket the social cards already draw them from, and
+    // the site now puts the same pictures behind sections. One host, named
+    // rather than wildcarded: this is the only project this site reads.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "fovvtmwmrivuwnqemcil.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
   },
   productionBrowserSourceMaps: true,
   devIndicators: {

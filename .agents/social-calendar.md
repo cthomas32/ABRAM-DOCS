@@ -30,6 +30,34 @@ The three states that matter:
 
 `skipped` exists so a deliberate gap is explained rather than looking like a miss.
 
+---
+
+## The second thing worth understanding: what the week is made of
+
+A post also carries a **kind**, which is what it is for. Left unrecorded, a week drifts to the
+same place every time, because on any given day the easiest post to write is another one about
+ABRAM, and seven of those is an account with no audience to announce anything to.
+
+| Kind | What it is | Needs |
+|---|---|---|
+| `product` | ABRAM doing something. A screen, a shipped change, an outcome. | |
+| `craft` | Useful with the product taken out. A definition, a checklist, a way of running a day. | |
+| `market` | A number about the industry. | The publisher named on the card, and the link in the note. |
+| `story` | How we think about production, and what we are building. | |
+| `article` | Sends the reader to a blog post or a help article. | `blogSlug` or `docSlug`. |
+
+**At most half the posts on the days a run touches may be `product`.** `social-draft.js` counts
+the kinds already standing on those days along with the ones being filed, and refuses the whole
+run when the share goes over. Refusing beats warning here: a warning at the end of a long agent
+run is a line that gets scrolled past, and the fix is one card.
+
+The rule sleeps under four posts. A week halfway through being written is not a week that has
+drifted, and a check that fires every Monday is one nobody reads.
+
+The week view counts the same five under its standing figures, and says so out loud when more
+than half of a week has become about us. See [`brand-voice.md`](./brand-voice.md) §5 for what
+each kind is doing and how a post pairs with an article without giving the article away.
+
 **Marking a post ready publishes its card.** One click renders the PNG, uploads it, and flips the
 post, because those two things were always going to happen together and splitting them across two
 screens is how a post reaches Slack with a caption and a hole where the picture should be. It is
@@ -113,10 +141,10 @@ Runs daily at **11:12 UTC**, which is 07:12 ET in summer and 06:12 ET in winter.
 cannot observe daylight saving, and reliable delivery is worth more than an exact local minute.
 There is deliberately **no hour-guard**: a delayed run still delivers.
 
-Each ready post arrives as: the channel and campaign, the caption, the tracked link on its own
-line (bare, so it can be selected and pasted), the photographer's credit where the card is built
-on somebody's picture, the card at its public address, and the note explaining why the post
-exists.
+Each ready post arrives as: the channel and campaign, what the post is for when it is anything
+other than product, the caption, the tracked link on its own line (bare, so it can be selected
+and pasted), the photographer's credit where the card is built on somebody's picture, the card at
+its public address, and the note explaining why the post exists.
 
 The credit line is there because a card can only credit somebody in a corner, and a corner is not
 something a creator is ever told about. The tag in the caption is, so it arrives ready to paste
@@ -172,6 +200,28 @@ The pages and channels come from `campaign_link_pages` and `campaign_link_channe
 tables the builder on the campaigns dashboard reads, so a channel added there appears here with no
 deploy. See [`campaign-links.md`](./campaign-links.md).
 
+### Pointing at something we wrote
+
+A landing page is one of six. The blog and the help centre are the rest of the site, and a post
+that sends somebody to a piece of writing is the cheapest traffic on the calendar: the piece
+already carries the argument and the search value, and the card costs one headline.
+
+In the studio, leave the landing page empty and paste the URL into the tracked link, keeping
+`utm_source` spelled the way the channel is. In a KIPP proposal it is a field:
+
+```json
+"post": { "kind": "article", "blogSlug": "why-productions-still-run-on-spreadsheets" }
+"post": { "kind": "article", "docSlug": "user-guide/2.1-building-a-call-sheet" }
+```
+
+Both are checked before anything is written. A blog slug is matched against the published posts
+and a doc slug against the search index, because a slug guessed from a headline is a card with a
+404 behind it, approved by somebody who had no reason to check the link.
+`node scripts/social-draft.js --articles` prints both lists.
+
+`page_slug` stays empty on those rows. The campaign dashboard joins its landing analytics on that
+column, and an article is not one of the pages it measures. The clicks still arrive tagged.
+
 **`utm_source` has to match the normalized channel names** in `REFERRER_CHANNELS`
 (`src/lib/campaigns.ts`), or a tagged click and an untagged share from the same place land in two
 separate rows in the dashboard.
@@ -208,6 +258,7 @@ It books the week through `scripts/social-draft.js`, by adding a `post` block to
 "post": {
   "scheduledFor": "2026-08-04",
   "channel": "linkedin",
+  "kind": "product",
   "caption": "Tomorrow's call sheet builds from the schedule you already made.",
   "pageSlug": "start-filmmakers",
   "altText": "A call sheet screen showing tomorrow's crew and call times"
@@ -222,9 +273,18 @@ What the script refuses, rather than filing something misleading:
 
 - **A day in the past, or more than 21 days out.** A weekly agent has no business filling a month.
 - **A channel or landing page that is not in the link builder**, with the live list printed.
+- **A post with no `kind`.** There is no default, because a default is what the whole week would
+  quietly become.
+- **A week where more than half the posts are `product`.** The counts and the ceiling are printed.
+- **A `market` post with no source**, meaning no link in the note or nothing naming the publisher
+  on the card. An unsourced statistic under our logo is a claim we made.
+- **An `article` post with nothing to point at**, and any blog or doc slug that does not resolve.
 - **A campaign that does not exist.** Creating one is a positioning decision and it is yours. KIPP
   proposes it in the Slack pack instead.
 - **A day and channel already booked**, which is skipped and reported rather than double posted.
+
+A week with no `article` post is allowed and mentioned. There is not always a piece worth
+pointing at, and a refusal would only produce a weak article post filed to clear the check.
 
 A bad booking fails the whole run, cards included. A card filed without the post it was drawn for
 is a card nobody can place.

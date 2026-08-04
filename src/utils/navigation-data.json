@@ -12,6 +12,17 @@
   {
     "slug": [
       "user-guide",
+      "README"
+    ],
+    "path": "user-guide/README",
+    "title": "Welcome",
+    "group": "Introduction & Concepts",
+    "groupIcon": "compass",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
       "0.0-agent-and-human-navigation-guide"
     ],
     "path": "user-guide/0.0-agent-and-human-navigation-guide",

@@ -108,7 +108,7 @@ async function rest(path) {
 }
 
 const SELECT =
-  "select=id,scheduled_for,slot,channel,caption,link_url,status,source,note,alt_text,set_id," +
+  "select=id,scheduled_for,slot,channel,kind,caption,link_url,status,source,note,alt_text,set_id," +
   "asset:social_image_assets(title,public_url,width,height,status,spec)," +
   "campaign:social_campaigns(name,slug)";
 
@@ -310,6 +310,10 @@ function buildBlocks({ date, ready, drafts, week, shown }) {
 
     const heading = [`*${channelLabel(post.channel)}*`];
     if (post.campaign?.name) heading.push(`_${post.campaign.name}_`);
+    // What the post is for. A product post and a post about the craft are
+    // read differently by whoever is about to paste them, and on a week
+    // where three arrive in a row it is the fastest way to see the drift.
+    if (post.kind && post.kind !== "product") heading.push(`· ${post.kind}`);
     if (post.source === "kipp") heading.push("· drafted by KIPP");
 
     blocks.push({ type: "section", text: { type: "mrkdwn", text: heading.join("  ") } });

@@ -23,6 +23,7 @@
  *   cat proposals.json | node scripts/social-draft.js --stdin
  *   node scripts/social-draft.js --options            # what the renderer accepts
  *   node scripts/social-draft.js --backdrops          # the image library, by title
+ *   node scripts/social-draft.js --articles           # blog posts and help articles to link to
  *   node scripts/social-draft.js --file x.json --dry-run
  *
  * Environment:
@@ -190,7 +191,33 @@ const CATALOG = {
   placement: idsFrom("src/lib/social/placement.ts", "export const PLACEMENTS"),
   footer: idsFromList("src/lib/social/spec.ts", "export const FOOTER_MODES"),
   destination: idsFrom("src/lib/social/platforms.ts", "export const SOCIAL_DESTINATIONS"),
+  // What a post is FOR, which is the only field the week is balanced on.
+  // Same list the studio offers, read out of the same file.
+  kind: idsFromList("src/lib/social/postKinds.ts", "export const POST_KINDS"),
 };
+
+/**
+ * The share of a week that may be about us.
+ *
+ * Half, and it is a ceiling rather than a target. A feed that only ever
+ * announces its own product is one nobody follows and nobody shares, and
+ * the posts that earn the audience are the ones that are useful with ABRAM
+ * taken out of them. Below four posts the rule does not apply: a week still
+ * being written is not a week that has drifted.
+ */
+const PRODUCT_SHARE_MIN_POSTS = 4;
+
+/** Help articles, for a post that exists to send somebody to one. */
+function docSlugs() {
+  try {
+    const index = JSON.parse(readFileSync(join(ROOT, "public/search-index.json"), "utf8"));
+    return Array.isArray(index) ? index.map((entry) => entry.slug).filter(Boolean) : [];
+  } catch {
+    // Built by scripts/build-search-index.js. Absent is a reason to stop
+    // checking, never a reason to stop the run.
+    return [];
+  }
+}
 
 /**
  * Which fields each layout actually draws, read out of the same table the
@@ -248,6 +275,9 @@ function formatSize(id) {
 // ---------------------------------------------------------------------
 
 const problems = [];
+
+/** Worth saying at the end of a run, never worth stopping one over. */
+const advice = [];
 
 function fail(where, message) {
   problems.push(`${where}: ${message}`);
@@ -344,11 +374,40 @@ function normalizePost(post, where) {
   const channel = str(post.channel, 40).trim().toLowerCase();
   if (!channel) fail(where, "post.channel is required, and must match a channel in the link builder");
 
+  // What the post is for. Required, and there is no default: left to one,
+  // every week comes out as seven cards about ABRAM, because that is the
+  // easiest post to write on any given day.
+  const kind = str(post.kind, 20).trim().toLowerCase();
+  if (!CATALOG.kind.includes(kind)) {
+    fail(
+      where,
+      `post.kind must be one of ${CATALOG.kind.join(", ")} (got ${JSON.stringify(post.kind)}). ` +
+        "It is what the week is balanced on, so there is no default."
+    );
+  }
+
+  // Three ways to point somewhere, and a post points at one thing. A
+  // caption carrying two links splits its own clicks.
+  const pageSlug = str(post.pageSlug, 80).trim() || null;
+  const blogSlug = str(post.blogSlug, 160).trim().replace(/^\/?blog\//, "").replace(/\/$/, "") || null;
+  const docSlug = str(post.docSlug, 200).trim().replace(/^\/?docs\//, "").replace(/\/$/, "") || null;
+
+  const targets = [pageSlug, blogSlug, docSlug].filter(Boolean);
+  if (targets.length > 1) {
+    fail(where, "a post links to one thing. Set pageSlug, blogSlug or docSlug, and only one of them.");
+  }
+  if (kind === "article" && targets.length === 0) {
+    fail(where, "an article post exists to send somebody to something we wrote. Set blogSlug or docSlug.");
+  }
+
   return {
     scheduledFor,
     channel,
+    kind,
     caption: str(post.caption, 4000),
-    pageSlug: str(post.pageSlug, 80).trim() || null,
+    pageSlug,
+    blogSlug,
+    docSlug,
     campaign: str(post.campaign, 80).trim() || null,
     altText: str(post.altText, 500).trim() || null,
   };
@@ -405,6 +464,22 @@ function normalizeProposal(proposal, index) {
 
   const slides = slidesIn.slice(0, MAX_SLIDES).map((slide, i) => normalizeSlide(slide, `${where} slide ${i + 1}`));
 
+  const post = normalizePost(raw.post, where);
+
+  // A number about the industry belongs to whoever published it. The link
+  // in the note is how a reviewer checks it in ten seconds, and the
+  // attribution on the card is how a reader knows it is not ours. Both, or
+  // the post is an unsourced statistic with our logo under it.
+  if (post && post.kind === "market") {
+    if (!/https?:\/\//.test(note)) {
+      fail(where, "a market post cites somebody. Put the link to the source in the note.");
+    }
+    const carriesSource = slides.some((slide) => slide.attribution.trim() || slide.footnote.trim());
+    if (!carriesSource) {
+      fail(where, "a market post has to name its source on the card. Put the publisher in attribution, or in the footnote.");
+    }
+  }
+
   return {
     // Carried so a problem found later, against the live tables, can still
     // say which proposal it came from.
@@ -430,7 +505,7 @@ function normalizeProposal(proposal, index) {
     typeScale,
     brandScale,
     slides,
-    post: normalizePost(raw.post, where),
+    post,
   };
 }
 
@@ -506,13 +581,40 @@ function toPostRows(prepared, lists) {
       continue;
     }
 
+    // Where the post points. A landing page comes off the link builder; an
+    // article is a path on the site, and it is checked so a post cannot go
+    // out pointing at a piece that was renamed or never published.
     let page = null;
+    let path = null;
     if (booking.pageSlug) {
       page = lists.pages.find((p) => p.slug === booking.pageSlug) || null;
       if (!page) {
         fail(proposal.where, `post.pageSlug "${booking.pageSlug}" is not a landing page. Live: ${lists.pages.map((p) => p.slug).join(", ")}`);
         continue;
       }
+      path = page.path;
+    } else if (booking.blogSlug) {
+      // Null means a dry run with no credentials, where the list cannot be
+      // read. A real run always has it.
+      if (lists.blogSlugs && !lists.blogSlugs.has(booking.blogSlug)) {
+        fail(
+          proposal.where,
+          `post.blogSlug "${booking.blogSlug}" is not a published article. ` +
+            "Run `node scripts/social-draft.js --articles` to see what is live."
+        );
+        continue;
+      }
+      path = `/blog/${booking.blogSlug}`;
+    } else if (booking.docSlug) {
+      if (lists.docSlugs.length > 0 && !lists.docSlugs.includes(booking.docSlug)) {
+        fail(
+          proposal.where,
+          `post.docSlug "${booking.docSlug}" is not a help article. ` +
+            "Run `node scripts/social-draft.js --articles` to see what is live."
+        );
+        continue;
+      }
+      path = `/docs/${booking.docSlug}`;
     }
 
     let campaign = null;
@@ -541,8 +643,11 @@ function toPostRows(prepared, lists) {
       scheduled_for: booking.scheduledFor,
       slot: 1,
       channel: booking.channel,
+      kind: booking.kind,
       caption: booking.caption || "",
-      link_url: page ? buildTrackedLink(page.path, channel.source, channel.medium, campaign ? campaign.slug : null) : null,
+      link_url: path ? buildTrackedLink(path, channel.source, channel.medium, campaign ? campaign.slug : null) : null,
+      // Only a landing page. The campaign dashboard joins its analytics on
+      // this, and an article is not one of the pages it measures.
       page_slug: page ? page.slug : null,
       asset_id: first.id,
       set_id: first.set_id,
@@ -553,7 +658,70 @@ function toPostRows(prepared, lists) {
     });
   }
 
+  checkMix(rows, lists.scheduled || []);
+
   return { rows, skipped };
+}
+
+/** "3 product, 2 craft, 1 article", so the run reports the balance it filed. */
+function describeMix(rows) {
+  const tally = new Map();
+  for (const row of rows) tally.set(row.kind, (tally.get(row.kind) || 0) + 1);
+  return CATALOG.kind
+    .filter((kind) => tally.has(kind))
+    .map((kind) => `${tally.get(kind)} ${kind}`)
+    .join(", ");
+}
+
+/**
+ * The week, read as a mix.
+ *
+ * Counted across every post standing on the days this run touches, not just
+ * the ones it is filing: a run that books two product posts onto a week that
+ * already holds four is the same lopsided week as one that books all six.
+ *
+ * A breach fails the run rather than warning about it. A warning at the end
+ * of a long run is a line an agent scrolls past, and the fix is cheap: swap
+ * a product card for the tip or the finding that was going to be next week's
+ * anyway.
+ */
+function checkMix(rows, scheduled) {
+  if (rows.length === 0) return;
+
+  const dates = rows.map((row) => row.scheduled_for).sort();
+  const from = dates[0];
+  const to = dates[dates.length - 1];
+
+  const kinds = [
+    ...scheduled.filter((row) => row.scheduled_for >= from && row.scheduled_for <= to).map((row) => row.kind || "product"),
+    ...rows.map((row) => row.kind),
+  ];
+
+  if (kinds.length < PRODUCT_SHARE_MIN_POSTS) return;
+
+  const product = kinds.filter((kind) => kind === "product").length;
+  const ceiling = Math.floor(kinds.length / 2);
+
+  if (product > ceiling) {
+    fail(
+      "the mix",
+      `${product} of the ${kinds.length} posts standing between ${from} and ${to} are product posts, ` +
+        `and at most ${ceiling} may be. The rest of a week is craft, market, story and article: ` +
+        "the posts that are worth reading with ABRAM taken out of them are the ones that earn the audience " +
+        "the product posts are shown to."
+    );
+    return;
+  }
+
+  // Not a failure. There is not always a piece worth pointing at, and a run
+  // that refused over it would start filing weak article posts to get past
+  // the check.
+  if (kinds.length >= 5 && !kinds.includes("article")) {
+    advice.push(
+      "No post in this week points at anything we wrote. A blog post or a help article with a card in front of it " +
+        "is the cheapest traffic there is: set blogSlug or docSlug on one of them."
+    );
+  }
 }
 
 // ---------------------------------------------------------------------
@@ -577,7 +745,9 @@ async function main() {
   if (args.includes("--options") || args.includes("--help")) {
     console.log("What the renderer accepts:\n");
     for (const [key, values] of Object.entries(CATALOG)) {
-      if (key === "destination" || key === "backdrop" || key === "placement" || key === "footer") continue;
+      // kind belongs to the post rather than to the card, and is printed
+      // with the rest of the booking block below.
+      if (key === "destination" || key === "backdrop" || key === "placement" || key === "footer" || key === "kind") continue;
       console.log(`  ${key.padEnd(9)} ${values.join(", ")}`);
     }
     console.log(`  ${"brand".padEnd(9)} ${BRAND_KINDS.join(", ")}`);
@@ -636,10 +806,26 @@ async function main() {
     console.log("\nOptional `post` block, which books the card onto the calendar:\n");
     console.log('  scheduledFor  YYYY-MM-DD. Today or later, at most ' + MAX_DAYS_AHEAD + " days out.");
     console.log("  channel       required, must match a channel in the link builder");
+    console.log(`  kind          required, one of ${CATALOG.kind.join(", ")}. What the post is for.`);
     console.log("  caption       the words. Empty is allowed when the card carries the message.");
     console.log("  pageSlug      landing page to link to. Omit for a post with no link.");
+    console.log("  blogSlug      a published blog post to send the reader to");
+    console.log("  docSlug       a help article to send the reader to");
     console.log("  campaign      an existing campaign slug. It must already exist.");
     console.log("  altText       what the card shows, for anyone who cannot see it");
+
+    console.log("\n  What the kinds mean, and why the field exists:\n");
+    console.log("    product   ABRAM doing something. A screen, a shipped change, an outcome.");
+    console.log("    craft     Useful with the product taken out. A definition, a checklist, a");
+    console.log("              way of running a day. It earns the audience the product posts");
+    console.log("              are shown to.");
+    console.log("    market    A number about the industry. Name the publisher on the card and");
+    console.log("              put the link to it in the note, or the run stops.");
+    console.log("    story     How we think about production, and what we are building.");
+    console.log("    article   Sends somebody to something we wrote. Needs blogSlug or docSlug.");
+    console.log("");
+    console.log("  At most half the posts standing on the days a run touches may be product.");
+    console.log("  A breach stops the run. `--articles` lists what there is to point at.");
     console.log("\n  One post per channel per day. A day already booked is skipped and reported.");
     console.log("  Everything lands as a draft and reaches nobody until a person marks it ready.");
     return 0;
@@ -687,6 +873,52 @@ async function main() {
     console.log("\n  A credit is carried onto the card on its own, and the morning pack asks");
     console.log("  whoever posts it to tag them. Nothing to set, and nothing to write: an");
     console.log("  attribution is a fact about a picture, not a line for an agent to compose.");
+    return 0;
+  }
+
+  /**
+   * What there is to point at.
+   *
+   * A post that sends somebody to a piece of writing is the cheapest traffic
+   * on the calendar, and the piece has to exist: a blog slug guessed from
+   * the title of an article is a card with a 404 behind it, approved by
+   * somebody who had no reason to check.
+   */
+  if (args.includes("--articles")) {
+    const docs = docSlugs();
+    if (docs.length > 0) {
+      console.log(`${docs.length} help articles. Name one in docSlug:\n`);
+      for (const slug of docs) console.log(`  ${slug}`);
+    } else {
+      console.log("No help articles read. Run `node scripts/build-search-index.js` first.");
+    }
+
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) {
+      console.log("\nThe blog is a table, so it needs credentials. Help articles above are the whole offline list.");
+      return 0;
+    }
+
+    const res = await fetch(
+      `${url.replace(/\/$/, "")}/rest/v1/blog_posts` +
+        "?select=slug,title,published_at&status=eq.published&order=published_at.desc&limit=40",
+      { headers: { apikey: key, Authorization: `Bearer ${key}` } }
+    );
+
+    if (!res.ok) {
+      console.error(`Could not read the blog (${res.status}): ${await res.text()}`);
+      return 1;
+    }
+
+    const posts = await res.json();
+    console.log(`\n${posts.length} published blog posts, newest first. Name one in blogSlug:\n`);
+    for (const post of posts) {
+      const when = (post.published_at || "").slice(0, 10);
+      console.log(`  ${String(post.slug).padEnd(46)} ${when.padEnd(12)}${post.title || ""}`);
+    }
+    console.log("\n  The card carries one idea out of the piece and stops. A card that gives");
+    console.log("  away the whole article is one nobody has a reason to click.");
     return 0;
   }
 
@@ -738,6 +970,12 @@ async function main() {
       pages: FALLBACK_PAGES,
       campaigns: [],
       booked: new Set(),
+      // The help articles are a file in the repository, so they are checked
+      // here too. Blog posts are a table, and null says so: a dry run has no
+      // credentials and checking one would fail every time.
+      blogSlugs: null,
+      docSlugs: docSlugs(),
+      scheduled: [],
     });
 
     if (problems.length > 0) {
@@ -752,10 +990,15 @@ async function main() {
     );
     for (const { proposal } of prepared) {
       const shape = proposal.slides.length > 1 ? `carousel, ${proposal.slides.length} slides` : "single";
-      const booking = proposal.post ? `${proposal.post.scheduledFor} ${proposal.post.channel}` : "not scheduled";
+      const booking = proposal.post
+        ? `${proposal.post.scheduledFor} ${proposal.post.channel} ${proposal.post.kind}`
+        : "not scheduled";
       console.log(`  - ${proposal.title} (${shape}, ${proposal.format}, ${proposal.theme}) ${booking}`);
     }
+    if (postRows.length > 0) console.log(`  mix: ${describeMix(postRows)}`);
     for (const skip of skipped) console.log(`  skipped: ${skip}`);
+    for (const line of advice) console.log(`  worth fixing: ${line}`);
+    console.log("  (A dry run cannot check a blog slug. The live run does.)");
     return 0;
   }
 
@@ -838,14 +1081,17 @@ async function main() {
     let lists;
     try {
       const today = todayISO();
-      const [channels, pages, campaigns, booked] = await Promise.all([
+      const [channels, pages, campaigns, booked, articles] = await Promise.all([
         read("campaign_link_channels?select=source,medium&active=eq.true&order=sort_order"),
         read("campaign_link_pages?select=slug,path&active=eq.true&order=sort_order"),
         read("social_campaigns?select=id,slug&status=in.(planning,active)"),
+        // `kind` comes back so the mix is counted against what is already
+        // standing on those days, not only against what this run is filing.
         read(
-          `social_posts?select=scheduled_for,channel&scheduled_for=gte.${today}` +
+          `social_posts?select=scheduled_for,channel,kind&scheduled_for=gte.${today}` +
             `&scheduled_for=lte.${addDaysISO(today, MAX_DAYS_AHEAD)}&status=neq.skipped`
         ),
+        read("blog_posts?select=slug&status=eq.published"),
       ]);
 
       lists = {
@@ -854,6 +1100,9 @@ async function main() {
         pages: pages.length > 0 ? pages : FALLBACK_PAGES,
         campaigns,
         booked: new Set(booked.map((row) => `${row.scheduled_for}:${row.channel}`)),
+        scheduled: booked,
+        blogSlugs: new Set(articles.map((row) => row.slug)),
+        docSlugs: docSlugs(),
       };
     } catch (err) {
       console.error(`Could not read the calendar to schedule against: ${err.message}`);
@@ -904,9 +1153,11 @@ async function main() {
       `${proposals.length === 1 ? "proposal" : "proposals"}, ${postRows.length} booked onto the calendar. ` +
       "All drafts, waiting on review in Admin, Social Studio."
   );
+  if (postRows.length > 0) console.log(`  mix: ${describeMix(postRows)}`);
   // Never a silent cap. A skipped booking that goes unmentioned reads as one
   // that was filed.
   for (const skip of skipped) console.log(`  not scheduled: ${skip}`);
+  for (const line of advice) console.log(`  worth fixing: ${line}`);
   return 0;
 }
 

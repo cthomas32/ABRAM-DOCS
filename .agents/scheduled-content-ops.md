@@ -142,12 +142,14 @@ there is a second workflow with no model in it.
 | Every morning, 07:12 ET | [`social-daily.yml`](../.github/workflows/social-daily.yml) | Delivers the day's approved posts to `#kipp`, ready to paste. No model, no judgment, no credentials. Also names any coming stretch of unbooked days and any post still waiting on a click. |
 | Every Friday | KIPP, Phase 0d | `seo-audit.js`, persisted to `seo_audit_runs` with the git SHA so the debt trends. `gsc-report.js` alongside it when Search Console is configured. |
 | Every Friday | KIPP, Phase 0g | Up to six web searches: the production conversation, the mood on AI in production, public competitor moves, and which post format is working. A trend changes the angle, the format and the day. It never becomes a claim. |
-| Every Friday | KIPP, Phase 4 | Books the next seven days of social as full packets. Five days is the floor, seven the target, and a shortfall leads the report. |
+| Every Friday | KIPP, Phase 4 | Books the next seven days of social as full packets. Five days is the floor, seven the target, and a shortfall leads the report. At most half of them may be about ABRAM: the rest are craft, market, story and the posts that point at something we wrote. |
 | Continuously, elsewhere | Romilly, in `abram-network` | The market research itself. KIPP does not duplicate it — it reads `MARKET.md` as a work list and converts it into words. |
 
 The one number to watch in the Friday report is the second one on the `CALENDAR` line: days
 booked but not yet approved. A booked week nobody clicked is the same silent morning as a week
-nobody booked.
+nobody booked. The tally after it is the second thing to read: it says how much of the week is
+about us, and a week that has drifted back to all product is a week losing the audience the
+product posts are shown to.
 
 ---
 

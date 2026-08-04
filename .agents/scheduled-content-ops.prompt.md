@@ -453,7 +453,9 @@ Weekly, in `#kipp`:
    in ninety seconds beats a campaign concept. **The strongest ones do not belong in the pack at
    all: book them onto the calendar instead**, card and caption together, per the next section. A
    hook described in Slack is work he still has to do. Keep the pack for the ones you could not
-   turn into a post, and say in one line how many days you booked.
+   turn into a post, and say in one line how many days you booked. **Hooks are not all about
+   ABRAM either.** A thing you learned about how productions run, an argument worth having, a
+   number from Romilly's market work: those are the ones he can post as himself.
 3. **The one number worth quoting** — from Romilly's market work or from something you measured
    yourself this run. If there is no honest number this week, say so. **An invented number is
    the fastest way to lose the only reader you have.**
@@ -483,9 +485,48 @@ the morning message works. Then:
 ```bash
 node scripts/social-draft.js --options              # what is accepted, read from the source
 node scripts/social-draft.js --backdrops            # the photographs you are allowed to name
+node scripts/social-draft.js --articles             # blog posts and help articles to point at
 node scripts/social-draft.js --file drafts.json --dry-run
 node scripts/social-draft.js --file drafts.json
 ```
+
+## Half the week, at most, may be about ABRAM
+
+Every booking carries a `kind`, there is no default, and the script refuses a run where more than
+half the posts standing on the days you touch are `product`. Read the table in
+[`brand-voice.md`](./brand-voice.md) §5 before you write the week; the short version:
+
+| Kind | What it is | The rule it brings |
+|---|---|---|
+| `product` | A screen, a shipped change, an outcome. | At most half the week. |
+| `craft` | Useful with ABRAM taken out. A definition, a checklist, the four places a shoot day leaks time. | None. This is the one that gets saved and forwarded. |
+| `market` | A number about the industry. | Name the publisher on the card, put the link in the note. Both, or the run stops. |
+| `story` | How we think about production, and what we are building. | None. |
+| `article` | Sends somebody to a blog post or a help article. | Needs `blogSlug` or `docSlug`, and both are checked against what is live. |
+
+Hold the reasoning rather than the ceiling. An account that only ever announces its own product
+has no audience to announce to, and the reach a product post needs is built by the posts that ask
+for nothing. Write the `craft` and `market` ones first and the week comes out right on its own.
+
+**A borrowed number is allowed and a borrowed claim is not.** `brand-voice.md` §1 carries the
+four conditions. The one that catches agents: the moment somebody else's figure is used to imply
+what ABRAM does about it, it has become our claim and needs a merged PR behind it. Quote the
+industry, then stop.
+
+**The blog is traffic you have already paid for.** Every published piece carries an argument, its
+specifics and its search value, and `--articles` prints what is live. A card in front of one
+costs a single headline, so at least one post a week should point at something we wrote. Pick
+them the way you pick anything else, from the numbers you already pulled in Phase 0:
+
+- A piece with impressions and no clicks in Search Console has a headline problem, and a post
+  with a better line on it is the cheapest test of that.
+- A piece you wrote or materially rewrote this run is one nobody knows exists yet.
+- A piece from months ago whose best paragraph has never been said anywhere else is worth
+  reviving. The article does not have to be new for the post to be.
+
+Two ways this goes wrong, both of them common: the card answers the question the article answers,
+which leaves nobody a reason to click, and the caption repeats the article's own opening
+paragraph, which puts the top of the page in the feed. Take one idea out of the piece and stop.
 
 **You can put a photograph behind a card, and you cannot upload one.** `--backdrops` prints the
 image library, which is the one part of the catalogue that is not in the repository: it is a
@@ -522,6 +563,7 @@ A proposal with a booking looks like this. Everything outside `post` is the card
   "post": {
     "scheduledFor": "2026-08-04",
     "channel": "linkedin",
+    "kind": "product",
     "caption": "Tomorrow's call sheet builds from the schedule you already made.",
     "pageSlug": "start-filmmakers",
     "altText": "A call sheet screen showing tomorrow's crew and call times"
@@ -550,6 +592,8 @@ The rules that matter:
 - **The footer is an invitation, not a caveat.** If a headline would only be true with an
   asterisk, change the headline rather than adding the asterisk.
 - **A product look beats a statement** when something shipped. Draw the screen the change is in.
+  On a `craft` or `market` card, leave the app out of it: a drawn screen behind a tip turns it
+  back into an advert, which is the thing that stops it being shared.
 - **Book every one of the next seven days. Five is the floor, seven is the target, one post per
   channel per day.** This is the one cap in `brand-voice.md` §5 that is also a minimum, and the
   morning pack is the reason: it delivers what is approved for that date and can do nothing
@@ -569,9 +613,14 @@ The rules that matter:
   the Slack pack and leave the field out.
 
 Then say so in the Slack report on a `CALENDAR` line: how many of the next seven days you
-booked, and how many are still waiting to be marked ready. Two numbers, one line, and do not
-describe the posts. The second number is the one that matters most, because a booked week
-nobody approved is the same silent morning as a week nobody booked.
+booked, how many are still waiting to be marked ready, and the mix you filed. Two numbers and a
+tally, one line, and do not describe the posts. The middle number matters most, because a booked
+week nobody approved is the same silent morning as a week nobody booked, and the tally is there
+so a drift back to seven product cards is visible in the report rather than a month later.
+
+```
+CALENDAR  7 of 7 days booked · 7 waiting on your click · 3 product 2 craft 1 market 1 article
+```
 
 Campaign drafts: at most one per run, `status='draft'`, via `scripts/create-campaign-draft.js`.
 **You never call `send-campaign`.** An email blast is the one un-unsendable action in the system
@@ -622,7 +671,7 @@ DECIDE
 SEARCH  102 impr · 0 clicks · nothing in striking distance
 Alternatives-intent is 30 of 102. ~20 impressions are other companies.
 
-CALENDAR  7 of 7 days booked · 7 waiting on your click
+CALENDAR  7 of 7 days booked · 7 waiting on your click · 3 product 2 craft 1 market 1 article
 TRENDS  quiet week. Nothing moving worth changing an angle for.
 
 SKIPPED  14 long meta descriptions · "Platform Fee" in 3 places (2 legal)
@@ -634,10 +683,11 @@ SKIPPED  14 long meta descriptions · "Platform Fee" in 3 places (2 legal)
   it.** Slack is the index; the PR is the document. Writing the argument in both is exactly how
   a report reaches forty lines.
 - **`DECIDE` is capped at 2**, each carrying the number that makes it decidable.
-- **`CALENDAR` is two numbers and no adjectives** — days booked out of seven, and days still
-  waiting on approval. Never a list of the posts. If you booked fewer than five days, this line
-  moves to the top of the message and says why, because a week with holes in it outranks
-  anything else the run produced.
+- **`CALENDAR` is two numbers, the mix, and no adjectives** — days booked out of seven, days
+  still waiting on approval, and the count of each kind. Never a list of the posts. If you booked
+  fewer than five days, this line moves to the top of the message and says why, because a week
+  with holes in it outranks anything else the run produced. The tally is there so a drift back to
+  a week of product cards shows up in the report rather than a month later.
 - **`TRENDS` is one line, and "quiet week" is a complete and respectable answer.** One line
   either way. The detail, if there is any, belongs in the ammo pack where it can actually be
   used, not in the index.

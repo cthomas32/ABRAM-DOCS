@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { SOCIAL_FORMATS, type SocialFormatId } from "@/lib/social/formats";
 import { normalizeSpec, specToRenderPath } from "@/lib/social/spec";
 import { buildTrackedLink } from "@/lib/social/links";
+import { POST_KINDS, type PostKind } from "@/lib/social/postKinds";
 import { savePost, type SocialCampaignRow, type SocialPostRow } from "@/app/admin/dashboard/social/calendarActions";
 import { createVariation, type SocialAssetRow } from "@/app/admin/dashboard/social/actions";
 
@@ -144,6 +145,7 @@ export default function SocialPostEditor({
   const [date, setDate] = useState(post?.scheduled_for?.slice(0, 10) || defaultDate);
   const [channel, setChannel] = useState(post?.channel || channels[0]?.source || "linkedin");
   const [campaignId, setCampaignId] = useState(post?.campaign_id || "");
+  const [kind, setKind] = useState<PostKind>(post?.kind || "product");
   const [pageSlug, setPageSlug] = useState(post?.page_slug || "");
   const [link, setLink] = useState(post?.link_url || "");
   const [linkTouched, setLinkTouched] = useState(Boolean(post?.link_url));
@@ -263,8 +265,9 @@ export default function SocialPostEditor({
       setId: setId || null,
       altText,
       note,
+      kind,
     });
-  }, [post?.id, post?.slot, campaignId, date, channel, caption, link, pageSlug, assetId, setId, altText, note]);
+  }, [post?.id, post?.slot, campaignId, date, channel, caption, link, pageSlug, assetId, setId, altText, note, kind]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -413,6 +416,33 @@ export default function SocialPostEditor({
             </div>
           </div>
 
+          {/* What the post is for. Here rather than tucked in beside the
+              note, because a week of these is read as a mix and the mix is
+              decided one post at a time. */}
+          <div className="flex flex-col gap-2">
+            <span className={LABEL}>What it is for</span>
+            <div className="flex flex-wrap gap-2">
+              {POST_KINDS.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setKind(option.id)}
+                  title={option.blurb}
+                  className={`px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
+                    kind === option.id
+                      ? "bg-white text-black border-white"
+                      : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] text-zinc-600 leading-relaxed">
+              {POST_KINDS.find((option) => option.id === kind)?.blurb}
+            </p>
+          </div>
+
           <div className="flex flex-col gap-2">
             <label className={LABEL} htmlFor="post-caption">
               Caption
@@ -471,6 +501,11 @@ export default function SocialPostEditor({
                 placeholder="Built from the page and the channel. Edit it if you need to."
                 className={`${FIELD} font-mono text-[11px]`}
               />
+              <p className="text-[11px] text-zinc-600 leading-relaxed">
+                For a blog post or a help article, leave the landing page empty and paste the link here. Keep the
+                <span className="font-mono"> utm_source </span>
+                the same as the channel so its clicks land in one row.
+              </p>
             </div>
           </div>
 

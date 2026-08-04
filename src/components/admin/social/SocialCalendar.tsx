@@ -23,6 +23,7 @@ import AbramMark from "@/components/AbramMark";
 import { createClient } from "@/utils/supabase/client";
 import { normalizeSpec, specToRenderPath } from "@/lib/social/spec";
 import { composePostText } from "@/lib/social/links";
+import { POST_KINDS } from "@/lib/social/postKinds";
 import {
   deletePost,
   markPostReady,
@@ -235,6 +236,31 @@ export default function SocialCalendar({
     () => posts.filter((post) => post.source === "kipp" && post.status === "draft").length,
     [posts]
   );
+  /**
+   * The week read as a mix.
+   *
+   * Three numbers say whether the week is full. This says whether it is
+   * worth following: a week that is all product is an account that only ever
+   * talks about itself, and that is invisible from inside the calendar until
+   * it is counted.
+   */
+  const mix = useMemo(() => {
+    const counted = visiblePosts.filter((post) => post.status !== "skipped");
+    const tally = POST_KINDS.map((option) => ({
+      ...option,
+      count: counted.filter((post) => (post.kind || "product") === option.id).length,
+    }));
+    const product = tally.find((entry) => entry.id === "product")?.count || 0;
+    return {
+      tally,
+      total: counted.length,
+      // Half the week is the line. Under four posts a week is still being
+      // written, and a warning about a week that is half filled in is one
+      // that fires every Monday and stops being read.
+      lopsided: counted.length >= 4 && product > Math.floor(counted.length / 2),
+    };
+  }, [visiblePosts]);
+
   const emptyDays = useMemo(
     () =>
       days.filter((day) => {
@@ -289,10 +315,31 @@ export default function SocialCalendar({
 
       {/* Three numbers on one line. They were three cards the height of a
           paragraph each, which is a lot of furniture for three integers. */}
-      <div className="order-5 lg:order-2 flex flex-wrap items-baseline gap-x-5 gap-y-1.5 rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-3">
-        <Stat value={readyToday} label="ready today" />
-        <Stat value={emptyDays} label={emptyDays === 1 ? "day still open" : "days still open"} />
-        <Stat value={visiblePosts.length} label={visiblePosts.length === 1 ? "post this week" : "posts this week"} />
+      <div className="order-5 lg:order-2 flex flex-col gap-2 rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-3">
+        <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1.5">
+          <Stat value={readyToday} label="ready today" />
+          <Stat value={emptyDays} label={emptyDays === 1 ? "day still open" : "days still open"} />
+          <Stat value={visiblePosts.length} label={visiblePosts.length === 1 ? "post this week" : "posts this week"} />
+        </div>
+
+        {mix.total > 0 ? (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            {mix.tally.map((entry) => (
+              <span
+                key={entry.id}
+                title={entry.blurb}
+                className={`text-[11px] ${entry.count > 0 ? "text-zinc-400" : "text-zinc-600"}`}
+              >
+                <span className="font-semibold">{entry.count}</span> {entry.label.toLowerCase()}
+              </span>
+            ))}
+            {mix.lopsided ? (
+              <span className="text-[11px] text-amber-300/80">
+                More than half of this week is about ABRAM.
+              </span>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       {/* Campaign bar */}

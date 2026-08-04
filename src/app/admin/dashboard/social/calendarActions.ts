@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
+import { isPostKind, type PostKind } from "@/lib/social/postKinds";
 import { approveAsset, type SocialAssetRow } from "./actions";
 
 /**
@@ -43,6 +44,8 @@ export interface SocialPostRow {
   set_id: string | null;
   alt_text: string | null;
   status: PostStatus;
+  /** What the post is for. See src/lib/social/postKinds.ts */
+  kind: PostKind;
   source: "studio" | "kipp";
   note: string | null;
   posted_at: string | null;
@@ -85,6 +88,7 @@ export interface SavePostInput {
   setId?: string | null;
   altText?: string | null;
   note?: string | null;
+  kind?: PostKind;
 }
 
 /**
@@ -114,6 +118,9 @@ export async function savePost(input: SavePostInput): Promise<ActionResult<{ id:
     set_id: input.setId || null,
     alt_text: input.altText?.trim().slice(0, 500) || null,
     note: input.note?.trim().slice(0, 1000) || null,
+    // Anything the form does not recognise lands as product, which is the
+    // only value that was ever true before this column existed.
+    kind: isPostKind(input.kind) ? input.kind : "product",
   };
 
   if (input.id) {
