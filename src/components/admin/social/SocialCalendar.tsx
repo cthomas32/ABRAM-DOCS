@@ -1,26 +1,27 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CalendarDays,
   Check,
   ChevronLeft,
   ChevronRight,
   Copy,
-  Download,
+  ImageOff,
+  Layers,
   Loader2,
+  MoreHorizontal,
   Pencil,
   Plus,
   Send,
-  Share,
+  SkipForward,
   Trash2,
+  Undo2,
   Upload,
 } from "lucide-react";
 import AbramMark from "@/components/AbramMark";
 import { createClient } from "@/utils/supabase/client";
-import { SOCIAL_FORMATS, type SocialFormatId } from "@/lib/social/formats";
-import { normalizeSpec, specToFilename, specToRenderPath } from "@/lib/social/spec";
-import { saveCards, useCanShareImages } from "@/lib/social/saveImage";
+import { normalizeSpec, specToRenderPath } from "@/lib/social/spec";
 import { composePostText } from "@/lib/social/links";
 import {
   deletePost,
@@ -30,9 +31,9 @@ import {
   type SocialCampaignRow,
   type SocialPostRow,
 } from "@/app/admin/dashboard/social/calendarActions";
-import type { SocialAssetRow } from "@/app/admin/dashboard/social/actions";
 import SocialPostEditor, { type LinkChannel, type LinkPage } from "./SocialPostEditor";
 import SocialCampaignEditor from "./SocialCampaignEditor";
+import SocialPostViewer from "./SocialPostViewer";
 
 /**
  * The week, as posts rather than pictures.
@@ -120,9 +121,8 @@ export default function SocialCalendar({
   const [busy, setBusy] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [campaignFilter, setCampaignFilter] = useState<string>("all");
-  // On a phone the save button opens the share sheet, so it says so.
-  const canShare = useCanShareImages();
 
+  const [viewing, setViewing] = useState<SocialPostRow | null>(null);
   const [editing, setEditing] = useState<{ post: SocialPostRow | null; date: string } | null>(null);
   const [editingCampaign, setEditingCampaign] = useState<SocialCampaignRow | null | undefined>(undefined);
 
@@ -234,46 +234,6 @@ export default function SocialCalendar({
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const handleDownload = async (post: SocialPostRow) => {
-    const asset = post.asset;
-    if (!asset) {
-      onNotify("That post has no card on it.", "error");
-      return;
-    }
-    setBusy(post.id);
-    try {
-      const supabase = createClient();
-      // A carousel downloads as the whole set, in order, because that is
-      // the only way it can be posted.
-      let slides: SocialAssetRow[] = [asset];
-      if (post.set_id) {
-        const { data } = await supabase
-          .from("social_image_assets")
-          .select("*")
-          .eq("set_id", post.set_id)
-          .order("slide_index", { ascending: true });
-        if (data?.length) slides = data as SocialAssetRow[];
-      }
-
-      // On a phone this opens the system sheet, where Save Image writes to
-      // Photos and Save to Files still goes to Files.
-      await saveCards(
-        slides.map((slide) => {
-          const spec = normalizeSpec(slide.spec);
-          return {
-            url: slide.public_url || specToRenderPath(spec),
-            filename: specToFilename(spec, slide.title),
-          };
-        }),
-        asset.title || undefined
-      );
-    } catch (err) {
-      onNotify(err instanceof Error ? err.message : "Could not save that card.", "error");
-    } finally {
-      setBusy(null);
-    }
-  };
-
   const handleDelete = (post: SocialPostRow) => {
     if (!window.confirm("Remove this post from the calendar? The card stays in the library.")) return;
     return run(post.id, () => deletePost(post.id), "Removed from the calendar.");
@@ -294,14 +254,12 @@ export default function SocialCalendar({
           </div>
         ) : null}
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Stat label="Ready today" value={`${readyToday}`} hint={readyToday > 0 ? "In this morning's message" : "Nothing is due today"} />
-          <Stat
-            label="Days still open"
-            value={`${emptyDays}`}
-            hint={emptyDays > 0 ? "From today to Sunday" : "The rest of the week is filled"}
-          />
-          <Stat label="Posts this week" value={`${visiblePosts.length}`} hint={`Across ${campaigns.length} ${campaigns.length === 1 ? "campaign" : "campaigns"}`} />
+        {/* Three numbers on one line. They were three cards the height of a
+            paragraph each, which is a lot of furniture for three integers. */}
+        <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1.5 rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-3">
+          <Stat value={readyToday} label="ready today" />
+          <Stat value={emptyDays} label={emptyDays === 1 ? "day still open" : "days still open"} />
+          <Stat value={visiblePosts.length} label={visiblePosts.length === 1 ? "post this week" : "posts this week"} />
         </div>
       </div>
 
@@ -413,19 +371,17 @@ export default function SocialCalendar({
           return (
             <div
               key={key}
-              className={`flex flex-col gap-2.5 rounded-2xl border p-3 min-h-[8rem] ${
+              className={`flex flex-col gap-2 rounded-2xl border p-2.5 ${
                 isToday ? "border-white/25 bg-white/[0.04]" : "border-white/8 bg-white/[0.02]"
               } ${isPast ? "opacity-60" : ""}`}
             >
-              <div className="flex items-baseline justify-between gap-2">
+              <div className="flex items-baseline justify-between gap-2 px-0.5">
                 <span className={`text-[11px] font-semibold ${isToday ? "text-white" : "text-zinc-400"}`}>
                   {DAY_NAMES[(day.getDay() + 6) % 7]}
                   <span className="text-zinc-600 font-normal"> {day.getDate()}</span>
                 </span>
                 {isToday ? (
-                  <span className="rounded-full bg-white px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-widest text-black">
-                    Today
-                  </span>
+                  <span className="text-[9px] font-semibold uppercase tracking-widest text-white">Today</span>
                 ) : null}
               </div>
 
@@ -436,9 +392,8 @@ export default function SocialCalendar({
                   channels={channels}
                   busy={busy === post.id}
                   copied={copied === post.id}
+                  onOpen={() => setViewing(post)}
                   onCopy={() => handleCopy(post)}
-                  onDownload={() => handleDownload(post)}
-                  canShare={canShare}
                   onEdit={() => setEditing({ post, date: key })}
                   onDelete={() => handleDelete(post)}
                   onReady={() =>
@@ -453,15 +408,24 @@ export default function SocialCalendar({
               <button
                 type="button"
                 onClick={() => setEditing({ post: null, date: key })}
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/10 py-2.5 text-[11px] font-semibold text-zinc-600 transition-colors hover:border-white/25 hover:text-zinc-300 min-h-[44px]"
+                aria-label={`Add a post on ${DAY_NAMES[(day.getDay() + 6) % 7]} ${day.getDate()}`}
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/8 py-2 text-[11px] font-semibold text-zinc-700 transition-colors hover:border-white/20 hover:text-zinc-300 min-h-[44px]"
               >
                 <Plus className="w-3 h-3" />
-                Add
               </button>
             </div>
           );
         })}
       </div>
+
+      {viewing ? (
+        <SocialPostViewer
+          post={viewing}
+          channelLabel={channels.find((channel) => channel.source === viewing.channel)?.label || viewing.channel}
+          onClose={() => setViewing(null)}
+          onNotify={onNotify}
+        />
+      ) : null}
 
       {editing ? (
         <SocialPostEditor
@@ -496,31 +460,39 @@ export default function SocialCalendar({
   );
 }
 
-function Stat({ label, value, hint }: { label: string; value: string; hint: string }) {
+function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-3">
-      <span className={LABEL}>{label}</span>
-      <p className="text-2xl font-semibold text-white mt-1.5 leading-none">{value}</p>
-      <p className="text-[11px] text-zinc-600 mt-1.5">{hint}</p>
-    </div>
+    <span className="flex items-baseline gap-1.5">
+      <span className={`text-lg font-semibold leading-none ${value > 0 ? "text-white" : "text-zinc-600"}`}>{value}</span>
+      <span className="text-[11px] text-zinc-500">{label}</span>
+    </span>
   );
 }
 
+// A word in a colour, not a pill. Seven columns of filled badges is most of
+// what made the week look loud.
 const STATUS_STYLES: Record<PostStatus, string> = {
-  draft: "bg-black/75 text-amber-300",
-  ready: "bg-white text-black",
-  posted: "bg-black/75 text-emerald-400",
-  skipped: "bg-black/75 text-zinc-500",
+  draft: "text-amber-300/80",
+  ready: "text-white",
+  posted: "text-emerald-400/80",
+  skipped: "text-zinc-600",
 };
 
+/**
+ * One post in a day column: a line, not a poster.
+ *
+ * Seven columns of full-size cards is a wall of pictures nobody can read a
+ * week off. So the row carries a thumbnail, who it is for and how far along
+ * it is, tapping it opens the picture full size, and everything that
+ * changes the post is behind the one menu glyph on the right.
+ */
 function PostCard({
   post,
   channels,
   busy,
-  copied,
+  onOpen,
   onCopy,
-  onDownload,
-  canShare,
+  copied,
   onEdit,
   onDelete,
   onReady,
@@ -529,130 +501,159 @@ function PostCard({
   post: SocialPostRow;
   channels: LinkChannel[];
   busy: boolean;
-  copied: boolean;
+  onOpen: () => void;
   onCopy: () => void;
-  onDownload: () => void;
-  canShare: boolean;
+  copied: boolean;
   onEdit: () => void;
   onDelete: () => void;
   onReady: () => void;
   onStatus: (status: PostStatus) => void;
 }) {
+  const [menu, setMenu] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const asset = post.asset || null;
   const spec = asset ? normalizeSpec(asset.spec) : null;
   const preview = asset ? asset.public_url || specToRenderPath(spec!) : null;
-  const format = asset ? SOCIAL_FORMATS[asset.format as SocialFormatId] || SOCIAL_FORMATS.square : null;
   const channelLabel = channels.find((channel) => channel.source === post.channel)?.label || post.channel;
 
-  return (
-    <div className="flex flex-col gap-2 rounded-xl border border-white/8 bg-black/30 overflow-hidden">
-      {preview && format ? (
-        <div className="relative w-full bg-black/40" style={{ aspectRatio: `${format.width} / ${format.height}` }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={preview}
-            alt={post.alt_text || asset?.title || "Post card"}
-            loading="lazy"
-            className="w-full h-full object-contain"
-          />
-          {post.set_id ? (
-            <span className="absolute bottom-1.5 right-1.5 rounded-full bg-black/80 px-1.5 py-0.5 text-[8px] font-semibold text-zinc-300">
-              Carousel
-            </span>
-          ) : null}
-        </div>
-      ) : null}
+  // Anywhere else, and away it goes.
+  useEffect(() => {
+    if (!menu) return;
+    const onDown = (event: MouseEvent) => {
+      if (!wrapRef.current?.contains(event.target as Node)) setMenu(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenu(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menu]);
 
-      <div className="flex flex-col gap-2 p-2.5">
-        <div className="flex items-center justify-between gap-1.5">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 truncate">
-            {channelLabel}
-          </span>
+  const act = (work: () => void) => () => {
+    setMenu(false);
+    work();
+  };
+
+  return (
+    <div ref={wrapRef} className={`relative ${post.status === "skipped" ? "opacity-50" : ""}`}>
+      <button
+        type="button"
+        onClick={onOpen}
+        title={post.caption || asset?.title || "Open this post"}
+        className="block w-full overflow-hidden rounded-xl border border-white/8 bg-white/[0.02] text-left transition-colors hover:border-white/25 hover:bg-white/[0.05]"
+      >
+        {/* Short in the seven-column week, where the crop is only there to
+            be recognised. Taller below that, where a column is the width of
+            the screen and a 64px band of a portrait card is a sliver. */}
+        <span className="relative block h-40 xl:h-16 w-full bg-black/50">
+          {preview ? (
+            /* A crop, not the whole card. The picture is here to be
+               recognised across a week, not read. */
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={preview}
+              alt={post.alt_text || asset?.title || "Post card"}
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center">
+              <ImageOff className="w-3.5 h-3.5 text-zinc-700" />
+            </span>
+          )}
+          {/* Over the picture, so the line below belongs to the channel
+              alone and nothing has to be truncated to fit. */}
           <span
-            className={`rounded-full px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-widest shrink-0 ${
+            className={`absolute bottom-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-widest backdrop-blur-sm ${
               STATUS_STYLES[post.status]
             }`}
           >
             {post.status}
           </span>
-        </div>
+        </span>
 
-        {post.caption ? (
-          <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-3 break-words">{post.caption}</p>
-        ) : (
-          <p className="text-[11px] text-zinc-600 italic">Card only, no caption</p>
-        )}
+        <span className="flex items-center gap-1 px-2 py-1.5">
+          <span className="truncate text-[10px] font-semibold uppercase tracking-wider text-zinc-300">
+            {channelLabel}
+          </span>
+          {post.source === "kipp" ? <AbramMark size={9} className="shrink-0 opacity-40" /> : null}
+          {post.set_id ? <Layers className="ml-auto w-2.5 h-2.5 shrink-0 text-zinc-600" /> : null}
+        </span>
+      </button>
 
-        {post.source === "kipp" ? (
-          <span className="text-[9px] font-semibold uppercase tracking-widest text-[#8ECAFF]">KIPP</span>
-        ) : null}
+      <button
+        type="button"
+        onClick={() => setMenu((open) => !open)}
+        aria-label="More for this post"
+        aria-expanded={menu}
+        disabled={busy}
+        className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-lg bg-black/60 text-zinc-400 backdrop-blur-sm transition-colors hover:text-white disabled:opacity-50"
+      >
+        {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <MoreHorizontal className="w-3.5 h-3.5" />}
+      </button>
 
-        <div className="flex flex-wrap gap-1">
+      {menu ? (
+        <div className="glass-panel absolute right-0 top-[calc(100%-0.25rem)] z-20 w-48 overflow-hidden rounded-xl border border-white/10 py-1 shadow-2xl">
           {post.status === "draft" ? (
-            <button
-              type="button"
-              onClick={onReady}
-              disabled={busy}
-              title="Publish the card and put this in the morning message"
-              className="btn-primary flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
-            >
-              {busy ? <Loader2 className="w-2.5 h-2.5 animate-spin" /> : <Upload className="w-2.5 h-2.5" />}
-              Ready
-            </button>
-          ) : post.status === "ready" ? (
-            <button
-              type="button"
-              onClick={() => onStatus("posted")}
-              disabled={busy}
-              title="Mark as posted"
-              className="btn-glass flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
-            >
-              <Send className="w-2.5 h-2.5" />
-              Posted
-            </button>
+            <MenuItem icon={<Upload className="w-3 h-3" />} onClick={act(onReady)}>
+              Mark ready
+            </MenuItem>
           ) : null}
-
-          <button
-            type="button"
-            onClick={onCopy}
-            title="Copy the caption and the link"
-            className="btn-glass flex items-center justify-center rounded-full px-2.5 py-1 text-[10px] font-semibold min-h-[44px] sm:min-h-[36px] min-w-[36px]"
-          >
-            {copied ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
-          </button>
-
-          {asset ? (
-            <button
-              type="button"
-              onClick={onDownload}
-              disabled={busy}
-              title={canShare ? "Save to Photos or Files" : "Download the card"}
-              className="btn-glass flex items-center justify-center rounded-full px-2.5 py-1 text-[10px] font-semibold disabled:opacity-50 min-h-[44px] sm:min-h-[36px] min-w-[36px]"
-            >
-              {canShare ? <Share className="w-2.5 h-2.5" /> : <Download className="w-2.5 h-2.5" />}
-            </button>
+          {post.status === "ready" ? (
+            <MenuItem icon={<Send className="w-3 h-3" />} onClick={act(() => onStatus("posted"))}>
+              Mark posted
+            </MenuItem>
           ) : null}
-
-          <button
-            type="button"
-            onClick={onEdit}
-            title="Edit this post"
-            className="btn-glass flex items-center justify-center rounded-full px-2.5 py-1 text-[10px] font-semibold min-h-[44px] sm:min-h-[36px] min-w-[36px]"
-          >
-            <Pencil className="w-2.5 h-2.5" />
-          </button>
-
-          <button
-            type="button"
-            onClick={onDelete}
-            disabled={busy}
-            title="Remove from the calendar"
-            className="btn-danger flex items-center justify-center rounded-full px-2.5 py-1 text-[10px] font-semibold disabled:opacity-50 min-h-[44px] sm:min-h-[36px] min-w-[36px]"
-          >
-            <Trash2 className="w-2.5 h-2.5" />
-          </button>
+          {post.status === "posted" || post.status === "skipped" ? (
+            <MenuItem icon={<Undo2 className="w-3 h-3" />} onClick={act(() => onStatus("draft"))}>
+              Back to draft
+            </MenuItem>
+          ) : null}
+          <MenuItem icon={copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} onClick={act(onCopy)}>
+            {copied ? "Copied" : "Copy caption"}
+          </MenuItem>
+          <MenuItem icon={<Pencil className="w-3 h-3" />} onClick={act(onEdit)}>
+            Edit post
+          </MenuItem>
+          {post.status !== "skipped" ? (
+            <MenuItem icon={<SkipForward className="w-3 h-3" />} onClick={act(() => onStatus("skipped"))}>
+              Skip this one
+            </MenuItem>
+          ) : null}
+          <MenuItem icon={<Trash2 className="w-3 h-3" />} onClick={act(onDelete)} danger>
+            Remove
+          </MenuItem>
         </div>
-      </div>
+      ) : null}
     </div>
+  );
+}
+
+function MenuItem({
+  icon,
+  onClick,
+  danger,
+  children,
+}: {
+  icon: React.ReactNode;
+  onClick: () => void;
+  danger?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-[11px] font-semibold transition-colors ${
+        danger ? "text-red-400 hover:bg-red-500/10" : "text-zinc-300 hover:bg-white/[0.06] hover:text-white"
+      }`}
+    >
+      <span className="shrink-0 opacity-70">{icon}</span>
+      {children}
+    </button>
   );
 }

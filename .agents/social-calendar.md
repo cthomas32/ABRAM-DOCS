@@ -37,6 +37,26 @@ still a person's click, and it is still the only thing that writes a PNG.
 
 ---
 
+## The week, and the post you tapped
+
+**The week is a schedule, not a gallery.** Seven columns of full-size cards is a wall of pictures
+you cannot read a week off, so a post in a day column is a short crop, the channel, and the status
+in one word. No caption, no row of buttons. Everything that changes a post is behind the single
+menu glyph in the corner: mark ready, mark posted, copy the caption and link, edit, skip, remove.
+
+**Tapping the post opens it, and that view does two things only.** The card at full size, swiping
+if it is a carousel, and one button to save it. It is deliberately not an editor: this is the view
+for the moment you want the picture on your phone, and a settings panel in the way of that is the
+thing it exists to avoid. It writes nothing.
+
+On a phone that save button hands the slides to the system share sheet, so **Save Image** puts them
+in Photos, which a download cannot do. The whole of that behaviour lives in
+[`saveImage.ts`](../src/lib/social/saveImage.ts) and is described in
+[social-images.md](./social-images.md). A carousel saves as the whole set, in order, because that
+is the only way it can be posted.
+
+---
+
 ## The card on a post, and its other sizes
 
 A post used to be able to *pick* a card and nothing else, so fixing a typo meant leaving the
