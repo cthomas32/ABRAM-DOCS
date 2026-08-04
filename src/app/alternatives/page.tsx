@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import AlternativesHubClient from './AlternativesHubClient';
 
 export const metadata: Metadata = {
-  title: 'ABRAM Alternatives — Modern Production & Agency Software Comparisons',
+  title: 'ABRAM Alternatives | Production & Agency Software',
   description:
-    'Compare ABRAM to legacy film production software and creative agency management tools including StudioBinder, Movie Magic, Adobe Workfront, Celtx, and SetHero.',
+    'Compare ABRAM to legacy film production and agency management tools like StudioBinder, Movie Magic, Workfront, Celtx, and SetHero.',
   keywords: [
     'ABRAM alternatives', 'StudioBinder alternative', 'Movie Magic alternative',
     'Adobe Workfront alternative', 'Celtx alternative', 'SetHero alternative',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
       'Discover how ABRAM combines script breakdown, stripboards, call sheets, crew payouts, and client portals in one unified platform.',
     type: 'website',
     url: 'https://abram.network/alternatives',
-    siteName: 'ABRAM Network',
+    siteName: 'ABRAM',
   },
   twitter: {
     card: 'summary_large_image',

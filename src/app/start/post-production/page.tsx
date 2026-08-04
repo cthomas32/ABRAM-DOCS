@@ -8,7 +8,7 @@ const variant = CAMPAIGN_VARIANTS["start-post"];
 const SEO = {
   title: "Post Production Management Software: Start Free",
   description:
-    "Get to final cut faster with fewer rounds lost. Deliverables, versioned revision rounds, approvals and post schedules in one free workspace, with editor hours and AI credit spend tracked against every job.",
+    "Get to final cut faster. Manage deliverables, versioned revisions, approvals and schedules in one free workspace, with tracked editor hours and AI spend.",
   keywords: [
     "post production management software",
     "video editing project management",

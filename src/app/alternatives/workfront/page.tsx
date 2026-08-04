@@ -4,7 +4,7 @@ import WorkfrontClient from './WorkfrontClient';
 export const metadata: Metadata = {
   title: 'Adobe Workfront Alternative | ABRAM for Production Teams',
   description:
-    'An Adobe Workfront alternative built for production teams: fast onboarding, published pricing, film-native scheduling and call sheets, crew payouts, and an AI copilot.',
+    'A Workfront alternative built for production teams: fast onboarding, published pricing, film-native scheduling, crew payouts, and an AI copilot.',
   keywords: [
     'Adobe Workfront alternative', 'Workfront alternative', 'Workfront vs ABRAM',
     'production management software', 'creative operations platform', 'work management alternative',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       'Skip the multi-month rollout and per-seat quotes. Manage briefs, schedules, budgets, and client approvals in a platform built for production. Compare ABRAM and Workfront.',
     type: 'website',
     url: 'https://abram.network/alternatives/workfront',
-    siteName: 'ABRAM Network',
+    siteName: 'ABRAM',
   },
   twitter: {
     card: 'summary_large_image',

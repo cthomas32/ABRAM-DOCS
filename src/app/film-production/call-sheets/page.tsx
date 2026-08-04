@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: 'Manage shooting schedules, weather forecasting, basecamp contacts, and crew turnaround compliance with digital call sheets built on ABRAM\'s creative operations platform.',
     type: 'website',
     url: 'https://abram.network/film-production/call-sheets',
-    siteName: 'ABRAM Network',
+    siteName: 'ABRAM',
   },
   twitter: {
     card: 'summary_large_image',

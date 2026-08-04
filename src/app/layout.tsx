@@ -27,12 +27,12 @@ const archivo = Archivo({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://abram.network'),
-  applicationName: 'ABRAM Network',
+  applicationName: 'ABRAM',
   title: {
     default: 'ABRAM Network — The AI Platform for Creative Intelligence',
     template: '%s | ABRAM Network',
   },
-  description: 'Official documentation and help center for ABRAM Network — the AI-powered creative operations platform and project management software. Streamline crew scheduling, equipment allocation, script breakdown, and production accounting.',
+  description: 'Official help center for ABRAM Network. Streamline your creative operations, crew scheduling, script breakdowns, and production accounting with AI.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'creative ops platform', 'creative ops tools', 'ABRAM', 'ABRAM Network',
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
     'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
     'Jira for creative production', 'StudioBinder replacement',
   ],
-  authors: [{ name: 'ABRAM Network', url: 'https://abram.network' }],
-  creator: 'ABRAM Network',
-  publisher: 'ABRAM Network',
+  authors: [{ name: 'ABRAM', url: 'https://abram.network' }],
+  creator: 'ABRAM',
+  publisher: 'ABRAM',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -54,8 +54,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'ABRAM Network',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM Network — The AI Platform for Creative Intelligence' }],
+    siteName: 'ABRAM',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM — The AI Platform for Creative Intelligence' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -183,7 +183,8 @@ export default function RootLayout({
                 {
                   '@type': 'Organization',
                   '@id': 'https://abram.network/#organization',
-                  'name': 'ABRAM Network',
+                  'name': 'ABRAM',
+                  'alternateName': 'ABRAM Network',
                   'url': 'https://abram.network',
                   'logo': {
                     '@type': 'ImageObject',
@@ -229,11 +230,34 @@ export default function RootLayout({
                 {
                   '@type': 'WebSite',
                   '@id': 'https://abram.network/#website',
-                  'name': 'ABRAM Network',
-                  'alternateName': 'ABRAM',
+                  'name': 'ABRAM',
+                  'alternateName': ['ABRAM Network', 'abram.network'],
                   'url': 'https://abram.network',
                   'description': 'Official portal, documentation, and help center for the ABRAM platform.',
                   'publisher': { '@id': 'https://abram.network/#organization' },
+                  'hasPart': [
+                    {
+                      '@type': 'WebPage',
+                      '@id': 'https://abram.network/film-production#webpage',
+                      'name': 'Film Production Suite',
+                      'description': 'AI script breakdown, stripboard scheduling, digital call sheets, and production budgeting.',
+                      'url': 'https://abram.network/film-production'
+                    },
+                    {
+                      '@type': 'WebPage',
+                      '@id': 'https://abram.network/agency#webpage',
+                      'name': 'Creative Agency Operations',
+                      'description': 'Client intake forms, crew roster management, capacity planning, and smart scheduling.',
+                      'url': 'https://abram.network/agency'
+                    },
+                    {
+                      '@type': 'WebPage',
+                      '@id': 'https://abram.network/intelligence#webpage',
+                      'name': 'Creative Intelligence Suite',
+                      'description': 'AI co-pilots, brief intelligence, and crew matchmaking for production workflows.',
+                      'url': 'https://abram.network/intelligence'
+                    }
+                  ],
                   'potentialAction': {
                     '@type': 'SearchAction',
                     'target': {

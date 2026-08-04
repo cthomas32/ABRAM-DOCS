@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const commonDisallows = ['/api/', '/_next/', '/admin/'];
+  const commonDisallows = ['/api/', '/_next/', '/admin', '/admin/'];
 
   return {
     rules: [

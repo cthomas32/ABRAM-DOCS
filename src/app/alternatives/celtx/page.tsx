@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       'Keep writing and breaking down scripts, and run the money, the crew, and the client from one platform. Compare ABRAM and Celtx.',
     type: 'website',
     url: 'https://abram.network/alternatives/celtx',
-    siteName: 'ABRAM Network',
+    siteName: 'ABRAM',
   },
   twitter: {
     card: 'summary_large_image',

@@ -4,7 +4,7 @@ import SetHeroClient from './SetHeroClient';
 export const metadata: Metadata = {
   title: 'SetHero Alternative | ABRAM Production Platform',
   description:
-    'A SetHero alternative that keeps professional call sheets and adds script breakdown, budget tracking, crew payouts, client portals, and an AI production copilot.',
+    'A SetHero alternative with professional call sheets, script breakdown, budget tracking, crew payouts, client portals, and an AI copilot.',
   keywords: [
     'SetHero alternative', 'SetHero vs ABRAM', 'best SetHero alternative',
     'call sheet software', 'digital call sheets', 'film production management software',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       'Send the same professional call sheets, and manage the whole production and its finances in one platform. Compare ABRAM and SetHero.',
     type: 'website',
     url: 'https://abram.network/alternatives/sethero',
-    siteName: 'ABRAM Network',
+    siteName: 'ABRAM',
   },
   twitter: {
     card: 'summary_large_image',

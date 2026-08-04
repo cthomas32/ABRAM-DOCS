@@ -4,7 +4,7 @@ import MovieMagicClient from './MovieMagicClient';
 export const metadata: Metadata = {
   title: 'Movie Magic Alternative | ABRAM Cloud Production Platform',
   description:
-    'A Movie Magic alternative that connects scheduling and budgeting in one cloud workspace your whole team can open at once, with crew payouts, client portals, and an AI copilot.',
+    'A Movie Magic alternative connecting scheduling and budgeting in one cloud workspace, with crew payouts, client portals, and an AI copilot.',
   keywords: [
     'Movie Magic alternative', 'Movie Magic Scheduling alternative', 'Movie Magic Budgeting alternative',
     'cloud film scheduling software', 'collaborative film budgeting', 'stripboard software',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       'Move from single-user desktop files to a connected cloud platform where the schedule feeds the budget. See how ABRAM compares to Movie Magic.',
     type: 'website',
     url: 'https://abram.network/alternatives/moviemagic',
-    siteName: 'ABRAM Network',
+    siteName: 'ABRAM',
   },
   twitter: {
     card: 'summary_large_image',

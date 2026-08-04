@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Updates | ABRAM Changelog",
     description: "Updates, improvements, and new features added to ABRAM — the premier creative operations platform and creative production software.",
     url: "https://abram.network/changelog",
-    siteName: "ABRAM Network",
+    siteName: "ABRAM",
     locale: "en_US",
     type: "website",
   },

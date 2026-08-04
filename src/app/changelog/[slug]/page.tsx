@@ -108,7 +108,7 @@ export async function generateMetadata({ params, searchParams }: ChangelogDetail
       description,
       type: "article",
       url: canonicalUrl,
-      siteName: "ABRAM Network",
+      siteName: "ABRAM",
       locale: "en_US",
       publishedTime: release.published_at || release.created_at,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: title }],

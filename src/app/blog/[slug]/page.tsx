@@ -91,7 +91,7 @@ export async function generateMetadata({ params, searchParams }: BlogPostPagePro
       description,
       type: "article",
       url: canonicalUrl,
-      siteName: "ABRAM Network",
+      siteName: "ABRAM",
       locale: "en_US",
       publishedTime: post.published_at || post.created_at,
       authors: [post.author || "ABRAM Network"],

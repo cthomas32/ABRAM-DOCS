@@ -4,7 +4,7 @@ import StudioBinderClient from './StudioBinderClient';
 export const metadata: Metadata = {
   title: 'StudioBinder Alternative | ABRAM Production Platform',
   description:
-    'A StudioBinder alternative that keeps polished call sheets and adds native budget tracking, crew payouts, client approval portals, and an AI production copilot in one platform.',
+    'A StudioBinder alternative that keeps polished call sheets and adds native budget tracking, crew payouts, client portals, and an AI copilot.',
   keywords: [
     'StudioBinder alternative', 'StudioBinder vs ABRAM', 'best StudioBinder alternative',
     'film production management software', 'call sheet software', 'production budgeting software',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       'Keep the polished call sheets, add native budget tracking, crew payouts, and client approval portals. See how ABRAM compares to StudioBinder.',
     type: 'website',
     url: 'https://abram.network/alternatives/studiobinder',
-    siteName: 'ABRAM Network',
+    siteName: 'ABRAM',
   },
   twitter: {
     card: 'summary_large_image',
