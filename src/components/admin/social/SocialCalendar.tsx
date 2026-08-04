@@ -12,6 +12,7 @@ import {
   Pencil,
   Plus,
   Send,
+  Share,
   Trash2,
   Upload,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import AbramMark from "@/components/AbramMark";
 import { createClient } from "@/utils/supabase/client";
 import { SOCIAL_FORMATS, type SocialFormatId } from "@/lib/social/formats";
 import { normalizeSpec, specToFilename, specToRenderPath } from "@/lib/social/spec";
+import { saveCards, useCanShareImages } from "@/lib/social/saveImage";
 import { composePostText } from "@/lib/social/links";
 import {
   deletePost,
@@ -118,6 +120,8 @@ export default function SocialCalendar({
   const [busy, setBusy] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [campaignFilter, setCampaignFilter] = useState<string>("all");
+  // On a phone the save button opens the share sheet, so it says so.
+  const canShare = useCanShareImages();
 
   const [editing, setEditing] = useState<{ post: SocialPostRow | null; date: string } | null>(null);
   const [editingCampaign, setEditingCampaign] = useState<SocialCampaignRow | null | undefined>(undefined);
@@ -251,22 +255,20 @@ export default function SocialCalendar({
         if (data?.length) slides = data as SocialAssetRow[];
       }
 
-      for (const slide of slides) {
-        const spec = normalizeSpec(slide.spec);
-        const response = await fetch(slide.public_url || specToRenderPath(spec));
-        if (!response.ok) throw new Error("Could not fetch that card.");
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = specToFilename(spec, slide.title);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-      }
+      // On a phone this opens the system sheet, where Save Image writes to
+      // Photos and Save to Files still goes to Files.
+      await saveCards(
+        slides.map((slide) => {
+          const spec = normalizeSpec(slide.spec);
+          return {
+            url: slide.public_url || specToRenderPath(spec),
+            filename: specToFilename(spec, slide.title),
+          };
+        }),
+        asset.title || undefined
+      );
     } catch (err) {
-      onNotify(err instanceof Error ? err.message : "Could not download that card.", "error");
+      onNotify(err instanceof Error ? err.message : "Could not save that card.", "error");
     } finally {
       setBusy(null);
     }
@@ -436,6 +438,7 @@ export default function SocialCalendar({
                   copied={copied === post.id}
                   onCopy={() => handleCopy(post)}
                   onDownload={() => handleDownload(post)}
+                  canShare={canShare}
                   onEdit={() => setEditing({ post, date: key })}
                   onDelete={() => handleDelete(post)}
                   onReady={() =>
@@ -517,6 +520,7 @@ function PostCard({
   copied,
   onCopy,
   onDownload,
+  canShare,
   onEdit,
   onDelete,
   onReady,
@@ -528,6 +532,7 @@ function PostCard({
   copied: boolean;
   onCopy: () => void;
   onDownload: () => void;
+  canShare: boolean;
   onEdit: () => void;
   onDelete: () => void;
   onReady: () => void;
@@ -621,10 +626,10 @@ function PostCard({
               type="button"
               onClick={onDownload}
               disabled={busy}
-              title="Download the card"
+              title={canShare ? "Save to Photos or Files" : "Download the card"}
               className="btn-glass flex items-center justify-center rounded-full px-2.5 py-1 text-[10px] font-semibold disabled:opacity-50 min-h-[44px] sm:min-h-[36px] min-w-[36px]"
             >
-              <Download className="w-2.5 h-2.5" />
+              {canShare ? <Share className="w-2.5 h-2.5" /> : <Download className="w-2.5 h-2.5" />}
             </button>
           ) : null}
 

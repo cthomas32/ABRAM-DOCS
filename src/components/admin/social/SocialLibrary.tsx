@@ -10,6 +10,7 @@ import {
   Loader2,
   Pencil,
   RefreshCw,
+  Share,
   Trash2,
   Upload,
 } from "lucide-react";
@@ -17,6 +18,7 @@ import AbramMark from "@/components/AbramMark";
 import { createClient } from "@/utils/supabase/client";
 import { SOCIAL_FORMATS, SOCIAL_FORMAT_IDS, type SocialFormatId } from "@/lib/social/formats";
 import { normalizeSpec, specToFilename, specToRenderPath, type SocialImageSpec } from "@/lib/social/spec";
+import { saveCards, useCanShareImages } from "@/lib/social/saveImage";
 import {
   approveAsset,
   approveSet,
@@ -126,6 +128,8 @@ export default function SocialLibrary({
   const [format, setFormat] = useState<SocialFormatId | "all">("all");
   const [busy, setBusy] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  // On a phone the save button opens the share sheet, so it says so.
+  const canShare = useCanShareImages();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -218,23 +222,20 @@ export default function SocialLibrary({
   const handleDownload = async (entry: LibraryEntry) => {
     setBusy(entry.key);
     try {
-      for (const slide of entry.slides) {
-        const spec = normalizeSpec(slide.spec);
-        const source = slide.public_url || specToRenderPath(spec);
-        const response = await fetch(source);
-        if (!response.ok) throw new Error("Could not fetch that card.");
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = specToFilename(spec, entry.title);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-      }
+      // On a phone this opens the system sheet, where Save Image writes to
+      // Photos and Save to Files still goes to Files.
+      await saveCards(
+        entry.slides.map((slide) => {
+          const spec = normalizeSpec(slide.spec);
+          return {
+            url: slide.public_url || specToRenderPath(spec),
+            filename: specToFilename(spec, entry.title),
+          };
+        }),
+        entry.title
+      );
     } catch (err) {
-      onNotify(err instanceof Error ? err.message : "Could not download that.", "error");
+      onNotify(err instanceof Error ? err.message : "Could not save that.", "error");
     } finally {
       setBusy(null);
     }
@@ -373,6 +374,7 @@ export default function SocialLibrary({
               onDelete={() => handleDelete(entry)}
               onCopyUrl={() => handleCopyUrl(entry)}
               onDownload={() => handleDownload(entry)}
+              canShare={canShare}
               onEdit={() => handleEdit(entry)}
             />
           ))}
@@ -391,6 +393,7 @@ function EntryCard({
   onDelete,
   onCopyUrl,
   onDownload,
+  canShare,
   onEdit,
 }: {
   entry: LibraryEntry;
@@ -401,6 +404,7 @@ function EntryCard({
   onDelete: () => void;
   onCopyUrl: () => void;
   onDownload: () => void;
+  canShare: boolean;
   onEdit: () => void;
 }) {
   const first = entry.slides[0];
@@ -484,9 +488,10 @@ function EntryCard({
             onClick={onDownload}
             disabled={busy}
             className="btn-glass flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50"
-            title="Download the PNG"
+            title={canShare ? "Save to Photos or Files" : "Download the PNG"}
           >
-            <Download className="w-3 h-3" />
+            {canShare ? <Share className="w-3 h-3" /> : <Download className="w-3 h-3" />}
+            {canShare ? "Save" : null}
           </button>
           <button
             type="button"

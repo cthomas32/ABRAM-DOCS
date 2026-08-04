@@ -11,6 +11,7 @@ import {
   MonitorSmartphone,
   Plus,
   Save,
+  Share,
   Square,
   Trash2,
 } from "lucide-react";
@@ -55,6 +56,7 @@ import {
   type SocialSpecField,
   type SocialTemplateId,
 } from "@/lib/social/spec";
+import { saveCards, useCanShareImages } from "@/lib/social/saveImage";
 import { CAROUSEL_PRESETS, SOCIAL_PRESETS } from "@/lib/social/presets";
 import { saveAsset, saveCarousel } from "@/app/admin/dashboard/social/actions";
 import BackdropPicker, { type BackdropState } from "./BackdropPicker";
@@ -426,6 +428,8 @@ export default function SocialStudio({
   const [active, setActive] = useState(0);
   const [saving, setSaving] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  // On a phone the button opens the share sheet, so it says so.
+  const canShare = useCanShareImages();
 
   // Reloading the editor from the library replaces everything at once.
   useEffect(() => {
@@ -618,29 +622,21 @@ export default function SocialStudio({
   };
 
   /**
-   * Downloading fetches the same render the preview is showing. The route
-   * is signed in, so this goes through fetch and a blob rather than a bare
-   * link, which would open a new tab and lose the filename.
+   * Saving fetches the same render the preview is showing. The route is
+   * signed in, so this goes through fetch and a blob rather than a bare
+   * link, which would open a new tab and lose the filename. On a phone the
+   * blob goes to the system sheet, which is the only way into Photos.
    */
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      const targets = isCarousel ? slides.map((_, i) => specAt(i)) : [currentSpec];
-      for (const spec of targets) {
-        const response = await fetch(specToRenderPath(spec));
-        if (!response.ok) throw new Error("That card did not come back. Try again.");
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = specToFilename(spec, title);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-      }
+      const specs = isCarousel ? slides.map((_, i) => specAt(i)) : [currentSpec];
+      await saveCards(
+        specs.map((spec) => ({ url: specToRenderPath(spec), filename: specToFilename(spec, title) })),
+        title || undefined
+      );
     } catch (err) {
-      onNotify(err instanceof Error ? err.message : "Could not download that card.", "error");
+      onNotify(err instanceof Error ? err.message : "Could not save that card.", "error");
     } finally {
       setDownloading(false);
     }
@@ -1216,8 +1212,20 @@ export default function SocialStudio({
             disabled={downloading}
             className="btn-glass flex items-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-full disabled:opacity-50"
           >
-            {downloading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-            {isCarousel ? `Download ${slides.length} PNGs` : "Download PNG"}
+            {downloading ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : canShare ? (
+              <Share className="w-3.5 h-3.5" />
+            ) : (
+              <Download className="w-3.5 h-3.5" />
+            )}
+            {canShare
+              ? isCarousel
+                ? `Save ${slides.length} images`
+                : "Save image"
+              : isCarousel
+                ? `Download ${slides.length} PNGs`
+                : "Download PNG"}
           </button>
         </div>
       </div>

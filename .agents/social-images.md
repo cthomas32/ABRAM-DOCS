@@ -628,6 +628,31 @@ ones.
 
 ---
 
+## Getting the finished card off the screen
+
+One helper does this everywhere the studio, the library and the calendar offer it:
+[`saveImage.ts`](../src/lib/social/saveImage.ts). It fetches the renders (all of a carousel's
+slides at once, in order) and then delivers them one of two ways.
+
+On a desktop it is a file in the downloads folder, as it always was. On a phone it goes to the
+system share sheet instead, because a PNG downloaded in mobile Safari lands in Files and there is
+no route from there to the camera roll without opening the Files app and sharing it back out. The
+sheet is the only thing that can write to Photos, and it still lists Files, so the choice stays
+with the person: **Save Image** for Photos, **Save to Files** for Files. A carousel arrives as one
+sheet with every slide on it, so it saves in a single tap.
+
+Two things to keep in mind when touching it:
+
+- **The button says what it will do.** `useCanShareImages()` returns false on the first render so
+  the server and the client agree, then true on a touch device once mounted. Desktops are excluded
+  deliberately even when they can share, since a sheet in the middle of the screen is an
+  interruption there.
+- **Every failure still lands the file.** Closing the sheet is not an error and says nothing.
+  Anything else, including Safari deciding the tap has expired while the render was fetched, falls
+  through to the plain download rather than dead-ending.
+
+---
+
 ## What the copy has to do
 
 **Write the outcome, then stop early.** Name what the reader walks away with, and leave the how
