@@ -37,6 +37,17 @@ export interface SocialTheme {
   appPanel: string;
   /** A raised card or tile inside the main panel */
   appTile: string;
+  /**
+   * A drop shadow under the drawn app window.
+   *
+   * Empty on a flat card, where the panel already sits on a colour that is
+   * plainly not it. It earns its place on a photograph: a rectangle with no
+   * shadow on top of a picture reads as a hole cut in the picture, and the
+   * shadow is what makes it a window in front of one. Satori draws
+   * `boxShadow` and has no `filter`, so this is the only separation
+   * available to the renderer.
+   */
+  appShadow: string;
   /** Which ink of the brand mark and lockup sits correctly on this card */
   ink: "cream" | "black";
   /** Swatch shown in the studio picker */
@@ -60,6 +71,7 @@ export const SOCIAL_THEMES: Record<SocialThemeId, SocialTheme> = {
     appShell: "#050505",
     appPanel: "#0E0E10",
     appTile: "rgba(255,255,255,0.07)",
+    appShadow: "",
     ink: "cream",
     swatch: "#0A0A0A",
   },
@@ -79,6 +91,7 @@ export const SOCIAL_THEMES: Record<SocialThemeId, SocialTheme> = {
     appShell: "#02070E",
     appPanel: "#0A1524",
     appTile: "rgba(142,202,255,0.10)",
+    appShadow: "",
     ink: "cream",
     swatch: "#0B1B33",
   },
@@ -98,6 +111,7 @@ export const SOCIAL_THEMES: Record<SocialThemeId, SocialTheme> = {
     appShell: "#050505",
     appPanel: "#130E0E",
     appTile: "rgba(255,255,255,0.07)",
+    appShadow: "",
     ink: "cream",
     swatch: "#2A0B0B",
   },
@@ -117,6 +131,7 @@ export const SOCIAL_THEMES: Record<SocialThemeId, SocialTheme> = {
     appShell: "#08080A",
     appPanel: "#16161A",
     appTile: "rgba(255,255,255,0.07)",
+    appShadow: "",
     ink: "cream",
     swatch: "#111113",
   },
@@ -136,6 +151,7 @@ export const SOCIAL_THEMES: Record<SocialThemeId, SocialTheme> = {
     appShell: "#E6E3DC",
     appPanel: "#FFFFFF",
     appTile: "rgba(10,10,10,0.06)",
+    appShadow: "",
     ink: "black",
     swatch: "#FAFAF9",
   },

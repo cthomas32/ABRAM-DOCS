@@ -145,6 +145,35 @@ who took them. The studio's Look panel shows the same library as a picker, and i
 same component in two modes — the compression, the title rules and the credit fields all have to
 behave identically or a picture uploaded in one place would be second-class in the other.
 
+### The picker is a room, and the shelf is not loaded
+
+In the studio the Look panel shows **the one picture the card is on**: a thumbnail, its title, its
+credit, a control to take it off and a Choose that opens the library over the top. Pick one and it
+goes on the card and the library closes again. It used to be the whole grid, open, sitting in the
+middle of Look between the palette and the crop controls, which is a wall of squares on top of
+controls you need while you are looking at the card, and it only gets taller.
+
+Two things underneath that, both invisible at a dozen pictures and both fatal at three hundred:
+
+- **A page at a time.** The grid reads `PAGE_SIZE` rows and fetches the next when you reach the
+  bottom, with a button under the observer for when an observer never fires. The search runs
+  against the table rather than over the loaded rows, because a search that only finds what you
+  have already scrolled past is worse than no search. PostgREST reads `or` as a grammar, so commas
+  and brackets in what somebody typed are dropped rather than escaped — none of them belongs in a
+  title anyway.
+- **Tiles are not the upload.** A picture is scaled to 2560 on its long edge on the way in, which
+  is right for a story and absurd for a square 180 across: the grid was pulling about a megabyte
+  per tile. `backdropThumbUrl` asks the storage layer to resize and it caches the answer, so the
+  same picture arrives at roughly 25 kilobytes instead of 905. A failure there falls back to the
+  full file once, so the bad outcome is a slow tile rather than a broken one. The renderer still
+  takes the full file: a story at the tightest crop is 3360 across.
+
+A tile carries **one** corner control, not two. Forty-four pixels is the rule and a tile on a phone
+is about 150 across, so two of them side by side cover the picture. The chooser gets the pencil,
+because deleting while picking is a mis-tap rather than an intention; the gallery gets the bin,
+because a tap there already opens the editor. Nothing is lost either way — the editor carries
+delete in its own header.
+
 The Library tab holds two different things and toggles between them. **Cards** came out of the
 studio and are specs waiting on approval. **Images** are the raw pictures, which have their own
 life: they arrive by the dozen off a shoot and get titled and credited long before anybody makes a
@@ -441,6 +470,45 @@ neutral tone.
   them were indistinguishable at feed size.
 - **Three rows and three columns is the cap.** A fourth row and a fifth column add nothing at
   1080 and cost the height that would have made the other three readable.
+
+### On a photograph the panel is opaque, because there is no blur
+
+The panel tokens move with the ink: `BACKDROP_INK` overrides `appPanel`, `appShell`, `appTile`
+and `panelBorder` along with the text tiers, so a cream palette on a dusk sky does not draw a
+white rectangle under a white headline.
+
+Those fills were once frosted glass — the panel at 0.72, the shell under it at 0.55. That reads as
+glass in a browser, where a `backdrop-filter` blurs what is behind it. **Satori has no
+`backdrop-filter` and no `filter`**, so what actually rendered was the photograph at full
+sharpness at about a third strength, straight through the middle of the app: a call sheet with a
+river running through its rows, and half the library is bright enough for that. There is no blur
+available to fix it, so the fill does the job — near enough opaque that the screen is a screen,
+with the last few per cent left in so it still takes the colour of the picture under it.
+
+`appShadow` is the other half, and the only token that exists solely for this: a rectangle on a
+photograph with nothing under it reads as a hole cut in the photograph, and the shadow is what
+makes it a window in front of one. It is empty on all five palettes and set only by
+`BACKDROP_INK`, because on a flat card the panel already sits on a colour that is plainly not it.
+
+### Never one word on a line
+
+A headline that wraps to `…the call sheet still to / do` is the one typographic mistake on a card
+that everybody sees and nobody can name. It is not a wrapping bug — the line broke where it had to
+— so there is nothing to fix in the layout, and the fix is in the text. `noWidow` binds the last
+two words with U+00A0, which the Unicode line breaking algorithm treats as glue, so the breaker
+has to take them down together and the shortest a last line can be is two words. Every headline,
+body and list item on every template goes through it.
+
+Binding is not free: a bound pair is one unbreakable token, so a pair too wide for a line would
+overflow instead of wrapping. That is why `fitFontSize` fits for **two** things — the line budget,
+and whether the last two words could share a line — and shrinks the type until both hold. Without
+that second constraint the fitter would happily settle on a size where the only legal wrap leaves
+one word alone, and the widow would be baked in before there was anything to fix. `fitItems` does
+the same job for the list templates, which measure their longest item as a run of `x` and so have
+no pair for `fitFontSize` to see.
+
+The floor still wins: copy long enough to drive the type to its minimum keeps its widow rather
+than running off the edge, which is the worse of the two.
 
 ### The aspects are measured, not estimated
 

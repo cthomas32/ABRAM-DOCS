@@ -146,6 +146,24 @@ export function getBackdrop(id: string | null | undefined): Backdrop {
  * under the white headline this override had just created: pick cream,
  * then pick a backdrop, and a product card drew a blank rectangle. The
  * panel tokens are part of the ink, so they move with it.
+ *
+ * ## The app window is opaque, and has to be
+ *
+ * These panel fills were once frosted glass: `appPanel` at 0.72, the shell
+ * under it at 0.55. That reads as glass in a browser, where a
+ * `backdrop-filter` blurs whatever is behind it. Satori has no
+ * `backdrop-filter` and no `filter`, so what actually rendered was the
+ * photograph at full sharpness, at nearly a third strength, straight
+ * through the middle of the app. On a bright picture — and half the
+ * library is bright — a call sheet came out with a river running through
+ * its rows. There is no blur available to fix that, so the fill does the
+ * job instead: near enough opaque that the screen is a screen, with the
+ * last few per cent of translucency left in so it still picks up the
+ * colour of the picture it is sitting on.
+ *
+ * The shadow is the other half. A rectangle on top of a photograph with
+ * nothing under it reads as a hole cut in the photograph; the shadow is
+ * what turns it into a window in front of one.
  */
 export const BACKDROP_INK = {
   text: "#FFFFFF",
@@ -153,10 +171,11 @@ export const BACKDROP_INK = {
   muted: "rgba(255,255,255,0.62)",
   hairline: "rgba(255,255,255,0.20)",
   panel: "rgba(255,255,255,0.04)",
-  panelBorder: "rgba(255,255,255,0.10)",
-  appShell: "rgba(0,0,0,0.55)",
-  appPanel: "rgba(10,12,16,0.72)",
-  appTile: "rgba(255,255,255,0.06)",
+  panelBorder: "rgba(255,255,255,0.14)",
+  appShell: "rgba(6,7,10,0.94)",
+  appPanel: "rgba(11,13,17,0.97)",
+  appTile: "rgba(255,255,255,0.07)",
+  appShadow: "0 24px 60px rgba(0,0,0,0.55)",
   ink: "cream" as const,
 };
 
@@ -179,6 +198,42 @@ export function backdropImageUrl(storagePath: string): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!base || !storagePath) return "";
   return `${base.replace(/\/+$/, "")}/storage/v1/object/public/${BACKDROP_BUCKET}/${storagePath}`;
+}
+
+/**
+ * A small version of a picture, for the library grid.
+ *
+ * Uploads are scaled to 2560 on the long edge, which is right for a card
+ * and absurd for a tile 180 across: the grid was pulling a megabyte per
+ * square to draw a thumbnail, so fifteen images was fifteen megabytes and
+ * a hundred would be a hundred. The storage layer will resize on request
+ * and cache the result, and the same picture comes back at 25 kilobytes.
+ *
+ * Cover rather than contain for a square tile, because the grid is a wall
+ * of squares and a letterboxed one in the middle of it reads as broken.
+ * The detail view asks for `contain` and a real width instead: there the
+ * shape of the picture is a thing you are looking at.
+ *
+ * Never used for the card itself. The renderer takes the full file, since
+ * a story at the tightest crop is 3360 across.
+ */
+export function backdropThumbUrl(
+  storagePath: string,
+  { width, height, resize = "cover", quality = 70 }: {
+    width: number;
+    height?: number;
+    resize?: "cover" | "contain";
+    quality?: number;
+  }
+): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!base || !storagePath) return "";
+  const params = new URLSearchParams({ width: String(width), resize, quality: String(quality) });
+  if (height) params.set("height", String(height));
+  return (
+    `${base.replace(/\/+$/, "")}/storage/v1/render/image/public/${BACKDROP_BUCKET}/${storagePath}` +
+    `?${params.toString()}`
+  );
 }
 
 /**

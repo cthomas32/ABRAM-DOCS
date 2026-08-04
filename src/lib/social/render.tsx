@@ -174,6 +174,21 @@ function getBackdropPhoto(storagePath: string): Promise<string> {
  * fitted by estimate: shrink the size until the text is likely to fall
  * within the line budget. The ratio is the average glyph width as a
  * fraction of the font size, measured off the medium weight.
+ *
+ * It fits for two things, not one. The line budget is the obvious one.
+ * The other is that the last two words have to fit on a line together,
+ * because `noWidow` is about to bind them and a pair too wide for a line
+ * would run off the edge instead of wrapping. Without this the fitter
+ * would settle on a size where the only legal wrap leaves one word alone,
+ * and the widow would be baked in before there was anything to fix. That
+ * is exactly what "Every call sheet you send is already / reconciled"
+ * was: at 109 points a line holds fifteen characters and "already
+ * reconciled" is eighteen, so no arrangement of that headline had two
+ * words on its last line. The type has to give.
+ *
+ * A synthetic string of one long token — which is how the list templates
+ * measure their longest item — has no last pair, so this costs them
+ * nothing.
  */
 function fitFontSize(
   content: string,
@@ -185,10 +200,97 @@ function fitFontSize(
 ): number {
   let size = base;
   while (size > min) {
-    if (estimateLines(content, size, availableWidth, glyphRatio) <= maxLines) break;
+    if (
+      estimateLines(content, size, availableWidth, glyphRatio) <= maxLines &&
+      lastPairFits(content, size, availableWidth, glyphRatio)
+    ) {
+      break;
+    }
     size -= 2;
   }
   return Math.max(size, min);
+}
+
+/**
+ * How much of a line the last two words are allowed to want.
+ *
+ * They are about to be bound into one unbreakable token, so they have to
+ * fit on a line together or they overflow instead of wrapping. The
+ * shortfall from a whole line is margin against the estimate, which is an
+ * average and can be beaten by a pair of unusually wide words.
+ */
+const PAIR_FITS = 0.8;
+
+/**
+ * Whether the last two words could share a line at this size.
+ *
+ * Under three words there is nothing to decide: two words that will not
+ * fit on one line widow whatever anybody does.
+ */
+function lastPairFits(content: string, size: number, availableWidth: number, glyphRatio: number): boolean {
+  const words = content.trim().split(/\s+/);
+  if (words.length < 3) return true;
+  const pair = `${words[words.length - 2]} ${words[words.length - 1]}`;
+  return pair.length * size * glyphRatio <= availableWidth * PAIR_FITS;
+}
+
+/**
+ * One size for a list, that every item in it can live at.
+ *
+ * The list templates set all their items at one size, because a checklist
+ * whose third line is smaller than its second reads as a bug. Which size
+ * is decided by the longest item, measured as a run of `x` so the
+ * character count does the work.
+ *
+ * That synthetic string is why these need their own fitter. It has no
+ * spaces, so the widow constraint inside `fitFontSize` sees nothing to
+ * check and passes every size. So the pairs are checked here, against the
+ * real items, and the size comes down until the last two words of every
+ * one of them can share a line.
+ */
+function fitItems(
+  items: string[],
+  availableWidth: number,
+  maxLines: number,
+  base: number,
+  min: number,
+  glyphRatio = 0.54
+): number {
+  const longest = items.reduce((max, item) => Math.max(max, item.length), 0);
+  let size = fitFontSize("x".repeat(longest), availableWidth, maxLines, base, min, glyphRatio);
+  while (size > min && !items.every((item) => lastPairFits(item, size, availableWidth, glyphRatio))) {
+    size -= 2;
+  }
+  return Math.max(size, min);
+}
+
+/**
+ * Never leave one word alone on the last line.
+ *
+ * A headline that wraps to "…the call sheet still to / do" is the one
+ * typographic mistake on a card that everybody sees and nobody can name.
+ * It is not a wrapping bug — the line broke exactly where it had to — so
+ * there is nothing to fix in the layout. The fix is in the text: bind the
+ * last two words with a non-breaking space and the breaker has to take
+ * them down together, which means the shortest a last line can be is two
+ * words.
+ *
+ * Satori runs the Unicode line breaking algorithm, where U+00A0 is glue
+ * and carries a prohibited break on both sides, so this is the same
+ * mechanism a browser uses rather than a trick that happens to work.
+ *
+ * The size this is called with came out of `fitFontSize`, which shrank
+ * the type until this pair would fit, so the guard here almost always
+ * passes. It is still checked, because the fitter has a floor: copy long
+ * enough to drive the type down to its minimum keeps its widow rather
+ * than running off the edge of the card, which is the worse of the two.
+ */
+function noWidow(content: string, size: number, availableWidth: number, glyphRatio = 0.54): string {
+  const words = content.trim().split(/\s+/);
+  if (words.length < 3) return content;
+  if (!lastPairFits(content, size, availableWidth, glyphRatio)) return content;
+
+  return [...words.slice(0, -2), `${words[words.length - 2]}\u00A0${words[words.length - 1]}`].join(" ");
 }
 
 /** Same estimate, used to budget vertical space before laying anything out. */
@@ -295,8 +397,8 @@ function ItemList({ ctx, size, maxLines = 2 }: { ctx: RenderContext; size: numbe
   const { spec, theme, s, contentWidth } = ctx;
   if (spec.items.length === 0) return null;
 
-  const longest = spec.items.reduce((max, item) => Math.max(max, item.length), 0);
-  const fitted = fitFontSize("x".repeat(longest), contentWidth - s(42), maxLines, size, Math.round(size * 0.62));
+  const width = contentWidth - s(42);
+  const fitted = fitItems(spec.items, width, maxLines, size, Math.round(size * 0.62));
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -321,7 +423,7 @@ function ItemList({ ctx, size, maxLines = 2 }: { ctx: RenderContext; size: numbe
               flexGrow: 1,
             }}
           >
-            {item}
+            {noWidow(item, fitted, width)}
           </div>
         </div>
       ))}
@@ -353,7 +455,7 @@ function StatementBody({ ctx }: { ctx: RenderContext }) {
             letterSpacing: "-0.025em",
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, size, contentWidth)}
         </div>
       ) : null}
       {spec.headlineAccent ? (
@@ -407,7 +509,7 @@ function QuoteBody({ ctx }: { ctx: RenderContext }) {
           letterSpacing: "-0.01em",
         }}
       >
-        {spec.headline}
+        {noWidow(spec.headline, size, contentWidth)}
       </div>
       {spec.attribution ? (
         <div
@@ -464,7 +566,7 @@ function StatBody({ ctx }: { ctx: RenderContext }) {
             marginTop: s(26),
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, contentWidth)}
         </div>
       ) : null}
       {spec.attribution ? (
@@ -505,7 +607,7 @@ function ChecklistBody({ ctx }: { ctx: RenderContext }) {
             marginBottom: s(38),
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, contentWidth)}
         </div>
       ) : null}
       <ItemList ctx={ctx} size={s(32)} />
@@ -532,7 +634,7 @@ function FeatureBody({ ctx }: { ctx: RenderContext }) {
             letterSpacing: "-0.02em",
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, contentWidth)}
         </div>
       ) : null}
       {spec.body ? (
@@ -546,7 +648,7 @@ function FeatureBody({ ctx }: { ctx: RenderContext }) {
             marginTop: s(24),
           }}
         >
-          {spec.body}
+          {noWidow(spec.body, bodySize, contentWidth)}
         </div>
       ) : null}
       {spec.items.length > 0 ? (
@@ -598,7 +700,7 @@ function AnnounceBody({ ctx }: { ctx: RenderContext }) {
             letterSpacing: "-0.02em",
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, contentWidth)}
         </div>
       ) : null}
       {spec.body ? (
@@ -612,7 +714,7 @@ function AnnounceBody({ ctx }: { ctx: RenderContext }) {
             marginTop: s(26),
           }}
         >
-          {spec.body}
+          {noWidow(spec.body, bodySize, contentWidth)}
         </div>
       ) : null}
     </div>
@@ -679,7 +781,7 @@ function ProductBody({ ctx }: { ctx: RenderContext }) {
             letterSpacing: "-0.02em",
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, copyWidth)}
         </div>
       ) : null}
       {spec.body ? (
@@ -693,7 +795,7 @@ function ProductBody({ ctx }: { ctx: RenderContext }) {
             marginTop: s(18),
           }}
         >
-          {spec.body}
+          {noWidow(spec.body, bodySize, copyWidth)}
         </div>
       ) : null}
     </div>
@@ -784,7 +886,7 @@ function HookBody({ ctx }: { ctx: RenderContext }) {
           letterSpacing: "-0.035em",
         }}
       >
-        {spec.headline}
+        {noWidow(spec.headline, size, contentWidth, 0.55)}
       </div>
     </div>
   );
@@ -807,8 +909,8 @@ function CompareBody({ ctx }: { ctx: RenderContext }) {
   const headlineSize = fitFontSize(spec.headline, contentWidth, 2, s(50), s(28));
   const columnWidth = stacked ? contentWidth : Math.floor((contentWidth - s(48)) / 2);
 
-  const longest = [...spec.items, ...spec.itemsB].reduce((max, item) => Math.max(max, item.length), 0);
-  const itemSize = fitFontSize("x".repeat(longest), columnWidth - s(34), 2, s(26), s(16));
+  const itemWidth = columnWidth - s(34);
+  const itemSize = fitItems([...spec.items, ...spec.itemsB], itemWidth, 2, s(26), s(16));
 
   const column = (label: string, items: string[], positive: boolean) => (
     <div style={{ display: "flex", flexDirection: "column", width: stacked ? "100%" : columnWidth }}>
@@ -853,7 +955,7 @@ function CompareBody({ ctx }: { ctx: RenderContext }) {
               flexGrow: 1,
             }}
           >
-            {item}
+            {noWidow(item, itemSize, itemWidth)}
           </div>
         </div>
       ))}
@@ -875,7 +977,7 @@ function CompareBody({ ctx }: { ctx: RenderContext }) {
             marginBottom: s(40),
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, contentWidth)}
         </div>
       ) : null}
       <div
@@ -899,8 +1001,8 @@ function StepsBody({ ctx }: { ctx: RenderContext }) {
   const { spec, theme, s, contentWidth } = ctx;
   const headlineSize = fitFontSize(spec.headline, contentWidth, 2, s(50), s(28));
   const numberWidth = s(64);
-  const longest = spec.items.reduce((max, item) => Math.max(max, item.length), 0);
-  const itemSize = fitFontSize("x".repeat(longest), contentWidth - numberWidth, 2, s(30), s(19));
+  const itemWidth = contentWidth - numberWidth;
+  const itemSize = fitItems(spec.items, itemWidth, 2, s(30), s(19));
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -917,7 +1019,7 @@ function StepsBody({ ctx }: { ctx: RenderContext }) {
             marginBottom: s(38),
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, contentWidth)}
         </div>
       ) : null}
       {spec.items.map((item, index) => (
@@ -955,7 +1057,7 @@ function StepsBody({ ctx }: { ctx: RenderContext }) {
               flexGrow: 1,
             }}
           >
-            {item}
+            {noWidow(item, itemSize, itemWidth)}
           </div>
         </div>
       ))}
@@ -976,8 +1078,8 @@ function GridBody({ ctx }: { ctx: RenderContext }) {
   const gap = s(20);
   const tileWidth = Math.floor((contentWidth - gap) / 2);
   const tiles = spec.items.slice(0, 4);
-  const longest = tiles.reduce((max, item) => Math.max(max, item.length), 0);
-  const tileSize = fitFontSize("x".repeat(longest), tileWidth - s(56), 3, s(26), s(16));
+  const tileTextWidth = tileWidth - s(56);
+  const tileSize = fitItems(tiles, tileTextWidth, 3, s(26), s(16));
 
   const tile = (item: string | undefined, index: number) => (
     <div
@@ -1007,7 +1109,7 @@ function GridBody({ ctx }: { ctx: RenderContext }) {
         {String(index + 1).padStart(2, "0")}
       </div>
       <div style={{ display: "flex", fontSize: tileSize, fontWeight: 500, lineHeight: 1.3, color: theme.secondary }}>
-        {item || ""}
+        {noWidow(item || "", tileSize, tileTextWidth)}
       </div>
     </div>
   );
@@ -1027,7 +1129,7 @@ function GridBody({ ctx }: { ctx: RenderContext }) {
             marginBottom: s(34),
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, contentWidth)}
         </div>
       ) : null}
       {/* Two explicit rows: Satori ignores flex-wrap, so a wrapping row
@@ -1084,7 +1186,7 @@ function TermBody({ ctx }: { ctx: RenderContext }) {
             letterSpacing: "-0.035em",
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, termSize, contentWidth, 0.58)}
         </div>
       ) : null}
       <div
@@ -1109,7 +1211,7 @@ function TermBody({ ctx }: { ctx: RenderContext }) {
             lineHeight: 1.55,
           }}
         >
-          {spec.body}
+          {noWidow(spec.body, bodySize, contentWidth)}
         </div>
       ) : null}
     </div>
@@ -1148,7 +1250,7 @@ function ShowcaseBody({ ctx }: { ctx: RenderContext }) {
             letterSpacing: "-0.025em",
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, headlineSize, contentWidth)}
         </div>
       ) : null}
       <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: s(34) }}>
@@ -1228,7 +1330,7 @@ function PosterBody({ ctx }: { ctx: RenderContext }) {
             letterSpacing: "-0.02em",
           }}
         >
-          {spec.headline}
+          {noWidow(spec.headline, size, width, 0.55)}
         </div>
       ) : null}
 
@@ -1243,7 +1345,7 @@ function PosterBody({ ctx }: { ctx: RenderContext }) {
             marginTop: s(34),
           }}
         >
-          {spec.body}
+          {noWidow(spec.body, Math.max(s(20), Math.round(size * 0.52)), width)}
         </div>
       ) : null}
 

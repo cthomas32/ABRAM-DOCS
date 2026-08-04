@@ -2805,6 +2805,9 @@ export function AppMockup({
         borderRadius: u(R.card),
         border: `1px solid ${theme.panelBorder}`,
         backgroundColor: theme.appPanel,
+        // Only a backdrop sets one. On a flat card the panel is already
+        // plainly not the background and a shadow would be decoration.
+        ...(theme.appShadow ? { boxShadow: theme.appShadow } : {}),
         overflow: "hidden",
       }}
     >
