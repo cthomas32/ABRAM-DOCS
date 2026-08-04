@@ -8,6 +8,7 @@ import Link from "next/link";
 import { cache } from "react";
 import TelemetryTracker from "@/components/TelemetryTracker";
 import { AuthorAvatar } from "@/components/blog/AuthorAvatar";
+import FigureScrollHints from "@/components/blog/FigureScrollHints";
 
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
@@ -194,7 +195,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
   };
 
   return (
-    <div className="space-y-8 max-w-3xl mx-auto px-0 select-text">
+    <div className="w-full min-w-0 space-y-8 max-w-3xl mx-auto px-0 select-text">
       <TelemetryTracker id={post.id} type="blog_post" />
       <script
         type="application/ld+json"
@@ -225,17 +226,17 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
         </Link>
       </div>
 
-      <article className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-4 sm:p-8 md:p-10 select-text">
+      <article className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md px-5 py-6 sm:p-8 md:p-10 select-text">
         <header className="space-y-4 mb-8 pb-8 border-b border-white/5">
-          <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 font-medium font-sans">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-zinc-500 font-medium font-sans">
             <time dateTime={post.published_at || post.created_at}>{formattedDate}</time>
-            <span className="w-1 h-1 rounded-full bg-zinc-700" />
-            <div className="flex items-center gap-2">
+            <span className="hidden sm:inline w-1 h-1 rounded-full bg-zinc-700" />
+            <div className="flex items-center gap-2 min-w-0">
               <AuthorAvatar src={post.author_avatar} name={post.author || "ABRAM Team"} size="sm" />
-              <span>By {post.author || "ABRAM Team"}</span>
+              <span className="truncate">By {post.author || "ABRAM Team"}</span>
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-zinc-50 leading-tight font-sans">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-zinc-50 leading-tight font-sans break-words">
             {post.title}
           </h1>
           {post.summary && (
@@ -245,7 +246,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
           )}
         </header>
 
-        <div className="text-zinc-300 font-sans select-text release-notes-content">
+        <div className="text-zinc-300 font-sans select-text release-notes-content blog-article">
           <MDXRemote
             source={preprocessMdx(post.content)}
             components={mdxComponents}
@@ -256,15 +257,16 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
             }}
           />
         </div>
+        <FigureScrollHints />
       </article>
 
       {/* Recommendations Section */}
       {otherPosts && otherPosts.length > 0 && (
-        <div className="mt-16 pt-10 border-t border-white/5 space-y-6">
+        <div className="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-white/5 space-y-6">
           <h3 className="text-lg font-semibold text-zinc-100 font-sans">
             More from the ABRAM Journal
           </h3>
-          <div className={`grid grid-cols-1 gap-6 ${
+          <div className={`grid grid-cols-1 gap-4 sm:gap-6 ${
             otherPosts.length === 2 ? "sm:grid-cols-2" : 
             otherPosts.length >= 3 ? "sm:grid-cols-2 md:grid-cols-3" : ""
           }`}>

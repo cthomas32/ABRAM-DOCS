@@ -104,20 +104,20 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
             <motion.div
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] as [number, number, number, number] }}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-950/40 via-zinc-950/20 to-red-500/[0.01] backdrop-blur-md p-5 sm:p-8 flex flex-col md:flex-row gap-6 md:gap-8 hover:bg-zinc-900/40 hover:border-white/15 transition-all duration-300"
+              className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-950/40 via-zinc-950/20 to-red-500/[0.01] backdrop-blur-md p-4 sm:p-6 md:p-8 flex flex-col md:flex-row gap-5 md:gap-8 hover:bg-zinc-900/40 hover:border-white/15 transition-all duration-300"
             >
               {/* Decorative Glow */}
-              <div className="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 bg-red-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
+              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-56 h-56 sm:-mr-24 sm:-mt-24 sm:w-96 sm:h-96 bg-red-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
 
               {/* Graphic/Brand Visual Section */}
-              <div className="w-full md:w-1/2 aspect-[16/10] rounded-xl border border-white/5 bg-zinc-950/80 relative overflow-hidden flex items-center justify-center select-none">
+              <div className="w-full md:w-1/2 shrink-0 aspect-[16/9] md:aspect-[16/10] rounded-xl border border-white/5 bg-zinc-950/80 relative overflow-hidden flex items-center justify-center select-none">
                 {coverRows ? (
-                  <div className="absolute inset-0 p-4 flex items-center justify-center overflow-hidden scale-[0.8] sm:scale-[0.85] md:scale-[0.9]">
+                  <div className="absolute inset-0 p-0 sm:p-4 flex items-center justify-center overflow-hidden scale-100 md:scale-[0.9]">
                     <Cover rows={coverRows} noMargin />
                   </div>
                 ) : coverSvg ? (
-                  <div 
-                    className="absolute inset-0 p-4 flex items-center justify-center overflow-hidden scale-[0.8] sm:scale-[0.85] md:scale-[0.9] [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-full"
+                  <div
+                    className="absolute inset-0 p-0 sm:p-4 flex items-center justify-center overflow-hidden scale-100 md:scale-[0.9] [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-full"
                     dangerouslySetInnerHTML={{ __html: coverSvg }}
                   />
                 ) : (
@@ -132,7 +132,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
               </div>
 
               {/* Content Section */}
-              <div className="w-full md:w-1/2 flex flex-col justify-between space-y-4">
+              <div className="w-full md:w-1/2 min-w-0 flex flex-col justify-between space-y-4">
                 <div className="space-y-3">
                   {/* Meta */}
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-semibold tracking-wider text-zinc-500 uppercase font-sans">
@@ -144,7 +144,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-xl sm:text-2xl font-semibold text-zinc-50 group-hover:text-white transition-colors duration-300 leading-snug font-sans">
+                  <h2 className="text-xl sm:text-2xl font-semibold text-zinc-50 group-hover:text-white transition-colors duration-300 leading-snug font-sans break-words">
                     {featuredPost.title}
                   </h2>
 
@@ -156,15 +156,16 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
                   )}
                 </div>
 
-                {/* Action Row */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                  <div className="flex items-center gap-2">
+                {/* Action Row — stacks on phones so neither the byline nor the
+                    button has to wrap mid-word */}
+                <div className="flex flex-col items-stretch gap-3 pt-4 border-t border-white/5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <div className="flex items-center gap-2 min-w-0">
                     <AuthorAvatar src={featuredPost.author_avatar} name={featuredPost.author} size="sm" />
-                    <span className="text-xs text-zinc-500 font-medium font-sans">
+                    <span className="text-xs text-zinc-500 font-medium font-sans truncate">
                       By {featuredPost.author}
                     </span>
                   </div>
-                  <div className="btn-glass px-4 py-1.5 text-xs">
+                  <div className="btn-glass w-full sm:w-auto shrink-0 px-4 min-h-[44px] sm:min-h-0 sm:py-1.5 text-xs">
                     Read Article
                     <span className="group-hover:translate-x-0.5 transition-transform duration-200 ml-1">→</span>
                   </div>
@@ -181,7 +182,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
           variants={listContainer}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"
         >
           {gridPosts.map((post) => (
             <motion.div key={post.id} variants={listItem}>
@@ -197,19 +198,19 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
                       <time dateTime={post.published_at || post.created_at}>
                         {formatPostDate(post.published_at || post.created_at)}
                       </time>
-                      <span className="w-1 h-1 rounded-full bg-zinc-700" />
-                      <div className="flex items-center gap-1.5">
+                      <span className="hidden sm:inline w-1 h-1 rounded-full bg-zinc-700" />
+                      <div className="flex items-center gap-1.5 min-w-0">
                         <AuthorAvatar
                           src={post.author_avatar}
                           name={post.author}
-                          className="w-4 h-4 text-[8px]"
+                          className="w-4 h-4 text-[8px] shrink-0"
                         />
-                        <span>By {post.author}</span>
+                        <span className="truncate">By {post.author}</span>
                       </div>
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-lg font-semibold text-zinc-100 group-hover:text-white transition-colors duration-200 leading-snug line-clamp-2 font-sans">
+                    <h3 className="text-lg font-semibold text-zinc-100 group-hover:text-white transition-colors duration-200 leading-snug line-clamp-2 font-sans break-words">
                       {post.title}
                     </h3>
 

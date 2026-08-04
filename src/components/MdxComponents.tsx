@@ -250,7 +250,67 @@ export function preprocessMdx(content: string | undefined | null): string {
     processed = processed.replace(new RegExp(`(\\s)${kebab}=`, "g"), `$1${camel}=`);
   }
 
+  processed = normalizeRawTables(processed);
+  processed = wrapWideFigures(processed);
+
   return processed;
+}
+
+// A <table> written as raw markup in article content is rendered by MDX as a
+// literal HTML tag, so it never reaches the `table` component below. Two things
+// have to happen here instead: rows need a <thead>/<tbody> home (React refuses
+// <tr> directly under <table> and the mismatch breaks hydration), and the table
+// needs a horizontal scroller so a wide one scrolls on a phone instead of
+// bleeding off the side of the screen.
+function normalizeRawTables(content: string): string {
+  return content.replace(
+    /<table(\s[^>]*)?>([\s\S]*?)<\/table>/gi,
+    (match, attrs: string | undefined, inner: string) => {
+      // A nested table would end this match early and produce broken markup.
+      if (/<table[\s>]/i.test(inner)) return match;
+
+      let body = inner;
+
+      if (!/<(thead|tbody|tfoot)[\s>]/i.test(inner)) {
+        const rows = inner.match(/<tr[\s\S]*?<\/tr>/gi) || [];
+        if (rows.length > 0) {
+          const headerRows = rows.filter((row) => /<th[\s>]/i.test(row));
+          const bodyRows = rows.filter((row) => !/<th[\s>]/i.test(row));
+          body =
+            (headerRows.length > 0 ? `<thead>${headerRows.join("")}</thead>` : "") +
+            (bodyRows.length > 0 ? `<tbody>${bodyRows.join("")}</tbody>` : "");
+        }
+      }
+
+      return `<div className="mdx-figure"><div className="mdx-scroll"><table${attrs || ""}>${body}</table></div></div>`;
+    }
+  );
+}
+
+// Charts authored as inline SVG carry a wide viewBox (typically 1200 units), so
+// fitting one to a 375px screen shrinks its labels to a few pixels. Wrapping the
+// labelled ones in the same scroller lets them hold a legible minimum width.
+// Purely graphic SVGs read fine at any size and are left to scale.
+function wrapWideFigures(content: string): string {
+  const MIN_VIEWBOX_WIDTH = 600;
+
+  return content.replace(
+    /(^|\n)([ \t]*)(<svg\b[^>]*>[\s\S]*?<\/svg>)/gi,
+    (match, lead: string, indent: string, svg: string) => {
+      // Non-greedy matching stops at the first closing tag, so a nested SVG
+      // would leave the wrapper straddling half an element.
+      if (/<svg[\s>][\s\S]*<svg[\s>]/i.test(svg)) return match;
+      if (/mdx-scroll/.test(lead + indent)) return match;
+      if (!/<text[\s>]/i.test(svg)) return match;
+
+      const viewBox = svg.match(
+        /viewBox=["']\s*[\d.eE+-]+[\s,]+[\d.eE+-]+[\s,]+([\d.eE+-]+)[\s,]+[\d.eE+-]+\s*["']/i
+      );
+      if (!viewBox || Number(viewBox[1]) < MIN_VIEWBOX_WIDTH) return match;
+
+      return `${lead}${indent}<div className="mdx-figure"><div className="mdx-scroll">${svg}</div></div>`;
+    }
+  );
 }
 
 
@@ -512,10 +572,12 @@ export const table = ({ children, ...props }: React.TableHTMLAttributes<HTMLTabl
   }
 
   return (
-    <div className="my-6 w-full overflow-x-auto border border-zinc-200 dark:border-zinc-800 rounded-lg">
-      <table className="w-full border-collapse text-left text-sm" {...getSafeProps(props)}>
-        {processedChildren}
-      </table>
+    <div className="mdx-figure w-full">
+      <div className="mdx-scroll border border-zinc-200 dark:border-zinc-800 rounded-lg">
+        <table className="w-full border-collapse text-left text-sm" {...getSafeProps(props)}>
+          {processedChildren}
+        </table>
+      </div>
     </div>
   );
 };

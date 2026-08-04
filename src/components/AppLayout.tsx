@@ -144,6 +144,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // 3. Non-docs/non-sidebar layout (for blog, changelog, privacy policy, terms of use, docs main page, etc.)
   const contentMaxWidth = cleanPathname === "/docs" ? "max-w-7xl" : "max-w-4xl";
 
+  // Blog pages carry their own card padding, so the wrapper's phone padding
+  // would stack on top of it and leave the reading column around 260px wide.
+  const isBlogPage = cleanPathname === "/blog" || cleanPathname.startsWith("/blog/");
+  const contentPadding = isBlogPage
+    ? "px-0 py-6 sm:px-6 sm:py-8 lg:p-12"
+    : "p-6 md:p-8 lg:p-12";
+
   return (
     <BackgroundGlow variant="premium" className="selection:bg-zinc-800 selection:text-white">
       <Navbar 
@@ -155,7 +162,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 w-full flex flex-col pt-16">
         <div className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div
-            className={`flex-1 w-full mx-auto p-6 md:p-8 lg:p-12 ${contentMaxWidth}`}
+            className={`flex-1 w-full mx-auto ${contentPadding} ${contentMaxWidth}`}
           >
             <div className="flex-1">
               {children}

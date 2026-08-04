@@ -384,12 +384,15 @@ body {
   width: 100%;
   border-collapse: collapse;
   margin: 1.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .release-notes-content th,
 .release-notes-content td {
   padding: 0.75rem 1rem;
   text-align: left;
+  vertical-align: top;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -401,6 +404,101 @@ body {
 
 .release-notes-content tr:hover {
   background: rgba(255, 255, 255, 0.02);
+}
+
+/* ─────────────────────────────────────────────
+   Long-form article figures — tables and charts
+   ride in a horizontal scroller so a phone never
+   has to shrink them past the point of reading.
+   Wrappers are added by preprocessMdx().
+   ───────────────────────────────────────────── */
+.mdx-figure {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.mdx-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.mdx-scroll > table {
+  margin: 0;
+}
+
+.mdx-scroll > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 767px) {
+  /* Inside a blog article, a figure breaks out of the card's padding so it gets
+     the whole screen width back before it starts scrolling. */
+  .blog-article .mdx-figure {
+    margin-left: calc(-1 * var(--article-gutter, 1.25rem));
+    margin-right: calc(-1 * var(--article-gutter, 1.25rem));
+  }
+
+  .blog-article .mdx-scroll {
+    padding-left: var(--article-gutter, 1.25rem);
+    padding-right: var(--article-gutter, 1.25rem);
+  }
+
+  .blog-article .mdx-figure[data-scrollable="true"]::after {
+    padding-left: var(--article-gutter, 1.25rem);
+  }
+
+  /* Content sizing rather than a flat minimum: a short table still fits the
+     screen, and only a genuinely wide one grows (up to a cap) and scrolls. */
+  .mdx-scroll > table {
+    width: max-content;
+    min-width: 100%;
+    max-width: 40rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Chart labels are sized against a ~1200 unit viewBox, so the SVG needs a
+     floor of its own to stay readable. */
+  .mdx-scroll > svg {
+    min-width: 34rem;
+  }
+
+  /* Swipe affordance required for horizontally scrolling data. Set by
+     FigureScrollHints only on figures that actually overflow. */
+  .mdx-figure[data-scrollable="true"]::after {
+    content: "Swipe to view →";
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #71717a; /* zinc-500 */
+  }
+
+  .release-notes-content th,
+  .release-notes-content td {
+    padding: 0.625rem 0.75rem;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Blog article body
+   ───────────────────────────────────────────── */
+.blog-article {
+  --article-gutter: 1.25rem;
+  /* A long URL or slug in body copy must not push the page sideways. */
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .blog-article {
+    --article-gutter: 0rem;
+  }
 }
 
 
