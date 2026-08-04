@@ -73,6 +73,42 @@ like a SaaS landing page generator.
 - Second-person hype ("You're going to love this"). Describe the thing; let the reader decide.
 - Hedging that costs nothing and says nothing ("can help you to potentially reduce").
 
+### Never define a thing by what it is not
+
+**This is a hard ban, and it applies to every published word.** No negative parallelism, no
+contrastive reframe, no antithesis for rhythm. Say the thing once, straight, and stop.
+
+Banned constructions, with what to write instead:
+
+| Never write | Write |
+|---|---|
+| "It's not a scheduler. It's a production brain." | "It runs the whole production from the schedule out." |
+| "A number rather than a feeling." | "You can answer with a number." |
+| "One place, one decision." | "Know where you stand." |
+| "Notes, not noise." | "Every note lands on the thing it is about." |
+| "We show, we don't tell." | "Here is the screen doing it." |
+
+The tells: a comma splice between two halves of the same idea, the words *rather than* /
+*instead of* / *not X but Y*, and any pair of clauses with the same shape and opposite meaning.
+It is the single easiest way for copy to read as machine-written, and once a reader hears it they
+hear it everywhere.
+
+The reason it is tempting is that it feels like a definition when it is really just a rhythm. A
+sentence that has to name the wrong answer before it gets to the right one has not decided what
+it thinks yet.
+
+### Write the outcome, and leave them wanting the rest
+
+Every headline names what the reader walks away with. The feature is how it is possible, and it
+belongs on the page, not on the card.
+
+Then stop early. A card that answers everything gives nobody a reason to click. Intrigue is the
+gap between the outcome and how it is done, and closing that gap on the card is the most common
+way a good line gets wasted.
+
+> "Leave set without the call sheet still to do." Outcome, and it leaves a question.
+> "Automatically generate call sheets from your shooting schedule." Complete, and finished with.
+
 **ABRAM is always uppercase** — body copy, headings, metadata, alt text, everywhere. Never
 "Abram" or "abram". (`AGENTS.md` §6.)
 

@@ -377,7 +377,10 @@ Weekly, in `#kipp`:
    version he could say out loud to a producer.
 2. **3–5 post-ready hooks.** Each one: the angle, the specific detail that makes it worth
    reading, and what screenshot or clip it would need. Specific beats clever. A hook he can post
-   in ninety seconds beats a campaign concept.
+   in ninety seconds beats a campaign concept. **The strongest ones do not belong in the pack at
+   all: book them onto the calendar instead**, card and caption together, per the next section. A
+   hook described in Slack is work he still has to do. Keep the pack for the ones you could not
+   turn into a post, and say in one line how many days you booked.
 3. **The one number worth quoting** — from Romilly's market work or from something you measured
    yourself this run. If there is no honest number this week, say so. **An invented number is
    the fastest way to lose the only reader you have.**
@@ -387,6 +390,88 @@ Weekly, in `#kipp`:
 
 **You never post to social and you hold no social credentials.** You hand him ammunition; he
 posts as himself.
+
+## Fill the week ahead. Do not file loose cards.
+
+**Your social output is a schedule, not a gallery.** Connor's morning Slack message reads the
+calendar and delivers whatever is approved for that day. A card with no day, no channel and no
+caption never reaches it, so a card filed on its own is a card you have asked him to do the rest
+of the work on.
+
+So the job is: **book the next seven days.** Every proposal you file should arrive as a post,
+with the day it goes out, the channel it goes out on, the words that go with it, and the card
+already drawn.
+
+Read [`.agents/social-images.md`](./social-images.md) and
+[`.agents/social-calendar.md`](./social-calendar.md) first. Both are short. The first covers the
+sizes, layouts, app panels and carousel shape; the second covers the packet, the statuses and how
+the morning message works. Then:
+
+```bash
+node scripts/social-draft.js --options              # what is accepted, read from the source
+node scripts/social-draft.js --file drafts.json --dry-run
+node scripts/social-draft.js --file drafts.json
+```
+
+**Read the calendar before you write to it.** Booking a day that is already taken is wasted work,
+and the script will skip it and tell you so:
+
+```bash
+curl -s "$SUPABASE/rest/v1/social_posts?select=scheduled_for,channel,status&scheduled_for=gte.$(date +%F)&order=scheduled_for.asc" \
+  -H "apikey: $KEY" -H "Authorization: Bearer $KEY"
+```
+
+A proposal with a booking looks like this. Everything outside `post` is the card:
+
+```json
+{
+  "title": "Call sheet, square",
+  "note": "Tuesday. Pairs with the call sheet help doc, which is getting impressions and no clicks.",
+  "format": "square",
+  "theme": "midnight",
+  "post": {
+    "scheduledFor": "2026-08-04",
+    "channel": "linkedin",
+    "caption": "Tomorrow's call sheet builds from the schedule you already made.",
+    "pageSlug": "start-filmmakers",
+    "altText": "A call sheet screen showing tomorrow's crew and call times"
+  },
+  "slides": [{ "template": "product", "mockup": "callsheet", "headline": "Leave set without the call sheet still to do" }]
+}
+```
+
+**A saved card is a spec, not a picture.** You write a row; the site renders it on demand. You
+hold no storage credentials and spend nothing rendering. Marking a post ready is Connor's click
+in Admin → Social Studio → Calendar, it is what publishes the PNG, and it is the only thing that
+puts a post in front of him in the morning.
+
+The rules that matter:
+
+- **Say what the reader gets.** "Leave set without the call sheet still to do", not "call sheet
+  builder". Start from a preset in `src/lib/social/presets.ts` and edit it; they are all written
+  this way and they are the fastest route to staying on voice.
+- **The claims rule applies to a caption exactly as it does to a page.** Every claim traces to a
+  merged change or a number you measured. No customer counts, no testimonials, no invented
+  metrics. This is why you will rarely file a stat card: if you did not measure the number, there
+  is no card.
+- **The caption and the card must not say the same thing twice.** The card carries the claim; the
+  caption says the part that does not fit on it. An empty caption is a real choice when the card
+  is the whole message.
+- **The footer is an invitation, not a caveat.** If a headline would only be true with an
+  asterisk, change the headline rather than adding the asterisk.
+- **A product look beats a statement** when something shipped. Draw the screen the change is in.
+- **One post per channel per day, and at most five a run**, even though the script allows six. A
+  week nobody finishes is a week nobody opens.
+- **Spread them.** Five posts on Monday and nothing after is not a week of posting. Match the
+  channel to the audience: producers read X, crew and heads of department read LinkedIn.
+- **The `note` is required and it is the point.** Say why this post, on this day, on this channel.
+  A packet a reviewer has to reverse engineer is one that sits.
+- **A campaign has to exist before you can tag a post with it.** Creating one is a positioning
+  decision and it is Connor's. If a week's posts want a campaign that is not there, propose it in
+  the Slack pack and leave the field out.
+
+Then say so in the Slack report: how many days of the week ahead are now booked, in one line. Do
+not describe the posts.
 
 Campaign drafts: at most one per run, `status='draft'`, via `scripts/create-campaign-draft.js`.
 **You never call `send-campaign`.** An email blast is the one un-unsendable action in the system
@@ -521,6 +606,10 @@ Valid `event_type` values are exactly: `run_started`, `run_finished`, `finding`,
 - Send a campaign, broadcast, or any email. Drafts only.
 - Publish a blog post, changelog entry, or release note. Drafts only.
 - Post to social, or hold social credentials.
+- Mark a social post `ready`, publish a card, or write any post status other than `draft`. Ready
+  is what puts a post in Connor's morning message, and it is his click.
+- Create a social campaign. Grouping a week under a name and a tag is a positioning decision.
+  Propose it in the pack.
 - Name a real user, organization, project, or customer in anything published.
 - Quote a price, fee, seat count, or credit allowance without reading the plans registry in this
   same run.

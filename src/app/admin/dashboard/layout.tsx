@@ -18,6 +18,7 @@ import {
   Link as LinkIcon,
   Megaphone,
   BadgePercent,
+  Image as ImageIcon,
   Menu,
   X,
   ChevronRight
@@ -38,6 +39,7 @@ const NAV_GROUPS = [
       { id: "docs", label: "Docs Editor", href: "/admin/dashboard/docs", icon: BookOpen, hint: "Help centre guides" },
       { id: "blog", label: "Blog Posts", href: "/admin/dashboard/blog", icon: Newspaper, hint: "Articles & announcements" },
       { id: "changelog", label: "Release Notes", href: "/admin/dashboard/changelog", icon: Tag, hint: "Version changelogs" },
+      { id: "social", label: "Social Studio", href: "/admin/dashboard/social", icon: ImageIcon, hint: "Post images & carousels" },
     ],
   },
   {

@@ -1,0 +1,94 @@
+name: "Social: morning post pack"
+
+# Delivers the day's approved posts to Slack, ready to post.
+#
+# There is no model in this workflow. It runs scripts/social-daily.js, which reads the calendar
+# and formats a message. Everything it sends was written by a person or by KIPP and then approved
+# by a person; this job cannot write copy, cannot approve anything, and holds no social
+# credentials. That is what makes it safe to run unattended every morning.
+#
+# It costs nothing beyond a minute of Actions time, which is why it is daily and KIPP is weekly:
+# the thinking is weekly, the delivery is daily.
+
+on:
+  # GitHub cron is UTC and best-effort. Runs are frequently 10-45 minutes late and can be dropped
+  # entirely under load. 11:12 UTC is anchored to EDT:
+  #   EDT (summer): 07:12 ET
+  #   EST (winter): 06:12 ET
+  # Early enough to be there before the day starts, and late enough that a delayed run still lands
+  # in the morning. Minute :12 dodges the top-of-the-hour congestion runs get dropped in.
+  #
+  # No hour-guard, deliberately. A delayed run still delivers; a run that rejects itself for being
+  # late delivers nothing, which is the failure mode that has already killed scheduled runs here
+  # once.
+  schedule:
+    - cron: '12 11 * * *'
+
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Which day to deliver (YYYY-MM-DD). Defaults to today in ET."
+        required: false
+        type: string
+      resend:
+        description: "Include posts already announced. Use after a message was lost."
+        required: false
+        default: false
+        type: boolean
+
+# Nothing is written to the repository. The only write anywhere is notified_at on the posts that
+# were delivered, which happens over the database API.
+permissions:
+  contents: read
+
+concurrency:
+  group: social-daily
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # No install step. The script is zero-dependency on purpose: a daily job that npm installs
+      # is a daily job that fails on a registry blip.
+      - name: Deliver the post pack
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SLACK_WEBHOOK_URL_KIPP: ${{ secrets.SLACK_WEBHOOK_URL_KIPP }}
+          SOCIAL_DAILY_TZ: America/New_York
+          # Read through the environment rather than interpolated into the script body, so a
+          # dispatch input is data and never shell.
+          INPUT_DATE: ${{ inputs.date }}
+          INPUT_RESEND: ${{ inputs.resend }}
+        run: |
+          ARGS=()
+          if [ -n "$INPUT_DATE" ]; then
+            ARGS+=(--date "$INPUT_DATE")
+          fi
+          if [ "$INPUT_RESEND" = "true" ]; then
+            ARGS+=(--resend)
+          fi
+
+          # The default shell is `bash -e`, which would abort on the script's exit code before it
+          # could be read. 78 has to survive to be treated as a skip.
+          set +e
+          node scripts/social-daily.js "${ARGS[@]}"
+          STATUS=$?
+          set -e
+
+          # 78 means the secrets are not in place yet. That is a skip, not a failure, and it keeps
+          # the Actions tab honest about which runs actually broke.
+          if [ $STATUS -eq 78 ]; then
+            echo "::notice::Not configured yet. Add the secrets listed in .agents/social-calendar.md."
+            exit 0
+          fi
+          exit $STATUS
