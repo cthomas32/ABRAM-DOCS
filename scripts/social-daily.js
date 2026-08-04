@@ -7,6 +7,11 @@
  * caption, the tracked link, and which channel it is for. Copy, paste,
  * post. That is the whole job.
  *
+ * It adds one forward-looking line: a stretch of days ahead with nothing
+ * booked, and any day whose post is written but still waiting to be
+ * marked ready. Both are worth hearing while there is still time to act
+ * on them, and neither is visible on the morning the day goes quiet.
+ *
  * There is no model in this script and there is no judgement in it. The
  * thinking happened when the post was written and again when someone
  * marked it ready; this only delivers. That is deliberate: a daily job
@@ -130,7 +135,21 @@ async function readWeekAhead(fromDate) {
 
   const days = new Set(rows.map((row) => row.scheduled_for));
   const ready = new Set(rows.filter((row) => row.status === "ready").map((row) => row.scheduled_for));
-  return { filledDays: days.size, readyDays: ready.size };
+
+  // The days still to come, not the whole window. Today is being reported on
+  // directly and does not need nagging about; the days after it are the ones
+  // where knowing early is worth something. A gap you hear about on Monday is
+  // a gap KIPP can still fill on Friday. A gap you find on the morning of is
+  // a day that already went quiet.
+  const ahead = [];
+  for (let offset = 1; offset <= 6; offset += 1) ahead.push(addDaysISO(fromDate, offset));
+
+  return {
+    filledDays: days.size,
+    readyDays: ready.size,
+    emptyDates: ahead.filter((day) => !days.has(day)),
+    awaitingApproval: ahead.filter((day) => days.has(day) && !ready.has(day)),
+  };
 }
 
 async function stampNotified(ids) {
@@ -164,6 +183,69 @@ async function stampNotified(ids) {
 /** "1 day has", "3 days have". Small, but a report that cannot count reads as a report nobody checked. */
 function daysHave(count) {
   return count === 1 ? "1 of the next 7 days has" : `${count} of the next 7 days have`;
+}
+
+/** Weekday alone is unambiguous inside a six day window, and it is how a person thinks about next week. */
+function weekdayName(iso) {
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    weekday: "long",
+  });
+}
+
+/**
+ * "Thursday", "Thursday and Friday", "Thursday through Sunday".
+ *
+ * Only a run of three or more collapses to "through" — two days spelled out
+ * is shorter to read than the range that would replace it, and it keeps the
+ * "and" doing one job rather than two.
+ */
+function listDays(dates) {
+  const runs = [];
+  for (const date of dates) {
+    const current = runs[runs.length - 1];
+    if (current && addDaysISO(current[current.length - 1], 1) === date) current.push(date);
+    else runs.push([date]);
+  }
+
+  const phrases = runs.flatMap((run) =>
+    run.length > 2
+      ? [`${weekdayName(run[0])} through ${weekdayName(run[run.length - 1])}`]
+      : run.map(weekdayName)
+  );
+
+  if (phrases.length === 1) return phrases[0];
+  if (phrases.length === 2) return `${phrases[0]} and ${phrases[1]}`;
+  return `${phrases.slice(0, -1).join(", ")}, and ${phrases[phrases.length - 1]}`;
+}
+
+/**
+ * The forward look, and the only place this script says something about a day
+ * other than today.
+ *
+ * Two empty days is a quiet stretch worth knowing about while there is still
+ * time to fill it. One is an ordinary gap, and a job that nags about every
+ * ordinary gap is a job whose lines stop being read.
+ */
+function calendarWarnings(week) {
+  const lines = [];
+
+  if (week.emptyDates.length >= 2) {
+    lines.push(
+      `Nothing booked ${listDays(week.emptyDates)}. KIPP fills the week ahead on Friday, ` +
+        "so a gap this far out is one there is still time to close."
+    );
+  }
+
+  if (week.awaitingApproval.length > 0) {
+    lines.push(
+      `${listDays(week.awaitingApproval)} ${week.awaitingApproval.length === 1 ? "has a post" : "have posts"} ` +
+        "still waiting to be marked ready in Social Studio, Calendar. Nothing unapproved reaches this message."
+    );
+  }
+
+  return lines.map((text) => ({ type: "context", elements: [{ type: "mrkdwn", text }] }));
 }
 
 function channelLabel(channel) {
@@ -206,6 +288,7 @@ function buildBlocks({ date, ready, drafts, week, shown }) {
         },
       ],
     });
+    blocks.push(...calendarWarnings(week));
     return blocks;
   }
 
@@ -220,6 +303,7 @@ function buildBlocks({ date, ready, drafts, week, shown }) {
       },
     ],
   });
+  blocks.push(...calendarWarnings(week));
 
   for (const post of shown) {
     blocks.push({ type: "divider" });

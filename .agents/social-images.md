@@ -723,7 +723,9 @@ one side filled in is an advert with the awkward half deleted:
 
 ### The caps, and why they are there
 
-- **Six proposals per run.** A queue nobody finishes is a queue nobody opens.
+- **Seven proposals per run**, one for each morning the post pack goes out. It was six until the
+  daily calendar made six a guaranteed silent morning. It is still a cap, and a queue nobody
+  finishes is still a queue nobody opens.
 - **Ten slides per carousel.**
 - **Everything lands as a draft, from `source: kipp`.** The library badges them and counts them so
   they are impossible to miss and impossible to publish by accident.

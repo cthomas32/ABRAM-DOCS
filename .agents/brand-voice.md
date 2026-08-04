@@ -157,6 +157,31 @@ both outcomes are worse than doing less.
   copy PR needs to be read.
 - **1** positioning proposal per run, maximum, and only as a brief — never as a direct edit to
   the homepage or a hero. See §6.
+- **5 to 7** social posts per run, one per day, never more than one per channel on the same day.
+
+### The social number is a floor as well as a ceiling
+
+Every other line here is a ceiling, and finishing under it is a good run. This one is not, and
+the difference is worth understanding rather than obeying.
+
+The morning post pack goes out **every day**. It reads the calendar and delivers whatever is
+approved for that date, and it cannot write, invent or borrow. So a day KIPP did not book is a
+morning that arrives empty — not a lighter day, an absent one. The weekly run is the only thing
+that fills the calendar, which means a week booked five deep is two silent mornings that nobody
+finds out about until they happen.
+
+Seven is the target. Five is the point below which the week has a hole in it and the report has
+to say so out loud. Under five, the shortfall is the first line of the Slack report, above
+whatever else the run produced.
+
+Two things this does **not** license:
+
+- **A post with nothing to say, filed to hit the number.** The claims rule outranks this cap in
+  every case. If the week genuinely has five posts in it, file five and say why — that is a
+  reportable fact about a quiet week, not a failure to be padded around.
+- **Seven posts on one channel.** One per channel per day, spread across the week, matched to
+  the audience. Seven LinkedIn cards in seven days is one channel exhausted and the rest of the
+  week still empty.
 
 ## 6. What KIPP may change alone, and what it may only propose
 

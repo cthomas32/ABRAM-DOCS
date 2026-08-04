@@ -65,7 +65,11 @@ concurrency:
 jobs:
   content-ops:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 55 rather than 45 since Phase 0g (the trend read) and a seven day calendar were added.
+    # A timeout is the worst outcome available here: the work is done, the PRs may be open, and
+    # the run dies before the Slack report and the brain write that would tell anyone about it.
+    # The prompt's run-economy rules are what keep the run short; this is only the backstop.
+    timeout-minutes: 55
 
     steps:
       - name: Checkout ABRAM-DOCS
@@ -168,6 +172,11 @@ jobs:
           # --strict-mcp-config with no --mcp-config loads ZERO MCP servers, so any committed
           # .mcp.json is ignored and no auth prompt clutters the log. The agent reaches both
           # databases with plain curl and the service-role keys instead.
+          #
+          # It does NOT disable the built-in tools, and Phase 0g depends on that: WebSearch is
+          # how KIPP reads what the audience is talking about this week. If web access is ever
+          # restricted here, that phase degrades to nothing and the run should say so rather
+          # than inventing a trend. Do not add --allowedTools without WebSearch in the list.
           claude -p "$(cat .agents/scheduled-content-ops.prompt.md)" \
             --model claude-opus-5 \
             --dangerously-skip-permissions \

@@ -59,6 +59,11 @@ and the message says to use it. See the image library in
 - **A quiet day still speaks.** With nothing approved it says how many drafts are waiting; with
   nothing scheduled it says so and reports how much of the week ahead is filled. Pass `--quiet` to
   suppress the empty-day message.
+- **It looks forward as well as at today.** Two or more days in the next six with nothing booked
+  are named, and so is any day whose post is written but still sitting as a draft. Both are worth
+  hearing while there is time to act: KIPP refills the calendar on Friday, and an unapproved post
+  is one click from being a real one. A single empty day is not flagged, because a job that nags
+  about every ordinary gap is a job whose lines stop being read.
 - **Links do not unfurl.** Every post points at the same handful of landing pages, and left to
   unfurl the pack arrives with a stack of preview cards stapled underneath it.
 

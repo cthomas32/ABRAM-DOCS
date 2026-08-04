@@ -41,8 +41,16 @@ const { randomUUID } = require("node:crypto");
 
 const ROOT = join(__dirname, "..");
 
-/** Nobody reads more than this in a review sitting, and a flooded queue gets ignored. */
-const MAX_PROPOSALS = 6;
+/**
+ * Seven, because the morning pack goes out seven mornings a week and the weekly
+ * run is the only thing that fills it. A cap of six was a cap that made one
+ * silent morning unavoidable.
+ *
+ * It stays a cap. Nobody reads more than a week of cards in a review sitting and
+ * a flooded queue gets ignored, which is why this did not become a larger number
+ * when it became the right one.
+ */
+const MAX_PROPOSALS = 7;
 const MAX_SLIDES = 10;
 const MAX_ITEMS = 5;
 
