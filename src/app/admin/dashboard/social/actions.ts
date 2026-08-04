@@ -31,6 +31,8 @@ export interface SocialAssetRow {
   status: AssetStatus;
   source: "studio" | "kipp";
   set_id: string | null;
+  /** Groups the sizes of one card. Null for a card standing on its own. */
+  variation_id: string | null;
   slide_index: number;
   campaign_slug: string | null;
   post_slug: string | null;
@@ -66,10 +68,77 @@ export interface SaveAssetInput {
 }
 
 /**
+ * Push an edit out to the other sizes of the same card.
+ *
+ * A variation group is one message in several formats, so the whole spec
+ * travels except the format itself: the renderer already adapts a card to
+ * its size on its own, scaling type from `formats.ts` and keeping clear of
+ * the story and banner safe areas through `contentInsets`. Syncing only the
+ * words would leave a theme or a backdrop change stranded on one size.
+ *
+ * A synced sibling goes back to draft for the same reason the edited card
+ * does: its PNG no longer matches its spec, and serving the stale file at
+ * the address someone already pasted is the worse of the two outcomes.
+ *
+ * Failures here are logged rather than returned. The edit the person asked
+ * for has already been written, and failing the whole save because a second
+ * size could not be updated would lose the thing they were actually doing.
+ */
+async function syncVariations(
+  supabase: Awaited<ReturnType<typeof requireAdmin>>["supabase"],
+  id: string,
+  spec: SocialImageSpec,
+  title: string
+): Promise<number> {
+  const { data: edited, error: readError } = await supabase
+    .from("social_image_assets")
+    .select("variation_id")
+    .eq("id", id)
+    .single();
+
+  const variationId = (edited as { variation_id: string | null } | null)?.variation_id;
+  if (readError || !variationId) return 0;
+
+  const { data: siblings, error: siblingError } = await supabase
+    .from("social_image_assets")
+    .select("id, format")
+    .eq("variation_id", variationId)
+    .neq("id", id);
+
+  if (siblingError || !siblings || siblings.length === 0) return 0;
+
+  let synced = 0;
+  for (const sibling of siblings as { id: string; format: string }[]) {
+    const siblingSpec = normalizeSpec({ ...spec, format: sibling.format });
+    const siblingFormat = getFormat(siblingSpec.format);
+    const { error } = await supabase
+      .from("social_image_assets")
+      .update({
+        title,
+        spec: siblingSpec,
+        template: siblingSpec.template,
+        theme: siblingSpec.theme,
+        width: siblingFormat.width,
+        height: siblingFormat.height,
+        status: "draft",
+      })
+      .eq("id", sibling.id);
+
+    if (error) {
+      console.error(`Variation sync: ${sibling.format} was left as it was:`, error.message);
+      continue;
+    }
+    synced += 1;
+  }
+
+  return synced;
+}
+
+/**
  * Create or update a card. Always lands as a draft: approving is a
  * separate, deliberate step, including for a card you drew yourself.
  */
-export async function saveAsset(input: SaveAssetInput): Promise<ActionResult<{ id: string }>> {
+export async function saveAsset(input: SaveAssetInput): Promise<ActionResult<{ id: string; synced?: number }>> {
   const { supabase, user } = await requireAdmin();
   if (!user) return { error: "You are signed out. Sign in again to save." };
 
@@ -100,8 +169,11 @@ export async function saveAsset(input: SaveAssetInput): Promise<ActionResult<{ i
       .eq("id", input.id);
 
     if (error) return { error: error.message };
+
+    const synced = await syncVariations(supabase, input.id, spec, row.title);
+
     revalidatePath("/admin/dashboard/social");
-    return { data: { id: input.id } };
+    return { data: { id: input.id, synced } };
   }
 
   const { data, error } = await supabase
@@ -168,6 +240,85 @@ export async function approveAsset(id: string): Promise<ActionResult<{ publicUrl
 
   revalidatePath("/admin/dashboard/social");
   return { data: { publicUrl } };
+}
+
+/**
+ * Add another size of a card, carrying its copy across.
+ *
+ * The first call on a card with no group mints one and puts the original in
+ * it, which is why a card standing alone has a null `variation_id` rather
+ * than a group of one: most cards never need a second size, and a column
+ * that is null until it means something is easier to read than one that is
+ * always full.
+ *
+ * The new size always lands as a draft, whatever the card it came from was.
+ * A PNG is only ever written by an approval, and this is a copy of a spec.
+ */
+export async function createVariation(
+  id: string,
+  format: string
+): Promise<ActionResult<{ id: string; variationId: string }>> {
+  const { supabase, user } = await requireAdmin();
+  if (!user) return { error: "You are signed out. Sign in again to add a size." };
+
+  const { data: source, error: readError } = await supabase
+    .from("social_image_assets")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (readError || !source) return { error: readError?.message || "That card is no longer in the library." };
+
+  const row = source as SocialAssetRow;
+  if (row.set_id) {
+    return { error: "A carousel slide cannot take its own sizes. Save the set in the size you need." };
+  }
+
+  const spec = normalizeSpec({ ...row.spec, format });
+  if (spec.format === row.format) return { error: "That card is already this size." };
+
+  const variationId = row.variation_id || crypto.randomUUID();
+
+  if (!row.variation_id) {
+    const { error } = await supabase
+      .from("social_image_assets")
+      .update({ variation_id: variationId })
+      .eq("id", id);
+    if (error) return { error: error.message };
+  }
+
+  const target = getFormat(spec.format);
+  const { data: created, error } = await supabase
+    .from("social_image_assets")
+    .insert({
+      title: row.title,
+      spec,
+      template: spec.template,
+      format: spec.format,
+      theme: spec.theme,
+      width: target.width,
+      height: target.height,
+      status: "draft",
+      source: "studio",
+      variation_id: variationId,
+      note: row.note,
+      campaign_slug: row.campaign_slug,
+      post_slug: row.post_slug,
+      created_by: user.id,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    // The unique index on (variation_id, format) is the one failure worth
+    // naming: it means the size already exists and the picker should have
+    // offered it rather than offering to make it.
+    if (error.code === "23505") return { error: "That size is already in this card's set." };
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/dashboard/social");
+  return { data: { id: created.id as string, variationId } };
 }
 
 export interface SaveCarouselInput {

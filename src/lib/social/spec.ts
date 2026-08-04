@@ -68,6 +68,9 @@ export type MockupKind =
   | "portal"
   | "clienthome"
   | "approval"
+  | "requestform"
+  | "intake"
+  | "requests"
   | "inventory"
   | "resources"
   | "skills"
@@ -251,6 +254,30 @@ export const MOCKUPS: Record<MockupKind, MockupDefinition> = {
     group: "Clients",
     shape: "wide",
     valueLine: "Every sign off arrives with a name and a time on it.",
+  },
+  requestform: {
+    id: "requestform",
+    label: "The request form",
+    group: "Clients",
+    // It reads as a page, and it was declared tall on that basis. It
+    // measures 0.68, the same trap `document` fell into: calling it tall
+    // makes the studio warn about a squash that does not happen.
+    shape: "wide",
+    valueLine: "Your clients brief you on a form you wrote.",
+  },
+  intake: {
+    id: "intake",
+    label: "Building the form",
+    group: "Clients",
+    shape: "wide",
+    valueLine: "Every question you ask lands somewhere in the project.",
+  },
+  requests: {
+    id: "requests",
+    label: "Project requests",
+    group: "Clients",
+    shape: "wide",
+    valueLine: "A brief arrives, and the project builds itself out of it.",
   },
   inventory: {
     id: "inventory",
@@ -462,8 +489,41 @@ export interface SocialImageSpec {
   slideIndex: number;
   slideCount: number;
 
+  /**
+   * Which half of the footer bar draws.
+   *
+   * The bar has two slots doing different jobs: the footnote on the left is
+   * the invitation, and the right is the call to action, or `Swipe` when the
+   * card is one of a set. They were always drawn as a pair, so a card whose
+   * footnote and cta both said `abram.network` printed the domain twice with
+   * a rule under it, which reads as a rendering fault rather than as a
+   * decision. Turning one side off is the fix that keeps the other side's
+   * job intact.
+   */
+  footer: FooterMode;
+
+  /**
+   * The laser streak across the top-left corner.
+   *
+   * Off by default. It echoes a detail on the site, and on a card it is one
+   * more thing above the mark competing with the words for the first look.
+   * Every card that wants it can still ask.
+   */
   showRule: boolean;
 }
+
+/**
+ * Which side of the footer bar draws. `none` suppresses the bar and its rule
+ * altogether, which is what a card carrying its address in the copy wants.
+ */
+export type FooterMode = "both" | "left" | "right" | "none";
+
+export const FOOTER_MODES: { id: FooterMode; label: string }[] = [
+  { id: "both", label: "Both" },
+  { id: "left", label: "Left only" },
+  { id: "right", label: "Right only" },
+  { id: "none", label: "None" },
+];
 
 /**
  * Which corner a photographer's credit sits in.
@@ -777,7 +837,8 @@ export const EMPTY_SPEC: SocialImageSpec = {
   grain: false,
   slideIndex: 0,
   slideCount: 0,
-  showRule: true,
+  footer: "both",
+  showRule: false,
 };
 
 /** A carousel longer than this stops being read and starts being scrolled past. */
@@ -864,7 +925,10 @@ export function normalizeSpec(input: unknown): SocialImageSpec {
     grain: typeof raw.grain === "boolean" ? raw.grain : hasBacking,
     slideIndex: clampInt(raw.slideIndex, 0, MAX_SLIDES),
     slideCount: clampInt(raw.slideCount, 0, MAX_SLIDES),
-    showRule: raw.showRule !== false,
+    footer: FOOTER_MODES.some((f) => f.id === raw.footer) ? (raw.footer as FooterMode) : "both",
+    // Opt in rather than opt out. An absent flag on an existing draft now
+    // means no streak, which is the answer that card would have chosen.
+    showRule: raw.showRule === true,
   };
 }
 

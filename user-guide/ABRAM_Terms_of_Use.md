@@ -1,5 +1,6 @@
 ---
 title: Terms of Use
+sidebarTitle: Terms of Use
 description: Terms of Use for the ABRAM creative intelligence platform.
 keywords:
   - ABRAM

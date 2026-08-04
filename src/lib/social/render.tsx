@@ -141,6 +141,9 @@ const photoCache = new Map<string, Promise<string>>();
 /** A backdrop this big is a slow render on every card that uses it. */
 const MAX_PHOTO_BYTES = 12 * 1024 * 1024;
 
+/** The image formats Satori can decode. Everything else crashes the render. */
+const RENDERABLE_PHOTO = ["image/jpeg", "image/png"];
+
 function getBackdropPhoto(storagePath: string): Promise<string> {
   const cached = photoCache.get(storagePath);
   if (cached) return cached;
@@ -153,6 +156,19 @@ function getBackdropPhoto(storagePath: string): Promise<string> {
       if (!response.ok) throw new Error(`the bucket answered ${response.status}`);
       const type = response.headers.get("content-type") || "image/jpeg";
       if (!type.startsWith("image/")) throw new Error(`the bucket answered with ${type}`);
+      /**
+       * Satori decodes PNG and JPEG. Handed anything else it does not draw
+       * a plain card, it takes the whole render down, so the studio preview
+       * returns nothing while the library grid beside it looks perfect:
+       * that grid is a browser `<img>`, and browsers read everything.
+       *
+       * Uploads are JPEG now, but the bucket accepts what it accepts and a
+       * file already in it outlives the encoder that made it. Refusing here
+       * turns a dead preview into a card on its base colour.
+       */
+      if (!RENDERABLE_PHOTO.includes(type.split(";")[0].trim())) {
+        throw new Error(`Satori cannot draw ${type}, so the card falls back to its base colour`);
+      }
       const bytes = await response.arrayBuffer();
       if (bytes.byteLength > MAX_PHOTO_BYTES) throw new Error("the file is too large to draw");
       return `data:${type};base64,${Buffer.from(bytes).toString("base64")}`;
@@ -1492,7 +1508,17 @@ export async function renderSocialImage(input: Partial<SocialImageSpec> | Social
   // A carousel that is not on its last slide earns a nudge to keep going,
   // which is the whole mechanic of the format.
   const footerRight = isSlide && spec.slideIndex < spec.slideCount ? "Swipe" : spec.cta;
-  const hasFooter = !isPoster && Boolean(spec.footnote || footerRight);
+
+  /**
+   * Which half of the bar draws. Both slots used to render whenever either
+   * had words in it, so a card whose footnote and cta both read
+   * `abram.network` printed the domain at each end of the same rule.
+   */
+  const showFooterLeft = spec.footer === "both" || spec.footer === "left";
+  const showFooterRight = spec.footer === "both" || spec.footer === "right";
+  const footerLeftText = showFooterLeft ? spec.footnote : "";
+  const footerRightText = showFooterRight ? footerRight : "";
+  const hasFooter = !isPoster && Boolean(footerLeftText || footerRightText);
 
   // What the template has left after the brand row, the footer and the
   // breathing room around the middle block have taken their share.
@@ -1762,8 +1788,8 @@ export async function renderSocialImage(input: Partial<SocialImageSpec> | Social
               flexShrink: 0,
             }}
           >
-            <div style={{ display: "flex", fontSize: s(24), color: theme.secondary }}>{spec.footnote}</div>
-            <div style={{ display: "flex", fontSize: s(24), color: theme.muted }}>{footerRight}</div>
+            <div style={{ display: "flex", fontSize: s(24), color: theme.secondary }}>{footerLeftText}</div>
+            <div style={{ display: "flex", fontSize: s(24), color: theme.muted }}>{footerRightText}</div>
           </div>
         ) : null}
 

@@ -158,6 +158,29 @@ function idsFrom(relativePath, declaration) {
   return ids;
 }
 
+/**
+ * The same job as `idsFrom` for the other shape in `spec.ts`.
+ *
+ * A record (`{ statement: { … } }`) is what the template and placement
+ * tables are; a list of `{ id, label }` is what the smaller pickers are,
+ * and it closes on `];` rather than `};`. Read with the wrong one, a list
+ * runs past its own end and picks up the ids of whatever is declared next,
+ * which is how `footer` first printed the fourteen template names.
+ */
+function idsFromList(relativePath, declaration) {
+  const source = readFileSync(join(ROOT, relativePath), "utf8");
+  const start = source.indexOf(declaration);
+  if (start === -1) return [];
+  const body = source.slice(start);
+  const end = body.indexOf("\n];");
+  const scope = end === -1 ? body : body.slice(0, end);
+  const ids = [];
+  const pattern = /\{\s*id: "([a-z][a-zA-Z0-9-]*)"/g;
+  let match;
+  while ((match = pattern.exec(scope)) !== null) ids.push(match[1]);
+  return ids;
+}
+
 const CATALOG = {
   format: idsFrom("src/lib/social/formats.ts", "export const SOCIAL_FORMATS"),
   theme: idsFrom("src/lib/social/themes.ts", "export const SOCIAL_THEMES"),
@@ -165,6 +188,7 @@ const CATALOG = {
   mockup: idsFrom("src/lib/social/spec.ts", "export const MOCKUPS"),
   backdrop: idsFrom("src/lib/social/backdrops.ts", "export const SOCIAL_BACKDROPS"),
   placement: idsFrom("src/lib/social/placement.ts", "export const PLACEMENTS"),
+  footer: idsFromList("src/lib/social/spec.ts", "export const FOOTER_MODES"),
   destination: idsFrom("src/lib/social/platforms.ts", "export const SOCIAL_DESTINATIONS"),
 };
 
@@ -277,7 +301,10 @@ function normalizeSlide(slide, where) {
     stat,
     attribution: str(raw.attribution),
     footnote: str(raw.footnote),
-    cta: str(raw.cta) || "abram.network",
+    // No default. The cta draws on the right of the footer and the footnote
+    // draws on the left, so defaulting this to the domain put `abram.network`
+    // at both ends of the same rule on every card that set the footnote to it.
+    cta: str(raw.cta),
     mockup: CATALOG.mockup.includes(raw.mockup) ? raw.mockup : "callsheet",
     // The product and showcase layouts draw a panel whatever this says.
     // Everywhere else it is the switch that puts one under the words.
@@ -354,6 +381,11 @@ function normalizeProposal(proposal, index) {
   }
   const placement = CATALOG.placement.includes(raw.placement) ? raw.placement : "center-left";
 
+  if (raw.footer !== undefined && !CATALOG.footer.includes(raw.footer)) {
+    fail(where, `footer must be one of ${CATALOG.footer.join(", ")} (got ${JSON.stringify(raw.footer)})`);
+  }
+  const footer = CATALOG.footer.includes(raw.footer) ? raw.footer : "both";
+
   const grain = typeof raw.grain === "boolean" ? raw.grain : backdrop !== "none" || Boolean(backdropImage);
   // All snapped by the renderer anyway; passed through so a proposal can ask.
   const typeScale = typeof raw.typeScale === "number" ? raw.typeScale : 1;
@@ -393,6 +425,7 @@ function normalizeProposal(proposal, index) {
     backdropFocus,
     backdropDim,
     placement,
+    footer,
     grain,
     typeScale,
     brandScale,
@@ -423,6 +456,7 @@ function toRows(proposal) {
       backdropFocus: proposal.backdropFocus,
       backdropDim: proposal.backdropDim,
       placement: proposal.placement,
+      footer: proposal.footer,
       grain: proposal.grain,
       typeScale: proposal.typeScale,
       brandScale: proposal.brandScale,
@@ -543,13 +577,18 @@ async function main() {
   if (args.includes("--options") || args.includes("--help")) {
     console.log("What the renderer accepts:\n");
     for (const [key, values] of Object.entries(CATALOG)) {
-      if (key === "destination" || key === "backdrop" || key === "placement") continue;
+      if (key === "destination" || key === "backdrop" || key === "placement" || key === "footer") continue;
       console.log(`  ${key.padEnd(9)} ${values.join(", ")}`);
     }
     console.log(`  ${"brand".padEnd(9)} ${BRAND_KINDS.join(", ")}`);
     console.log(`  ${"backdrop".padEnd(9)} ${CATALOG.backdrop.join(", ")}   (set-level, with grain: true|false)`);
     console.log(`  ${"placement".padEnd(9)} ${CATALOG.placement.join(", ")}   (set-level: where the words sit)`);
+    console.log(`  ${"footer".padEnd(9)} ${CATALOG.footer.join(", ")}   (set-level: which side of the footer bar draws)`);
     console.log(`  ${"sizes".padEnd(9)} typeScale 0.85 | 1 | 1.15 | 1.3   brandScale 0.7 | 1 | 1.35`);
+    console.log("");
+    console.log("  The footer has two slots: the footnote on the left and the cta on the right.");
+    console.log("  Setting both to the same words prints them at each end of one rule, so give");
+    console.log("  the card a footnote or a cta, and use footer: left | right to draw just one.");
     console.log("");
     console.log("  A photograph instead of a drawn backdrop, all set-level:");
     console.log("    backdropImage  the title of an image in the studio's image library");

@@ -6,9 +6,9 @@ import { campaignJsonLd, campaignMetadata } from "@/lib/campaignSeo";
 const variant = CAMPAIGN_VARIANTS["start-assistant"];
 
 const SEO = {
-  title: "An AI Assistant That Runs the Whole Platform, No MCP Required",
+  title: "AI Assistant That Runs the Platform, No MCP Required",
   description:
-    "Ask for it and approve it. ABRAM answers from your live workspace, drafts your paperwork and runs multi-step work, with no MCP server, API keys or integrations to set up.",
+    "ABRAM answers from your live workspace, drafts paperwork, and runs multi-step workflows. No MCP server, API keys, or integrations to set up.",
   keywords: [
     "AI assistant for production",
     "AI agent no MCP required",

@@ -168,6 +168,15 @@ export default function HomeFooter({
           Disclaimer: All third-party trademarks, product names, and logos referenced on this website are the property of their respective owners. ABRAM is an independent platform and is not affiliated with, endorsed by, or sponsored by any referenced third-party entities, guilds, or trademark holders. Interactive tools, mockups, and feature previews are provided for demonstration purposes only.
         </p>
       </div>
+      <div className="max-w-8xl mx-auto mt-4 flex flex-wrap gap-4 text-[10px] text-zinc-600/60 justify-center">
+        <Link href="/start" className="hover:text-zinc-400 transition-colors duration-200">Start Free</Link>
+        <Link href="/start/agencies" className="hover:text-zinc-400 transition-colors duration-200">For Agencies</Link>
+        <Link href="/start/filmmakers" className="hover:text-zinc-400 transition-colors duration-200">For Filmmakers</Link>
+        <Link href="/start/post-production" className="hover:text-zinc-400 transition-colors duration-200">Post-Production</Link>
+        <Link href="/start/resource-management" className="hover:text-zinc-400 transition-colors duration-200">Resource Management</Link>
+        <Link href="/start/ai-assistant" className="hover:text-zinc-400 transition-colors duration-200">AI Assistant</Link>
+        <Link href="/links" className="hover:text-zinc-400 transition-colors duration-200">Link Directory</Link>
+      </div>
     </footer>
   );
 }

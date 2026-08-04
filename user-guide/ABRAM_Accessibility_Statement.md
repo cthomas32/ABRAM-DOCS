@@ -1,5 +1,6 @@
 ---
 title: Accessibility Statement
+sidebarTitle: Accessibility Statement
 description: Accessibility Statement for the ABRAM creative intelligence platform.
 keywords:
   - ABRAM

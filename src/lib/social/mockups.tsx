@@ -2641,6 +2641,188 @@ function Brain(p: FrameProps) {
  * card that sized on width alone pushed its own footer off the bottom.
  * Overestimating is the safe direction, since it only shrinks the panel.
  */
+/**
+ * The form a client actually fills in.
+ *
+ * The shape is the argument here: a stack of labelled boxes reads as a form
+ * from across a room, which is what makes this recognisable at thumbnail
+ * size where a table of the same information would be grey mush. The fields
+ * are the real ones the builder offers, and the last row is a custom
+ * question, because custom questions are the reason anybody builds one.
+ */
+function RequestForm(p: FrameProps) {
+  const { u, theme } = p;
+
+  const field = (label: string, value: string, filled: boolean, width?: number) => (
+    <div key={label} style={{ display: "flex", flexDirection: "column", ...optionalWidth(width), flexGrow: width === undefined ? 1 : 0, flexBasis: width === undefined ? 0 : "auto", minWidth: 0 }}>
+      <div style={{ display: "flex", fontSize: u(TYPE.caption), fontWeight: 600, letterSpacing: TRACK, textTransform: "uppercase", color: theme.muted, marginBottom: u(6) }}>
+        {label}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          backgroundColor: theme.appTile,
+          borderRadius: u(R.card),
+          paddingLeft: u(PAD.snug),
+          paddingRight: u(PAD.snug),
+          paddingTop: u(10),
+          paddingBottom: u(10),
+          fontSize: u(TYPE.body),
+          color: filled ? theme.text : theme.muted,
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+
+  return (
+    <FeaturePanel {...p} title="Request a project" action="Submit">
+      <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+        <div style={{ display: "flex", marginBottom: u(12) }}>{field("Project title", "Helix spring campaign", true)}</div>
+
+        <div style={{ display: "flex", marginBottom: u(12) }}>
+          {field("What you need", "Three social cutdowns from the March shoot, plus a 60 second hero.", true)}
+        </div>
+
+        <div style={{ display: "flex", marginBottom: u(12) }}>
+          <div style={{ display: "flex", flexGrow: 1, flexBasis: 0, minWidth: 0, marginRight: u(10) }}>
+            {field("Estimated budget", "$40,000", true)}
+          </div>
+          <div style={{ display: "flex", flexGrow: 1, flexBasis: 0, minWidth: 0, marginRight: u(10) }}>
+            {field("Start date", "14 Sep", true)}
+          </div>
+          <div style={{ display: "flex", flexGrow: 1, flexBasis: 0, minWidth: 0 }}>{field("End date", "02 Oct", true)}</div>
+        </div>
+
+        <div style={{ display: "flex", marginBottom: u(12) }}>{field("Where is it shooting", "Lisbon, and one studio day", true)}</div>
+
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: theme.appTile,
+              borderRadius: u(R.pill),
+              paddingLeft: u(PAD.snug),
+              paddingRight: u(PAD.snug),
+              paddingTop: u(6),
+              paddingBottom: u(6),
+              fontSize: u(TYPE.caption),
+              color: theme.secondary,
+            }}
+          >
+            brief-v3.pdf
+          </div>
+          <div style={{ display: "flex", fontSize: u(TYPE.caption), color: theme.muted, marginLeft: u(10) }}>
+            Attached
+          </div>
+        </div>
+      </div>
+    </FeaturePanel>
+  );
+}
+
+/**
+ * The builder behind that form.
+ *
+ * The mapping chip on the right is the whole point of the screen, and the
+ * reason it is worth drawing separately from the form: an answer that lands
+ * in the project's locations or its kit list is different from an answer
+ * that lands in a paragraph of description, and nothing on the client's side
+ * of the form shows that.
+ */
+function IntakeBuilder(p: FrameProps) {
+  const { u, theme } = p;
+
+  const fields = [
+    { name: "Project title", type: "Always on", maps: "Title", tone: "neutral" as Tone },
+    { name: "Estimated budget", type: "Required", maps: "Budget", tone: "info" as Tone },
+    { name: "Where is it shooting", type: "Short text", maps: "On-site locations", tone: "purple" as Tone },
+    { name: "Kit you need us to bring", type: "Paragraph", maps: "Equipment", tone: "purple" as Tone },
+    { name: "Crew disciplines", type: "Dropdown", maps: "Required skills", tone: "purple" as Tone },
+  ];
+
+  return (
+    <FeaturePanel {...p} title="Intake form" action="Copy link">
+      <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+        <TableHead
+          {...p}
+          columns={[
+            { label: "Question", grow: true },
+            { label: "Type", width: u(96) },
+            { label: "Lands in", width: u(150) },
+          ]}
+        />
+
+        {fields.map((row, i, all) => (
+          <TableRow key={row.name} {...p} last={i === all.length - 1}>
+            <Cell {...p} title={row.name} grow />
+            <div style={{ display: "flex", width: u(96), fontSize: u(TYPE.caption), color: theme.muted, flexShrink: 0 }}>{row.type}</div>
+            <div style={{ display: "flex", width: u(150), flexShrink: 0 }}>
+              <Badge {...p} label={row.maps} tone={row.tone} />
+            </div>
+          </TableRow>
+        ))}
+      </div>
+    </FeaturePanel>
+  );
+}
+
+/**
+ * The queue those answers land in, and the decision at the end of it.
+ *
+ * The action row is the screen. A list of requests on its own says nothing
+ * a shared inbox does not already say; the thing worth showing is that one
+ * of the three buttons builds the project out of the answers rather than
+ * opening an empty one.
+ */
+function ProjectRequests(p: FrameProps) {
+  const { u, theme } = p;
+
+  const requests = [
+    { name: "Helix spring campaign", from: "Helix, portal", when: "2h ago", tone: "warning" as Tone, status: "New" },
+    { name: "Nebula product film", from: "Public link", when: "Yesterday", tone: "warning" as Tone, status: "New" },
+    { name: "Vesper brand refresh", from: "Aura, portal", when: "3d ago", tone: "success" as Tone, status: "Approved" },
+  ];
+
+  return (
+    <FeaturePanel {...p} title="Project requests" action="Export">
+      <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+        {requests.map((row, i, all) => (
+          <TableRow key={row.name} {...p} last={i === all.length - 1}>
+            <Cell {...p} title={row.name} sub={row.from} grow />
+            <div style={{ display: "flex", width: u(88), fontSize: u(TYPE.caption), color: theme.muted, flexShrink: 0 }}>{row.when}</div>
+            <div style={{ display: "flex", width: u(92), flexShrink: 0 }}>
+              <Badge {...p} label={row.status} tone={row.tone} />
+            </div>
+          </TableRow>
+        ))}
+
+        {/* The decision. Three buttons because there are three, and the
+            middle one is the one worth knowing about. */}
+        <div style={{ display: "flex", alignItems: "center", marginTop: u(16) }}>
+          <div style={{ display: "flex", marginRight: u(10) }}>
+            <Button {...p} label="Approve and set up" />
+          </div>
+          <div style={{ display: "flex", marginRight: u(10) }}>
+            {/* The product's own label. It may not say ABRAM: the name is
+                only ever the drawn mark, never the word in the body face,
+                and a pill button is no place for a lockup. */}
+            <Button {...p} label="AI auto-setup" primary />
+          </div>
+          <Button {...p} label="Reject" />
+        </div>
+
+        <div style={{ display: "flex", fontSize: u(TYPE.caption), color: theme.muted, marginTop: u(12) }}>
+          Work packages, milestones and deliverables, from the answers they gave.
+        </div>
+      </div>
+    </FeaturePanel>
+  );
+}
+
 export /**
  * Roughly how tall each panel draws, as a fraction of its width.
  *
@@ -2678,6 +2860,9 @@ const MOCKUP_ASPECT: Record<MockupKind, number> = {
   portal: 0.5,
   clienthome: 0.5,
   approval: 0.51,
+  requestform: 0.68,
+  intake: 0.46,
+  requests: 0.47,
   inventory: 0.4,
   resources: 0.44,
   skills: 0.37,
@@ -2719,6 +2904,9 @@ const MOCKUP_REFERENCE: Record<MockupKind, number> = {
   portal: 680,
   clienthome: 680,
   approval: 680,
+  requestform: 560,
+  intake: 680,
+  requests: 680,
   inventory: 680,
   resources: 680,
   skills: 680,
@@ -2751,6 +2939,9 @@ const SCREENS: Record<MockupKind, (props: FrameProps) => React.ReactElement> = {
   portal: Portal,
   clienthome: ClientHome,
   approval: Approval,
+  requestform: RequestForm,
+  intake: IntakeBuilder,
+  requests: ProjectRequests,
   inventory: Inventory,
   resources: Resources,
   skills: Skills,

@@ -8,7 +8,7 @@ const variant = CAMPAIGN_VARIANTS["start-agencies"];
 const SEO = {
   title: "Creative Agency Operations Software: Start Free",
   description:
-    "Take on more work without hiring for it. See real capacity, scope faster and keep the margin you quoted, with capacity planning, client intake, client portals and production accounting in one workspace.",
+    "Take on more work without hiring. See capacity, scope faster, and keep your margins with planning, intake, portals, and accounting in one workspace.",
   keywords: [
     "creative agency management software",
     "agency capacity planning",

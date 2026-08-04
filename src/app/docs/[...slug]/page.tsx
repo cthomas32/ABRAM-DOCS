@@ -375,8 +375,36 @@ export default async function DocPage({ params }: PageProps) {
   const authorName = doc.data.author || "ABRAM Network";
   const publisherName = doc.data.publisher || "ABRAM Network";
 
+  const isHowTo = doc.data.schemaType === "HowTo" || lowercaseTitle.startsWith("how to");
+
+  let howToSchema: any = null;
+  if (isHowTo) {
+    const steps: any[] = [];
+    let stepCount = 1;
+    // Extremely basic parsing for steps if they are marked as headings
+    const stepRegex = /^(?:###|##) (?:Step \d+:?|\d+\.)\s*(.*)$/gm;
+    let match;
+    while ((match = stepRegex.exec(doc.content)) !== null) {
+      steps.push({
+        "@type": "HowToStep",
+        "position": stepCount++,
+        "name": match[1].trim(),
+        "text": match[1].trim()
+      });
+    }
+
+    if (steps.length > 0) {
+      howToSchema = {
+        "@type": "HowTo",
+        "name": title,
+        "description": description,
+        "step": steps
+      };
+    }
+  }
+
   const articleSchema = {
-    "@type": doc.data.schemaType || "TechArticle",
+    "@type": doc.data.schemaType && doc.data.schemaType !== "HowTo" ? doc.data.schemaType : "TechArticle",
     "headline": title,
     "description": description,
     "keywords": finalKeywords.join(", "),
@@ -432,7 +460,7 @@ export default async function DocPage({ params }: PageProps) {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@graph": [articleSchema, breadcrumbSchema],
+    "@graph": howToSchema ? [articleSchema, breadcrumbSchema, howToSchema] : [articleSchema, breadcrumbSchema],
   };
 
   const hasInlineH1 = doc.content.trim().startsWith("# ");

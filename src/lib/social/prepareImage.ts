@@ -40,8 +40,23 @@ const MAX_EDGE = 2560;
  */
 const LEAVE_ALONE_BYTES = 1024 * 1024;
 
-/** WebP at this quality is visually clean on photographs and about half of JPEG. */
+/** JPEG at this quality is visually clean on photographs. */
 const QUALITY = 0.86;
+
+/**
+ * What the card renderer can actually draw.
+ *
+ * This is the constraint the whole file answers to, and it is not the
+ * browser's. Satori decodes PNG and JPEG; handed a WebP it does not fall
+ * back to a plain card, it takes the render down with it, so the studio
+ * preview returns nothing at all while the library grid beside it looks
+ * perfect, because the grid is a browser `<img>` and browsers read WebP.
+ *
+ * Uploads used to be re-encoded to WebP whenever they were scaled, which
+ * made every photograph over 2560 on its long edge unrenderable. A stock
+ * photograph is always over 2560 on its long edge.
+ */
+const RENDERABLE = ["image/jpeg", "image/png"];
 
 export interface PreparedImage {
   /** What to upload. The original file when nothing was worth changing. */
@@ -104,19 +119,26 @@ export async function prepareImage(file: File): Promise<PreparedImage> {
 
   const colour = averageColour(canvas);
 
-  // Small and already inside the cap: nothing to win, and re-encoding
-  // would only cost quality.
-  if (ratio === 1 && file.size <= LEAVE_ALONE_BYTES) {
+  // A file the renderer cannot draw has to be re-encoded however small it
+  // is, so the cheap exit is only open to the formats that already work.
+  const drawable = RENDERABLE.includes(file.type);
+
+  // Small, drawable and already inside the cap: nothing to win, and
+  // re-encoding would only cost quality.
+  if (drawable && ratio === 1 && file.size <= LEAVE_ALONE_BYTES) {
     return untouched(file, originalWidth, originalHeight, colour);
   }
 
-  const type = supportsWebp() ? "image/webp" : "image/jpeg";
+  const type = "image/jpeg";
   const encoded = await toBlob(canvas, type, QUALITY);
 
   // An encoder that gives back something larger than it was handed has
   // done the opposite of its job, so the original goes up instead. This is
-  // the ordinary outcome for flat graphics, where PNG beats both.
-  if (!encoded || (ratio === 1 && encoded.size >= file.size)) {
+  // the ordinary outcome for flat graphics, where PNG beats JPEG. It only
+  // applies to a file that was drawable to begin with: sending a WebP up
+  // untouched because it happened to be smaller is how the card ends up
+  // unable to draw it.
+  if (!encoded || (drawable && ratio === 1 && encoded.size >= file.size)) {
     return untouched(file, originalWidth, originalHeight, colour);
   }
 
@@ -134,6 +156,15 @@ export async function prepareImage(file: File): Promise<PreparedImage> {
   };
 }
 
+/**
+ * Upload exactly what was chosen.
+ *
+ * Only reached for a format the renderer can draw, or when the canvas
+ * refused to produce a blob at all. In that second case the type is left
+ * as it was rather than relabelled: mislabelling WebP bytes as JPEG would
+ * turn a picture that does not draw into a picture that does not draw and
+ * lies about why.
+ */
 function untouched(file: File, width: number, height: number, colour: string): PreparedImage {
   const type = EXTENSIONS[file.type] ? file.type : "image/jpeg";
   return {
@@ -210,18 +241,6 @@ function averageColour(source: HTMLCanvasElement): string {
 
 function toBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob | null> {
   return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
-}
-
-let webp: boolean | null = null;
-
-function supportsWebp(): boolean {
-  if (webp === null) {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1;
-    canvas.height = 1;
-    webp = canvas.toDataURL("image/webp").startsWith("data:image/webp");
-  }
-  return webp;
 }
 
 /** Bytes as somebody would say them, for the line under a tile. */

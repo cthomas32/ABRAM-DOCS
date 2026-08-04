@@ -33,6 +33,7 @@ import {
   BRAND_KINDS,
   BRAND_SCALES,
   EMPTY_SPEC,
+  FOOTER_MODES,
   LIST_FIELDS,
   MAX_ITEMS,
   MAX_SLIDES,
@@ -50,6 +51,7 @@ import {
   specToRenderPath,
   type SocialImageSpec,
   type BrandKind,
+  type FooterMode,
   type SocialSpecField,
   type SocialTemplateId,
 } from "@/lib/social/spec";
@@ -126,6 +128,40 @@ export function blankSeed(): StudioSeed {
     typeScale: 1,
     brandScale: 1,
     slides: [normalizeSpec({ ...EMPTY_SPEC })],
+  };
+}
+
+/**
+ * A seed for one card already in the library.
+ *
+ * The set-level fields live on the spec, so a single card speaks for all of
+ * them. The library builds the same thing for a carousel by reading them off
+ * slide one; this is the single-card half, pulled out so the calendar can
+ * open a post's card in the studio without restating the mapping and drifting
+ * from it.
+ */
+export function seedFromCard(card: { id: string; title: string; note?: string | null; spec: unknown }): StudioSeed {
+  const spec = normalizeSpec(card.spec);
+  return {
+    mode: "single",
+    title: card.title,
+    note: card.note || "",
+    format: spec.format,
+    theme: spec.theme,
+    backdrop: spec.backdrop,
+    backdropImage: spec.backdropImage,
+    backdropCrop: spec.backdropCrop,
+    backdropFocus: spec.backdropFocus,
+    backdropDim: spec.backdropDim,
+    backdropBase: spec.backdropBase,
+    backdropCredit: spec.backdropCredit,
+    backdropCreditSide: spec.backdropCreditSide,
+    placement: spec.placement,
+    grain: spec.grain,
+    typeScale: spec.typeScale,
+    brandScale: spec.brandScale,
+    slides: [spec],
+    assetId: card.id,
   };
 }
 
@@ -563,8 +599,16 @@ export default function SocialStudio({
         );
       } else {
         const result = await saveAsset({ id: seed.assetId, title, note, spec: currentSpec });
+        // Say when the edit travelled. A card that quietly rewrote two other
+        // sizes, and sent them back to draft doing it, is worth a sentence:
+        // the alternative is finding out on the morning a post goes out.
+        const synced = result.data?.synced ?? 0;
+        const carried =
+          synced > 0
+            ? ` The same words went to ${synced} other ${synced === 1 ? "size" : "sizes"}, back to draft with it.`
+            : "";
         onSaved(
-          result.error || "Saved as a draft. Approve it in the library to get a public address.",
+          result.error || `Saved as a draft. Approve it in the library to get a public address.${carried}`,
           result.error ? "error" : "success"
         );
       }
@@ -1123,8 +1167,25 @@ export default function SocialStudio({
             </Group>
 
             <Group
+              label="Footer"
+              hint="The bar along the bottom: the footnote on the left, the call to action on the right. Turn a side off when both would say the same thing, which is how a card ends up with the domain printed at each end of one rule."
+            >
+              <div className="flex flex-wrap gap-2">
+                {FOOTER_MODES.map((mode) => (
+                  <Chip
+                    key={mode.id}
+                    active={current.footer === mode.id}
+                    onClick={() => patch({ footer: mode.id as FooterMode })}
+                  >
+                    {mode.label}
+                  </Chip>
+                ))}
+              </div>
+            </Group>
+
+            <Group
               label="Corner rule"
-              hint="The short laser line in the top left, echoing the site. Take it off for the quiet cards; the poster drops it either way."
+              hint="The short laser streak in the top left, echoing the site. Off by default: it sits above the mark and takes the first look off the words. The poster drops it either way."
             >
               <div className="flex gap-2">
                 <Chip active={current.showRule} onClick={() => patch({ showRule: true })}>

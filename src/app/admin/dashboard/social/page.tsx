@@ -3,7 +3,8 @@
 import React, { useCallback, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, Image as ImageIcon, Images, LayoutGrid, LibraryBig, Wand2, X } from "lucide-react";
-import SocialStudio, { blankSeed, type StudioSeed } from "@/components/admin/social/SocialStudio";
+import SocialStudio, { blankSeed, seedFromCard, type StudioSeed } from "@/components/admin/social/SocialStudio";
+import { createClient } from "@/utils/supabase/client";
 import SocialLibrary from "@/components/admin/social/SocialLibrary";
 import SocialCalendar from "@/components/admin/social/SocialCalendar";
 import ImageLibrary from "@/components/admin/social/ImageLibrary";
@@ -53,23 +54,68 @@ export default function SocialPage() {
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 5000);
   }, []);
 
+  /**
+   * The post to go back to once the studio has saved.
+   *
+   * Set only when the studio was opened from a post, which is what makes
+   * Edit card a round trip rather than a one-way door: a save lands you back
+   * on the calendar with the sheet open where you left it. Everything else
+   * still finishes in the library, where a card that belongs to nothing in
+   * particular is meant to end up.
+   */
+  const [returnToPost, setReturnToPost] = useState<string | null>(null);
+
   const handleSaved = useCallback(
     (message: string, tone: "success" | "error") => {
       notify(message, tone);
-      if (tone === "success") {
-        setRefreshToken((n) => n + 1);
-        setTab("library");
-      }
+      if (tone !== "success") return;
+      setRefreshToken((n) => n + 1);
+      setTab(returnToPost ? "calendar" : "library");
     },
-    [notify]
+    [notify, returnToPost]
   );
 
   const handleEdit = useCallback((next: StudioSeed) => {
+    setReturnToPost(null);
     setSeed(next);
     setTab("studio");
   }, []);
 
+  /**
+   * Open a post's card in the studio.
+   *
+   * The card is read here rather than passed down from the post sheet, which
+   * only ever held a thumbnail and a format. The spec is what the studio
+   * needs, and reading it at the moment of the click means it is the current
+   * one even if the card was edited in another tab.
+   */
+  const handleEditCard = useCallback(
+    async (assetId: string, postId: string) => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("social_image_assets")
+        .select("id, title, note, spec, set_id")
+        .eq("id", assetId)
+        .single();
+
+      if (error || !data) {
+        notify(error?.message || "That card is no longer in the library.", "error");
+        return;
+      }
+      if (data.set_id) {
+        notify("That post is on a carousel. Open it from the library to edit every slide together.", "error");
+        return;
+      }
+
+      setSeed(seedFromCard(data));
+      setReturnToPost(postId || null);
+      setTab("studio");
+    },
+    [notify]
+  );
+
   const startBlank = () => {
+    setReturnToPost(null);
     setSeed(blankSeed());
     setTab("studio");
   };
@@ -126,7 +172,13 @@ export default function SocialPage() {
         </div>
 
         {tab === "calendar" ? (
-          <SocialCalendar onNotify={notify} refreshToken={refreshToken} />
+          <SocialCalendar
+            onNotify={notify}
+            refreshToken={refreshToken}
+            onEditCard={handleEditCard}
+            reopenPostId={returnToPost}
+            onReopened={() => setReturnToPost(null)}
+          />
         ) : tab === "studio" ? (
           <SocialStudio seed={seed} onSaved={handleSaved} onNotify={notify} />
         ) : (

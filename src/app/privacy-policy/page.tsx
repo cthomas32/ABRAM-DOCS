@@ -20,6 +20,17 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: 'https://abram.network/privacy-policy',
     },
+    openGraph: {
+      title: data.title || "Privacy Policy | ABRAM Network",
+      description: data.description || "Privacy Policy for the ABRAM creative intelligence platform.",
+      type: 'website',
+      url: 'https://abram.network/privacy-policy',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.title || "Privacy Policy | ABRAM Network",
+      description: data.description || "Privacy Policy for the ABRAM creative intelligence platform.",
+    },
   };
 }
 

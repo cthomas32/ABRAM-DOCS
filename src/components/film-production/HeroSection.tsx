@@ -66,7 +66,7 @@ export default function HeroSection() {
               href="#interactive-playground" 
               className="btn-glass group flex items-center justify-center gap-1 cursor-pointer w-full sm:w-auto min-h-[44px] md:min-h-0"
             >
-              <span>Learn More</span>
+              <span>Explore Scheduling Tools</span>
               <ArrowDown className="h-3.5 w-3.5 opacity-70 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all duration-200" />
             </a>
           </motion.div>

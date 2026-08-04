@@ -1,3 +1,13 @@
+---
+title: Welcome to ABRAM Help Center
+sidebarTitle: Welcome
+description: Welcome to the ABRAM documentation. Find guides, tutorials, and policies here.
+keywords:
+  - ABRAM
+  - documentation
+  - user guide
+---
+
 # ABRAM Network - User Guide Directory
 
 Welcome to the **ABRAM Network User Guide**. This documentation directory serves as the comprehensive manual for creative producers, agencies, production managers, and specialized freelancers using the ABRAM production management platform. 
@@ -11,7 +21,7 @@ This guide is structured around active workflows in the **Management Phase** of 
 * **[0.0 User & AI Assistant Navigation Guide](./0.0-agent-and-human-navigation-guide.md)**: Introduction to reading these guides as a human user or parsing them as an AI agent/chatbot.
 * **[0.1 Glossary & Acronym Reference](./0.1-glossary-and-acronyms.md)**: Quick definitions of industry terms, payment jargon, and technical integration acronyms.
 * **[0.2 Order of Operations Guide](./0.2-order-of-operations.mdx)**: Chronological step-by-step workflow tracing a project from intake to final freelancer payouts.
-* **[0.3 AI Capabilities & the Abram Assistant](./0.3-ai-capabilities-and-copilot.md)**: Details of ABRAM's AI features, including Brief Intelligence, crew suggestions, the AI resume importer, Agent Skills, and the Abram assistant.
+* **[0.3 AI Capabilities & the ABRAM Assistant](./0.3-ai-capabilities-and-copilot.md)**: Details of ABRAM's AI features, including Brief Intelligence, crew suggestions, the AI resume importer, Agent Skills, and the ABRAM assistant.
 * **[0.4 ABRAM Memory & Organization Brain](./0.4-production-brain-and-workspace-memory.mdx)**: How the personal ABRAM Memory and the shared Organization Brain store knowledge, plus the admin review workflow that governs shared facts.
  
 ### 🚪 [Section 1: Getting Started, Organizations & Team Setup](./1.1-signing-in-and-onboarding.md)

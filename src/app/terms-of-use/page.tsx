@@ -20,6 +20,17 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: 'https://abram.network/terms-of-use',
     },
+    openGraph: {
+      title: data.title || "Terms of Use | ABRAM Network",
+      description: data.description || "Terms of Use for the ABRAM creative intelligence platform.",
+      type: 'website',
+      url: 'https://abram.network/terms-of-use',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.title || "Terms of Use | ABRAM Network",
+      description: data.description || "Terms of Use for the ABRAM creative intelligence platform.",
+    },
   };
 }
 

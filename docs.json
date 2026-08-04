@@ -115,7 +115,11 @@
             "icon": "help-circle",
             "pages": [
               "user-guide/7.1-faqs-and-troubleshooting",
-              "user-guide/7.2-cookie-consent-and-tag-behavior"
+              "user-guide/7.2-cookie-consent-and-tag-behavior",
+              "user-guide/ABRAM_Acceptable_Use_Policy",
+              "user-guide/ABRAM_Accessibility_Statement",
+              "user-guide/ABRAM_Privacy_Policy",
+              "user-guide/ABRAM_Terms_of_Use"
             ]
           }
         ]

@@ -20,6 +20,17 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: 'https://abram.network/acceptable-use-policy',
     },
+    openGraph: {
+      title: data.title || "Acceptable Use Policy | ABRAM Network",
+      description: data.description || "Acceptable Use Policy for the ABRAM creative intelligence platform.",
+      type: 'website',
+      url: 'https://abram.network/acceptable-use-policy',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.title || "Acceptable Use Policy | ABRAM Network",
+      description: data.description || "Acceptable Use Policy for the ABRAM creative intelligence platform.",
+    },
   };
 }
 

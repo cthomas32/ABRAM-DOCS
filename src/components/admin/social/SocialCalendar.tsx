@@ -93,9 +93,21 @@ const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export default function SocialCalendar({
   onNotify,
   refreshToken,
+  onEditCard,
+  reopenPostId,
+  onReopened,
 }: {
   onNotify: (message: string, tone: "success" | "error") => void;
   refreshToken: number;
+  /** Hand a post's card to the studio, remembering the post to come back to. */
+  onEditCard: (assetId: string, postId: string) => void;
+  /**
+   * A post to open as soon as it is on screen, set when the studio sends us
+   * back after editing its card. Cleared through `onReopened` so the sheet
+   * does not spring open again every time the week is reloaded.
+   */
+  reopenPostId?: string | null;
+  onReopened?: () => void;
 }) {
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
   const [posts, setPosts] = useState<SocialPostRow[]>([]);
@@ -147,6 +159,21 @@ export default function SocialCalendar({
   useEffect(() => {
     load();
   }, [load, refreshToken]);
+
+  /**
+   * Come back to the post whose card was just edited.
+   *
+   * Waits for the week to hold it, because the studio can hand back a post
+   * on a day the calendar has since been scrolled away from. If the post is
+   * not in the loaded range the request is dropped rather than left pending,
+   * so it cannot fire later against a different week.
+   */
+  useEffect(() => {
+    if (!reopenPostId || loading) return;
+    const found = posts.find((row) => row.id === reopenPostId);
+    if (found) setEditing({ post: found, date: found.scheduled_for.slice(0, 10) });
+    onReopened?.();
+  }, [reopenPostId, loading, posts, onReopened]);
 
   const visiblePosts = useMemo(
     () => (campaignFilter === "all" ? posts : posts.filter((post) => post.campaign_id === campaignFilter)),
@@ -446,6 +473,7 @@ export default function SocialCalendar({
             load();
           }}
           onNotify={onNotify}
+          onEditCard={onEditCard}
         />
       ) : null}
 

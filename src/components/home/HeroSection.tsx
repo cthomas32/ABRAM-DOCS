@@ -55,6 +55,7 @@ export default function HeroSection() {
           width={115}
           height={23}
           priority
+          fetchPriority="high"
           className="h-[23px] w-auto opacity-100"
         />
       </div>
@@ -71,6 +72,7 @@ export default function HeroSection() {
             alt="Cinematic Sunset Mountains"
             fill
             priority
+            fetchPriority="high"
             sizes="100vw"
             className="object-cover object-center select-none"
           />

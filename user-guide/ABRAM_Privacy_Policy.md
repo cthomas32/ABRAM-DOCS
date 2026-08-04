@@ -1,5 +1,6 @@
 ---
 title: Privacy Policy
+sidebarTitle: Privacy Policy
 description: Privacy Policy for the ABRAM creative intelligence platform.
 keywords:
   - ABRAM

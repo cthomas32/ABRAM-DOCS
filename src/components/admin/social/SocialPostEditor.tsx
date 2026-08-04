@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Check, ImageOff, Loader2, Search, X } from "lucide-react";
+import { Check, ImageOff, Loader2, Pencil, Plus, Search, X } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { SOCIAL_FORMATS, type SocialFormatId } from "@/lib/social/formats";
 import { normalizeSpec, specToRenderPath } from "@/lib/social/spec";
 import { buildTrackedLink } from "@/lib/social/links";
 import { savePost, type SocialCampaignRow, type SocialPostRow } from "@/app/admin/dashboard/social/calendarActions";
-import type { SocialAssetRow } from "@/app/admin/dashboard/social/actions";
+import { createVariation, type SocialAssetRow } from "@/app/admin/dashboard/social/actions";
 
 /**
  * Writing one post.
@@ -52,12 +52,22 @@ const FIELD =
 interface AssetChoice {
   id: string;
   setId: string | null;
+  variationId: string | null;
   title: string;
   preview: string;
   format: SocialFormatId;
   slides: number;
   status: string;
 }
+
+/**
+ * The sizes offered as variations, in the order the studio offers them.
+ *
+ * Banner is left out on purpose: a LinkedIn profile header is not something
+ * a dated post goes out as, and offering it here would put a size on the
+ * list that no channel on the calendar can use.
+ */
+const VARIATION_FORMATS: SocialFormatId[] = ["square", "portrait", "story", "landscape", "wide"];
 
 function toChoices(rows: SocialAssetRow[]): AssetChoice[] {
   const sets = new Map<string, SocialAssetRow[]>();
@@ -74,6 +84,7 @@ function toChoices(rows: SocialAssetRow[]): AssetChoice[] {
     choices.push({
       id: row.id,
       setId: null,
+      variationId: row.variation_id,
       title: row.title,
       preview: row.public_url || specToRenderPath(spec),
       format: row.format as SocialFormatId,
@@ -89,6 +100,9 @@ function toChoices(rows: SocialAssetRow[]): AssetChoice[] {
     choices.push({
       id: first.id,
       setId,
+      // A carousel takes its sizes as a set, so its slides never join a
+      // variation group and the row below stays off for them.
+      variationId: null,
       title: first.title.replace(/\s+\d+\/\d+$/, ""),
       preview: first.public_url || specToRenderPath(spec),
       format: first.format as SocialFormatId,
@@ -109,6 +123,7 @@ export default function SocialPostEditor({
   onClose,
   onSaved,
   onNotify,
+  onEditCard,
 }: {
   /** Absent when writing a new post */
   post: SocialPostRow | null;
@@ -119,6 +134,12 @@ export default function SocialPostEditor({
   onClose: () => void;
   onSaved: () => void;
   onNotify: (message: string, tone: "success" | "error") => void;
+  /**
+   * Hand the post's card to the studio. The post is saved first and its id
+   * goes with it, so saving in the studio can bring the sheet back rather
+   * than dropping you on the calendar wondering what you were doing.
+   */
+  onEditCard: (assetId: string, postId: string) => void;
 }) {
   const [date, setDate] = useState(post?.scheduled_for?.slice(0, 10) || defaultDate);
   const [channel, setChannel] = useState(post?.channel || channels[0]?.source || "linkedin");
@@ -132,6 +153,7 @@ export default function SocialPostEditor({
   const [assetId, setAssetId] = useState(post?.asset_id || "");
   const [setId, setSetId] = useState(post?.set_id || "");
   const [saving, setSaving] = useState(false);
+  const [busyFormat, setBusyFormat] = useState<SocialFormatId | null>(null);
 
   const [assets, setAssets] = useState<AssetChoice[]>([]);
   const [assetQuery, setAssetQuery] = useState("");
@@ -155,26 +177,23 @@ export default function SocialPostEditor({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("social_image_assets")
-        .select("*")
-        .neq("status", "archived")
-        .order("created_at", { ascending: false })
-        .limit(200);
+  const loadAssets = useCallback(async () => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("social_image_assets")
+      .select("*")
+      .neq("status", "archived")
+      .order("created_at", { ascending: false })
+      .limit(200);
 
-      if (cancelled) return;
-      if (error) onNotify(error.message, "error");
-      setAssets(toChoices((data as SocialAssetRow[]) || []));
-      setLoadingAssets(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
+    if (error) onNotify(error.message, "error");
+    setAssets(toChoices((data as SocialAssetRow[]) || []));
+    setLoadingAssets(false);
   }, [onNotify]);
+
+  useEffect(() => {
+    void loadAssets();
+  }, [loadAssets]);
 
   const campaign = useMemo(() => campaigns.find((c) => c.id === campaignId) || null, [campaigns, campaignId]);
   const page = useMemo(() => pages.find((p) => p.slug === pageSlug) || null, [pages, pageSlug]);
@@ -209,24 +228,48 @@ export default function SocialPostEditor({
     setSetId(asset?.setId || "");
   }, []);
 
+  /** The card this post is on, once the library has loaded. */
+  const chosen = useMemo(() => assets.find((asset) => asset.id === assetId) || null, [assets, assetId]);
+
+  /**
+   * The other sizes of the chosen card, keyed by format.
+   *
+   * A card with no group is a group of one: the size it already is, and
+   * every other size offered as something to make. That is the same shape as
+   * a card that has siblings, so the row below does not need two versions.
+   */
+  const variations = useMemo(() => {
+    if (!chosen || chosen.setId) return new Map<SocialFormatId, AssetChoice>();
+    const group = new Map<SocialFormatId, AssetChoice>();
+    group.set(chosen.format, chosen);
+    if (!chosen.variationId) return group;
+    for (const asset of assets) {
+      if (asset.variationId === chosen.variationId) group.set(asset.format, asset);
+    }
+    return group;
+  }, [assets, chosen]);
+
+  const savePostRow = useCallback(async () => {
+    return savePost({
+      id: post?.id,
+      campaignId: campaignId || null,
+      scheduledFor: date,
+      slot: post?.slot,
+      channel,
+      caption,
+      linkUrl: link,
+      pageSlug: pageSlug || null,
+      assetId: assetId || null,
+      setId: setId || null,
+      altText,
+      note,
+    });
+  }, [post?.id, post?.slot, campaignId, date, channel, caption, link, pageSlug, assetId, setId, altText, note]);
+
   const handleSave = async () => {
     setSaving(true);
     try {
-      const result = await savePost({
-        id: post?.id,
-        campaignId: campaignId || null,
-        scheduledFor: date,
-        slot: post?.slot,
-        channel,
-        caption,
-        linkUrl: link,
-        pageSlug: pageSlug || null,
-        assetId: assetId || null,
-        setId: setId || null,
-        altText,
-        note,
-      });
-
+      const result = await savePostRow();
       if (result.error) {
         onNotify(result.error, "error");
         return;
@@ -235,6 +278,50 @@ export default function SocialPostEditor({
       onSaved();
     } finally {
       setSaving(false);
+    }
+  };
+
+  /**
+   * Save the post, then hand its card to the studio.
+   *
+   * Saving first is the whole reason this is not just a link: leaving for
+   * the studio with an unsaved caption in the box would throw the caption
+   * away, and losing typed words to a button labelled Edit is the kind of
+   * thing nobody forgives.
+   */
+  const handleEditCard = async () => {
+    if (!assetId) return;
+    setSaving(true);
+    try {
+      const result = await savePostRow();
+      if (result.error) {
+        onNotify(result.error, "error");
+        return;
+      }
+      onEditCard(assetId, result.data?.id || post?.id || "");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  /** Make a size this card does not have yet, and move the post onto it. */
+  const handleAddSize = async (format: SocialFormatId) => {
+    if (!assetId) return;
+    setBusyFormat(format);
+    try {
+      const result = await createVariation(assetId, format);
+      if (result.error || !result.data) {
+        onNotify(result.error || "That size could not be made.", "error");
+        return;
+      }
+      // Refetched rather than patched in: the new row needs a real preview,
+      // and the only thing that knows how to draw one is the spec the server
+      // just wrote. Guessing at it here would put a wrong thumbnail on screen
+      // until the next open.
+      await loadAssets();
+      onNotify(`${SOCIAL_FORMATS[format].label} added, carrying the same words. It is a draft.`, "success");
+    } finally {
+      setBusyFormat(null);
     }
   };
 
@@ -463,6 +550,73 @@ export default function SocialPostEditor({
               A draft card is fine to schedule. Marking the post ready publishes it, which is what gives the morning
               message a picture to carry.
             </p>
+
+            {/* What is on the card, and the other sizes of it. Only for a
+                single card: a carousel takes its sizes as a set, and its
+                slides are edited together in the studio. */}
+            {chosen && !chosen.setId ? (
+              <div className="flex flex-col gap-3 rounded-xl border border-white/8 bg-white/[0.02] p-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-zinc-200 truncate">{chosen.title}</p>
+                    <p className="text-[11px] text-zinc-600">
+                      {SOCIAL_FORMATS[chosen.format].label}
+                      {variations.size > 1 ? `, one of ${variations.size} sizes` : ""}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleEditCard}
+                    disabled={saving}
+                    className="btn-glass flex items-center gap-2 rounded-full px-3.5 py-2 text-[11px] font-semibold min-h-[44px] sm:min-h-[36px] disabled:opacity-50"
+                  >
+                    <Pencil className="w-3 h-3" />
+                    Edit card
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <span className={LABEL}>Sizes</span>
+                  <div className="flex flex-wrap gap-2">
+                    {VARIATION_FORMATS.map((option) => {
+                      const existing = variations.get(option);
+                      const isThisPost = existing?.id === assetId;
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          disabled={busyFormat !== null}
+                          onClick={() => (existing ? chooseAsset(existing) : handleAddSize(option))}
+                          title={
+                            existing
+                              ? `Put this post on the ${SOCIAL_FORMATS[option].label.toLowerCase()}`
+                              : `Make a ${SOCIAL_FORMATS[option].label.toLowerCase()} carrying the same words`
+                          }
+                          className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors min-h-[44px] sm:min-h-[34px] disabled:opacity-40 ${
+                            isThisPost
+                              ? "bg-white text-black border-white"
+                              : existing
+                                ? "bg-white/[0.06] text-zinc-200 border-white/15 hover:border-white/30"
+                                : "bg-transparent text-zinc-500 border-dashed border-white/12 hover:text-zinc-300"
+                          }`}
+                        >
+                          {busyFormat === option ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : existing ? null : (
+                            <Plus className="w-3 h-3" />
+                          )}
+                          {SOCIAL_FORMATS[option].label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[11px] text-zinc-600 leading-relaxed">
+                    One message in several sizes. Editing any of them rewrites the others, so the words only get
+                    written once, and each one goes back to draft when they change.
+                  </p>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

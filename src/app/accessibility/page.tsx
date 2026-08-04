@@ -22,6 +22,17 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: 'https://abram.network/accessibility',
     },
+    openGraph: {
+      title: data.title || "Accessibility Statement | ABRAM Network",
+      description: data.description || "Accessibility Statement for the ABRAM creative intelligence platform.",
+      type: 'website',
+      url: 'https://abram.network/accessibility',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.title || "Accessibility Statement | ABRAM Network",
+      description: data.description || "Accessibility Statement for the ABRAM creative intelligence platform.",
+    },
   };
 }
 

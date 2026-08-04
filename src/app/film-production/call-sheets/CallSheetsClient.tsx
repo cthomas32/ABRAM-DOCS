@@ -78,7 +78,7 @@ export default function CallSheetsClient() {
                 href="#core-features" 
                 className="btn-glass group flex items-center justify-center gap-1 cursor-pointer w-full sm:w-auto min-h-[44px] md:min-h-0"
               >
-                <span>Learn More</span>
+                <span>Explore Call Sheets</span>
                 <ArrowDown className="h-3.5 w-3.5 opacity-75 group-hover:translate-y-0.5 transition-transform" />
               </a>
             </motion.div>

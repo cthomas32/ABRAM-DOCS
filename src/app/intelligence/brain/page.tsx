@@ -7,7 +7,7 @@ import EstimateLearning from '@/components/production-brain/EstimateLearning';
 
 export const metadata: Metadata = {
   title: 'ABRAM, the Core AI for Creative Production',
-  description: 'ABRAM is the core AI for creative production: ask in plain language, approve real actions, and build a Production Brain that remembers crews, rates, and estimates across every campaign.',
+  description: 'ABRAM is the core AI for production: ask in plain language, approve actions, and build a Production Brain that remembers crews, rates, and estimates.',
   keywords: [
     'creative production software', 'creative production tools', 'creative operations platform',
     'core AI for production', 'ABRAM Copilot', 'conversational production AI',
@@ -21,14 +21,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'ABRAM, the Core AI for Creative Production | ABRAM Network',
-    description: 'Ask in plain language, approve real actions, and build a Production Brain that remembers crews, rates, and estimates across every campaign.',
+    description: 'Ask in plain language, approve actions, and build a Production Brain that remembers crews, rates, and estimates.',
     type: 'website',
     url: 'https://abram.network/intelligence/brain',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ABRAM, the Core AI for Creative Production | ABRAM Network',
-    description: 'Ask in plain language, approve real actions, and build a Production Brain that remembers crews, rates, and estimates across every campaign.',
+    description: 'Ask in plain language, approve actions, and build a Production Brain that remembers crews, rates, and estimates.',
   },
 };
 

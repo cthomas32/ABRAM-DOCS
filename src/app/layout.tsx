@@ -93,9 +93,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} h-full antialiased dark`}>
       <head>
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       </head>
       <body className="min-h-full bg-background-base text-foreground font-sans">
@@ -200,13 +200,14 @@ export default function RootLayout({
                   ]
                 },
                 {
-                  '@type': 'WebApplication',
+                  '@type': 'SoftwareApplication',
                   '@id': 'https://app.abram.network/#application',
                   'name': 'ABRAM App',
                   'applicationCategory': 'BusinessApplication',
                   'operatingSystem': 'Web Browser',
                   'browserRequirements': 'Requires HTML5, CSS3, and JavaScript enabled. Compatible with Chrome, Safari, Firefox, and Edge.',
                   'description': 'Web-based application workspace for managing creative agency and studio production logistics, scheduling, and billing.',
+                  'url': 'https://app.abram.network',
                   'offers': {
                     '@type': 'Offer',
                     'price': '0',

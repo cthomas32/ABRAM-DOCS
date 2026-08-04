@@ -48,7 +48,7 @@
       "0.3-ai-capabilities-and-copilot"
     ],
     "path": "user-guide/0.3-ai-capabilities-and-copilot",
-    "title": "AI Capabilities & Abram",
+    "title": "AI Capabilities & Assistant",
     "group": "Introduction & Concepts",
     "groupIcon": "compass",
     "product": "Help Center"
@@ -478,6 +478,50 @@
     ],
     "path": "user-guide/7.2-cookie-consent-and-tag-behavior",
     "title": "Cookie Consent & Tag Behavior",
+    "group": "FAQs & Support",
+    "groupIcon": "help-circle",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "ABRAM_Acceptable_Use_Policy"
+    ],
+    "path": "user-guide/ABRAM_Acceptable_Use_Policy",
+    "title": "Acceptable Use Policy",
+    "group": "FAQs & Support",
+    "groupIcon": "help-circle",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "ABRAM_Accessibility_Statement"
+    ],
+    "path": "user-guide/ABRAM_Accessibility_Statement",
+    "title": "Accessibility Statement",
+    "group": "FAQs & Support",
+    "groupIcon": "help-circle",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "ABRAM_Privacy_Policy"
+    ],
+    "path": "user-guide/ABRAM_Privacy_Policy",
+    "title": "Privacy Policy",
+    "group": "FAQs & Support",
+    "groupIcon": "help-circle",
+    "product": "Help Center"
+  },
+  {
+    "slug": [
+      "user-guide",
+      "ABRAM_Terms_of_Use"
+    ],
+    "path": "user-guide/ABRAM_Terms_of_Use",
+    "title": "Terms of Use",
     "group": "FAQs & Support",
     "groupIcon": "help-circle",
     "product": "Help Center"

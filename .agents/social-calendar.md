@@ -37,6 +37,45 @@ still a person's click, and it is still the only thing that writes a PNG.
 
 ---
 
+## The card on a post, and its other sizes
+
+A post used to be able to *pick* a card and nothing else, so fixing a typo meant leaving the
+calendar, finding the card in the library, remembering which post it was for, and coming back.
+
+**Edit card** is on the post sheet, next to whichever card is on it. It saves the post first and
+then opens the card in the studio with every control, and saving there brings you back to the
+calendar with the sheet open where you left it. Saving first is the point rather than a detail: a
+caption typed and not yet saved would otherwise be thrown away by a button labelled Edit.
+
+A carousel is the exception. Its slides are written together, so the post sheet sends you to the
+library for those rather than opening slide one on its own.
+
+### Variations are sizes, not versions
+
+The same message usually has to go out as a square on LinkedIn, a portrait on Instagram and a
+story. Those were three unrelated rows, which meant editing the headline fixed one of them and the
+other two went out saying the old thing.
+
+**Sizes** on the post sheet shows the five a dated post can use, with the ones that exist filled in
+and the rest offered as something to make. Making one copies the card's whole spec into the new
+format. Tapping a size that exists puts *this post* on it.
+
+- **A variation group shares everything except its format.** The renderer already adapts a card to
+  its size on its own, scaling type from `formats.ts` and keeping clear of the story and banner
+  safe areas through `contentInsets`, so there is nothing left that a second size needs to hold
+  differently. Syncing only the words would strand a theme or backdrop change on one size.
+- **Editing any size rewrites the others, and sends them back to draft.** Their PNGs no longer
+  match their specs, and serving a stale file at an address somebody already pasted is worse than
+  asking for another approval. The studio says how many travelled.
+- **One size per group**, enforced by a unique index. Two squares in one group is an ambiguity the
+  post picker could not resolve and the sync would have no reason to prefer either.
+- **Banner is not offered.** A LinkedIn profile header is not something a dated post goes out as.
+
+Null `variation_id` means a card standing on its own, which is most of them. The first size added
+mints the group and puts the original in it.
+
+---
+
 ## The morning message
 
 Runs daily at **11:12 UTC**, which is 07:12 ET in summer and 06:12 ET in winter. GitHub cron

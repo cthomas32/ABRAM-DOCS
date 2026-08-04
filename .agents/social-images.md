@@ -4,7 +4,9 @@ Post images are **rendered from code**, the same way the site's link previews al
 There is one renderer, one set of templates, and one palette, and everything comes out of it: the
 Open Graph card on a campaign page, a square for the feed, a story, a carousel.
 
-- **Studio and library:** Admin → **Social Studio** (`/admin/dashboard/social`).
+- **Studio and library:** Admin → **Social Studio** (`/admin/dashboard/social`). A card can also be
+  opened straight from the post it is on, and carries its other sizes with it: see
+  [`social-calendar.md`](./social-calendar.md).
 - **Where a card ends up:** [`social-calendar.md`](./social-calendar.md), which covers the day,
   channel, caption and link that carry it, and the morning Slack message that delivers the pack.
 - **Renderer:** [`src/lib/social/`](../src/lib/social/) — `render.tsx` draws, `mockups.tsx` draws the
@@ -308,6 +310,30 @@ as a real field, because a version badge is the point of that layout.
 
 Turn it on where it carries something the card cannot get any other way: a version, or where you
 are in a carousel. The four presets that still have one are exactly those cases.
+
+### The footer, and the two slots that used to argue
+
+The bar along the bottom has two slots doing different jobs: the **footnote** on the left is the
+invitation, and the right is the **cta**, or `Swipe` when the card is one of a set. Both drew
+whenever either had words in it, so a card that set the footnote and the cta to the same string
+printed `abram.network` at each end of one rule. That reads as a rendering fault rather than as a
+decision, and it was reaching real cards because `social-draft.js` defaulted the cta to the domain:
+any proposal with `footnote: "abram.network"` got it twice without asking.
+
+The default is gone, and **Footer** is a control in the studio and a set-level field in a proposal:
+`both`, `left`, `right`, `none`. `none` takes the bar and its rule away entirely and gives the
+height back to the copy, which is what a card carrying its address in the words already wants.
+
+Give a card a footnote **or** a cta. Where it genuinely has both, they have to be two different
+things: the campaign link previews put the trust line on the left and the domain on the right, and
+that is the shape the two slots were built for.
+
+### The corner rule is off now
+
+The short laser streak across the top left echoes a detail on the site, and on a card it sits above
+the mark and takes the first look off the words. It was on unless a card said otherwise. It is off
+unless a card asks, which flips `showRule` to opt-in: an absent flag on an existing draft now means
+no streak. Approved cards are already PNGs and are untouched. The poster drops it either way.
 
 Four layouts are worth a note:
 
