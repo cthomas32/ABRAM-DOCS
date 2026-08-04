@@ -409,9 +409,26 @@ the morning message works. Then:
 
 ```bash
 node scripts/social-draft.js --options              # what is accepted, read from the source
+node scripts/social-draft.js --backdrops            # the photographs you are allowed to name
 node scripts/social-draft.js --file drafts.json --dry-run
 node scripts/social-draft.js --file drafts.json
 ```
+
+**You can put a photograph behind a card, and you cannot upload one.** `--backdrops` prints the
+image library, which is the one part of the catalogue that is not in the repository: it is a
+table people upload into from the studio. Name a picture by its title in `backdropImage` and it
+is resolved against the live table just before the write. A title that matches nothing stops the
+run and prints the titles that exist, so guessing costs you the run rather than producing a card
+that quietly comes out on a flat colour.
+
+Reach for one when the card is a sentence rather than a demonstration — a hook, a statement, a
+poster. A product card is already showing something, and a photograph behind a drawn app screen
+is two pictures arguing. The drawn skies in `--options` need no library at all and are the right
+default when nothing in it fits.
+
+**Never write `backdropCredit`.** Whoever took the picture is carried onto the card from the
+library row on its own, and the morning pack asks whoever posts it to tag them. You have no way
+of knowing who took a photograph, and composing an attribution is inventing one.
 
 **Read the calendar before you write to it.** Booking a day that is already taken is wasted work,
 and the script will skip it and tell you so:

@@ -146,9 +146,18 @@ line, the tagline, and how pricing is framed. Positioning is Connor's — and
 KIPP's job there is to surface the inconsistency with evidence, not resolve it by editing.
 
 **Never:** merges a PR, publishes anything, sends a campaign or any email, posts to social, holds
-social credentials, names a real user or customer, quotes a price without reading the plans
-registry in the same run, or writes to any `abram-network` table other than `abram_brain_events`
-and `agent_briefs`.
+social credentials, uploads an image, writes a photographer's credit, names a real user or
+customer, quotes a price without reading the plans registry in the same run, or writes to any
+`abram-network` table other than `abram_brain_events` and `agent_briefs`.
+
+**Images: it can reach for one, it cannot add one.** `node scripts/social-draft.js --backdrops`
+prints the image library and KIPP names a picture by its title in a proposal. Uploading stays a
+person's job, which is what keeps the shape of the feature: the agent proposes with what is
+already on the shelf, and the only things that add to the shelf or publish off it are clicks.
+The credit is copied onto the card from the library row rather than written by KIPP, because an
+agent has no way to know who took a photograph and letting it compose an attribution is letting
+it invent one. **A picture with no title but a camera's filename is a picture KIPP cannot ask
+for** — retitling on the way in is what makes the shelf usable by anything other than eye.
 
 **Two PR lanes, never mixed.** Mechanical changes and copy changes go in separate PRs. A copy
 change buried in a 40-file metadata sweep gets rubber-stamped, and rubber-stamped copy is how a
