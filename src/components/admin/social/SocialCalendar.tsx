@@ -93,6 +93,28 @@ function startOfWeek(date: Date): Date {
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+/**
+ * Whether to show one day at a time.
+ *
+ * Seven columns on a phone is seven boxes stacked, most of them empty, and
+ * a page you scroll for a while to reach Thursday. Below the width where
+ * the columns can sit side by side, the week becomes a strip of seven days
+ * and one of them is open. False on the first render so the server and the
+ * client agree; the posts arrive after mount, so nothing is ever painted
+ * into the wrong shape.
+ */
+function useDayView(): boolean {
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 1023px)");
+    const update = () => setNarrow(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return narrow;
+}
+
 export default function SocialCalendar({
   onNotify,
   refreshToken,
@@ -121,6 +143,9 @@ export default function SocialCalendar({
   const [busy, setBusy] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [campaignFilter, setCampaignFilter] = useState<string>("all");
+
+  const dayView = useDayView();
+  const [selectedDay, setSelectedDay] = useState<string>(() => toISODate(new Date()));
 
   const [viewing, setViewing] = useState<SocialPostRow | null>(null);
   const [editing, setEditing] = useState<{ post: SocialPostRow | null; date: string } | null>(null);
@@ -178,6 +203,13 @@ export default function SocialCalendar({
     if (found) setEditing({ post: found, date: found.scheduled_for.slice(0, 10) });
     onReopened?.();
   }, [reopenPostId, loading, posts, onReopened]);
+
+  // Changing week takes the open day with it: today if the week holds it,
+  // Monday otherwise.
+  useEffect(() => {
+    if (selectedDay >= rangeStart && selectedDay <= rangeEnd) return;
+    setSelectedDay(today >= rangeStart && today <= rangeEnd ? today : rangeStart);
+  }, [rangeStart, rangeEnd, today, selectedDay]);
 
   const visiblePosts = useMemo(
     () => (campaignFilter === "all" ? posts : posts.filter((post) => post.campaign_id === campaignFilter)),
@@ -240,31 +272,31 @@ export default function SocialCalendar({
   };
 
   return (
+    /* On a phone the week comes first and the standing figures go to the
+       bottom: what you open this on the way to set for is Thursday, not a
+       count of how many posts the week holds. */
     <div className="flex flex-col gap-6">
-      {/* Standing state */}
-      <div className="flex flex-col gap-3">
-        {kippDrafts > 0 ? (
-          <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
-            {/* The mark, never a generic AI glyph. AGENTS.md is explicit about it. */}
-            <AbramMark size={16} className="shrink-0 mt-0.5" />
-            <p className="text-xs text-zinc-300 leading-relaxed">
-              KIPP has scheduled {kippDrafts} {kippDrafts === 1 ? "post" : "posts"} this week as drafts. Nothing reaches
-              your morning message until you mark it ready.
-            </p>
-          </div>
-        ) : null}
-
-        {/* Three numbers on one line. They were three cards the height of a
-            paragraph each, which is a lot of furniture for three integers. */}
-        <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1.5 rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-3">
-          <Stat value={readyToday} label="ready today" />
-          <Stat value={emptyDays} label={emptyDays === 1 ? "day still open" : "days still open"} />
-          <Stat value={visiblePosts.length} label={visiblePosts.length === 1 ? "post this week" : "posts this week"} />
+      {kippDrafts > 0 ? (
+        <div className="order-1 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
+          {/* The mark, never a generic AI glyph. AGENTS.md is explicit about it. */}
+          <AbramMark size={16} className="shrink-0 mt-0.5" />
+          <p className="text-xs text-zinc-300 leading-relaxed">
+            KIPP has scheduled {kippDrafts} {kippDrafts === 1 ? "post" : "posts"} this week as drafts. Nothing reaches
+            your morning message until you mark it ready.
+          </p>
         </div>
+      ) : null}
+
+      {/* Three numbers on one line. They were three cards the height of a
+          paragraph each, which is a lot of furniture for three integers. */}
+      <div className="order-5 lg:order-2 flex flex-wrap items-baseline gap-x-5 gap-y-1.5 rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-3">
+        <Stat value={readyToday} label="ready today" />
+        <Stat value={emptyDays} label={emptyDays === 1 ? "day still open" : "days still open"} />
+        <Stat value={visiblePosts.length} label={visiblePosts.length === 1 ? "post this week" : "posts this week"} />
       </div>
 
       {/* Campaign bar */}
-      <div className="flex flex-col gap-2">
+      <div className="order-6 lg:order-3 flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span className={LABEL}>Campaigns</span>
           <button
@@ -276,11 +308,13 @@ export default function SocialCalendar({
             New campaign
           </button>
         </div>
-        <div className="flex flex-wrap gap-2">
+        {/* One row that scrolls sideways rather than a block of chips that
+            grows down the screen a phone has to scroll past. */}
+        <div className="flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible">
           <button
             type="button"
             onClick={() => setCampaignFilter("all")}
-            className={`px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
+            className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
               campaignFilter === "all"
                 ? "bg-white text-black border-white"
                 : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
@@ -289,7 +323,7 @@ export default function SocialCalendar({
             Everything
           </button>
           {campaigns.map((campaign) => (
-            <span key={campaign.id} className="flex items-stretch">
+            <span key={campaign.id} className="flex items-stretch shrink-0">
               <button
                 type="button"
                 onClick={() => setCampaignFilter(campaign.id)}
@@ -317,7 +351,7 @@ export default function SocialCalendar({
             </span>
           ))}
           {campaigns.length === 0 ? (
-            <span className="text-[11px] text-zinc-600 self-center">
+            <span className="hidden lg:inline text-[11px] text-zinc-600 self-center">
               None yet. A campaign groups a week of posts and supplies the tag their links are measured by.
             </span>
           ) : null}
@@ -325,7 +359,7 @@ export default function SocialCalendar({
       </div>
 
       {/* Week nav */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-y border-white/5 py-3">
+      <div className="order-2 lg:order-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-y border-white/5 py-3">
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -338,7 +372,7 @@ export default function SocialCalendar({
           <button
             type="button"
             onClick={() => setWeekStart(startOfWeek(new Date()))}
-            className="btn-glass rounded-full px-4 py-2 text-[11px] font-semibold"
+            className="btn-glass rounded-full px-4 py-2 text-[11px] font-semibold min-h-[44px] sm:min-h-[36px]"
           >
             This week
           </button>
@@ -352,49 +386,78 @@ export default function SocialCalendar({
           </button>
         </div>
 
-        <p className="text-xs text-zinc-400 font-sans flex items-center gap-2">
-          <CalendarDays className="w-3.5 h-3.5 text-zinc-600" />
-          {days[0].toLocaleDateString(undefined, { month: "long", day: "numeric" })} to{" "}
-          {days[6].toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
+        <p className="text-[11px] sm:text-xs text-zinc-400 font-sans flex items-center gap-2">
+          <CalendarDays className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+          {days[0].toLocaleDateString(undefined, { month: "short", day: "numeric" })} to{" "}
+          {days[6].toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
           {loading ? <Loader2 className="w-3 h-3 animate-spin text-zinc-600" /> : null}
         </p>
       </div>
 
-      {/* The week */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3">
-        {days.map((day) => {
-          const key = toISODate(day);
-          const dayPosts = byDay.get(key) || [];
-          const isToday = key === today;
-          const isPast = key < today;
+      {/* The week: seven columns where there is room, one day at a time
+          where there is not. */}
+      <div className="order-3 lg:order-5">
+        {dayView ? (
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-1">
+              {days.map((day) => {
+                const key = toISODate(day);
+                const count = (byDay.get(key) || []).length;
+                const isSelected = key === selectedDay;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSelectedDay(key)}
+                    aria-pressed={isSelected}
+                    className={`flex flex-1 min-w-0 flex-col items-center gap-1 rounded-xl border py-2 transition-colors min-h-[60px] ${
+                      isSelected
+                        ? "border-white bg-white text-black"
+                        : key === today
+                          ? "border-white/25 bg-white/[0.04] text-zinc-200"
+                          : "border-white/8 bg-white/[0.02] text-zinc-500"
+                    }`}
+                  >
+                    <span className="text-[9px] font-semibold uppercase tracking-wider">
+                      {DAY_NAMES[(day.getDay() + 6) % 7]}
+                    </span>
+                    <span className="text-sm font-semibold leading-none">{day.getDate()}</span>
+                    {/* Up to three dots, so a full day reads as full without
+                        anybody counting. */}
+                    <span className="flex h-1 items-center gap-0.5">
+                      {Array.from({ length: Math.min(count, 3) }, (_, i) => (
+                        <span
+                          key={i}
+                          className={`h-1 w-1 rounded-full ${isSelected ? "bg-black/50" : "bg-zinc-500"}`}
+                        />
+                      ))}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
 
-          return (
-            <div
-              key={key}
-              className={`flex flex-col gap-2 rounded-2xl border p-2.5 ${
-                isToday ? "border-white/25 bg-white/[0.04]" : "border-white/8 bg-white/[0.02]"
-              } ${isPast ? "opacity-60" : ""}`}
-            >
-              <div className="flex items-baseline justify-between gap-2 px-0.5">
-                <span className={`text-[11px] font-semibold ${isToday ? "text-white" : "text-zinc-400"}`}>
-                  {DAY_NAMES[(day.getDay() + 6) % 7]}
-                  <span className="text-zinc-600 font-normal"> {day.getDate()}</span>
-                </span>
-                {isToday ? (
-                  <span className="text-[9px] font-semibold uppercase tracking-widest text-white">Today</span>
-                ) : null}
-              </div>
+            <div className="flex flex-col gap-2.5">
+              <p className="text-xs font-semibold text-zinc-300">
+                {new Date(`${selectedDay}T12:00:00`).toLocaleDateString(undefined, {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                })}
+                {selectedDay === today ? <span className="text-zinc-600 font-normal"> · today</span> : null}
+              </p>
 
-              {dayPosts.map((post) => (
+              {(byDay.get(selectedDay) || []).map((post) => (
                 <PostCard
                   key={post.id}
                   post={post}
                   channels={channels}
                   busy={busy === post.id}
                   copied={copied === post.id}
+                  row
                   onOpen={() => setViewing(post)}
                   onCopy={() => handleCopy(post)}
-                  onEdit={() => setEditing({ post, date: key })}
+                  onEdit={() => setEditing({ post, date: selectedDay })}
                   onDelete={() => handleDelete(post)}
                   onReady={() =>
                     run(post.id, () => markPostReady(post.id), "Ready. The card is published and it is in the morning message.")
@@ -405,17 +468,78 @@ export default function SocialCalendar({
                 />
               ))}
 
+              {(byDay.get(selectedDay) || []).length === 0 ? (
+                <p className="py-6 text-center text-[11px] text-zinc-600">Nothing on this day yet.</p>
+              ) : null}
+
               <button
                 type="button"
-                onClick={() => setEditing({ post: null, date: key })}
-                aria-label={`Add a post on ${DAY_NAMES[(day.getDay() + 6) % 7]} ${day.getDate()}`}
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/8 py-2 text-[11px] font-semibold text-zinc-700 transition-colors hover:border-white/20 hover:text-zinc-300 min-h-[44px]"
+                onClick={() => setEditing({ post: null, date: selectedDay })}
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/10 py-3 text-[11px] font-semibold text-zinc-500 transition-colors hover:border-white/25 hover:text-zinc-200 min-h-[48px]"
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="w-3.5 h-3.5" />
+                Add a post
               </button>
             </div>
-          );
-        })}
+          </div>
+        ) : (
+          <div className="grid grid-cols-7 gap-3">
+            {days.map((day) => {
+              const key = toISODate(day);
+              const dayPosts = byDay.get(key) || [];
+              const isToday = key === today;
+              const isPast = key < today;
+
+              return (
+                <div
+                  key={key}
+                  className={`flex flex-col gap-2 rounded-2xl border p-2.5 ${
+                    isToday ? "border-white/25 bg-white/[0.04]" : "border-white/8 bg-white/[0.02]"
+                  } ${isPast ? "opacity-60" : ""}`}
+                >
+                  <div className="flex items-baseline justify-between gap-2 px-0.5">
+                    <span className={`text-[11px] font-semibold ${isToday ? "text-white" : "text-zinc-400"}`}>
+                      {DAY_NAMES[(day.getDay() + 6) % 7]}
+                      <span className="text-zinc-600 font-normal"> {day.getDate()}</span>
+                    </span>
+                    {isToday ? (
+                      <span className="text-[9px] font-semibold uppercase tracking-widest text-white">Today</span>
+                    ) : null}
+                  </div>
+
+                  {dayPosts.map((post) => (
+                    <PostCard
+                      key={post.id}
+                      post={post}
+                      channels={channels}
+                      busy={busy === post.id}
+                      copied={copied === post.id}
+                      onOpen={() => setViewing(post)}
+                      onCopy={() => handleCopy(post)}
+                      onEdit={() => setEditing({ post, date: key })}
+                      onDelete={() => handleDelete(post)}
+                      onReady={() =>
+                        run(post.id, () => markPostReady(post.id), "Ready. The card is published and it is in the morning message.")
+                      }
+                      onStatus={(status) =>
+                        run(post.id, () => setPostStatus(post.id, status), status === "posted" ? "Marked as posted." : "Updated.")
+                      }
+                    />
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={() => setEditing({ post: null, date: key })}
+                    aria-label={`Add a post on ${DAY_NAMES[(day.getDay() + 6) % 7]} ${day.getDate()}`}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/8 py-2 text-[11px] font-semibold text-zinc-700 transition-colors hover:border-white/20 hover:text-zinc-300 min-h-[44px]"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {viewing ? (
@@ -424,6 +548,10 @@ export default function SocialCalendar({
           channelLabel={channels.find((channel) => channel.source === viewing.channel)?.label || viewing.channel}
           onClose={() => setViewing(null)}
           onNotify={onNotify}
+          onEdit={() => {
+            setEditing({ post: viewing, date: viewing.scheduled_for.slice(0, 10) });
+            setViewing(null);
+          }}
         />
       ) : null}
 
@@ -479,17 +607,20 @@ const STATUS_STYLES: Record<PostStatus, string> = {
 };
 
 /**
- * One post in a day column: a line, not a poster.
+ * One post, in whichever of the two shapes the space allows.
  *
  * Seven columns of full-size cards is a wall of pictures nobody can read a
- * week off. So the row carries a thumbnail, who it is for and how far along
- * it is, tapping it opens the picture full size, and everything that
- * changes the post is behind the one menu glyph on the right.
+ * week off, so in the grid a post is a short crop with its channel under it.
+ * Given the width of a phone screen it becomes a list row instead: the whole
+ * card as a thumbnail, never cropped through the middle of a word, with the
+ * caption beside it. Either way, tapping opens the picture full size and
+ * everything that changes the post is behind the one menu glyph.
  */
 function PostCard({
   post,
   channels,
   busy,
+  row,
   onOpen,
   onCopy,
   copied,
@@ -501,6 +632,8 @@ function PostCard({
   post: SocialPostRow;
   channels: LinkChannel[];
   busy: boolean;
+  /** List row rather than tile. The day view, on a narrow screen. */
+  row?: boolean;
   onOpen: () => void;
   onCopy: () => void;
   copied: boolean;
@@ -538,51 +671,97 @@ function PostCard({
     work();
   };
 
+  const marks = (
+    <>
+      {post.source === "kipp" ? <AbramMark size={9} className="shrink-0 opacity-40" /> : null}
+      {post.set_id ? <Layers className="w-2.5 h-2.5 shrink-0 text-zinc-600" /> : null}
+    </>
+  );
+
   return (
     <div ref={wrapRef} className={`relative ${post.status === "skipped" ? "opacity-50" : ""}`}>
       <button
         type="button"
         onClick={onOpen}
         title={post.caption || asset?.title || "Open this post"}
-        className="block w-full overflow-hidden rounded-xl border border-white/8 bg-white/[0.02] text-left transition-colors hover:border-white/25 hover:bg-white/[0.05]"
+        className={`w-full overflow-hidden rounded-xl border border-white/8 bg-white/[0.02] text-left transition-colors hover:border-white/25 hover:bg-white/[0.05] ${
+          row ? "flex items-center gap-3 p-2.5 pr-11" : "block"
+        }`}
       >
-        {/* Short in the seven-column week, where the crop is only there to
-            be recognised. Taller below that, where a column is the width of
-            the screen and a 64px band of a portrait card is a sliver. */}
-        <span className="relative block h-40 xl:h-16 w-full bg-black/50">
-          {preview ? (
-            /* A crop, not the whole card. The picture is here to be
-               recognised across a week, not read. */
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={preview}
-              alt={post.alt_text || asset?.title || "Post card"}
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <span className="flex h-full w-full items-center justify-center">
+        {row ? (
+          /* The whole card, small. A list row has the width to show it
+             without cutting a headline in half. */
+          <span className="flex h-[4.5rem] w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-black/50">
+            {preview ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={preview}
+                alt={post.alt_text || asset?.title || "Post card"}
+                loading="lazy"
+                className="max-h-full max-w-full object-contain"
+              />
+            ) : (
               <ImageOff className="w-3.5 h-3.5 text-zinc-700" />
+            )}
+          </span>
+        ) : (
+          <span className="relative block h-40 xl:h-16 w-full bg-black/50">
+            {preview ? (
+              /* A crop, not the whole card. The picture is here to be
+                 recognised across a week, not read. */
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={preview}
+                alt={post.alt_text || asset?.title || "Post card"}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="flex h-full w-full items-center justify-center">
+                <ImageOff className="w-3.5 h-3.5 text-zinc-700" />
+              </span>
+            )}
+            {/* Over the picture, so the line below belongs to the channel
+                alone and nothing has to be truncated to fit. */}
+            <span
+              className={`absolute bottom-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-widest backdrop-blur-sm ${
+                STATUS_STYLES[post.status]
+              }`}
+            >
+              {post.status}
             </span>
-          )}
-          {/* Over the picture, so the line below belongs to the channel
-              alone and nothing has to be truncated to fit. */}
-          <span
-            className={`absolute bottom-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-widest backdrop-blur-sm ${
-              STATUS_STYLES[post.status]
-            }`}
-          >
-            {post.status}
           </span>
-        </span>
+        )}
 
-        <span className="flex items-center gap-1 px-2 py-1.5">
-          <span className="truncate text-[10px] font-semibold uppercase tracking-wider text-zinc-300">
-            {channelLabel}
+        {row ? (
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-1.5">
+              <span className="truncate text-[10px] font-semibold uppercase tracking-wider text-zinc-300">
+                {channelLabel}
+              </span>
+              {marks}
+              <span
+                className={`ml-auto shrink-0 text-[9px] font-semibold uppercase tracking-widest ${
+                  STATUS_STYLES[post.status]
+                }`}
+              >
+                {post.status}
+              </span>
+            </span>
+            {/* No `block` here: line-clamp needs the box display it sets
+                for itself, and a display utility next to it wins. */}
+            <span className="mt-1 text-[11px] leading-relaxed text-zinc-500 line-clamp-2 break-words">
+              {post.caption || "Card only, no caption"}
+            </span>
           </span>
-          {post.source === "kipp" ? <AbramMark size={9} className="shrink-0 opacity-40" /> : null}
-          {post.set_id ? <Layers className="ml-auto w-2.5 h-2.5 shrink-0 text-zinc-600" /> : null}
-        </span>
+        ) : (
+          <span className="flex items-center gap-1 px-2 py-1.5">
+            <span className="truncate text-[10px] font-semibold uppercase tracking-wider text-zinc-300">
+              {channelLabel}
+            </span>
+            <span className="ml-auto flex items-center gap-1">{marks}</span>
+          </span>
+        )}
       </button>
 
       <button
@@ -591,7 +770,11 @@ function PostCard({
         aria-label="More for this post"
         aria-expanded={menu}
         disabled={busy}
-        className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-lg bg-black/60 text-zinc-400 backdrop-blur-sm transition-colors hover:text-white disabled:opacity-50"
+        className={`absolute flex items-center justify-center rounded-lg text-zinc-400 transition-colors hover:text-white disabled:opacity-50 ${
+          row
+            ? "right-0 top-1/2 h-11 w-11 -translate-y-1/2"
+            : "right-1 top-1 h-7 w-7 bg-black/60 backdrop-blur-sm"
+        }`}
       >
         {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <MoreHorizontal className="w-3.5 h-3.5" />}
       </button>

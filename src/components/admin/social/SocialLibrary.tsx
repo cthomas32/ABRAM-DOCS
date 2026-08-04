@@ -287,13 +287,13 @@ export default function SocialLibrary({
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <div className="flex flex-col gap-2">
             <span className={LABEL}>Status</span>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible">
               {STATUS_FILTERS.map((filter) => (
                 <button
                   key={filter.id}
                   type="button"
                   onClick={() => setStatus(filter.id)}
-                  className={`px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
+                  className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
                     status === filter.id
                       ? "bg-white text-black border-white"
                       : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
@@ -308,11 +308,11 @@ export default function SocialLibrary({
 
           <div className="flex flex-col gap-2">
             <span className={LABEL}>Size</span>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible">
               <button
                 type="button"
                 onClick={() => setFormat("all")}
-                className={`px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
+                className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
                   format === "all"
                     ? "bg-white text-black border-white"
                     : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
@@ -325,7 +325,7 @@ export default function SocialLibrary({
                   key={id}
                   type="button"
                   onClick={() => setFormat(id)}
-                  className={`px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
+                  className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
                     format === id
                       ? "bg-white text-black border-white"
                       : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
@@ -362,7 +362,9 @@ export default function SocialLibrary({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        // Two up on a phone. One card per screen-width turns a shelf into a
+        // stack you scroll for a minute to reach the end of.
+        <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5">
           {entries.map((entry) => (
             <EntryCard
               key={entry.key}
@@ -423,7 +425,9 @@ function EntryCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={preview} alt={entry.title} loading="lazy" className="w-full h-full object-contain" />
 
-        <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5">
+        {/* Capped, so on a two-up card these wrap under each other rather
+            than running into the status chip on the right. */}
+        <div className="absolute top-2.5 left-2.5 flex max-w-[60%] flex-wrap gap-1.5">
           {entry.setId ? (
             <span className="flex items-center gap-1 rounded-full bg-black/75 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-zinc-300">
               <Layers className="w-2.5 h-2.5" />
@@ -450,24 +454,28 @@ function EntryCard({
         </span>
       </div>
 
-      <div className="flex flex-col gap-3 p-4 flex-1">
+      <div className="flex flex-col gap-3 p-3 sm:p-4 flex-1">
         <div className="flex flex-col gap-1 min-w-0">
-          <h3 className="text-sm font-semibold text-zinc-100 truncate" title={entry.title}>
+          <h3 className="text-xs sm:text-sm font-semibold text-zinc-100 truncate" title={entry.title}>
             {entry.title}
           </h3>
-          <p className="text-[11px] text-zinc-600">
+          <p className="text-[10px] sm:text-[11px] text-zinc-600">
             {format.label} {format.width}x{format.height}
           </p>
-          {entry.note ? <p className="text-[11px] text-zinc-500 leading-relaxed line-clamp-3 mt-1">{entry.note}</p> : null}
+          {entry.note ? (
+            <p className="hidden sm:line-clamp-3 text-[11px] text-zinc-500 leading-relaxed mt-1">{entry.note}</p>
+          ) : null}
         </div>
 
-        <div className="flex flex-wrap gap-1.5 mt-auto pt-1">
+        {/* The one that matters goes full width on a narrow card; the rest
+            share one line under it however many of them there are. */}
+        <div className="flex flex-col gap-1.5 mt-auto pt-1 sm:flex-row sm:flex-wrap">
           {entry.status !== "approved" ? (
             <button
               type="button"
               onClick={onApprove}
               disabled={busy}
-              className="btn-primary flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50"
+              className="btn-primary flex w-full sm:w-auto items-center justify-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50 min-h-[40px] sm:min-h-0"
             >
               {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
               Approve
@@ -476,51 +484,55 @@ function EntryCard({
             <button
               type="button"
               onClick={onCopyUrl}
-              className="btn-glass flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full"
+              className="btn-glass flex w-full sm:w-auto items-center justify-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full min-h-[40px] sm:min-h-0"
             >
               {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
               {copied ? "Copied" : "Copy link"}
             </button>
           )}
 
-          <button
-            type="button"
-            onClick={onDownload}
-            disabled={busy}
-            className="btn-glass flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50"
-            title={canShare ? "Save to Photos or Files" : "Download the PNG"}
-          >
-            {canShare ? <Share className="w-3 h-3" /> : <Download className="w-3 h-3" />}
-            {canShare ? "Save" : null}
-          </button>
-          <button
-            type="button"
-            onClick={onEdit}
-            className="btn-glass flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full"
-            title="Open in the studio"
-          >
-            <Pencil className="w-3 h-3" />
-          </button>
-          {entry.status !== "archived" ? (
+          {/* `sm:contents` dissolves this wrapper on a wider card, so the
+              buttons rejoin the row above rather than keeping their grid. */}
+          <div className="grid grid-flow-col auto-cols-fr gap-1.5 sm:contents">
             <button
               type="button"
-              onClick={onArchive}
+              onClick={onDownload}
               disabled={busy}
-              className="btn-ghost flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50"
-              title="Archive"
+              className="btn-glass flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50 min-h-[40px] sm:min-h-0"
+              title={canShare ? "Save to Photos or Files" : "Download the PNG"}
             >
-              <Archive className="w-3 h-3" />
+              {canShare ? <Share className="w-3 h-3" /> : <Download className="w-3 h-3" />}
+              <span className={canShare ? "hidden sm:inline" : "hidden"}>Save</span>
             </button>
-          ) : null}
-          <button
-            type="button"
-            onClick={onDelete}
-            disabled={busy}
-            className="btn-danger flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50"
-            title="Delete"
-          >
-            <Trash2 className="w-3 h-3" />
-          </button>
+            <button
+              type="button"
+              onClick={onEdit}
+              className="btn-glass flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-[11px] font-semibold rounded-full min-h-[40px] sm:min-h-0"
+              title="Open in the studio"
+            >
+              <Pencil className="w-3 h-3" />
+            </button>
+            {entry.status !== "archived" ? (
+              <button
+                type="button"
+                onClick={onArchive}
+                disabled={busy}
+                className="btn-ghost flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50 min-h-[40px] sm:min-h-0"
+                title="Archive"
+              >
+                <Archive className="w-3 h-3" />
+              </button>
+            ) : null}
+            <button
+              type="button"
+              onClick={onDelete}
+              disabled={busy}
+              className="btn-danger flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-[11px] font-semibold rounded-full disabled:opacity-50 min-h-[40px] sm:min-h-0"
+              title="Delete"
+            >
+              <Trash2 className="w-3 h-3" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

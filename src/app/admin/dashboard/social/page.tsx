@@ -129,7 +129,9 @@ export default function SocialPage() {
               <ImageIcon className="w-5 h-5 text-zinc-400" />
               Social Studio
             </h1>
-            <p className="text-xs text-zinc-500 mt-1 font-sans max-w-2xl leading-relaxed">
+            {/* Two screens of scrolling before the week starts on a phone,
+                for a sentence that is only ever read once. */}
+            <p className="hidden sm:block text-xs text-zinc-500 mt-1 font-sans max-w-2xl leading-relaxed">
               What goes out and when, and the images that go with it. Mark a post ready and it arrives in
               Slack the morning it is due, with the words, the link and the card already on it.
             </p>
@@ -159,7 +161,7 @@ export default function SocialPage() {
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
+              className={`flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] ${
                 tab === id
                   ? "bg-white text-black border-white"
                   : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"

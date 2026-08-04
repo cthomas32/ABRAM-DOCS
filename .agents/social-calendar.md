@@ -44,10 +44,21 @@ you cannot read a week off, so a post in a day column is a short crop, the chann
 in one word. No caption, no row of buttons. Everything that changes a post is behind the single
 menu glyph in the corner: mark ready, mark posted, copy the caption and link, edit, skip, remove.
 
+**Below 1024px the week is one day at a time.** Seven columns on a phone is seven boxes stacked,
+most of them empty, and a page you scroll for a while to reach Thursday. So the week becomes a
+strip of seven chips carrying the date and a dot per post, and the day you tap opens under it.
+Today is what it opens on, and changing week takes the open day with it. The posts in that day are
+list rows rather than tiles, because a phone screen is wide enough to show the whole card as a
+thumbnail beside two lines of the caption, without cropping a headline through the middle of a
+word. The standing figures and the campaign filter move to the bottom on that layout: what you
+open this on the way to set for is Thursday, not a count of how many posts the week holds.
+
 **Tapping the post opens it, and that view does two things only.** The card at full size, swiping
-if it is a carousel, and one button to save it. It is deliberately not an editor: this is the view
-for the moment you want the picture on your phone, and a settings panel in the way of that is the
-thing it exists to avoid. It writes nothing.
+if it is a carousel, and one button to save it, with a small Edit beside it for the post's own
+editor. It is deliberately not an editor itself: this is the view for the moment you want the
+picture on your phone, and a settings panel in the way of that is the thing it exists to avoid. It
+writes nothing. The save button sits in a fixed foot below the picture, clear of the home
+indicator, so it stays under the thumb however long the caption runs.
 
 On a phone that save button hands the slides to the system share sheet, so **Save Image** puts them
 in Photos, which a download cannot do. The whole of that behaviour lives in
