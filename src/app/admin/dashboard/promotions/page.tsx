@@ -163,7 +163,7 @@ export default function PromotionsPage() {
           <div className="flex gap-2">
             <button
               onClick={() => void load()}
-              className="h-9 px-3 text-xs font-medium rounded-lg border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors flex items-center gap-2"
+              className="h-11 sm:h-9 px-3 text-xs font-medium rounded-lg border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors flex items-center gap-2"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Refresh
@@ -289,7 +289,7 @@ function CampaignRow({
             <button
               onClick={() => onSetStatus("paused")}
               title="Pause — also switches every code in this campaign off in Stripe"
-              className="h-8 w-8 rounded-lg border border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors flex items-center justify-center"
+              className="h-11 w-11 sm:h-8 sm:w-8 rounded-lg border border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors flex items-center justify-center"
             >
               <Pause className="w-3.5 h-3.5" />
             </button>
@@ -297,14 +297,14 @@ function CampaignRow({
             <button
               onClick={() => onSetStatus("active")}
               title="Activate"
-              className="h-8 w-8 rounded-lg border border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors flex items-center justify-center"
+              className="h-11 w-11 sm:h-8 sm:w-8 rounded-lg border border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors flex items-center justify-center"
             >
               <Play className="w-3.5 h-3.5" />
             </button>
           ) : null}
           <button
             onClick={onOpen}
-            className="h-8 px-3 text-xs font-medium rounded-lg border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors flex items-center gap-1"
+            className="h-11 sm:h-8 px-3 text-xs font-medium rounded-lg border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors flex items-center gap-1"
           >
             Codes
             <ChevronRight className="w-3.5 h-3.5" />
@@ -439,7 +439,7 @@ function CampaignDetail({
                 <button
                   key={k}
                   onClick={() => setKind(k)}
-                  className={`h-8 px-3 text-xs font-medium rounded-lg border transition-colors ${
+                  className={`h-11 sm:h-8 px-3 text-xs font-medium rounded-lg border transition-colors ${
                     kind === k ? "border-white/25 bg-white/[0.08] text-white" : "border-white/10 text-zinc-400"
                   }`}
                 >
@@ -508,7 +508,7 @@ function CampaignDetail({
             <button
               onClick={() => void mint()}
               disabled={minting || (kind === "public" && !publicCode.trim())}
-              className="btn-primary h-9 px-4 text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center gap-2"
+              className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center gap-2"
             >
               {minting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Mint {kind === "public" ? "code" : `${count} codes`}

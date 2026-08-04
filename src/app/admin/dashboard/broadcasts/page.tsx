@@ -1197,49 +1197,49 @@ export default function BroadcastsPage() {
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("h1")}
-                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               H1
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("h2")}
-                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               H2
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("p")}
-                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               Paragraph
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("a")}
-                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               Link
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("cta")}
-                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               CTA Button
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("bold")}
-                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               Bold
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("ul")}
-                              className="px-2.5 min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
+                              className="px-2.5 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-white/5 hover:bg-white/10 border border-white/8 text-white rounded-md text-[10px] font-medium transition-colors cursor-pointer"
                             >
                               List
                             </button>
@@ -1250,21 +1250,21 @@ export default function BroadcastsPage() {
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_first_name")}
-                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               first_name
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_last_name")}
-                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               last_name
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_unsubscribe")}
-                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               unsubscribe_url
                             </button>
@@ -1275,21 +1275,21 @@ export default function BroadcastsPage() {
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_first_name")}
-                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               first_name
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_last_name")}
-                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               last_name
                             </button>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_unsubscribe")}
-                              className="px-2 min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
+                              className="px-2 min-h-[44px] sm:min-h-[28px] inline-flex items-center bg-zinc-800 hover:bg-zinc-700 border border-white/8 text-zinc-300 font-mono rounded-md text-[9px] transition-colors cursor-pointer"
                             >
                               unsubscribe_url
                             </button>
@@ -1654,7 +1654,7 @@ export default function BroadcastsPage() {
                           </button>
                           <button
                             onClick={() => openCampaignAsCopy(selectedCampaign)}
-                            className="hidden sm:flex btn-glass h-9 px-4 text-xs font-semibold rounded-full items-center gap-1.5 cursor-pointer font-sans"
+                            className="hidden sm:flex btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <Edit className="w-3.5 h-3.5 text-zinc-400" />
                             <span>Edit &amp; Resend</span>
@@ -1664,7 +1664,7 @@ export default function BroadcastsPage() {
                               setResendConfirmInput("");
                               setShowResendModal(true);
                             }}
-                            className="hidden sm:flex btn-primary h-9 px-4 text-xs font-semibold rounded-full items-center gap-1.5 cursor-pointer font-sans"
+                            className="hidden sm:flex btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <RefreshCw className="w-3.5 h-3.5" />
                             <span>Resend Same Audience</span>

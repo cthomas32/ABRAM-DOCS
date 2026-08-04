@@ -182,6 +182,39 @@ body {
 }
 
 /* ─────────────────────────────────────────────
+   Tap targets
+
+   Every button here is sized for a pointer: `text-xs` inside half a rem of
+   vertical padding comes out about thirty-two pixels tall, which is a
+   comfortable click and a miss on a phone. DESIGN.md and AGENTS.md both
+   ask for forty-four, and the admin console is run from a phone as often
+   as from a desk.
+
+   Deliberately OUTSIDE `@layer components`, unlike the rules above.
+   Utilities beat the layer, which is what lets `px-3` and `rounded-lg`
+   work next to these classes — and would also let a `min-h-[32px]`
+   written on a button quietly beat a minimum meant to protect a thumb.
+   Unlayered, this wins. It is safe to let it win because it only ever
+   raises a floor, and only below the `sm` breakpoint: a button that asks
+   for more than forty-four still gets it, and nothing above 640px is
+   touched at all.
+   ───────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .btn-primary,
+  .btn-glass,
+  .btn-ghost,
+  .btn-danger {
+    min-height: 44px;
+  }
+
+  /* An icon on its own has no text to give it width, so a round icon
+     button comes out forty-four tall and twenty-eight wide without this. */
+  .btn-icon {
+    min-width: 44px;
+  }
+}
+
+/* ─────────────────────────────────────────────
    Glassmorphism Panels
    ───────────────────────────────────────────── */
 

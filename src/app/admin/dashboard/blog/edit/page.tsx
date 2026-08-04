@@ -590,7 +590,7 @@ function BlogEditorContent() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="btn-primary h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+            className="btn-primary h-11 sm:h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             <span>Save<span className="hidden sm:inline"> Post</span></span>

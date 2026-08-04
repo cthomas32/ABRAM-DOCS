@@ -315,7 +315,7 @@ export default function CampaignAnalyticsPage() {
           <button
             onClick={fetchAnalytics}
             disabled={refreshing}
-            className="btn-glass px-4 min-h-[40px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
+            className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${refreshing ? "animate-spin" : ""}`} />
             <span>{refreshing ? "Updating..." : "Refresh"}</span>
@@ -329,7 +329,7 @@ export default function CampaignAnalyticsPage() {
               <button
                 key={range.days}
                 onClick={() => setDays(range.days)}
-                className={`px-4 min-h-[40px] sm:min-h-[32px] rounded-full text-xs font-semibold border transition-colors duration-200 cursor-pointer ${
+                className={`px-4 min-h-[44px] sm:min-h-[32px] rounded-full text-xs font-semibold border transition-colors duration-200 cursor-pointer ${
                   days === range.days
                     ? "bg-white text-black border-white"
                     : "bg-white/[0.04] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
@@ -361,7 +361,7 @@ export default function CampaignAnalyticsPage() {
               <button
                 key={page.label}
                 onClick={() => setPageFilter(page.slug)}
-                className={`px-4 min-h-[32px] rounded-full text-xs font-semibold border transition-colors duration-200 cursor-pointer ${
+                className={`px-4 min-h-[44px] sm:min-h-[32px] rounded-full text-xs font-semibold border transition-colors duration-200 cursor-pointer ${
                   pageFilter === page.slug
                     ? "bg-white text-black border-white"
                     : "bg-white/[0.04] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"

@@ -237,7 +237,7 @@ export default function ChangelogManagerPage() {
               <button
                 key={opt.id}
                 onClick={() => setStatusFilter(opt.id)}
-                className={`px-2 sm:px-3.5 min-h-[40px] sm:min-h-0 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                className={`px-2 sm:px-3.5 min-h-[44px] sm:min-h-0 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   statusFilter === opt.id
                     ? "bg-white/10 text-white border border-white/10"
                     : "text-zinc-500 hover:text-zinc-300 border border-transparent"
@@ -308,7 +308,7 @@ export default function ChangelogManagerPage() {
                 <button
                   onClick={() => setSheetRelease(release)}
                   aria-label={`More actions for ${release.title}`}
-                  className="absolute top-3.5 right-3.5 w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 border border-white/8 bg-white/[0.03] hover:text-white hover:bg-white/[0.07] active:bg-white/[0.1] transition-colors"
+                  className="absolute top-3.5 right-3.5 w-11 h-11 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-zinc-400 border border-white/8 bg-white/[0.03] hover:text-white hover:bg-white/[0.07] active:bg-white/[0.1] transition-colors"
                 >
                   <MoreHorizontal className="w-4 h-4" />
                 </button>

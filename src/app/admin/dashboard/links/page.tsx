@@ -452,7 +452,7 @@ export default function LinkHubAdminPage() {
             <button
               key={key}
               onClick={() => setTab(key)}
-              className={`flex items-center gap-1.5 px-4 min-h-[38px] text-xs font-semibold border-b-2 -mb-px transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-4 min-h-[44px] sm:min-h-[38px] text-xs font-semibold border-b-2 -mb-px transition-all cursor-pointer ${
                 tab === key
                   ? "border-white text-white"
                   : "border-transparent text-zinc-500 hover:text-zinc-300"
@@ -644,7 +644,7 @@ function ContentTab({
             <button
               key={type}
               onClick={() => setDraftType(draftType === type ? null : type)}
-              className={`px-3 min-h-[30px] rounded-full text-[11px] font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+              className={`px-3 min-h-[44px] sm:min-h-[30px] rounded-full text-[11px] font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
                 draftType === type
                   ? "border-white/30 bg-white/10 text-white"
                   : "border-white/8 bg-white/[0.02] text-zinc-400 hover:text-white"
@@ -879,7 +879,7 @@ function BlockRow({
                   onClick={() => onMove(index, -1)}
                   disabled={index === 0}
                   aria-label="Move up"
-                  className="w-6 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
+                  className="w-11 h-11 sm:w-6 sm:h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
                 >
                   <ArrowUp className="w-3 h-3" />
                 </button>
@@ -887,7 +887,7 @@ function BlockRow({
                   onClick={() => onMove(index, 1)}
                   disabled={index === total - 1}
                   aria-label="Move down"
-                  className="w-6 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
+                  className="w-11 h-11 sm:w-6 sm:h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
                 >
                   <ArrowDown className="w-3 h-3" />
                 </button>
@@ -918,7 +918,7 @@ function BlockRow({
               onClick={() => onMove(index, -1)}
               disabled={index === 0}
               aria-label="Move up"
-              className="w-9 h-9 flex items-center justify-center rounded-full text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
+              className="w-11 h-11 sm:w-9 sm:h-9 flex items-center justify-center rounded-full text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
             >
               <ArrowUp className="w-3.5 h-3.5" />
             </button>
@@ -926,7 +926,7 @@ function BlockRow({
               onClick={() => onMove(index, 1)}
               disabled={index === total - 1}
               aria-label="Move down"
-              className="w-9 h-9 flex items-center justify-center rounded-full text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
+              className="w-11 h-11 sm:w-9 sm:h-9 flex items-center justify-center rounded-full text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
             >
               <ArrowDown className="w-3.5 h-3.5" />
             </button>
@@ -990,7 +990,7 @@ function Controls({
 
       <button
         onClick={() => onStartEdit(block)}
-        className="px-2.5 rounded-full text-[10px] font-semibold text-zinc-400 hover:text-white hover:bg-white/5 cursor-pointer min-h-[32px]"
+        className="px-2.5 rounded-full text-[10px] font-semibold text-zinc-400 hover:text-white hover:bg-white/5 cursor-pointer min-h-[44px] sm:min-h-[32px]"
       >
         Edit
       </button>

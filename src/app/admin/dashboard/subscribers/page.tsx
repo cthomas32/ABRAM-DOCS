@@ -438,7 +438,7 @@ export default function SubscribersPage() {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-3 sm:px-4 min-h-[38px] md:min-h-0 py-1.5 rounded-full text-[10px] font-semibold tracking-wider uppercase whitespace-nowrap transition-all duration-200 cursor-pointer font-sans ${
+                  className={`px-3 sm:px-4 min-h-[44px] md:min-h-0 py-1.5 rounded-full text-[10px] font-semibold tracking-wider uppercase whitespace-nowrap transition-all duration-200 cursor-pointer font-sans ${
                     activeTab === tab
                       ? "bg-white text-black"
                       : "text-zinc-400 hover:text-white"

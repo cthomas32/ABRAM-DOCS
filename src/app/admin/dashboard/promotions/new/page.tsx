@@ -164,7 +164,7 @@ export default function NewCampaignPage() {
           <button
             onClick={() => void submit()}
             disabled={blocked}
-            className="btn-primary h-9 px-4 text-xs font-semibold rounded-full disabled:opacity-40 flex items-center gap-2"
+            className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full disabled:opacity-40 flex items-center gap-2"
           >
             {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
             Create draft
@@ -298,7 +298,7 @@ export default function NewCampaignPage() {
                       onClick={() =>
                         setTiers((prev) => (prev.includes(t.id) ? prev.filter((x) => x !== t.id) : [...prev, t.id]))
                       }
-                      className={`h-9 px-3.5 text-xs font-medium rounded-lg border transition-colors ${
+                      className={`h-11 sm:h-9 px-3.5 text-xs font-medium rounded-lg border transition-colors ${
                         on ? "border-white/25 bg-white/[0.08] text-white" : "border-white/10 text-zinc-400 hover:bg-white/[0.03]"
                       }`}
                     >
@@ -394,7 +394,7 @@ export default function NewCampaignPage() {
             <button
               onClick={() => void submit()}
               disabled={blocked}
-              className="btn-primary h-9 px-4 text-xs font-semibold rounded-full disabled:opacity-40 flex items-center gap-2"
+              className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full disabled:opacity-40 flex items-center gap-2"
             >
               {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Create draft

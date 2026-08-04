@@ -287,7 +287,7 @@ export default function DashboardOverviewPage() {
           <button 
             onClick={fetchRealMetrics}
             disabled={refreshing}
-            className="btn-glass px-4 min-h-[40px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
+            className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${refreshing ? "animate-spin" : ""}`} />
             <span>{refreshing ? "Updating..." : "Refresh Telemetry"}</span>
@@ -415,7 +415,7 @@ export default function DashboardOverviewPage() {
                   href="https://analytics.google.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="btn-glass px-4 min-h-[40px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                  className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
                 >
                   <span>Launch GA Console</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -461,7 +461,7 @@ export default function DashboardOverviewPage() {
                   href="https://resend.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="btn-glass px-4 min-h-[40px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                  className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
                 >
                   <span>Launch Resend Console</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />

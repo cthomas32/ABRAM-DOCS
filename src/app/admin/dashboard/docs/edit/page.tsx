@@ -257,7 +257,7 @@ function DocsEditorContent() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="btn-primary h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer"
+            className="btn-primary h-11 sm:h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             <span>Save<span className="hidden sm:inline"> Draft</span></span>
@@ -364,7 +364,7 @@ function DocsEditorContent() {
                   <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Markdown/MDX Body</span>
                   <button
                     onClick={insertAgentOnly}
-                    className="btn-glass px-2.5 min-h-[32px] py-1 text-[9px] font-semibold rounded-full flex items-center gap-1.5 hover:text-white shrink-0"
+                    className="btn-glass px-2.5 min-h-[44px] sm:min-h-[32px] py-1 text-[9px] font-semibold rounded-full flex items-center gap-1.5 hover:text-white shrink-0"
                   >
                     <Cpu className="w-3.5 h-3.5 text-zinc-400" />
                     <span>Wrap AgentOnly</span>
