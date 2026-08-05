@@ -1,0 +1,181 @@
+[
+  {
+    "title": "Ask it what it learned",
+    "note": "LinkedIn, Thursday. The opening card of a week arguing one thing: software that only stores the work has run out of road, and the part that takes years to build is understanding it. A question and nothing else, so the argument lives in the caption and the card only has to stop the scroll. No product claim on the card at all.",
+    "format": "square",
+    "theme": "midnight",
+    "backdrop": "deep",
+    "grain": true,
+    "placement": "center",
+    "typeScale": 1.15,
+    "slides": [
+      {
+        "template": "poster",
+        "brand": "none",
+        "headline": "What has your production software learned about you?",
+        "footnote": "abram.network"
+      }
+    ],
+    "post": {
+      "scheduledFor": "2026-08-06",
+      "channel": "linkedin",
+      "kind": "story",
+      "caption": "A production tool has been holding your work for years. Every schedule, every call sheet, every invoice, the crew you rebooked and the crew you quietly stopped calling.\n\nAsk it what it learned from any of it.\n\nThat question is going to sort this category out. Building software that stores the work was hard for twenty years, and it stopped being hard. What is left is whether the thing holding all of it understood anything about how your company runs.\n\nWe are building ABRAM from that end. The schedule, the ledger and the roster are how it works out how you operate, and every conclusion it reaches names the events it came from, so you can look at one and tell it that it is wrong.\n\nTwo years of that is the part of a company nobody can install.",
+      "pageSlug": "start-assistant",
+      "altText": "A dark card with one line of type over a near-black sky: What has your production software learned about you?"
+    }
+  },
+  {
+    "title": "Four years of watching",
+    "note": "X, Friday. The same argument at the length X actually reads. Setup and turn on one card, the reasoning in 200 characters underneath. Deliberately says nothing about what ABRAM does, so the line has to stand on being true.",
+    "format": "wide",
+    "theme": "midnight",
+    "footer": "left",
+    "typeScale": 1,
+    "slides": [
+      {
+        "template": "statement",
+        "brand": "lockup",
+        "headline": "Your software has watched you work for four years.",
+        "headlineAccent": "It still asks you what to do next.",
+        "footnote": "abram.network"
+      }
+    ],
+    "post": {
+      "scheduledFor": "2026-08-07",
+      "channel": "x",
+      "kind": "story",
+      "caption": "Storing the work was the hard problem for twenty years. It is a weekend now.\n\nUnderstanding it is what is left, and that part gets built out of a company's own history. Which is the one thing a competitor cannot ship.",
+      "pageSlug": "start-assistant",
+      "altText": "A wide card reading: Your software has watched you work for four years. It still asks you what to do next."
+    }
+  },
+  {
+    "title": "Four things a season already told you",
+    "note": "Reddit, Saturday. Craft, and the only post in the set with no link and no product in it. It makes the same argument by being useful: every one of these is answerable from paperwork somebody already has, which is the point. Reddit punishes anything that reads as an advert, so this one asks for a reply instead of a click.",
+    "format": "square",
+    "theme": "steel",
+    "footer": "none",
+    "typeScale": 1,
+    "slides": [
+      {
+        "template": "grid",
+        "brand": "mark",
+        "headline": "Four things a season of work already told you",
+        "items": [
+          "Which client's approvals always take nine days",
+          "Which crew you rebooked, and which you quietly stopped calling",
+          "The day of the week your schedule always slips",
+          "The kit that has not left the shelf since March"
+        ]
+      }
+    ],
+    "post": {
+      "scheduledFor": "2026-08-08",
+      "channel": "reddit",
+      "kind": "craft",
+      "caption": "Nobody writes these down, and every one of them is already sitting in a season of your own paperwork.\n\nGo back through last year's schedules, invoices and bookings and you can answer all four in an afternoon. Most of us never do, so the same lesson gets learned again next year by whoever is unlucky enough to be on that job.\n\nIf you have a fifth, add it.",
+      "altText": "A four-panel card listing four things a season of production work already revealed about how a company operates"
+    }
+  },
+  {
+    "title": "Company move",
+    "note": "Instagram, Sunday. A definition card, which is the layout that gets saved and sent on, and a term that every crew member has an opinion about. Useful before it is an advert. The caption lands the week's theme at the end without making a product claim: the productions that plan a move properly are the ones that kept a record.",
+    "format": "portrait",
+    "theme": "cream",
+    "footer": "left",
+    "typeScale": 1,
+    "slides": [
+      {
+        "template": "term",
+        "brand": "lockup",
+        "headline": "Company move",
+        "body": "Moving the whole unit to a second location inside one shooting day. The part of the day every schedule underestimates.",
+        "footnote": "abram.network"
+      }
+    ],
+    "post": {
+      "scheduledFor": "2026-08-09",
+      "channel": "instagram",
+      "kind": "craft",
+      "caption": "Company move. Two locations, one shooting day, and the hour between them that never makes it onto the schedule.\n\nLoad out, travel, park, find the room, re-rig, re-light. Somebody wrote thirty minutes because thirty minutes is what the drive takes.\n\nThe productions that plan it properly are the ones that got burned by it before, which is really just another way of saying somebody kept a record.",
+      "altText": "A cream definition card: Company move, and what it means on a shooting day"
+    }
+  },
+  {
+    "title": "Upstream of the camera",
+    "note": "X, Monday. Points at the blog piece on AI in pre-production, which already carries this week's argument in long form and is the only thing on the calendar that compounds. The card takes one idea out of the piece and stops, so there is still a reason to open it, and the caption says the thing the article is too long to say quickly.",
+    "format": "wide",
+    "theme": "midnight",
+    "footer": "right",
+    "typeScale": 1,
+    "slides": [
+      {
+        "template": "hook",
+        "brand": "lockup",
+        "headline": "The AI worth caring about arrives weeks before the camera does.",
+        "cta": "Read it"
+      }
+    ],
+    "post": {
+      "scheduledFor": "2026-08-10",
+      "channel": "x",
+      "kind": "article",
+      "blogSlug": "how-ai-is-actually-changing-pre-production",
+      "caption": "Most of the AI talk in this industry is about footage. The part that has actually changed a working week sits upstream of the camera, in the fortnight nobody films.\n\nWritten up here, including where it still gets things wrong.",
+      "altText": "A wide card reading: The AI worth caring about arrives weeks before the camera does."
+    }
+  },
+  {
+    "title": "Where does it go",
+    "note": "Instagram, Tuesday. The week's thesis pointed at crew rather than at founders: a production teaches a company an enormous amount and almost none of it survives the wrap. One question on a sky, and the caption carries the ABRAM part.",
+    "format": "portrait",
+    "theme": "midnight",
+    "backdrop": "dusk",
+    "grain": true,
+    "placement": "center",
+    "typeScale": 1.15,
+    "slides": [
+      {
+        "template": "poster",
+        "brand": "none",
+        "headline": "Every production teaches you something. Where does it go?",
+        "footnote": "abram.network"
+      }
+    ],
+    "post": {
+      "scheduledFor": "2026-08-11",
+      "channel": "instagram",
+      "kind": "story",
+      "caption": "Four weeks of decisions. Three schedule rebuilds. One vendor who came through at midnight, and a crew list you would take anywhere.\n\nThen it wraps, and most of that lives in one person's head and a folder nobody opens again.\n\nWe are building ABRAM so the record does the remembering. It works the pattern out from the schedules, the bookings and the invoices you already made, and it tells you what it worked it out from.",
+      "pageSlug": "start-filmmakers",
+      "altText": "A portrait card over a dusk sky: Every production teaches you something. Where does it go?"
+    }
+  },
+  {
+    "title": "How your company actually runs",
+    "note": "LinkedIn, Wednesday. The one product card in the set, and the proof the rest of the week was arguing towards: the organisation brain screen, which infers how a company operates from work already done and names the events behind every line. Closes the week on something that can be pointed at in the app rather than on the thesis on its own.",
+    "format": "square",
+    "theme": "midnight",
+    "footer": "left",
+    "typeScale": 1,
+    "slides": [
+      {
+        "template": "product",
+        "mockup": "brain",
+        "brand": "lockup",
+        "headline": "Know how your company actually runs",
+        "body": "Worked out from the projects you already delivered, with the evidence on every line.",
+        "footnote": "abram.network"
+      }
+    ],
+    "post": {
+      "scheduledFor": "2026-08-12",
+      "channel": "linkedin",
+      "kind": "product",
+      "caption": "This is the part we think decides who is still here in five years.\n\nABRAM reads what a company already did. The schedules that got rebuilt, the crew who kept getting rebooked, the projects that ran in phases. Out of that it works out how that company operates, and every line it writes names the events it came from, so you can read one and tell it that it is wrong.\n\nNobody typed any of it in. It is the same work you were doing anyway, read back to you.\n\nA record like that gets more useful every month it runs, and it is the one part of a software company that cannot be shipped on a Friday.",
+      "pageSlug": "start-assistant",
+      "altText": "A card showing the organisation brain screen, where each inferred line about how a company works names the events it came from"
+    }
+  }
+]
