@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>ABRAM — Prepared for NBCUniversal</title>
+<style>
+  @font-face { font-family: "Geist"; src: url("../public/fonts/Geist-400.ttf") format("truetype"); font-weight: 400; font-display: block; }
+  @font-face { font-family: "Geist"; src: url("../public/fonts/Geist-500.ttf") format("truetype"); font-weight: 500; font-display: block; }
+  @font-face { font-family: "Geist"; src: url("../public/fonts/Geist-600.ttf") format("truetype"); font-weight: 600; font-display: block; }
+  @font-face { font-family: "Geist"; src: url("../public/fonts/Geist-700.ttf") format("truetype"); font-weight: 700; font-display: block; }
+
+  @page { size: letter; margin: 0; }
+
+  :root {
+    --black: #0A0A0A;
+    --cream: #FAFAF9;
+    --ink: #1C1917;
+    --body: #44403C;
+    --muted: #78716C;
+    --rule: #E7E5E4;
+    --accent: #CE1C1C;
+    --mark: #0C8C5E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 8.5in;
+    height: 11in;
+    background: #fff;
+    font-family: "Geist", -apple-system, "Segoe UI", sans-serif;
+    color: var(--body);
+    -webkit-font-smoothing: antialiased;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page { width: 8.5in; height: 11in; display: flex; flex-direction: column; }
+
+  /* ---------- Header band ---------- */
+  header {
+    background: var(--black);
+    color: var(--cream);
+    padding: 0.34in 0.5in 0.30in;
+  }
+  .brandrow { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.20in; }
+  .brandrow img { height: 17px; width: auto; display: block; }
+  .prepared {
+    font-size: 7.5pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #A8A29E;
+  }
+  h1 {
+    font-size: 20pt; line-height: 1.18; font-weight: 600; letter-spacing: -0.022em;
+    color: #fff; max-width: 7.5in;
+  }
+  .sub {
+    margin-top: 0.11in; font-size: 9.5pt; line-height: 1.46; color: #D6D3D1;
+    max-width: 6.4in; font-weight: 400;
+  }
+  .sub strong { color: #fff; font-weight: 500; }
+
+  /* ---------- Body ---------- */
+  main { flex: 1; padding: 0.22in 0.5in 0; }
+
+  .overline {
+    font-size: 7.5pt; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); display: block; margin-bottom: 0.11in;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1.5in 1fr;
+    gap: 0.24in;
+    padding: 0.095in 0 0.10in;
+    border-top: 1px solid var(--rule);
+  }
+  .row:first-of-type { border-top: 1px solid var(--ink); }
+
+  .rowlabel { padding-top: 0.012in; }
+  .rowlabel .n {
+    font-size: 7pt; font-weight: 600; color: var(--accent); letter-spacing: 0.1em;
+    display: block; margin-bottom: 0.035in;
+  }
+  .rowlabel h2 {
+    font-size: 10.5pt; font-weight: 600; line-height: 1.24; color: var(--ink);
+    letter-spacing: -0.012em;
+  }
+
+  ul { list-style: none; }
+  li {
+    position: relative; padding-left: 0.15in; font-size: 8.5pt; line-height: 1.40;
+    margin-bottom: 0.042in;
+  }
+  li:last-child { margin-bottom: 0; }
+  li::before {
+    content: ""; position: absolute; left: 0; top: 0.055in;
+    width: 3.4px; height: 3.4px; border-radius: 50%; background: var(--mark);
+  }
+  li b { font-weight: 600; color: var(--ink); }
+
+
+  .alsorow {
+    display: grid; grid-template-columns: 1.5in 1fr; gap: 0.24in;
+    padding: 0.115in 0 0; border-top: 1px solid var(--rule);
+  }
+  .alsolabel {
+    font-size: 7pt; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); padding-top: 0.02in;
+  }
+  .alsorow p { font-size: 8pt; line-height: 1.44; color: var(--muted); }
+
+  /* ---------- Footer band ---------- */
+  footer { margin-top: auto; padding: 0 0.5in 0.30in; }
+  .cta {
+    background: #F5F5F4; border: 1px solid var(--rule); border-radius: 10px;
+    padding: 0.17in 0.22in; display: flex; align-items: center; justify-content: space-between;
+    gap: 0.3in;
+  }
+  .cta h3 { font-size: 9.5pt; font-weight: 600; color: var(--ink); margin-bottom: 0.045in; }
+  .cta p { font-size: 8.5pt; line-height: 1.42; color: var(--body); max-width: 4.7in; }
+  .contact { text-align: right; white-space: nowrap; }
+  .contact .a { font-size: 9.5pt; font-weight: 600; color: var(--ink); display: block; }
+  .contact .b { font-size: 8.5pt; color: var(--muted); display: block; margin-top: 0.03in; }
+  .fineprint {
+    margin-top: 0.11in; font-size: 7pt; line-height: 1.4; color: #A8A29E;
+    display: flex; justify-content: space-between; gap: 0.3in;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brandrow">
+      <img src="../public/brand/lockup-cream.png" alt="ABRAM" />
+      <span class="prepared">Prepared for NBCUniversal</span>
+    </div>
+
+    <h1>Know who is on which shoot, and who is running it.</h1>
+    <p class="sub">ABRAM is one production workspace holding crew assignments, upcoming shoot days,
+    the person overseeing each one, the details of the day, and the schedule underneath all of it.
+    <strong>The answer is on screen.</strong></p>
+  </header>
+
+  <main>
+    <span class="overline">The five things you raised</span>
+
+    <div class="row">
+      <div class="rowlabel">
+        <span class="n">01</span>
+        <h2>Team production assignments</h2>
+      </div>
+      <ul>
+        <li>Every person on the roster shows <b>booked hours against their weekly capacity</b>, a utilization gauge, and the projects they are currently assigned to.</li>
+        <li>Double bookings, overcommitments and capacity overages are counted as <b>conflicts on one screen</b>, while there is still time to move someone.</li>
+        <li>One timeline carries every crew member and every kit, grouped by department. Bookings drag to new dates, and rescheduling a work order moves its kit as a group.</li>
+      </ul>
+    </div>
+
+    <div class="row">
+      <div class="rowlabel">
+        <span class="n">02</span>
+        <h2>Upcoming shoots and projects</h2>
+      </div>
+      <ul>
+        <li>A shoot day is a <b>work order</b>: dates, times, location, crew, gear, and a running cost checked against the package budget as you build it.</li>
+        <li>Status keeps itself current — Draft, Confirmed, In Progress, Wrapped — as the dates arrive. Confirming reserves the gear and places holds on crew calendars; wrapping releases both.</li>
+        <li>Each project opens on a timeline preview, budget snapshot, team capacity and upcoming events, with a full Gantt and workload view a tab away.</li>
+      </ul>
+    </div>
+
+    <div class="row">
+      <div class="rowlabel">
+        <span class="n">03</span>
+        <h2>Who is overseeing the shoot</h2>
+      </div>
+      <ul>
+        <li>The project header carries the client, the budget, the due date, <b>how many people are booked</b>, and the current status on one line.</li>
+        <li>Roles and per-person permissions decide who sees rates and budgets, and who is scoped to their assigned projects only. Custom roles can be defined beyond the standard set.</li>
+        <li>Every segment of a run of show has an owner, and every change to a project lands in an activity feed with the comment thread attached.</li>
+      </ul>
+    </div>
+
+    <div class="row">
+      <div class="rowlabel">
+        <span class="n">04</span>
+        <h2>Details of the shoot</h2>
+      </div>
+      <ul>
+        <li><b>Call sheets</b> hold general info, locations, the schedule with eighths, personnel call times and department notes in one document. Build one from a work order and that day's crew, resources and location come across with it.</li>
+        <li>Autofill from the project, or have ABRAM draft the sheet for you to review. Preview, print, and send to selected crew and outside email addresses.</li>
+        <li>For live and broadcast, the <b>Run of Show</b> is a minute-by-minute segment grid with column presets per role — Producer, Camera, Audio, Graphics, Replay, Stage Manager. Go Live tracks elapsed against scheduled, so the variance is visible while the show is running.</li>
+      </ul>
+    </div>
+
+    <div class="row">
+      <div class="rowlabel">
+        <span class="n">05</span>
+        <h2>Scheduling</h2>
+      </div>
+      <ul>
+        <li>Bookings are Tentative, Confirmed or Declined. A tentative hold still protects the slot.</li>
+        <li>Adding someone already booked raises a flag with a per-day conflict timeline. Gear that is already out is a <b>hard stop</b>, so two units cannot claim the same package.</li>
+        <li>Google Calendar and Outlook sync inbound, so outside commitments arrive as busy blocks with nobody re-entering them. A booking on a production the viewer does not own shows as Busy, details redacted.</li>
+      </ul>
+    </div>
+
+  <div class="alsorow">
+    <span class="alsolabel">Also in the workspace</span>
+    <p>Script breakdown and stripboard scheduling with day-out-of-days &middot; equipment, kit and vehicle
+    inventory &middot; timesheets that pre-fill from the work order &middot; deliverable review with Frame.io inside
+    the project &middot; budgets, invoicing and a client portal &middot; Slack notifications for approvals and changes.</p>
+  </div>
+  </main>
+
+  <footer>
+    <div class="cta">
+      <div>
+        <h3>Where a pilot starts</h3>
+        <p>One show. Load its roster, enter the next month of shoot days as work orders, and run a single
+        call sheet end to end. Everything above is in the product today.</p>
+      </div>
+      <div class="contact">
+        <span class="a">sales@abram.network</span>
+        <span class="b">abram.network</span>
+      </div>
+    </div>
+    <div class="fineprint">
+      <span>ABRAM Network is a product of Thomas Abram, LLC. Feature availability varies by plan.</span>
+      <span>August 2026</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
