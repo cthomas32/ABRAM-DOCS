@@ -15,7 +15,8 @@ import {
   FileText,
   Cpu,
   Upload,
-  User
+  User,
+  UsersRound
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,6 +24,7 @@ import { createClient } from "@/utils/supabase/client";
 import { MDXRemote } from "next-mdx-remote";
 import { mdxComponents } from "@/components/MdxComponents";
 import { compileMdxAction } from "@/app/admin/mdx-actions";
+import type { TeamMember } from "@/lib/team";
 
 function renderFormattedText(text: string): React.ReactNode {
   let tokens: { type: 'text' | 'bold' | 'code' | 'link'; content: string; url?: string }[] = [];
@@ -126,8 +128,26 @@ function BlogEditorContent() {
   const [author, setAuthor] = useState<string>("");
   const [publishedAt, setPublishedAt] = useState<string>("");
   const [authorAvatar, setAuthorAvatar] = useState<string>("");
-  const [loadedAuthor, setLoadedAuthor] = useState<string>("");
   const [existingAuthors, setExistingAuthors] = useState<{ name: string; avatar: string }[]>([]);
+
+  /**
+   * Who wrote it.
+   *
+   * "member" points the post at a row in the team list, which is where the
+   * name, the job title and the photograph live. "guest" is the one-off: a
+   * name typed straight in, for somebody who never joined the team. The two
+   * are exclusive, so a guest post leaves the team link empty.
+   */
+  const [authorMode, setAuthorMode] = useState<"member" | "guest">("member");
+  const [memberId, setMemberId] = useState<string>("");
+  const [members, setMembers] = useState<TeamMember[]>([]);
+  const selectedMember = members.find((m) => m.id === memberId) || null;
+
+  // What the byline will say once this is saved, drawn in the live preview.
+  const usingMember = authorMode === "member" && !!selectedMember;
+  const previewName = usingMember ? selectedMember!.full_name : author || "ABRAM Team";
+  const previewJobTitle = usingMember ? selectedMember!.job_title : null;
+  const previewPhoto = usingMember ? selectedMember!.photo_url : authorAvatar || null;
   const [existingAvatars, setExistingAvatars] = useState<{ name: string; url: string }[]>([]);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -171,11 +191,32 @@ function BlogEditorContent() {
 
   const supabase = createClient();
 
+  /** The team, newest sort order first, for the author picker. */
+  const fetchMembers = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("team_members")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("full_name", { ascending: true });
+
+      if (error) throw error;
+      if (data) setMembers(data as TeamMember[]);
+    } catch (err) {
+      console.error("Error fetching team members:", err);
+    }
+  };
+
+  /**
+   * Guest authors used before, offered as a shortcut. Posts with a team
+   * member are left out, since those names come from the picker instead.
+   */
   const fetchExistingAuthors = async () => {
     try {
       const { data, error } = await supabase
         .from("blog_posts")
         .select("author, author_avatar")
+        .is("member_id", null)
         .not("author", "is", null)
         .not("author", "eq", "");
 
@@ -199,6 +240,7 @@ function BlogEditorContent() {
   };
 
   useEffect(() => {
+    fetchMembers();
     fetchExistingAuthors();
     if (idParam) {
       loadBlogPost(idParam);
@@ -209,38 +251,21 @@ function BlogEditorContent() {
       setContent("# Untitled Blog Post\n\nStart writing your article here...");
       setStatus("draft");
       setAuthor("ABRAM Team");
-      setLoadedAuthor("ABRAM Team");
       setAuthorAvatar("");
+      setAuthorMode("member");
+      setMemberId("");
       setPublishedAt("");
       setLoading(false);
     }
   }, [idParam]);
 
-  // Automatically lookup and sync author avatar when author name changes
+  // A new post lands on the first active member, so the common case needs no
+  // choosing. An existing post keeps whatever it was saved with.
   useEffect(() => {
-    if (!author) return;
-    if (author === loadedAuthor && authorAvatar) return;
-
-    const timer = setTimeout(async () => {
-      try {
-        const { data, error } = await supabase
-          .from("blog_posts")
-          .select("author_avatar")
-          .eq("author", author)
-          .not("author_avatar", "is", null)
-          .order("created_at", { ascending: false })
-          .limit(1);
-
-        if (data && data.length > 0 && data[0].author_avatar) {
-          setAuthorAvatar(data[0].author_avatar);
-        }
-      } catch (err) {
-        console.error("Error fetching author avatar:", err);
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [author, loadedAuthor]);
+    if (idParam || memberId || members.length === 0) return;
+    const first = members.find((m) => m.is_active);
+    if (first) setMemberId(first.id);
+  }, [members, idParam, memberId]);
 
   const showToast = (message: string, type: "success" | "error" | "info") => {
     const id = Math.random().toString(36).substring(2, 9);
@@ -333,8 +358,9 @@ function BlogEditorContent() {
         setContent(data.content || "");
         setStatus(data.status || "draft");
         setAuthor(data.author || "ABRAM Team");
-        setLoadedAuthor(data.author || "ABRAM Team");
         setAuthorAvatar(data.author_avatar || "");
+        setMemberId(data.member_id || "");
+        setAuthorMode(data.member_id ? "member" : "guest");
         if (data.published_at) {
           setPublishedAt(new Date(data.published_at).toISOString().split("T")[0]);
         } else {
@@ -385,12 +411,18 @@ function BlogEditorContent() {
       });
     }
 
-    // 4. Author check (custom lint warning: blank author)
-    if (!author || !author.trim()) {
+    // 4. Author check. Either a team member is picked or a guest name is typed.
+    if (authorMode === "member" && !memberId) {
       warnings.push({
         id: "author-empty",
         type: "error",
-        text: "Author name cannot be blank.",
+        text: "Pick the team member who wrote this, or switch to a guest author.",
+      });
+    } else if (authorMode === "guest" && !author.trim()) {
+      warnings.push({
+        id: "author-empty",
+        type: "error",
+        text: "Guest author name cannot be blank.",
       });
     }
 
@@ -433,13 +465,20 @@ function BlogEditorContent() {
     });
 
     setSeoWarnings(warnings);
-  }, [content, title, summary, slug, author, idParam]);
+  }, [content, title, summary, slug, author, authorMode, memberId, idParam]);
 
   const handleSave = async () => {
     // Check for critical errors before saving
     const errors = seoWarnings.filter((w) => w.type === "error" && ["slug-format", "author-empty", "title-empty", "slug-empty"].includes(w.id));
     if (errors.length > 0) {
       showToast(`Cannot save. Please resolve critical errors: ${errors[0].text}`, "error");
+      return;
+    }
+
+    // Never quietly turn a team byline into a guest one because the team list
+    // has not arrived yet.
+    if (authorMode === "member" && !selectedMember) {
+      showToast("Pick the team member who wrote this before saving.", "error");
       return;
     }
 
@@ -451,10 +490,32 @@ function BlogEditorContent() {
         summary,
         content,
         status,
-        author,
-        author_avatar: authorAvatar || null,
         updated_at: new Date().toISOString()
       };
+
+      /**
+       * The byline.
+       *
+       * With a team member picked, the post stores the link and the page
+       * reads the name, job title and photograph from that one record. The
+       * legacy author columns are written alongside it as a plain snapshot.
+       * They are never preferred over the member, and they are never dropped:
+       * `member_id` is ON DELETE SET NULL, so if the person is ever removed
+       * these two fields are all that keeps a published byline readable, and
+       * other parts of the site still read `author` straight off the row.
+       *
+       * A guest author is the reverse. The typed name and headshot go in the
+       * legacy columns and the team link is cleared.
+       */
+      if (authorMode === "member" && selectedMember) {
+        updates.member_id = selectedMember.id;
+        updates.author = selectedMember.full_name;
+        updates.author_avatar = selectedMember.photo_url || null;
+      } else {
+        updates.member_id = null;
+        updates.author = author;
+        updates.author_avatar = authorAvatar || null;
+      }
 
       if (status === "published") {
         updates.published_at = publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString();
@@ -470,13 +531,9 @@ function BlogEditorContent() {
 
         if (error) throw error;
 
-        // Sync author_avatar across all posts for this author
-        if (author) {
-          await supabase
-            .from("blog_posts")
-            .update({ author_avatar: authorAvatar || null })
-            .eq("author", author);
-        }
+        // This used to rewrite author_avatar across every post by the same
+        // author. A headshot now lives on the team member, so changing it in
+        // the team screen changes every byline without touching a post.
 
         fetchExistingAuthors();
         showToast("Blog post saved successfully!", "success");
@@ -488,14 +545,6 @@ function BlogEditorContent() {
           .single();
 
         if (error) throw error;
-
-        // Sync author_avatar across all posts for this author
-        if (author) {
-          await supabase
-            .from("blog_posts")
-            .update({ author_avatar: authorAvatar || null })
-            .eq("author", author);
-        }
 
         fetchExistingAuthors();
         showToast("Blog post created successfully!", "success");
@@ -655,14 +704,89 @@ function BlogEditorContent() {
                   />
                 </div>
 
+                {/* Who wrote it. A team member, or a one-off guest name. */}
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Written by</label>
+                    <div className="flex bg-white/[0.04] p-1 rounded-full border border-white/10">
+                      {([
+                        { id: "member", label: "Team member" },
+                        { id: "guest", label: "Guest author" },
+                      ] as const).map((opt) => (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => setAuthorMode(opt.id)}
+                          className={`px-3 min-h-[44px] sm:min-h-[30px] rounded-full text-[10px] font-semibold transition-all cursor-pointer font-sans ${
+                            authorMode === opt.id ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-200"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {authorMode === "member" ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <select
+                          value={memberId}
+                          onChange={(e) => setMemberId(e.target.value)}
+                          className="w-full bg-[#121212] border border-white/8 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-white/20 h-[38px] font-sans"
+                        >
+                          <option value="">Select a team member...</option>
+                          {members
+                            .filter((m) => m.is_active || m.id === memberId)
+                            .map((m) => (
+                              <option key={m.id} value={m.id}>
+                                {m.full_name}
+                                {m.job_title ? `, ${m.job_title}` : ""}
+                                {m.is_active ? "" : " (inactive)"}
+                              </option>
+                            ))}
+                        </select>
+                        <p className="text-[9px] text-zinc-600 mt-1.5 leading-relaxed font-sans">
+                          {members.length === 0
+                            ? "No team members yet. "
+                            : "Name, job title and headshot all come from the team record. "}
+                          <Link href="/admin/dashboard/team" className="underline hover:text-zinc-400">
+                            Manage team
+                          </Link>
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3 bg-[#121212] border border-white/8 rounded-lg px-2 h-[38px] min-w-0">
+                        {selectedMember?.photo_url ? (
+                          <img
+                            src={selectedMember.photo_url}
+                            alt={selectedMember.full_name}
+                            className="w-6 h-6 rounded-full object-cover border border-white/10 shrink-0"
+                          />
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center shrink-0">
+                            <UsersRound className="w-3.5 h-3.5 text-zinc-500" />
+                          </div>
+                        )}
+                        <div className="min-w-0 leading-tight">
+                          <span className="block text-[11px] text-white font-semibold truncate font-sans">
+                            {selectedMember?.full_name || "Nobody selected"}
+                          </span>
+                          <span className="block text-[9px] text-zinc-500 truncate font-sans">
+                            {selectedMember?.job_title || "Byline preview"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Author Name</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Guest Author Name</label>
                     <input
                       type="text"
                       value={author}
                       onChange={(e) => setAuthor(e.target.value)}
-                      placeholder="e.g. John Doe"
+                      placeholder="e.g. Jane Rivera, Line Producer"
                       className="w-full bg-[#121212] border border-white/8 rounded-lg px-3 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white/20 font-sans"
                     />
                     {existingAuthors.length > 0 && (
@@ -780,6 +904,8 @@ function BlogEditorContent() {
                     </div>
                   </div>
                 </div>
+                  )}
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -886,20 +1012,26 @@ function BlogEditorContent() {
             <div className={`border border-white/5 bg-[#0E0E0E] rounded-2xl space-y-4 leading-relaxed text-zinc-300 text-xs min-h-[300px] break-words transition-all duration-300 ${
               previewMode === "preview" ? "max-w-3xl w-full mx-auto my-4 p-8 sm:p-10 border-white/10" : "w-full p-5"
             }`}>
-              <div className="flex items-center justify-between text-[10px] text-zinc-500">
-                <div className="flex items-center gap-2">
-                  {authorAvatar ? (
+              <div className="flex items-center justify-between text-[10px] text-zinc-500 gap-3">
+                <div className="flex items-center gap-2 min-w-0">
+                  {previewPhoto ? (
                     <img
-                      src={authorAvatar}
-                      alt="Author avatar"
+                      src={previewPhoto}
+                      alt={previewName}
                       className="w-5 h-5 rounded-full object-cover border border-white/10"
                     />
                   ) : (
-                    <div className="w-5 h-5 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[9px] text-zinc-400">
-                      {author?.charAt(0) || "A"}
+                    <div className="w-5 h-5 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[9px] text-zinc-400 shrink-0">
+                      {previewName.charAt(0) || "A"}
                     </div>
                   )}
-                  <span>By {author || "ABRAM Team"}</span>
+                  <span className="truncate">By {previewName}</span>
+                  {previewJobTitle && (
+                    <>
+                      <span className="w-1 h-1 rounded-full bg-zinc-700 shrink-0" />
+                      <span className="truncate text-zinc-600">{previewJobTitle}</span>
+                    </>
+                  )}
                 </div>
                 <span>{publishedAt || "Draft Mode"}</span>
               </div>

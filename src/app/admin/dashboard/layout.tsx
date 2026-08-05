@@ -18,10 +18,12 @@ import {
   Link as LinkIcon,
   Megaphone,
   BadgePercent,
+  Contact,
   Image as ImageIcon,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  UsersRound
 } from "lucide-react";
 
 const NAV_GROUPS = [
@@ -40,12 +42,14 @@ const NAV_GROUPS = [
       { id: "blog", label: "Blog Posts", href: "/admin/dashboard/blog", icon: Newspaper, hint: "Articles & announcements" },
       { id: "changelog", label: "Release Notes", href: "/admin/dashboard/changelog", icon: Tag, hint: "Version changelogs" },
       { id: "social", label: "Social Studio", href: "/admin/dashboard/social", icon: ImageIcon, hint: "Post images & carousels" },
+      { id: "team", label: "Team", href: "/admin/dashboard/team", icon: UsersRound, hint: "People & bylines" },
     ],
   },
   {
     id: "audience",
     label: "Audience",
     links: [
+      { id: "crm", label: "Contacts", href: "/admin/dashboard/crm", icon: Contact, hint: "Conference pipeline" },
       { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone, hint: "Landing page funnels" },
       { id: "links", label: "Link Hub", href: "/admin/dashboard/links", icon: LinkIcon, hint: "Your one bio link" },
       { id: "promotions", label: "Promotions", href: "/admin/dashboard/promotions", icon: BadgePercent, hint: "Discount codes" },

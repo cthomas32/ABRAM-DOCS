@@ -22,6 +22,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import ActionSheet, { type SheetAction } from "@/components/admin/ActionSheet";
 import Modal from "@/components/admin/Modal";
+import { BYLINE_MEMBER_SELECT, resolveByline, type Byline, type BylineMember } from "@/lib/team";
 
 interface BlogPost {
   id: string;
@@ -29,12 +30,16 @@ interface BlogPost {
   slug: string;
   summary: string;
   status: "draft" | "published";
+  /** Legacy free text. Still the byline for a post with no team member. */
   author: string;
   author_avatar?: string | null;
+  member_id?: string | null;
+  member?: BylineMember | BylineMember[] | null;
   published_at: string | null;
   created_at: string;
   views?: number;
   reads?: number;
+  byline: Byline;
 }
 
 interface Toast {
@@ -85,10 +90,10 @@ export default function BlogManagerPage() {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      // 1. Fetch Blog Posts
+      // 1. Fetch Blog Posts, with the team member each one is written by
       const { data: blogData, error: blogErr } = await supabase
         .from("blog_posts")
-        .select("*")
+        .select(`*, ${BYLINE_MEMBER_SELECT}`)
         .order("created_at", { ascending: false });
 
       if (blogErr) throw blogErr;
@@ -111,7 +116,8 @@ export default function BlogManagerPage() {
         const mappedPosts = blogData.map((post) => ({
           ...post,
           views: analyticsMap[post.id]?.views || 0,
-          reads: analyticsMap[post.id]?.reads || 0
+          reads: analyticsMap[post.id]?.reads || 0,
+          byline: resolveByline(post)
         }));
         setPosts(mappedPosts);
       }
@@ -159,6 +165,16 @@ export default function BlogManagerPage() {
 
   const handleCreatePost = async () => {
     try {
+      // A new post starts out written by whoever is signed in, if they are on
+      // the team. The legacy author column is filled in as well: it is what a
+      // byline falls back to, and it is what other readers of the row expect.
+      const { data: member } = await supabase
+        .from("team_members")
+        .select("id, full_name, photo_url")
+        .eq("email", currentUserEmail)
+        .eq("is_active", true)
+        .maybeSingle();
+
       const { data, error } = await supabase
         .from("blog_posts")
         .insert({
@@ -166,7 +182,9 @@ export default function BlogManagerPage() {
           slug: `untitled-post-${Date.now()}`,
           summary: "Short summary details.",
           content: "# Untitled Blog Post\n\nStart writing your article here...",
-          author: currentUserEmail,
+          member_id: member?.id || null,
+          author: member?.full_name || currentUserEmail,
+          author_avatar: member?.photo_url || null,
           status: "draft"
         })
         .select()
@@ -321,17 +339,20 @@ export default function BlogManagerPage() {
                       <Clock className="w-3 h-3 text-zinc-600" />
                       {new Date(post.created_at).toLocaleDateString()}
                     </span>
-                    <span className="flex items-center gap-1.5 truncate max-w-[130px]">
-                      {post.author_avatar ? (
+                    <span className="flex items-center gap-1.5 truncate max-w-[170px]">
+                      {post.byline.photoUrl ? (
                         <img
-                          src={post.author_avatar}
-                          alt={post.author}
+                          src={post.byline.photoUrl}
+                          alt={post.byline.name}
                           className="w-3.5 h-3.5 rounded-full object-cover border border-white/10 shrink-0"
                         />
                       ) : (
                         <User className="w-3 h-3 text-zinc-600 shrink-0" />
                       )}
-                      <span className="truncate">{post.author}</span>
+                      <span className="truncate">{post.byline.name}</span>
+                      {post.byline.jobTitle && (
+                        <span className="truncate text-zinc-600">{post.byline.jobTitle}</span>
+                      )}
                     </span>
                     <span className="flex items-center gap-1">
                       <Eye className="w-3 h-3 text-zinc-600" />

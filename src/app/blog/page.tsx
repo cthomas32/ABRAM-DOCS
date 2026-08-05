@@ -3,6 +3,7 @@ import React from "react";
 import { supabase } from "@/utils/supabase/static";
 import BlogListClient from "@/components/blog/BlogListClient";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import { BYLINE_MEMBER_SELECT, resolveByline } from "@/lib/team";
 
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
@@ -32,16 +33,22 @@ export const metadata: Metadata = {
 export default async function BlogListingPage() {
   let posts: any[] = [];
   try {
+    // The legacy author columns come back alongside the joined member so a
+    // post written before team members existed still has a byline.
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("id, slug, title, summary, author, author_avatar, published_at, created_at, content")
+      .select(
+        `id, slug, title, summary, author, author_avatar, published_at, created_at, content, ${BYLINE_MEMBER_SELECT}`
+      )
       .eq("status", "published")
       .order("published_at", { ascending: false });
 
     if (error) {
       console.error("Error loading blog posts:", error.message);
     } else if (data) {
-      posts = data;
+      // Resolved here so the list component receives a finished byline
+      // rather than the rules for working one out.
+      posts = data.map((post: any) => ({ ...post, byline: resolveByline(post) }));
     }
   } catch (err) {
     console.error("Error fetching blog posts from Supabase:", err);

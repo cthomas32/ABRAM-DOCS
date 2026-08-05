@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { linkSubscriberToContacts } from "@/lib/crm/subscriberLink";
 import { addSubscriber } from "@/utils/resend";
 
 /**
@@ -41,6 +42,17 @@ export async function POST(request: Request) {
       firstName: typeof firstName === "string" ? firstName.trim() : undefined,
       lastName: typeof lastName === "string" ? lastName.trim() : undefined,
     });
+
+    // 4. Somebody you met at a conference may sign up here weeks later.
+    // Link the two records so their history shows they came back on their
+    // own. Strictly a side effect: it runs after the subscription is safe,
+    // it writes nothing to the mailing list, and a failure here is logged
+    // and swallowed rather than turned into a failed signup.
+    try {
+      await linkSubscriberToContacts(email.trim().toLowerCase());
+    } catch (linkError) {
+      console.error("Newsletter subscription: contact link failed:", linkError);
+    }
 
     return NextResponse.json({
       success: true,

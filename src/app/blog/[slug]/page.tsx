@@ -9,6 +9,7 @@ import { cache } from "react";
 import TelemetryTracker from "@/components/TelemetryTracker";
 import { AuthorAvatar } from "@/components/blog/AuthorAvatar";
 import FigureScrollHints from "@/components/blog/FigureScrollHints";
+import { BYLINE_MEMBER_SELECT, resolveByline } from "@/lib/team";
 
 export const revalidate = 60; // Revalidate page cache every 60 seconds (ISR)
 
@@ -23,9 +24,11 @@ interface BlogPostPageProps {
 
 const getPost = cache(async (slug: string, preview: boolean = false) => {
   try {
+    // The author comes from the team member the post is linked to. The legacy
+    // author columns come back too and stand in for posts that have no member.
     let query = supabase
       .from("blog_posts")
-      .select("*")
+      .select(`*, ${BYLINE_MEMBER_SELECT}`)
       .eq("slug", slug);
 
     if (!preview) {
@@ -73,10 +76,11 @@ export async function generateMetadata({ params, searchParams }: BlogPostPagePro
     };
   }
 
+  const byline = resolveByline(post);
   const title = post.title;
   const description = post.summary || post.title;
   const canonicalUrl = `https://abram.network/blog/${post.slug}`;
-  const keywords = ["ABRAM", "blog", "article", post.author || "ABRAM Team"].concat(
+  const keywords = ["ABRAM", "blog", "article", byline.name].concat(
     post.title.split(" ").filter((w: string) => w.length > 4)
   );
 
@@ -95,7 +99,7 @@ export async function generateMetadata({ params, searchParams }: BlogPostPagePro
       siteName: "ABRAM",
       locale: "en_US",
       publishedTime: post.published_at || post.created_at,
-      authors: [post.author || "ABRAM Network"],
+      authors: [byline.name],
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: title }],
     },
     twitter: {
@@ -117,12 +121,15 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
     notFound();
   }
 
-  // Fetch related articles (limit 3, exclude current)
+  const byline = resolveByline(post);
+
+  // Fetch related articles (limit 3, exclude current). These cards carry a
+  // date and a title only, so they never need to resolve an author.
   let otherPosts: any[] = [];
   try {
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("id, slug, title, summary, author, author_avatar, published_at, created_at")
+      .select("id, slug, title, summary, published_at, created_at")
       .eq("status", "published")
       .neq("slug", slug)
       .order("published_at", { ascending: false })
@@ -156,7 +163,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
     "dateModified": post.published_at || post.created_at,
     "author": {
       "@type": "Organization",
-      "name": post.author || "ABRAM Network",
+      "name": byline.name,
       "url": "https://abram.network"
     },
     "publisher": {
@@ -231,9 +238,17 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-zinc-500 font-medium font-sans">
             <time dateTime={post.published_at || post.created_at}>{formattedDate}</time>
             <span className="hidden sm:inline w-1 h-1 rounded-full bg-zinc-700" />
-            <div className="flex items-center gap-2 min-w-0">
-              <AuthorAvatar src={post.author_avatar} name={post.author || "ABRAM Team"} size="sm" />
-              <span className="truncate">By {post.author || "ABRAM Team"}</span>
+            {/* Name and job title are separate elements now that they are
+                separate columns, so a byline can style them differently. */}
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
+              <AuthorAvatar src={byline.photoUrl} name={byline.name} size="sm" />
+              <span className="truncate">By {byline.name}</span>
+              {byline.jobTitle && (
+                <>
+                  <span className="w-1 h-1 rounded-full bg-zinc-700 shrink-0" />
+                  <span className="truncate text-zinc-600">{byline.jobTitle}</span>
+                </>
+              )}
             </div>
           </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-zinc-50 leading-tight font-sans break-words">

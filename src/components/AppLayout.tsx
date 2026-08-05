@@ -32,7 +32,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // The link hub is the one URL that goes in a social bio. It renders
   // bare: no header, no footer, no consent banner competing with the
   // links themselves.
-  const isBarePage = cleanPathname === "/links";
+  //
+  // Contact cards at /c/<slug> render bare for the same reason and one
+  // more: they are opened by someone standing in a conference hall on
+  // shared wifi, where every kilobyte of site chrome is weight between
+  // them and the one thing the page is for.
+  const isBarePage = cleanPathname === "/links" || cleanPathname.startsWith("/c/");
   // Conversion pages: single goal, so they get a logo-only header with no
   // navigation and no competing call to action.
   const isCampaignPage = cleanPathname === "/start" || cleanPathname.startsWith("/start/");

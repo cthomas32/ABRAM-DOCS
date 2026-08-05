@@ -665,6 +665,37 @@ body {
   }
 }
 
+/* ---------------------------------------------------------------------
+   Contact card entrance.
+
+   Deliberately CSS rather than a JavaScript animation. The card at
+   /c/<slug> is opened by a stranger on conference wifi, and if the
+   client bundle is slow, blocked or broken, an animation library that
+   holds content at opacity 0 until it hydrates leaves them staring at an
+   empty screen. A keyframe cannot fail that way: the worst case is that
+   the card appears without the fade.
+   --------------------------------------------------------------------- */
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.card-rise {
+  animation: card-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-rise {
+    animation: none;
+  }
+}
+
 /* Button label scales with the chosen button size. */
 .lh-btn-label {
   font-size: var(--lh-btn-font, 0.875rem);

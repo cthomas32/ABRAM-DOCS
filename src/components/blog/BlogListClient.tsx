@@ -5,17 +5,18 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Cover } from "../mdx/Cover";
 import { AuthorAvatar } from "./AuthorAvatar";
+import type { Byline } from "@/lib/team";
 
 interface Post {
   id: string;
   slug: string;
   title: string;
   summary: string | null;
-  author: string;
-  author_avatar?: string | null;
   published_at: string | null;
   created_at: string;
   content?: string;
+  /** Resolved on the server: the team member if there is one, the legacy text if not. */
+  byline: Byline;
 }
 
 function parseCoverRows(content?: string) {
@@ -160,9 +161,16 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
                     button has to wrap mid-word */}
                 <div className="flex flex-col items-stretch gap-3 pt-4 border-t border-white/5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                   <div className="flex items-center gap-2 min-w-0">
-                    <AuthorAvatar src={featuredPost.author_avatar} name={featuredPost.author} size="sm" />
-                    <span className="text-xs text-zinc-500 font-medium font-sans truncate">
-                      By {featuredPost.author}
+                    <AuthorAvatar src={featuredPost.byline.photoUrl} name={featuredPost.byline.name} size="sm" />
+                    <span className="min-w-0">
+                      <span className="block text-xs text-zinc-500 font-medium font-sans truncate">
+                        By {featuredPost.byline.name}
+                      </span>
+                      {featuredPost.byline.jobTitle && (
+                        <span className="block text-[10px] text-zinc-600 font-sans truncate">
+                          {featuredPost.byline.jobTitle}
+                        </span>
+                      )}
                     </span>
                   </div>
                   <div className="btn-glass w-full sm:w-auto shrink-0 px-4 min-h-[44px] sm:min-h-0 sm:py-1.5 text-xs">
@@ -201,11 +209,19 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
                       <span className="hidden sm:inline w-1 h-1 rounded-full bg-zinc-700" />
                       <div className="flex items-center gap-1.5 min-w-0">
                         <AuthorAvatar
-                          src={post.author_avatar}
-                          name={post.author}
+                          src={post.byline.photoUrl}
+                          name={post.byline.name}
                           className="w-4 h-4 text-[8px] shrink-0"
                         />
-                        <span className="truncate">By {post.author}</span>
+                        <span className="truncate">By {post.byline.name}</span>
+                        {post.byline.jobTitle && (
+                          <>
+                            <span className="w-1 h-1 rounded-full bg-zinc-700 shrink-0 hidden sm:inline-block" />
+                            <span className="truncate text-zinc-600 hidden sm:inline">
+                              {post.byline.jobTitle}
+                            </span>
+                          </>
+                        )}
                       </div>
                     </div>
 
