@@ -197,10 +197,20 @@ async function supabase(pathname, init = {}) {
 
   /* ------------------------------------------------------- the analysis */
 
-  const totals = queriesNow.reduce(
+  const sum = (rows) => rows.reduce(
     (acc, r) => ({ clicks: acc.clicks + r.clicks, impressions: acc.impressions + r.impressions }),
     { clicks: 0, impressions: 0 }
   );
+
+  // Headline totals come from the PAGE cut, not the query cut. Google withholds the query
+  // string on rare searches to protect user privacy, and drops those rows from the query
+  // dimension entirely rather than bucketing them — so summing queries under-counts a young
+  // site, where nearly every search is rare. Measured 2026-08-03 over the same 28 days: the
+  // query cut said 102 impressions / 0 clicks, the page cut said 346 / 11. Reporting "0
+  // clicks" while the homepage takes 8 at position 9.2 is exactly the sort of wrong number
+  // that gets repeated in a weekly report, so the headline reads the cut that sees them all.
+  const totals = sum(pagesNow);
+  const queryCut = sum(queriesNow);
 
   // Thresholds SCALE WITH THE SITE. Fixed floors (the usual "20 impressions minimum" advice)
   // are written for established sites and silently return nothing on a young one — which reads
@@ -208,7 +218,11 @@ async function supabase(pathname, init = {}) {
   // across 44 queries the average query has 2.3, so a floor of 20 excludes 100% of the data.
   //
   //     102 impressions -> floor 3       1,000 -> floor 5       10,000+ -> floor 50
-  const minImpr = Math.max(3, Math.min(50, Math.round(totals.impressions / 200)));
+  //
+  // Scaled off the QUERY cut, because the rows it filters are query rows — sizing a query
+  // threshold with page-dimension volume would raise the bar using impressions that can
+  // never appear in the list being filtered.
+  const minImpr = Math.max(3, Math.min(50, Math.round(queryCut.impressions / 200)));
   const minImprCtr = Math.max(minImpr, 5); // CTR is noisier; needs slightly more evidence
 
   // Positions 8-20: we are already relevant enough to be shown, and a better title,
@@ -263,6 +277,11 @@ async function supabase(pathname, init = {}) {
       ctr: totals.impressions ? Number(((totals.clicks / totals.impressions) * 100).toFixed(2)) : 0,
       queries: queries.length,
       pages: pages.length,
+      // The share of real traffic that carries no query string. Everything in the query-level
+      // buckets below is blind to it, so a large gap here means "striking distance is empty"
+      // should be read as "empty among the queries Google will name", not "empty".
+      anonymizedImpressions: totals.impressions - queryCut.impressions,
+      namedQueryImpressions: queryCut.impressions,
     },
     // Recorded so a reader can tell an empty bucket ("nothing qualified") apart from an
     // over-aggressive filter, and so a future run can explain why a query dropped out.
