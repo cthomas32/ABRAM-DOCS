@@ -54,10 +54,10 @@ export default function FAQSection() {
       )
     },
     {
-      question: "Google Calendar Integration",
+      question: "External Calendars",
       answer: (
         <p className="text-zinc-400 text-sm md:text-base leading-7">
-          ABRAM Network integrates with Google Calendar to automatically synchronize your production schedules and roster bookings. When you authorize this integration, ABRAM will securely read and write calendar events to display real-time contractor availability, manage project shoot dates, and prevent scheduling conflicts. Your calendar data is never shared with third parties and is used solely to keep your schedules in sync.
+          ABRAM publishes your bookings and holds as a private calendar link, so your production schedule appears in whichever calendar app you already use. You can also point ABRAM at an outside calendar, and those events show up alongside your bookings as clash warnings. Both directions are read-only: ABRAM never signs in to your calendar account and never writes anything to your personal calendar. Your calendar data is never shared with third parties.
         </p>
       )
     }
