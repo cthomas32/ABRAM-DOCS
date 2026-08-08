@@ -63,7 +63,7 @@ Learn how to find talent, receive AI recommendations, and schedule freelancer ca
 * **[4.2 AI Matchmaking Suggestions](./4.2-ai-matchmaking-suggestions.mdx)**: Utilizing AI suggestions to find freelancers based on role suitability and budget.
 * **[4.3 Inviting & Crew RSVP](./4.3-inviting-and-crew-rsvp.mdx)**: Managing direct project invites, sending chatbot invitations, and tracking freelancer RSVPs.
 * **[4.4 Managing Your Utilization Calendar](./4.4-managing-your-utilization-calendar.md)**: Freelancer utilization views, managing blockouts, and setting scheduling holds.
-* **[4.5 Syncing External Calendars](./4.5-syncing-external-calendars.md)**: Integrating Google Calendar and Microsoft Outlook for real-time availability updates.
+* **[4.5 External Calendars](./4.5-syncing-external-calendars.md)**: Publishing your ABRAM schedule as a private calendar link, and subscribing ABRAM to an outside calendar for clash warnings.
 * **[4.6 Team Management Dashboard](./4.6-team-management-dashboard.md)**: Workspace utilization overview, scheduling calendar, capacity planning tool, conflict detection panel, team templates, hours roster, and analytics.
 * **[4.7 Run of Show](./4.7-run-of-show.md)**: Building a minute-by-minute segment schedule, AI-generating segments, and running Go Live show control.
  
@@ -92,4 +92,4 @@ Link Slack, Frame.io, and calendar workspaces to automate creative review and no
 
 ### ❓ [Section 7: FAQs & Troubleshooting](./7.1-faqs-and-troubleshooting.md)
 Find answers to common questions and troubleshoot calendar, Stripe, or AI credit issues.
-* **[7.1 FAQs & Troubleshooting](./7.1-faqs-and-troubleshooting.md)**: Step-by-step troubleshooting for calendar sync webhooks, Stripe onboarding status, invoice capture holds, and AI brief analyzer errors.
+* **[7.1 FAQs & Troubleshooting](./7.1-faqs-and-troubleshooting.md)**: Step-by-step troubleshooting for subscribed calendars, Stripe onboarding status, invoice capture holds, and AI brief analyzer errors.
