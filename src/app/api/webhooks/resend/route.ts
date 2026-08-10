@@ -213,6 +213,25 @@ export async function POST(request: Request) {
       console.error("Failed to insert campaign log:", logError.message);
     }
 
+    // 4b. Keep the campaign's recipient count honest.
+    // A segment broadcast is expanded by Resend, so the send itself can only ever
+    // estimate its audience. These events are the real thing, so recompute the count
+    // from them as they land. Recomputing rather than incrementing keeps concurrent
+    // webhook deliveries and Resend's retries from inflating the number.
+    if (campaignId && type === "email.sent") {
+      const { error: reconcileError } = await supabase.rpc(
+        "reconcile_campaign_recipients_count",
+        { p_campaign_id: campaignId }
+      );
+
+      if (reconcileError) {
+        console.error(
+          `Failed to reconcile recipient count for campaign ${campaignId}:`,
+          reconcileError.message
+        );
+      }
+    }
+
     // 5. Handle specific event type behaviors
     switch (type) {
       case "email.bounced":

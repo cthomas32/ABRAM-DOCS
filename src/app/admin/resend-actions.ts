@@ -695,18 +695,25 @@ export async function updateManualDraftCampaignAction(
       throw new Error("Unauthorized. Admin privileges are required to update campaign drafts.");
     }
 
+    // Only touch recipients_count when the caller actually supplied one. Coercing an
+    // absent value to 0 silently wiped the audience size off any draft saved from a
+    // form that does not carry the field, and nothing recomputed it afterwards.
+    const updatePayload: Record<string, unknown> = {
+      title,
+      subject,
+      text_content: textContent,
+      html_content: htmlContent,
+      segment_id: segmentId || null,
+      metadata: metadata || null,
+      updated_at: new Date().toISOString(),
+    };
+    if (recipientsCount !== undefined) {
+      updatePayload.recipients_count = recipientsCount;
+    }
+
     const { data, error } = await supabase
       .from("campaigns")
-      .update({
-        title,
-        subject,
-        text_content: textContent,
-        html_content: htmlContent,
-        segment_id: segmentId || null,
-        metadata: metadata || null,
-        recipients_count: recipientsCount || 0,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("id", campaignId)
       .eq("status", "draft")
       .select()

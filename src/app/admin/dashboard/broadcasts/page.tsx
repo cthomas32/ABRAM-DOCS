@@ -761,8 +761,16 @@ export default function BroadcastsPage() {
       return { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0 };
     }
     
-    const sent = selectedCampaign.recipients_count || logs.length || 0;
-    
+    // Fall back to the delivery logs when the stored count is missing, counting the
+    // recipients that were actually sent to. Using logs.length here counted every
+    // event row (a send, a delivery and an open for one person counted as three).
+    const loggedRecipients = new Set(
+      logs
+        .filter(l => l.event_type === "email.sent" && l.recipient_email)
+        .map(l => l.recipient_email)
+    ).size;
+    const sent = selectedCampaign.recipients_count || loggedRecipients || 0;
+
     if (logs.length === 0) {
       return { sent, delivered: 0, opened: 0, clicked: 0, bounced: 0 };
     }

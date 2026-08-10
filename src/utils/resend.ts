@@ -288,6 +288,26 @@ interface ApprovalDetails {
 }
 
 /**
+ * Counts the subscribers a segment currently resolves to.
+ *
+ * This is only ever an estimate of what a broadcast will reach: Resend expands the
+ * segment on its own side at send time, so the authoritative number is the one that
+ * comes back from the delivery webhooks.
+ */
+async function countSegmentSubscribers(supabase: any, segmentId: string): Promise<number> {
+  const query = supabase
+    .from("subscribers")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "subscribed");
+
+  const { count } = segmentId === APPLICATION_SEGMENT_ID
+    ? await query.eq("is_application_list", true)
+    : await query.eq("is_marketing_list", true);
+
+  return count || 0;
+}
+
+/**
  * Creates and logs a Campaign Draft in the local database.
  * NEVER connects to Resend or dispatches any emails.
  */
@@ -308,21 +328,7 @@ export async function createDraftCampaign(input: CreateDraftCampaignInput) {
       // Fall back to the Marketing segment when no usable value is provided.
       segmentId = resolveSegmentId(input.segmentId) || MARKETING_SEGMENT_ID;
       if (input.recipientsCount === undefined) {
-        if (segmentId === APPLICATION_SEGMENT_ID) {
-          const { count } = await supabase
-            .from("subscribers")
-            .select("*", { count: "exact", head: true })
-            .eq("is_application_list", true)
-            .eq("status", "subscribed");
-          recipientsCount = count || 0;
-        } else {
-          const { count } = await supabase
-            .from("subscribers")
-            .select("*", { count: "exact", head: true })
-            .eq("is_marketing_list", true)
-            .eq("status", "subscribed");
-          recipientsCount = count || 0;
-        }
+        recipientsCount = await countSegmentSubscribers(supabase, segmentId);
       }
     }
   }
@@ -403,6 +409,8 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
 
     const isIndividualSend = Array.isArray(recipientEmails) && recipientEmails.length > 0;
 
+    let dispatchedCount = 0;
+
     if (isIndividualSend) {
       // Loop through each email in the array and send individually using resend.emails.send
       for (const email of recipientEmails) {
@@ -434,7 +442,8 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
           console.error(`Failed to send email to ${targetEmail}:`, emailResponse.error.message);
         } else {
           const resendEmailId = emailResponse.data?.id || null;
-          
+          dispatchedCount += 1;
+
           // Insert a row in campaign_logs with status = 'sent'
           const { error: logError } = await serviceClient
             .from("campaign_logs")
@@ -458,6 +467,9 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
         .update({
           status: "sent",
           sent_at: new Date().toISOString(),
+          // Individual sends are enumerated here, so this is the real number of
+          // emails Resend accepted rather than an estimate made at draft time.
+          recipients_count: dispatchedCount,
           approved_by: approval.approvedBy,
           approved_at: new Date().toISOString(),
           approval_ip: approval.ipAddress,
@@ -517,6 +529,12 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
         if (sendResponse.error) {
           throw new Error(sendResponse.error.message);
         }
+
+        // Resend expands the segment on its side and returns no recipient count, so
+        // the best we can do here is re-read the segment now instead of trusting a
+        // number estimated whenever the draft happened to be saved. The delivery
+        // webhooks correct this to the true figure as they arrive.
+        dispatchedCount = await countSegmentSubscribers(serviceClient, resolvedSegmentId);
       } else {
         // Send directly to the list of specific emails (legacy batch send)
         const legacyEmails: string[] = lockedCampaign.metadata?.emails || [];
@@ -548,6 +566,7 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
           if (batchResponse.error) {
             throw new Error(batchResponse.error.message);
           }
+          dispatchedCount += chunk.length;
         }
 
         resendBroadcastId = `batch_send_${Date.now()}`;
@@ -560,6 +579,7 @@ export async function approveAndSendCampaign(campaignId: string, approval: Appro
           resend_broadcast_id: resendBroadcastId,
           status: "sent",
           sent_at: new Date().toISOString(),
+          recipients_count: dispatchedCount,
           approved_by: approval.approvedBy,
           approved_at: new Date().toISOString(),
           approval_ip: approval.ipAddress,
