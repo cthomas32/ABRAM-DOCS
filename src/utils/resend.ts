@@ -36,6 +36,57 @@ export function getResendClient(): Resend | null {
   return new Resend(apiKey);
 }
 
+/**
+ * Adds a contact to a Resend audience, which is what actually makes them reachable
+ * by a broadcast. Storing a subscriber locally does not put them on any list: a
+ * broadcast is addressed to the audience, so a row that never made it across is a
+ * person who silently receives nothing.
+ *
+ * Idempotent from the caller's point of view. Never throws, because failing to
+ * register a contact must not fail the signup that produced them.
+ */
+export async function addContactToAudience(input: {
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  audienceId: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const apiKey = process.env.RESEND_MARKETING_API_KEY || process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return { ok: false, error: "Resend API key is not configured." };
+  }
+
+  try {
+    const res = await fetch(`https://api.resend.com/audiences/${input.audienceId}/contacts`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: input.email.trim().toLowerCase(),
+        first_name: input.firstName || undefined,
+        last_name: input.lastName || undefined,
+        unsubscribed: false,
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      // Resend answers a repeat add with a conflict rather than an error worth
+      // surfacing, so treat it as the success it effectively is.
+      if (res.status === 409 || body.includes("already exists")) {
+        return { ok: true };
+      }
+      return { ok: false, error: `Resend responded ${res.status}: ${body.slice(0, 200)}` };
+    }
+
+    return { ok: true };
+  } catch (err: unknown) {
+    return { ok: false, error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 // Canonical Resend segment IDs (overridable via environment).
 const MARKETING_SEGMENT_ID = process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
 const APPLICATION_SEGMENT_ID = process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8";
@@ -171,6 +222,18 @@ export async function addSubscriber(input: SubscribeInput) {
         console.error("Failed to update extra subscriber details during re-subscribe:", err);
       }
     }
+
+    // Someone who was already on file may still be missing from the audience their
+    // flags claim, either because they predate this registration step or because a
+    // list was added to them here.
+    await registerSubscriberAudiences({
+      email: existingSub.email,
+      firstName: input.firstName || existingSub.first_name,
+      lastName: input.lastName || existingSub.last_name,
+      isMarketing,
+      isApp,
+    });
+
     return { success: true, message: "You are already subscribed!", alreadySubscribed: true };
   }
 
@@ -215,7 +278,50 @@ export async function addSubscriber(input: SubscribeInput) {
     throw new Error(`Database Error: ${err.message}`);
   }
 
+  // 5. Register the contact with Resend.
+  // Saving the row above only records the intent to subscribe. Until the contact
+  // exists in the audience a broadcast will pass them by, which is how local
+  // subscriber counts drifted above the number of people actually reached.
+  await registerSubscriberAudiences({
+    email: subscriberData.email,
+    firstName: input.firstName,
+    lastName: input.lastName,
+    isMarketing,
+    isApp,
+  });
+
   return { success: true, message: "Successfully subscribed!" };
+}
+
+/**
+ * Puts a subscriber into every Resend audience their list flags imply.
+ * Failures are logged rather than thrown: a subscription that is recorded locally
+ * but not yet mirrored is recoverable by the sync, whereas a rejected signup is not.
+ */
+async function registerSubscriberAudiences(input: {
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  isMarketing: boolean;
+  isApp: boolean;
+}) {
+  const targets: string[] = [];
+  if (input.isMarketing) targets.push(MARKETING_SEGMENT_ID);
+  if (input.isApp) targets.push(APPLICATION_SEGMENT_ID);
+
+  for (const audienceId of targets) {
+    const result = await addContactToAudience({
+      email: input.email,
+      firstName: input.firstName,
+      lastName: input.lastName,
+      audienceId,
+    });
+    if (!result.ok) {
+      console.error(
+        `Subscriber ${input.email} saved locally but not added to Resend audience ${audienceId}: ${result.error}`
+      );
+    }
+  }
 }
 
 /**

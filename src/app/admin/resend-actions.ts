@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { addSubscriber, createDraftCampaign, approveAndSendCampaign, getResendClient } from "@/utils/resend";
+import { addSubscriber, addContactToAudience, createDraftCampaign, approveAndSendCampaign, getResendClient } from "@/utils/resend";
 import { headers } from "next/headers";
 
 /**
@@ -134,7 +134,7 @@ async function fetchContactDetailsFromResend(apiKey: string, contactId: string):
 /**
  * Server Action: Synchronizes all contacts from Resend into the local Supabase database.
  */
-export async function syncResendContacts(): Promise<{ success: boolean; count?: number; error?: string }> {
+export async function syncResendContacts(): Promise<{ success: boolean; count?: number; pushed?: number; error?: string }> {
   try {
     const apiKey = process.env.RESEND_MARKETING_API_KEY || process.env.RESEND_API_KEY;
     if (!apiKey) {
@@ -327,7 +327,58 @@ export async function syncResendContacts(): Promise<{ success: boolean; count?: 
       }
     }
 
-    return { success: true, count: syncCount };
+    // 5. Push local subscribers back up to Resend.
+    // Everything above pulls Resend into the database. Nothing used to go the other
+    // way, so a subscriber saved locally never became a member of the audience a
+    // broadcast is addressed to, and quietly received nothing while still being
+    // counted on the dashboard. Reconciling here closes that gap and repairs rows
+    // that drifted before this existed.
+    const marketingMembers = new Set(
+      marketingContacts.map(c => c.email?.trim().toLowerCase()).filter(Boolean)
+    );
+    const applicationMembers = new Set(
+      applicationContacts.map(c => c.email?.trim().toLowerCase()).filter(Boolean)
+    );
+
+    const { data: localSubs, error: localSubsError } = await supabase
+      .from("subscribers")
+      .select("email, first_name, last_name, is_marketing_list, is_application_list")
+      .eq("status", "subscribed");
+
+    let pushedCount = 0;
+    if (localSubsError) {
+      console.error("Failed to read local subscribers for audience reconcile:", localSubsError.message);
+    } else {
+      for (const sub of localSubs || []) {
+        const email = sub.email?.trim().toLowerCase();
+        if (!email) continue;
+
+        const missingFrom: string[] = [];
+        if (sub.is_marketing_list && !marketingMembers.has(email)) {
+          missingFrom.push(marketingSegmentId);
+        }
+        if (sub.is_application_list && !applicationMembers.has(email)) {
+          missingFrom.push(applicationSegmentId);
+        }
+
+        for (const audienceId of missingFrom) {
+          const result = await addContactToAudience({
+            email,
+            firstName: sub.first_name,
+            lastName: sub.last_name,
+            audienceId,
+          });
+          if (result.ok) {
+            pushedCount++;
+            console.log(`Added ${email} to Resend audience ${audienceId}.`);
+          } else {
+            console.error(`Failed to add ${email} to Resend audience ${audienceId}: ${result.error}`);
+          }
+        }
+      }
+    }
+
+    return { success: true, count: syncCount, pushed: pushedCount };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Sync Resend contacts error:", err);
