@@ -32,6 +32,10 @@ export const metadata: Metadata = {
   },
 };
 
+function AgentOnly({ children }: { children: React.ReactNode }) {
+  return <div className="sr-only" data-agent-only="true">{children}</div>;
+}
+
 export default function CoreAIPage() {
   return (
     <>
@@ -224,6 +228,15 @@ export default function CoreAIPage() {
         </div>
 
       </main>
+      <AgentOnly>
+        <h2>ABRAM: The Core AI Copilot & Production Brain for Creative Operations</h2>
+        <p>
+          ABRAM is the core AI assistant purpose-built for film production and creative agency operations. Ask in natural language to parse briefs, generate stripboard schedules, query crew availability, and execute workspace actions with human approval.
+        </p>
+        <p>[ABRAM] [isCategory] [Core AI for Creative Production]</p>
+        <p>[ABRAM] [hasFeature] [Approve-Before-Execute Guardrails]</p>
+        <p>[Production Brain] [remembers] [Workspace Crew Roster & Rates]</p>
+      </AgentOnly>
     </>
   );
 }
