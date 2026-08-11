@@ -14,63 +14,8 @@ import AgencyClientPortalMockup from "@/components/agency/AgencyClientPortalMock
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 export default function ClientPortalClient() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": "https://abram.network/agency/client-portal#webpage",
-        "name": "ABRAM Client Portal & Branded Dashboards",
-        "description": "Secure client portals to track project timelines, approve deliverables, comment on versions, and process invoice payments.",
-        "url": "https://abram.network/agency/client-portal",
-        "isPartOf": { "@id": "https://abram.network/#website" },
-        "publisher": { "@id": "https://abram.network/#organization" },
-        "mainEntity": {
-          "@type": "SoftwareApplication",
-          "name": "ABRAM Client Portal",
-          "applicationCategory": "BusinessApplication",
-          "featureList": [
-            "Secure unique link access",
-            "Interactive timeline & scheduling views",
-            "Real-time deliverable approvals",
-            "Threaded chat-style feedback",
-            "Stripe-integrated online invoice payments"
-          ]
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://abram.network/agency/client-portal#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://abram.network/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Creative Agency",
-            "item": "https://abram.network/agency"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Client Portal",
-            "item": "https://abram.network/agency/client-portal"
-          }
-        ]
-      }
-    ]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
       <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 select-none relative z-10 isolate">
         {/* Absolute Ambient Page Glows */}
         <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />

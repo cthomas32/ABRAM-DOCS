@@ -15,62 +15,8 @@ import AgencyIntakeMockup from "@/components/agency/AgencyIntakeMockup";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 export default function ClientIntakeClient() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": "https://abram.network/agency/client-intake#webpage",
-        "name": "ABRAM Client Request & Brief Intake Portal",
-        "description": "AI-powered creative brief scoping and custom client forms in the ABRAM creative production platform.",
-        "url": "https://abram.network/agency/client-intake",
-        "isPartOf": { "@id": "https://abram.network/#website" },
-        "publisher": { "@id": "https://abram.network/#organization" },
-        "mainEntity": {
-          "@type": "SoftwareApplication",
-          "name": "ABRAM Brief Intelligence",
-          "applicationCategory": "BusinessApplication",
-          "featureList": [
-            "Natural Language Brief Scanning",
-            "Form Builder Drag-and-Drop Mapping",
-            "Milestone Scoping Calculation",
-            "Budget Capacity Warning Indicators"
-          ]
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://abram.network/agency/client-intake#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://abram.network/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Creative Agency",
-            "item": "https://abram.network/agency"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Client Intake",
-            "item": "https://abram.network/agency/client-intake"
-          }
-        ]
-      }
-    ]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
       <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 select-none relative z-10 isolate">
         {/* Absolute Ambient Page Glows */}
         <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />

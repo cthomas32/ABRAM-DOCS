@@ -65,7 +65,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       type: "website",
       url: PAGE_URL,
-      siteName: "ABRAM",
+      siteName: "ABRAM Network",
       ...(image ? { images: [{ url: image }] } : {}),
     },
     twitter: {

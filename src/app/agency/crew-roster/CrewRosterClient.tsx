@@ -14,62 +14,8 @@ import AgencyRosterMockup from "@/components/agency/AgencyRosterMockup";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 export default function CrewRosterClient() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": "https://abram.network/agency/crew-roster#webpage",
-        "name": "ABRAM Crew & Assets Roster Optimization",
-        "description": "Talent matching index and crew database organization in the ABRAM creative production platform.",
-        "url": "https://abram.network/agency/crew-roster",
-        "isPartOf": { "@id": "https://abram.network/#website" },
-        "publisher": { "@id": "https://abram.network/#organization" },
-        "mainEntity": {
-          "@type": "SoftwareApplication",
-          "name": "ABRAM Crew Matchmaking",
-          "applicationCategory": "BusinessApplication",
-          "featureList": [
-            "AI-Assisted Roster Suggestions",
-            "Unified Gear & Personnel Asset Directory",
-            "Manual Shortlist Selection Review",
-            "One-Click Portal Broadcast Dispatch"
-          ]
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://abram.network/agency/crew-roster#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://abram.network/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Creative Agency",
-            "item": "https://abram.network/agency"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Crew Roster",
-            "item": "https://abram.network/agency/crew-roster"
-          }
-        ]
-      }
-    ]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
       <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 select-none relative z-10 isolate">
         {/* Absolute Ambient Page Glows */}
         <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />

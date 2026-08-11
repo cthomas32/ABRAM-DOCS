@@ -104,6 +104,12 @@ All pages are hosted canonical resources under https://abram.network/docs.
 ### Platform Resource Links
 - [ABRAM Web App](https://app.abram.network)
 - [Pricing & Plans](https://abram.network/pricing)
+- [StudioBinder Alternative Comparison](https://abram.network/alternatives/studiobinder)
+- [Movie Magic Alternative Comparison](https://abram.network/alternatives/moviemagic)
+- [Adobe Workfront Alternative Comparison](https://abram.network/alternatives/workfront)
+- [Celtx Alternative Comparison](https://abram.network/alternatives/celtx)
+- [SetHero Alternative Comparison](https://abram.network/alternatives/sethero)
+- [Full LLM Specification Text](https://abram.network/llms-full.txt)
 - [Privacy Policy](https://abram.network/privacy-policy)
 - [Terms of Use](https://abram.network/terms-of-use)
 
@@ -117,7 +123,8 @@ All third-party trademarks, brand names, labor union names, and logos mentioned 
   return new Response(markdown, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      'Link': '<https://abram.network/llms-full.txt>; rel="full"',
     },
   });
 }

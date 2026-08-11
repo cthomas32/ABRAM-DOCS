@@ -238,7 +238,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       type: "article",
       url: canonicalUrl,
-      siteName: "ABRAM",
+      siteName: "ABRAM Network",
       locale: "en_US",
       publishedTime,
       authors: [authorName],

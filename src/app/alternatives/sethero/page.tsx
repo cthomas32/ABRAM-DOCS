@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       'Send the same professional call sheets, and manage the whole production and its finances in one platform. Compare ABRAM and SetHero.',
     type: 'website',
     url: 'https://abram.network/alternatives/sethero',
-    siteName: 'ABRAM',
+    siteName: 'ABRAM Network',
   },
   twitter: {
     card: 'summary_large_image',

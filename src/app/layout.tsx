@@ -27,7 +27,7 @@ const archivo = Archivo({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://abram.network'),
-  applicationName: 'ABRAM',
+  applicationName: 'ABRAM Network',
   title: {
     default: 'ABRAM Network — The AI Platform for Creative Intelligence',
     template: '%s | ABRAM Network',
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
     'Movie Magic alternative', 'StudioBinder alternative', 'Adobe Workfront alternative',
     'Jira for creative production', 'StudioBinder replacement',
   ],
-  authors: [{ name: 'ABRAM', url: 'https://abram.network' }],
-  creator: 'ABRAM',
-  publisher: 'ABRAM',
+  authors: [{ name: 'ABRAM Network', url: 'https://abram.network' }],
+  creator: 'ABRAM Network',
+  publisher: 'ABRAM Network',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -54,8 +54,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'ABRAM',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM — The AI Platform for Creative Intelligence' }],
+    siteName: 'ABRAM Network',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'ABRAM Network — The AI Platform for Creative Intelligence' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: './',
+    canonical: 'https://abram.network',
     types: {
       'text/markdown': [
         {
@@ -97,6 +97,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="alternate" type="text/plain" href="https://abram.network/llms.txt" title="ABRAM Network LLMs.txt Platform Specification" />
       </head>
       <body className="min-h-full bg-background-base text-foreground font-sans">
         <script
@@ -183,8 +184,8 @@ export default function RootLayout({
                 {
                   '@type': 'Organization',
                   '@id': 'https://abram.network/#organization',
-                  'name': 'ABRAM',
-                  'alternateName': 'ABRAM Network',
+                  'name': 'ABRAM Network',
+                  'alternateName': 'ABRAM',
                   'url': 'https://abram.network',
                   'logo': {
                     '@type': 'ImageObject',
@@ -231,8 +232,8 @@ export default function RootLayout({
                 {
                   '@type': 'WebSite',
                   '@id': 'https://abram.network/#website',
-                  'name': 'ABRAM',
-                  'alternateName': ['ABRAM Network', 'abram.network'],
+                  'name': 'ABRAM Network',
+                  'alternateName': ['ABRAM', 'abram.network'],
                   'url': 'https://abram.network',
                   'description': 'Official portal, documentation, and help center for the ABRAM platform.',
                   'publisher': { '@id': 'https://abram.network/#organization' },

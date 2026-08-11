@@ -108,7 +108,7 @@ export async function generateMetadata({ params, searchParams }: ChangelogDetail
       description,
       type: "article",
       url: canonicalUrl,
-      siteName: "ABRAM",
+      siteName: "ABRAM Network",
       locale: "en_US",
       publishedTime: release.published_at || release.created_at,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: title }],
@@ -170,7 +170,11 @@ export default async function ChangelogDetailPage({ params, searchParams }: Chan
     "description": release.summary || `Release notes for version ${release.version} of the ABRAM Network.`,
     "image": "https://abram.network/og-image.png",
     "datePublished": release.published_at || release.created_at,
-    "dateModified": release.published_at || release.created_at,
+    "dateModified": release.updated_at || release.published_at || release.created_at,
+    "author": {
+      "@type": "Organization",
+      "@id": "https://abram.network/#organization"
+    },
     "publisher": {
       "@type": "Organization",
       "@id": "https://abram.network/#organization"

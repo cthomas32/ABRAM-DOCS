@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       'Keep the polished call sheets, add native budget tracking, crew payouts, and client approval portals. See how ABRAM compares to StudioBinder.',
     type: 'website',
     url: 'https://abram.network/alternatives/studiobinder',
-    siteName: 'ABRAM',
+    siteName: 'ABRAM Network',
   },
   twitter: {
     card: 'summary_large_image',

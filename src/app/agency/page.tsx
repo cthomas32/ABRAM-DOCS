@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: 'Scale agency and studio workflows with ABRAM — client intake forms, crew roster scheduling, capacity planning, and automated payouts.',
     type: 'website',
     url: 'https://abram.network/agency',
-    siteName: 'ABRAM',
+    siteName: 'ABRAM Network',
   },
   twitter: {
     card: 'summary_large_image',

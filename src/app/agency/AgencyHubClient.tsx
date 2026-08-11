@@ -225,28 +225,6 @@ function PortalPreview() {
 }
 
 export default function AgencyHubClient() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "ABRAM Creative Operations Hub",
-    "description": "Creative operations and studio logistics management in the ABRAM creative production platform.",
-    "url": "https://abram.network/agency",
-    "isPartOf": { "@id": "https://abram.network/#website" },
-    "publisher": { "@id": "https://abram.network/#organization" },
-    "mainEntity": {
-      "@type": "SoftwareApplication",
-      "name": "ABRAM Creative Operations",
-      "applicationCategory": "BusinessApplication",
-      "featureList": [
-        "Brief Intelligence Intake Wizard",
-        "AI-Assisted Crew Matchmaking",
-        "Multi-Day Timeline Resource Scheduling",
-        "Union Turnaround Margin Verification",
-        "Real-Time Schedule Overlap Resolution"
-      ]
-    }
-  };
-
   const steps: Step[] = [
     {
       index: "01",
@@ -297,10 +275,6 @@ export default function AgencyHubClient() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
       <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 select-none relative z-10 isolate">
         {/* Absolute Ambient Page Glows */}
         <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />

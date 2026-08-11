@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description: 'Measure the efficiency and financial yield of your creative operations. Quantify labor savings, prevent leakage, and deploy AI co-pilots.',
     type: 'website',
     url: 'https://abram.network/intelligence',
-    siteName: 'ABRAM',
+    siteName: 'ABRAM Network',
   },
   twitter: {
     card: 'summary_large_image',

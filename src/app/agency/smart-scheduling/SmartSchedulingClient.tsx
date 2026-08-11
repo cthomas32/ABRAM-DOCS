@@ -14,62 +14,8 @@ import AgencySchedulingMockup from "@/components/agency/AgencySchedulingMockup";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 export default function SmartSchedulingClient() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": "https://abram.network/agency/smart-scheduling#webpage",
-        "name": "ABRAM Smart Resource & Crew Scheduling",
-        "description": "Multi-row resource calendar and conflict resolution in the ABRAM creative production platform.",
-        "url": "https://abram.network/agency/smart-scheduling",
-        "isPartOf": { "@id": "https://abram.network/#website" },
-        "publisher": { "@id": "https://abram.network/#organization" },
-        "mainEntity": {
-          "@type": "SoftwareApplication",
-          "name": "ABRAM Scheduling Engine",
-          "applicationCategory": "BusinessApplication",
-          "featureList": [
-            "Double-Booking Prevention Scanning",
-            "Union Labor Margin Rest Verifications",
-            "Automated Calendar Allocation Overlaps",
-            "Multi-Day Resource Timeline Visualizer"
-          ]
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://abram.network/agency/smart-scheduling#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://abram.network/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Creative Agency",
-            "item": "https://abram.network/agency"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Smart Scheduling",
-            "item": "https://abram.network/agency/smart-scheduling"
-          }
-        ]
-      }
-    ]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
       <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 select-none relative z-10 isolate">
         {/* Absolute Ambient Page Glows */}
         <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />

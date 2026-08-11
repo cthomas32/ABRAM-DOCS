@@ -30,7 +30,7 @@ export function campaignMetadata(
       description: options.description,
       type: "website",
       url,
-      siteName: "ABRAM",
+      siteName: "ABRAM Network",
     },
     twitter: {
       card: "summary_large_image",

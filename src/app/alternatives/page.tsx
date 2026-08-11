@@ -19,7 +19,7 @@ export const metadata: Metadata = {
       'Discover how ABRAM combines script breakdown, stripboards, call sheets, crew payouts, and client portals in one unified platform.',
     type: 'website',
     url: 'https://abram.network/alternatives',
-    siteName: 'ABRAM',
+    siteName: 'ABRAM Network',
   },
   twitter: {
     card: 'summary_large_image',

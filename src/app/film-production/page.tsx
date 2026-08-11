@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     description: 'Streamline physical film production with ABRAM — AI script breakdown, call sheets, stripboard scheduling, and crew payouts.',
     type: 'website',
     url: 'https://abram.network/film-production',
-    siteName: 'ABRAM',
+    siteName: 'ABRAM Network',
   },
   twitter: {
     card: 'summary_large_image',

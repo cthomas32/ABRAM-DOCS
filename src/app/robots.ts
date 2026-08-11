@@ -51,6 +51,56 @@ export default function robots(): MetadataRoute.Robots {
         disallow: commonDisallows,
       },
       {
+        userAgent: 'PerplexityUser',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'ChatGPT-User',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'Omgilibot',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'Meta-ExternalAgent',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'Amazonbot',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'CCBot',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'Cohere-ai',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'Bytespider',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'YouBot',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
+        userAgent: 'Diffbot',
+        allow: '/',
+        disallow: commonDisallows,
+      },
+      {
         userAgent: 'Applebot-Extended',
         allow: '/',
         disallow: commonDisallows,

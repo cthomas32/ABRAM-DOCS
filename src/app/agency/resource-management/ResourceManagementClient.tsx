@@ -14,63 +14,8 @@ import ResourceInventoryMockup from "@/components/agency/ResourceInventoryMockup
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 export default function ResourceManagementClient() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": "https://abram.network/agency/resource-management#webpage",
-        "name": "ABRAM Equipment & Resource Management",
-        "description": "An inventory hub for equipment, studios, and locations with quantity-aware booking conflict detection in the ABRAM creative production platform.",
-        "url": "https://abram.network/agency/resource-management",
-        "isPartOf": { "@id": "https://abram.network/#website" },
-        "publisher": { "@id": "https://abram.network/#organization" },
-        "mainEntity": {
-          "@type": "SoftwareApplication",
-          "name": "ABRAM Resource Management",
-          "applicationCategory": "BusinessApplication",
-          "featureList": [
-            "Unified Equipment, Studio & Location Inventory",
-            "Quantity-Aware Booking Conflict Detection",
-            "Reusable Equipment Kits",
-            "Barcode Batch Check-Out",
-            "Utilization & Cost Analytics"
-          ]
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://abram.network/agency/resource-management#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://abram.network/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Creative Agency",
-            "item": "https://abram.network/agency"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Resource Management",
-            "item": "https://abram.network/agency/resource-management"
-          }
-        ]
-      }
-    ]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
       <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 select-none relative z-10 isolate">
         {/* Absolute Ambient Page Glows */}
         <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />
