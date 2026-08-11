@@ -60,6 +60,10 @@ and nothing else. This is Romilly's access shape. KIPP reads `.agents/brain/` an
 Falls back to `SLACK_TRIAGE_WEBHOOK_URL` if unset, which is fine for a first run but means KIPP's
 reports land in the triage channel.
 
+Approving a post from that channel needs a Slack app on top of the webhook, because a webhook can
+draw a button but has nowhere to send the press. Setup and secrets are in
+[`social-calendar.md`](./social-calendar.md), *The daily approval*.
+
 ### 5. Install the workflow
 
 ~~Copy the template into `.github/workflows/`.~~ **Done 2026-08-03.** The workflow is installed at

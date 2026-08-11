@@ -6,8 +6,10 @@ every morning it puts the day's approved posts in Slack with everything needed t
 - **Where it lives:** Admin, **Social Studio**, **Calendar** tab (`/admin/dashboard/social`).
 - **Tables:** `social_campaigns`, `social_posts`
   (`supabase/migrations/20260803180000_social_calendar.sql`).
-- **The morning job:** `node scripts/social-daily.js`, run by
-  [`.github/workflows/social-daily.yml`](../.github/workflows/social-daily.yml).
+- **The morning jobs:** `node scripts/social-review.js` puts the next post up for approval in
+  `#kipp`; `node scripts/social-daily.js` delivers the day's approved posts twenty minutes later.
+  Run by [`social-review.yml`](../.github/workflows/social-review.yml) and
+  [`social-daily.yml`](../.github/workflows/social-daily.yml).
 - **Cards:** [`social-images.md`](./social-images.md). **Voice and claims:**
   [`brand-voice.md`](./brand-voice.md), which governs a caption exactly as it governs a page.
 
@@ -24,7 +26,7 @@ The three states that matter:
 
 | Status | What it means |
 |---|---|
-| `draft` | Written, or proposed by KIPP. Invisible to the morning job. |
+| `draft` | Written, or proposed by KIPP. Invisible to the morning job, and what the daily approval asks about. |
 | `ready` | Approved. Its card is rendered and public. **This is what gets delivered.** |
 | `posted` | Out in the world. Stamped when you mark it. |
 
@@ -58,10 +60,11 @@ The week view counts the same five under its standing figures, and says so out l
 than half of a week has become about us. See [`brand-voice.md`](./brand-voice.md) §5 for what
 each kind is doing and how a post pairs with an article without giving the article away.
 
-**Marking a post ready publishes its card.** One click renders the PNG, uploads it, and flips the
+**Approving a post publishes its card.** One click renders the PNG, uploads it, and flips the
 post, because those two things were always going to happen together and splitting them across two
 screens is how a post reaches Slack with a caption and a hole where the picture should be. It is
-still a person's click, and it is still the only thing that writes a PNG.
+still a person's click, and it is still the only thing that writes a PNG. The click is in two
+places now, the calendar and the post's own message in `#kipp`, and they do the same thing.
 
 ---
 
@@ -132,6 +135,83 @@ format. Tapping a size that exists puts *this post* on it.
 
 Null `variation_id` means a card standing on its own, which is most of them. The first size added
 mints the group and puts the original in it.
+
+---
+
+## The daily approval
+
+**The message that asks is the message that decides.** A draft used to arrive in `#kipp` with
+everything needed to judge it — the channel, the words, the link, the card, the note saying why
+the post exists — and no way to say yes. Saying yes meant opening the dashboard, finding the post
+on the calendar, and pressing the one button on it worth pressing. The trip added nothing to the
+decision, and a decision with a trip attached is one that waits until the afternoon.
+
+So one post a day arrives with three buttons on it.
+
+| Button | What happens |
+|---|---|
+| **Approve** | Renders the card, uploads it, flips the post to `ready`. The message rewrites itself into the post with its published card, so on a same-day post it becomes the thing you paste. |
+| **Ask for a revision** | Opens a box in place of the buttons. What you type is written to the post and KIPP rewrites it on its next run, then it comes back here for approval. |
+| **Skip the day** | `skipped`, so the gap reads as deliberate rather than as a miss. Confirms first, because it sits next to the button pressed every morning and cannot be undone from Slack. |
+
+**One a day, oldest day first.** A queue of five to work through before coffee is a queue that
+gets rubber stamped, which is a worse outcome than an unapproved post. Ask about more with
+`--limit`, up to five.
+
+- **A post is never asked about twice.** Sending stamps `review_notified_at`, and the queue reads
+  that rather than the date, the same contract `notified_at` gives the morning pack. A late run or
+  a re-run is harmless.
+- **A day already gone is left alone.** Approving Tuesday's post on Thursday publishes a card for a
+  day that is over.
+- **Nothing is said when the queue is empty.** The morning pack already reports what the week looks
+  like, and a second message every day saying there is nothing to do trains you to ignore the first.
+- **A revision is not a rejection.** The post keeps its day, its channel and its card; only the
+  words KIPP got wrong change. It arrives again the next morning with "Rewritten after: …" above it,
+  so what you asked for and what came back are readable together.
+
+### The picture on a draft
+
+A draft's card has never been rendered to a file, and must not be: a PNG at a public address is
+exactly what an approval produces. So the review message points at
+`/api/social/preview/<asset>?e=…&t=…` — one asset, an expiry, and a signature over both. It draws
+the card on the way past and stores nothing, which is what lets you ask for a revision without
+having left a stale picture at an address somebody could have pasted.
+
+The signature is over the asset id, so the address cannot be edited into a card for something
+else, and it expires on its own after two weeks. `/api/social/render` stays signed-in only.
+
+### Setting it up
+
+Approving needs a real Slack app, because an incoming webhook can draw a button but has nowhere
+to send the press. The webhook still does the sending; the app only receives.
+
+1. **Slack API → Your Apps → Create New App**, in the ABRAM workspace. Name it KIPP.
+2. **Interactivity & Shortcuts → on.** Request URL:
+   `https://abram.network/api/slack/interactions`
+3. **Basic Information → Signing Secret.** That is `SLACK_SIGNING_SECRET`.
+4. **Your Slack user ID** (Slack profile → ⋮ → Copy member ID) into `SLACK_APPROVER_IDS`.
+5. Invite the app to `#kipp`. The existing `SLACK_WEBHOOK_URL_KIPP` keeps doing the posting.
+
+Then the environment, on Vercel and as GitHub Actions secrets:
+
+| Secret | Where | Why |
+|---|---|---|
+| `SLACK_SIGNING_SECRET` | Vercel | Proves a press came from Slack. **Nothing is accepted without it.** |
+| `SLACK_APPROVER_IDS` | Vercel | Comma separated Slack user ids. Unset means anyone in the channel. |
+| `SOCIAL_REVIEW_CRON_SECRET` | Vercel **and** Actions | Shared secret on the dispatch route. Unset closes the route. |
+| `SOCIAL_PREVIEW_SECRET` | Vercel | Signs preview addresses. Optional; falls back to the signing secret. |
+| `SOCIAL_REVIEW_URL` | Actions | Only to point the job at a preview deployment. Defaults to production. |
+
+```bash
+node scripts/social-review.js --dry-run    # pick the next post, report it, send nothing
+node scripts/social-review.js --limit 3    # ask about three
+```
+
+Exit **78** means the secrets are absent, which is a skip and not a failure.
+
+**Nothing here can approve anything.** The dispatch route reads the queue and formats a message;
+the interactions route only ever acts on a press that carries a valid Slack signature. There is
+still no social credential anywhere in this system and still nothing that posts by itself.
 
 ---
 

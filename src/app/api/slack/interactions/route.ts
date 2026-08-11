@@ -1,0 +1,263 @@
+import { after } from "next/server";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { publishPost } from "@/lib/social/approvePost";
+import {
+  ACTION_APPROVE,
+  ACTION_REVISE,
+  ACTION_REVISION_NOTE,
+  ACTION_REVISION_SEND,
+  ACTION_SKIP,
+  BLOCK_REVISION_INPUT,
+  REVIEW_POST_SELECT,
+  approvedBlocks,
+  channelLabel,
+  isApprover,
+  previewUrl,
+  replaceMessage,
+  replyPrivately,
+  reviewBlocks,
+  reviewSummary,
+  revisionFormBlocks,
+  revisionSentBlocks,
+  siteUrl,
+  skippedBlocks,
+  toReviewPost,
+  verifySlackRequest,
+  type ReviewPost,
+} from "@/lib/social/slackReview";
+
+/**
+ * Where the buttons in #kipp land.
+ *
+ * Approving a post used to mean leaving Slack for the dashboard, finding
+ * the post on the calendar, and pressing the one button on it that was
+ * worth pressing. Everything needed to make the decision was already in
+ * the Slack message. This is the button, on the message.
+ *
+ * Three things guard it, because the URL itself is public:
+ *
+ *   The Slack signature, over the raw body and a timestamp no more than
+ *   five minutes old. Without a signing secret nothing is accepted at all.
+ *
+ *   The approver list, when there is one. Unset means anyone in the
+ *   channel, which is the honest default while the channel is one person.
+ *
+ *   The post id travels in the button, not in anything the presser can
+ *   type, so a press can only ever act on a post that was put here.
+ *
+ * The work happens after the response. Slack gives an interaction three
+ * seconds before it shows a timeout, and rendering a card and putting it
+ * in the bucket takes longer than that, so the reply is immediate and the
+ * message is rewritten over response_url when the work is done.
+ */
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+const TZ = process.env.SOCIAL_DAILY_TZ || "America/New_York";
+
+function todayIn(timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+function service(): SupabaseClient | null {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+}
+
+async function loadPost(supabase: SupabaseClient, id: string): Promise<ReviewPost | null> {
+  const { data } = await supabase.from("social_posts").select(REVIEW_POST_SELECT).eq("id", id).maybeSingle();
+  if (!data) return null;
+  return toReviewPost(data as unknown as Record<string, unknown>);
+}
+
+/** The picture for a post: the published card once there is one, a drawn preview until then. */
+function cardUrl(post: ReviewPost): string | null {
+  if (!post.asset) return null;
+  return post.asset.public_url || previewUrl(post.asset.id, siteUrl());
+}
+
+// ---------------------------------------------------------------------
+// The four answers
+// ---------------------------------------------------------------------
+
+async function handleApprove(supabase: SupabaseClient, postId: string, responseUrl: string, who: string) {
+  const post = await loadPost(supabase, postId);
+  if (!post) {
+    await replyPrivately(responseUrl, "That post is no longer on the calendar.");
+    return;
+  }
+
+  const result = await publishPost(supabase, postId, who);
+  if (result.error) {
+    // The message is left exactly as it was, buttons and all, because the
+    // post was not approved and the next thing to happen is another press.
+    await replyPrivately(responseUrl, `That did not go through: ${result.error}`);
+    return;
+  }
+
+  const fresh = (await loadPost(supabase, postId)) || post;
+  await replaceMessage(
+    responseUrl,
+    approvedBlocks(fresh, cardUrl(fresh), who, todayIn(TZ)),
+    `Approved: ${channelLabel(fresh.channel)}`
+  );
+}
+
+async function handleReviseForm(supabase: SupabaseClient, postId: string, responseUrl: string) {
+  const post = await loadPost(supabase, postId);
+  if (!post) {
+    await replyPrivately(responseUrl, "That post is no longer on the calendar.");
+    return;
+  }
+
+  await replaceMessage(responseUrl, revisionFormBlocks(post, cardUrl(post)), "What should change?");
+}
+
+async function handleRevisionSend(
+  supabase: SupabaseClient,
+  postId: string,
+  responseUrl: string,
+  who: string,
+  note: string
+) {
+  const post = await loadPost(supabase, postId);
+  if (!post) {
+    await replyPrivately(responseUrl, "That post is no longer on the calendar.");
+    return;
+  }
+
+  const { error } = await supabase
+    .from("social_posts")
+    .update({
+      status: "draft",
+      revision_note: note.slice(0, 1000),
+      revision_requested_at: new Date().toISOString(),
+      reviewed_by: who,
+      reviewed_at: new Date().toISOString(),
+    })
+    .eq("id", postId);
+
+  if (error) {
+    await replyPrivately(responseUrl, `That did not save: ${error.message}`);
+    return;
+  }
+
+  await replaceMessage(responseUrl, revisionSentBlocks(post, note, who), "Sent back for a rewrite");
+}
+
+async function handleSkip(supabase: SupabaseClient, postId: string, responseUrl: string, who: string) {
+  const post = await loadPost(supabase, postId);
+  if (!post) {
+    await replyPrivately(responseUrl, "That post is no longer on the calendar.");
+    return;
+  }
+
+  const { error } = await supabase
+    .from("social_posts")
+    .update({ status: "skipped", reviewed_by: who, reviewed_at: new Date().toISOString() })
+    .eq("id", postId);
+
+  if (error) {
+    await replyPrivately(responseUrl, `That did not save: ${error.message}`);
+    return;
+  }
+
+  await replaceMessage(responseUrl, skippedBlocks(post, who), "Skipped");
+}
+
+/** Put the question back, unchanged, when something went wrong before the work started. */
+async function restore(supabase: SupabaseClient, postId: string, responseUrl: string) {
+  const post = await loadPost(supabase, postId);
+  if (!post) return;
+  await replaceMessage(
+    responseUrl,
+    reviewBlocks(post, cardUrl(post), todayIn(TZ)),
+    reviewSummary(post, todayIn(TZ))
+  );
+}
+
+// ---------------------------------------------------------------------
+
+export async function POST(request: Request) {
+  const raw = await request.text();
+
+  if (
+    !verifySlackRequest(
+      raw,
+      request.headers.get("x-slack-signature"),
+      request.headers.get("x-slack-request-timestamp")
+    )
+  ) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  let payload: Record<string, unknown>;
+  try {
+    payload = JSON.parse(new URLSearchParams(raw).get("payload") || "{}");
+  } catch {
+    return new Response(null, { status: 200 });
+  }
+
+  if (payload.type !== "block_actions") return new Response(null, { status: 200 });
+
+  const actions = (payload.actions || []) as Array<{ action_id?: string; value?: string }>;
+  const action = actions[0];
+  const responseUrl = payload.response_url as string | undefined;
+  const user = (payload.user || {}) as { id?: string; name?: string; username?: string };
+  const who = user.name || user.username || user.id || "someone";
+  const postId = action?.value;
+
+  if (!action?.action_id || !responseUrl || !postId) return new Response(null, { status: 200 });
+
+  if (!isApprover(user.id)) {
+    after(replyPrivately(responseUrl, "Approving a post is not something your account can do here."));
+    return new Response(null, { status: 200 });
+  }
+
+  const supabase = service();
+  if (!supabase) {
+    console.error("Slack interactions: missing platform credentials.");
+    after(replyPrivately(responseUrl, "This is not wired up to the calendar yet."));
+    return new Response(null, { status: 200 });
+  }
+
+  // The note lives in the message's own input block, and arrives on the
+  // press of the button beside it rather than on every keystroke.
+  const state = (payload.state || {}) as {
+    values?: Record<string, Record<string, { value?: string }>>;
+  };
+  const note = state.values?.[BLOCK_REVISION_INPUT]?.[ACTION_REVISION_NOTE]?.value?.trim() || "";
+
+  switch (action.action_id) {
+    case ACTION_APPROVE:
+      after(handleApprove(supabase, postId, responseUrl, who));
+      break;
+    case ACTION_REVISE:
+      after(handleReviseForm(supabase, postId, responseUrl));
+      break;
+    case ACTION_REVISION_SEND:
+      if (!note) {
+        // Nothing to act on, so the form stays open rather than closing on
+        // an empty answer that would read as a rewrite request for nothing.
+        after(replyPrivately(responseUrl, "Say what should change and press Send it back again."));
+        break;
+      }
+      after(handleRevisionSend(supabase, postId, responseUrl, who, note));
+      break;
+    case ACTION_SKIP:
+      after(handleSkip(supabase, postId, responseUrl, who));
+      break;
+    default:
+      after(restore(supabase, postId, responseUrl));
+  }
+
+  return new Response(null, { status: 200 });
+}

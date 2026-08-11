@@ -573,9 +573,35 @@ A proposal with a booking looks like this. Everything outside `post` is the card
 ```
 
 **A saved card is a spec, not a picture.** You write a row; the site renders it on demand. You
-hold no storage credentials and spend nothing rendering. Marking a post ready is Connor's click
-in Admin → Social Studio → Calendar, it is what publishes the PNG, and it is the only thing that
-puts a post in front of him in the morning.
+hold no storage credentials and spend nothing rendering. Approving a post is Connor's press of
+the Approve button on the post's own message in `#kipp`, it is what publishes the PNG, and it is
+the only thing that puts a post in the morning pack. He can also still do it from Admin → Social
+Studio → Calendar; both are the same click.
+
+**Rewrite what came back before you write anything new.** A post he sent back is a draft with a
+`revision_note` on it and a `revision_requested_at` stamp, and it is work already scoped: the day,
+the channel and the card exist, and he has said in his own words what is wrong with it. Clearing
+that queue is the first thing a run does with the calendar, ahead of booking new days.
+
+```bash
+curl -s "$SUPABASE/rest/v1/social_posts?select=id,scheduled_for,channel,caption,note,revision_note,asset_id&revision_requested_at=not.is.null&status=eq.draft&order=scheduled_for.asc" \
+  -H "apikey: $KEY" -H "Authorization: Bearer $KEY"
+```
+
+Rewrite the caption, and the card too when the note is about the card. Then hand it back to be
+asked about again by clearing the stamp and the announcement, and leaving the note where it is so
+the next message can show what you were answering:
+
+```bash
+curl -s -X PATCH "$SUPABASE/rest/v1/social_posts?id=eq.$ID" \
+  -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
+  -d '{"revision_requested_at": null, "review_notified_at": null}'
+```
+
+**Never clear a revision request you did not act on**, and never answer one by deleting the post
+and filing a new one. Both turn a specific piece of feedback into a post that quietly changed,
+which is the thing that stops feedback being worth giving. If you think the note is wrong, do the
+rewrite anyway and say why you disagree on the `CALENDAR` line.
 
 The rules that matter:
 
@@ -613,14 +639,19 @@ The rules that matter:
   the Slack pack and leave the field out.
 
 Then say so in the Slack report on a `CALENDAR` line: how many of the next seven days you
-booked, how many are still waiting to be marked ready, and the mix you filed. Two numbers and a
-tally, one line, and do not describe the posts. The middle number matters most, because a booked
-week nobody approved is the same silent morning as a week nobody booked, and the tally is there
-so a drift back to seven product cards is visible in the report rather than a month later.
+booked, how many are still waiting to be approved, how many you rewrote after being sent back,
+and the mix you filed. Three numbers and a tally, one line, and do not describe the posts. The
+waiting number matters most, because a booked week nobody approved is the same silent morning as
+a week nobody booked, and the tally is there so a drift back to seven product cards is visible in
+the report rather than a month later.
 
 ```
-CALENDAR  7 of 7 days booked · 7 waiting on your click · 3 product 2 craft 1 market 1 article
+CALENDAR  7 of 7 days booked · 6 waiting to approve · 1 rewritten · 3 product 2 craft 1 market 1 article
 ```
+
+They arrive one a day in `#kipp` with the card and the buttons on them, so "waiting" is a queue
+that empties on its own rather than a list to go and find. Leave the rewritten count off when it
+is zero.
 
 Campaign drafts: at most one per run, `status='draft'`, via `scripts/create-campaign-draft.js`.
 **You never call `send-campaign`.** An email blast is the one un-unsendable action in the system

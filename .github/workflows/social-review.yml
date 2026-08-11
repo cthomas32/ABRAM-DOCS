@@ -1,0 +1,80 @@
+name: "Social: daily approval"
+
+# Puts the next post waiting for approval into #kipp, with the card and three buttons on it.
+#
+# There is no model in this workflow. It calls the dispatch route, which reads the queue and
+# formats a message. It cannot write copy and it cannot approve anything: every approval in this
+# system is a person pressing a button in Slack.
+#
+# It runs before the morning post pack, so the day reads in the order it happens: here is
+# tomorrow's post to approve, and here is today's, already approved, ready to paste.
+
+on:
+  # 20 minutes ahead of the post pack at 11:12 UTC, which is far enough apart that the two
+  # messages do not arrive as one block and near enough that they are the same coffee.
+  #   EDT (summer): 06:52 ET
+  #   EST (winter): 05:52 ET
+  #
+  # No hour-guard, deliberately. GitHub cron is best-effort and frequently late; a delayed run
+  # still delivers, and a run that rejects itself for being late delivers nothing.
+  schedule:
+    - cron: '52 10 * * *'
+
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "How many posts to ask about. One a day is the point of it."
+        required: false
+        default: "1"
+        type: string
+
+# Nothing is written to the repository. The only write anywhere is review_notified_at on the
+# posts that were asked about, which happens over the site's own API.
+permissions:
+  contents: read
+
+concurrency:
+  group: social-review
+  cancel-in-progress: false
+
+jobs:
+  ask:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # No install step. The script is zero-dependency on purpose: a daily job that npm installs
+      # is a daily job that fails on a registry blip.
+      - name: Ask for the next approval
+        env:
+          SOCIAL_REVIEW_URL: ${{ secrets.SOCIAL_REVIEW_URL }}
+          SOCIAL_REVIEW_CRON_SECRET: ${{ secrets.SOCIAL_REVIEW_CRON_SECRET }}
+          # Read through the environment rather than interpolated into the script body, so a
+          # dispatch input is data and never shell.
+          INPUT_LIMIT: ${{ inputs.limit }}
+        run: |
+          ARGS=()
+          if [ -n "$INPUT_LIMIT" ]; then
+            ARGS+=(--limit "$INPUT_LIMIT")
+          fi
+
+          # The default shell is `bash -e`, which would abort on the script's exit code before it
+          # could be read. 78 has to survive to be treated as a skip.
+          set +e
+          node scripts/social-review.js "${ARGS[@]}"
+          STATUS=$?
+          set -e
+
+          # 78 means the secrets are not in place yet. That is a skip, not a failure, and it keeps
+          # the Actions tab honest about which runs actually broke.
+          if [ $STATUS -eq 78 ]; then
+            echo "::notice::Not configured yet. Add the secrets listed in .agents/social-calendar.md."
+            exit 0
+          fi
+          exit $STATUS
