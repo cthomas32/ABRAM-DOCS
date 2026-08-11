@@ -190,12 +190,15 @@ to send the press. The webhook still does the sending; the app only receives.
    `https://abram.network/api/slack/interactions`
 3. **Basic Information → Signing Secret.** That is `SLACK_SIGNING_SECRET`.
 4. **Your Slack user ID** (Slack profile → ⋮ → Copy member ID) into `SLACK_APPROVER_IDS`.
-5. Invite the app to `#kipp`. The existing `SLACK_WEBHOOK_URL_KIPP` keeps doing the posting.
+5. Invite the app to `#kipp`. The existing `#kipp` webhook keeps doing the posting, but it has to
+   be on Vercel as well as in Actions now: the morning pack is sent from a GitHub runner and the
+   review message is sent by the site, and they read the same variable in two different places.
 
 Then the environment, on Vercel and as GitHub Actions secrets:
 
 | Secret | Where | Why |
 |---|---|---|
+| `SLACK_WEBHOOK_URL_KIPP` | Vercel **and** Actions | The `#kipp` webhook. It already exists as an Actions secret for the morning pack, but the review message is sent by the site, so Vercel needs its own copy. **Missing here is a 503 and nothing sent.** |
 | `SLACK_SIGNING_SECRET` | Vercel | Proves a press came from Slack. **Nothing is accepted without it.** |
 | `SLACK_APPROVER_IDS` | Vercel | Comma separated Slack user ids. Unset means anyone in the channel. |
 | `SOCIAL_REVIEW_CRON_SECRET` | Vercel **and** Actions | Shared secret on the dispatch route. Unset closes the route. |
