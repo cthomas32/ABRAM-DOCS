@@ -2,604 +2,791 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowUpRight, ChevronDown, Check } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  ChevronDown,
+  Check,
+  Globe,
+  Layers,
+  ExternalLink,
+  CreditCard,
+  Users,
+  CheckCircle2,
+  AlertCircle,
+  LayoutDashboard,
+  ShieldCheck,
+  Briefcase,
+  FileText,
+  Smartphone,
+  Video,
+  Share2,
+  Tag,
+} from "lucide-react";
 import AbramMark from "@/components/AbramMark";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 type Faq = { q: string; a: string };
 
-type Step = {
-  index: string;
-  heading: string;
-  body: string;
-  visual: React.ReactNode;
-};
-
-/* Compact micro label used inside preview panels. */
 function MicroLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[9px] font-semibold tracking-[0.18em] uppercase text-zinc-500 font-sans">
+    <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans">
       {children}
     </span>
   );
 }
 
-function PreviewPanel({ children }: { children: React.ReactNode }) {
+/* =========================================================================
+   CANONICAL LINK HUB THEMES (From src/lib/linkHub.ts THEME_PRESETS)
+   ========================================================================= */
+const phoneThemes = [
+  {
+    id: "midnight",
+    name: "Midnight Preset",
+    isLight: false,
+    fontClass: "font-sans",
+    bg: "bg-[#0A0A0A]",
+    headerText: "text-white",
+    subtext: "text-blue-200/70",
+    cardBg: "bg-[#111C33]/40 border border-white/10 rounded-2xl shadow-lg",
+    cardText: "text-[#8ECAFF]",
+    cardSub: "text-zinc-400",
+    iconBg: "bg-[#8ECAFF]/20 text-[#8ECAFF] rounded-xl",
+    socialBg: "bg-[#111C33]/40 border border-white/10 text-[#8ECAFF]",
+    dotBg: "bg-[#8ECAFF]",
+    arrowColor: "text-zinc-400",
+  },
+  {
+    id: "paper",
+    name: "Paper Preset",
+    isLight: true,
+    fontClass: "font-sans",
+    bg: "bg-[#F5F4F0]",
+    headerText: "text-[#0A0A0A]",
+    subtext: "text-zinc-600",
+    cardBg: "bg-white border-2 border-[#0A0A0A] rounded-sm shadow-[3px_3px_0px_#0A0A0A]",
+    cardText: "text-[#0A0A0A]",
+    cardSub: "text-zinc-600",
+    iconBg: "bg-[#0A0A0A] text-white rounded-sm",
+    socialBg: "bg-white border-2 border-[#0A0A0A] text-[#0A0A0A]",
+    dotBg: "bg-[#0A0A0A]",
+    arrowColor: "text-[#0A0A0A]",
+  },
+  {
+    id: "studio",
+    name: "Studio Preset",
+    isLight: false,
+    fontClass: "font-display",
+    bg: "bg-[#101014]",
+    headerText: "text-white",
+    subtext: "text-purple-200/70",
+    cardBg: "bg-[#1C1A22] border border-[#C4A6FF]/20 rounded-full shadow-md",
+    cardText: "text-[#C4A6FF]",
+    cardSub: "text-zinc-400",
+    iconBg: "bg-[#C4A6FF]/20 text-[#C4A6FF] rounded-full",
+    socialBg: "bg-[#1C1A22] border border-[#C4A6FF]/20 text-[#C4A6FF]",
+    dotBg: "bg-[#C4A6FF]",
+    arrowColor: "text-[#C4A6FF]",
+  },
+  {
+    id: "daylight",
+    name: "Daylight Preset",
+    isLight: true,
+    fontClass: "font-sans",
+    bg: "bg-gradient-to-b from-white to-[#DCEBFF]",
+    headerText: "text-[#0A0A0A]",
+    subtext: "text-blue-700/80",
+    cardBg: "bg-[#0A0A0A] border border-black/10 rounded-full shadow-lg",
+    cardText: "text-white",
+    cardSub: "text-zinc-300",
+    iconBg: "bg-white/20 text-white rounded-full",
+    socialBg: "bg-white border border-blue-200 text-[#2563EB] shadow-sm",
+    dotBg: "bg-[#2563EB]",
+    arrowColor: "text-white",
+  },
+  {
+    id: "reel",
+    name: "Reel Preset",
+    isLight: false,
+    fontClass: "font-mono",
+    bg: "bg-[#07110D]",
+    headerText: "text-[#EAFFF5]",
+    subtext: "text-emerald-400/80",
+    cardBg: "bg-[#07110D] border border-[#4ADE80] rounded-none shadow-[0_0_15px_rgba(74,222,128,0.15)]",
+    cardText: "text-[#4ADE80]",
+    cardSub: "text-emerald-200/60",
+    iconBg: "bg-[#4ADE80]/20 text-[#4ADE80] rounded-none",
+    socialBg: "bg-[#07110D] border border-[#4ADE80] text-[#4ADE80]",
+    dotBg: "bg-[#4ADE80]",
+    arrowColor: "text-[#4ADE80]",
+  },
+  {
+    id: "ember",
+    name: "Ember Preset",
+    isLight: false,
+    fontClass: "font-sans",
+    bg: "bg-[#140A08]",
+    headerText: "text-white",
+    subtext: "text-orange-200/70",
+    cardBg: "bg-[#1F110C] border border-[#FF9E64]/25 rounded-2xl shadow-xl",
+    cardText: "text-[#FF9E64]",
+    cardSub: "text-zinc-400",
+    iconBg: "bg-[#FF9E64]/20 text-[#FF9E64] rounded-xl",
+    socialBg: "bg-[#1F110C] border border-[#FF9E64]/25 text-[#FF9E64]",
+    dotBg: "bg-[#FF9E64]",
+    arrowColor: "text-[#FF9E64]",
+  },
+  {
+    id: "carbon",
+    name: "Carbon Preset",
+    isLight: false,
+    fontClass: "font-sans",
+    bg: "bg-black",
+    headerText: "text-white",
+    subtext: "text-zinc-400",
+    cardBg: "bg-transparent border border-white/30 rounded-full",
+    cardText: "text-white",
+    cardSub: "text-zinc-400",
+    iconBg: "bg-white/10 text-white rounded-full",
+    socialBg: "bg-transparent border border-white/30 text-white",
+    dotBg: "bg-white",
+    arrowColor: "text-white",
+  },
+  {
+    id: "signal",
+    name: "Signal Preset",
+    isLight: false,
+    fontClass: "font-display",
+    bg: "bg-[#0A0A0A]",
+    headerText: "text-white",
+    subtext: "text-zinc-400",
+    cardBg: "bg-white text-[#0A0A0A] rounded-full shadow-lg",
+    cardText: "text-[#0A0A0A]",
+    cardSub: "text-zinc-600",
+    iconBg: "bg-[#0A0A0A] text-white rounded-full",
+    socialBg: "bg-white text-[#0A0A0A]",
+    dotBg: "bg-white",
+    arrowColor: "text-[#0A0A0A]",
+  },
+];
+
+/* =========================================================================
+   STATIC STYLED PHONE MOCKUP (Visual Card for Hero Section)
+   ========================================================================= */
+function PhoneVisualMockup() {
+  const [themeIndex, setThemeIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setThemeIndex((prev) => (prev + 1) % phoneThemes.length);
+    }, 3200);
+    return () => clearInterval(timer);
+  }, []);
+
+  const activeTheme = phoneThemes[themeIndex];
+
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-zinc-950/40 backdrop-blur-md shadow-xl p-5 md:p-6 select-none">
-      {children}
+    <div className={`w-[310px] h-[600px] rounded-[52px] border-[9px] border-zinc-800 p-4 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.95)] relative overflow-hidden select-none flex flex-col justify-between border-t-zinc-700 border-b-zinc-900 transition-colors duration-700 ${activeTheme.bg}`}>
+      {/* Top Dynamic Island Notch */}
+      <div>
+        <div className="w-24 h-4 bg-zinc-900 rounded-full mx-auto relative z-20 flex items-center justify-end px-2 shadow-inner">
+          <div className="w-2 h-2 rounded-full bg-zinc-950 border border-zinc-800/80" />
+        </div>
+
+        {/* Animated Inner Content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTheme.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className={`space-y-4 text-center pt-3 ${activeTheme.fontClass}`}
+          >
+            {/* Avatar */}
+            <div className="w-16 h-16 rounded-full border-2 border-white/20 shadow-xl overflow-hidden relative mx-auto shrink-0">
+              <Image
+                src="/creators/alexa-avatar.jpg"
+                alt="Alexa Rivera Profile Photo"
+                fill
+                sizes="64px"
+                className="object-cover"
+                priority
+              />
+            </div>
+
+            {/* Profile Name & Tagline */}
+            <div>
+              <div className={`text-base font-semibold tracking-tight transition-colors duration-500 ${activeTheme.headerText}`}>
+                Alexa Rivera
+              </div>
+              <div className={`text-[11px] mt-0.5 transition-colors duration-500 ${activeTheme.subtext}`}>
+                Tech & Lifestyle Creator · 420K
+              </div>
+            </div>
+
+            {/* Social Icons Row */}
+            <div className="flex items-center justify-center gap-2.5 pt-1">
+              <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors duration-500 ${activeTheme.socialBg}`}>
+                <Video className="w-3.5 h-3.5" />
+              </div>
+              <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors duration-500 ${activeTheme.socialBg}`}>
+                <Share2 className="w-3.5 h-3.5" />
+              </div>
+              <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors duration-500 ${activeTheme.socialBg}`}>
+                <Globe className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Link Cards Showcase */}
+            <div className="space-y-2.5 pt-4 px-1">
+              <div className={`p-3.5 text-left flex items-center justify-between transition-colors duration-500 ${activeTheme.cardBg}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 flex items-center justify-center shrink-0 transition-colors duration-500 ${activeTheme.iconBg}`}>
+                    <Briefcase className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className={`text-[11px] font-semibold transition-colors duration-500 ${activeTheme.cardText}`}>
+                      Work With Me & Rates
+                    </div>
+                    <div className={`text-[9.5px] transition-colors duration-500 ${activeTheme.cardSub}`}>
+                      Sponsorship inquiry form
+                    </div>
+                  </div>
+                </div>
+                <ArrowUpRight className={`w-3.5 h-3.5 transition-colors duration-500 ${activeTheme.arrowColor}`} />
+              </div>
+
+              <div className={`p-3.5 text-left flex items-center justify-between transition-colors duration-500 ${activeTheme.cardBg}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 flex items-center justify-center shrink-0 transition-colors duration-500 ${activeTheme.iconBg}`}>
+                    <Tag className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className={`text-[11px] font-semibold transition-colors duration-500 ${activeTheme.cardText}`}>
+                      20% Off Onyx Gear
+                    </div>
+                    <div className={`text-[9.5px] transition-colors duration-500 ${activeTheme.cardSub}`}>
+                      Code ALEXA20 at checkout
+                    </div>
+                  </div>
+                </div>
+                <ArrowUpRight className={`w-3.5 h-3.5 transition-colors duration-500 ${activeTheme.arrowColor}`} />
+              </div>
+
+              <div className={`p-3.5 text-left flex items-center justify-between transition-colors duration-500 ${activeTheme.cardBg}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 flex items-center justify-center shrink-0 transition-colors duration-500 ${activeTheme.iconBg}`}>
+                    <Layers className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className={`text-[11px] font-semibold transition-colors duration-500 ${activeTheme.cardText}`}>
+                      2026 Tech Desk Setup
+                    </div>
+                    <div className={`text-[9.5px] transition-colors duration-500 ${activeTheme.cardSub}`}>
+                      Full gear list & links
+                    </div>
+                  </div>
+                </div>
+                <ArrowUpRight className={`w-3.5 h-3.5 transition-colors duration-500 ${activeTheme.arrowColor}`} />
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Bottom Footer & iOS Home Indicator Bar */}
+      <div className="pb-1 text-center">
+        <div className={`text-[9px] tracking-wide mb-2 transition-colors duration-500 ${activeTheme.isLight ? "text-zinc-600 font-semibold" : "text-zinc-500"}`}>
+          Powered by ABRAM
+        </div>
+        <div className={`w-28 h-1 rounded-full mx-auto transition-colors duration-500 ${activeTheme.isLight ? "bg-black/30" : "bg-white/20"}`} />
+      </div>
     </div>
   );
 }
 
-/* ---- Step 01 · The link in bio ---- */
-function LinkHubPreview() {
-  const blocks = [
-    { label: "Work with me", note: "Rates and booking form" },
-    { label: "Latest video", note: "Scheduled, live until Friday" },
-    { label: "Discount code", note: "Highlight on" },
-    { label: "Instagram, TikTok, YouTube", note: "Social row" },
-  ];
-  return (
-    <PreviewPanel>
-      <div className="flex items-center justify-between mb-4">
-        <MicroLabel>Link Hub</MicroLabel>
-        <span className="text-[10px] text-zinc-400 font-sans">Free on every plan</span>
-      </div>
-
-      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 mb-4">
-        <div className="text-xs font-medium text-zinc-100 font-sans mb-1">
-          abram.network/l/yourname
-        </div>
-        <p className="text-[11px] leading-relaxed text-zinc-400 font-sans">
-          The link you put in three bios, holding whatever you are pointing
-          people at this week.
-        </p>
-      </div>
-
-      <div className="space-y-2">
-        {blocks.map((b) => (
-          <div
-            key={b.label}
-            className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-zinc-900/40 px-3 py-2.5"
-          >
-            <span className="text-xs text-zinc-200 font-sans truncate">{b.label}</span>
-            <span className="text-[9px] text-zinc-500 font-sans shrink-0">{b.note}</span>
-          </div>
-        ))}
-      </div>
-    </PreviewPanel>
-  );
-}
-
-/* ---- Step 02 · The deal becomes a project ---- */
-function DealPreview() {
-  const rows = [
-    { k: "Brand contact", v: "Nadia Ruiz" },
-    { k: "Deal fee", v: "$6,500" },
-    { k: "Live date", v: "Mar 14" },
-    { k: "Deliverables", v: "4 assets" },
-  ];
-  return (
-    <PreviewPanel>
-      <div className="flex items-center justify-between mb-4">
-        <MicroLabel>Brand Deal</MicroLabel>
-        <span className="inline-flex items-center gap-1.5 text-[10px] text-zinc-400 font-sans">
-          <AbramMark size={12} />
-          Project
-        </span>
-      </div>
-
-      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 mb-4">
-        <div className="text-xs font-medium text-zinc-100 font-sans mb-1">
-          Halcyon Motors Spring Campaign
-        </div>
-        <p className="text-[11px] leading-relaxed text-zinc-400 font-sans">
-          One long-form YouTube review, two TikTok cutdowns, and a story set,
-          all due in the same three week window.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2.5">
-        {rows.map((row) => (
-          <div
-            key={row.k}
-            className="rounded-lg border border-white/[0.06] bg-zinc-900/40 px-3 py-2.5"
-          >
-            <div className="text-[9px] uppercase tracking-wider text-zinc-500 font-sans mb-0.5">
-              {row.k}
-            </div>
-            <div className="text-xs font-medium text-zinc-100 font-sans truncate">
-              {row.v}
-            </div>
-          </div>
-        ))}
-      </div>
-    </PreviewPanel>
-  );
-}
-
-/* ---- Step 03 · Every asset carries a status ---- */
-function DeliverablesPreview() {
-  const assets = [
-    { name: "YouTube review, 8 min", state: "Approved" },
-    { name: "TikTok cutdown 01", state: "In Review" },
-    { name: "TikTok cutdown 02", state: "In Progress" },
-    { name: "Story set, 3 frames", state: "Not Started" },
-  ];
-  const tone: Record<string, string> = {
-    Approved: "text-emerald-300 bg-emerald-500/10 border-emerald-500/20",
-    "In Review": "text-zinc-300 bg-white/[0.04] border-white/[0.1]",
-    "In Progress": "text-zinc-300 bg-white/[0.04] border-white/[0.1]",
-    "Not Started": "text-zinc-500 bg-white/[0.02] border-white/[0.06]",
-  };
-  return (
-    <PreviewPanel>
-      <div className="flex items-center justify-between mb-4">
-        <MicroLabel>Deliverables</MicroLabel>
-        <span className="text-[10px] text-zinc-400 font-sans">4 assets, 1 deal</span>
-      </div>
-
-      <div className="space-y-2">
-        {assets.map((a) => (
-          <div
-            key={a.name}
-            className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-zinc-900/40 px-3 py-2.5"
-          >
-            <span className="text-xs text-zinc-200 font-sans truncate">{a.name}</span>
-            <span
-              className={`text-[9px] px-1.5 py-0.5 rounded-full border font-sans shrink-0 ${tone[a.state]}`}
-            >
-              {a.state}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-        <div className="text-[10px] text-zinc-400 font-sans leading-relaxed">
-          Revision requests reopen the asset and keep a count, so a fourth round
-          of notes is on the record.
-        </div>
-      </div>
-    </PreviewPanel>
-  );
-}
-
-/* ---- Step 04 · The brand watches from a portal ---- */
-function BrandPortalPreview() {
-  const items = [
-    { name: "YouTube review", state: "Approved" },
-    { name: "TikTok cutdown 01", state: "In Review" },
-    { name: "Story set", state: "Not Started" },
-  ];
-  return (
-    <PreviewPanel>
-      <div className="flex items-center justify-between mb-4">
-        <MicroLabel>Halcyon Brand Portal</MicroLabel>
-        <span className="text-[10px] text-emerald-300 font-sans font-semibold">
-          58% Done
-        </span>
-      </div>
-
-      <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden mb-4">
-        <div className="h-full w-[58%] rounded-full bg-white" />
-      </div>
-
-      <div className="space-y-2 mb-4">
-        {items.map((d) => (
-          <div
-            key={d.name}
-            className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-zinc-900/40 px-3 py-2"
-          >
-            <span className="text-xs text-zinc-200 font-sans truncate">{d.name}</span>
-            <span
-              className={`text-[9px] px-1.5 py-0.5 rounded-full border font-sans shrink-0 ${
-                d.state === "Approved"
-                  ? "text-emerald-300 bg-emerald-500/10 border-emerald-500/20"
-                  : "text-zinc-400 bg-white/[0.03] border-white/[0.08]"
-              }`}
-            >
-              {d.state}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-2.5">
-        <div className="text-[10px] text-zinc-400 font-sans leading-relaxed">
-          The brand contact opens a private link, reads the current status, and
-          approves without making an account.
-        </div>
-      </div>
-    </PreviewPanel>
-  );
-}
-
-/* ---- Step 05 · The money sits with the deal ---- */
-function MoneyPreview() {
-  const invoices = [
-    { ref: "Halcyon Motors", amount: "$6,500", state: "Paid", days: "Paid Mar 21" },
-    { ref: "Meridian Skincare", amount: "$2,800", state: "Sent", days: "Day 48 outstanding" },
-    { ref: "Northwind Audio", amount: "$4,100", state: "Overdue", days: "Day 92 outstanding" },
-  ];
-  const tone: Record<string, string> = {
-    Paid: "text-emerald-300 bg-emerald-500/10 border-emerald-500/20",
-    Sent: "text-zinc-300 bg-white/[0.04] border-white/[0.1]",
-    Overdue: "text-amber-300 bg-amber-500/10 border-amber-500/20",
-  };
-  return (
-    <PreviewPanel>
-      <div className="flex items-center justify-between mb-4">
-        <MicroLabel>Money In</MicroLabel>
-        <span className="text-[10px] text-zinc-400 font-sans">$6,900 outstanding</span>
-      </div>
-
-      <div className="space-y-2">
-        {invoices.map((inv) => (
-          <div
-            key={inv.ref}
-            className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-zinc-900/40 px-3 py-2.5"
-          >
-            <div className="min-w-0">
-              <div className="text-xs font-medium text-zinc-100 font-sans truncate">
-                {inv.ref}
-              </div>
-              <div className="text-[10px] text-zinc-500 font-sans truncate">{inv.days}</div>
-            </div>
-            <div className="flex flex-col items-end gap-1 shrink-0">
-              <span className="text-xs text-zinc-200 font-sans">{inv.amount}</span>
-              <span
-                className={`text-[9px] px-1.5 py-0.5 rounded-full border font-sans ${tone[inv.state]}`}
-              >
-                {inv.state}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4 rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-2.5">
-        <div className="text-[10px] text-zinc-400 font-sans leading-relaxed">
-          Card payment runs through Stripe into your own account, and the deal
-          shows what has landed.
-        </div>
-      </div>
-    </PreviewPanel>
-  );
-}
-
-const covers = [
-  "A link in bio at abram.network/l/yourname, free on every plan",
-  "A project per brand deal, with its own dates, fee and notes",
-  "A deliverable per post, video or story, carrying a status through approval",
-  "A private portal link for the brand contact to follow and approve",
-  "Quotes and invoices raised from the deal, paid by card through Stripe",
-  "A calendar of live dates and shoot days across every deal at once",
-  "Time tracking on the deals that eat your week",
-  "An AI assistant that drafts the deliverable list from a brief you paste in",
-];
-
-const stays = [
-  "Scheduling and publishing posts stays in your scheduling tool",
-  "Views, reach and follower analytics stay in the platform apps",
-  "Brand discovery and marketplace matching happen elsewhere",
-  "Contract e-signature runs through your signing tool",
-  "Usage rights terms live in the contract, tracked as project notes",
+const scopeItems = [
+  {
+    icon: Users,
+    title: "Brand Client Directory",
+    desc: "Every brand gets a portal record, set to project or retainer.",
+  },
+  {
+    icon: Globe,
+    title: "Free Link Hub Bio Page",
+    desc: "Public page at abram.network/l/yourname, free on every plan.",
+  },
+  {
+    icon: Briefcase,
+    title: "Brand Deal Projects",
+    desc: "Central workspace for campaign budgets, live dates & schedules.",
+  },
+  {
+    icon: Layers,
+    title: "Asset Status Lifecycle",
+    desc: "5-stage deliverable progress with revision rounds counted.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Brand Approval Portals",
+    desc: "No-account token links for 1-click client reviews.",
+  },
+  {
+    icon: CreditCard,
+    title: "Stripe Invoicing",
+    desc: "Card payments into your own Stripe account, with due dates.",
+  },
 ];
 
 export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [approved, setApproved] = useState(false);
   const toggleFaq = (i: number) => setActiveFaq(activeFaq === i ? null : i);
 
-  const steps: Step[] = [
-    {
-      index: "01",
-      heading: "Your link in bio is free, and it is the front of the business.",
-      body: "Publish a page at abram.network/l/yourname on the free plan and put it in every bio. From $19 a month you style it: themes, backgrounds, button shapes and colours, fonts, block highlights, and start and end dates so a launch link appears and retires on its own.",
-      visual: <LinkHubPreview />,
-    },
-    {
-      index: "02",
-      heading: "A brand deal becomes a project the day you sign it.",
-      body: "The fee, the live date, the brand contact and the asset list sit on one record, so the whole deal has a single home instead of a Notion page, a spreadsheet tab and a DM thread.",
-      visual: <DealPreview />,
-    },
-    {
-      index: "03",
-      heading: "Every post, video and story carries its own status.",
-      body: "Each asset moves through not started, in progress, in review, approved and completed. A five post campaign shows you which two are still waiting on the brand.",
-      visual: <DeliverablesPreview />,
-    },
-    {
-      index: "04",
-      heading: "The brand contact checks progress from a portal link.",
-      body: "Send one private link. They see current status, leave notes, and approve the assets they are happy with, which ends the round of status emails you were answering by hand.",
-      visual: <BrandPortalPreview />,
-    },
-    {
-      index: "05",
-      heading: "You can say what you are owed and how late it is.",
-      body: "Raise a quote, turn it into an invoice, and take payment by card through Stripe into your own account. The deal page shows what has landed, what has not, and the day count on every invoice still outstanding. You are the merchant of record, so the money arrives in your bank, not in a balance we hold.",
-      visual: <MoneyPreview />,
-    },
-  ];
-
   return (
-    <main className="text-zinc-100 overflow-x-hidden pt-24 pb-20 relative z-10 isolate">
-      <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="absolute top-[40%] right-1/4 w-[280px] md:w-[500px] h-[280px] bg-[#8ECAFF]/[0.015] rounded-full blur-[100px] pointer-events-none -z-10" />
-
-      {/* Hero */}
-      <section className="relative w-full min-h-[40vh] md:min-h-[45vh] flex flex-col justify-center py-16 md:py-24 px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
-        <div className="max-w-7xl mx-auto w-full">
+    <main className="text-zinc-100 overflow-x-hidden pt-20 pb-20 relative isolate">
+      {/* Top Hero Split Layout (Left: Phone Visual Card, Right: Value Prop & Stats) */}
+      <section className="w-full py-12 md:py-20 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* LEFT SIDE: Phone Visual Card Graphic */}
           <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col items-center text-center max-w-4xl mx-auto w-full"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-5 flex flex-col items-center"
           >
-            <motion.h1
-              variants={revealVariants}
-              custom={0.0}
-              className="text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
-            >
-              Know what you are owed, and how late it is.
-            </motion.h1>
-            <motion.p
-              variants={revealVariants}
-              custom={0.15}
-              className="text-base sm:text-lg md:text-xl font-normal leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans select-text"
-            >
-              Every deal, every deliverable, every dollar on one screen. Your
-              link in bio comes free with it, at abram.network/l/yourname.
-            </motion.p>
-            <motion.div
-              variants={revealVariants}
-              custom={0.3}
-              className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center"
-            >
-              <Link
-                href="/pricing"
-                className="btn-glass rounded-full px-4 py-1.5 text-xs font-medium w-full sm:w-auto min-h-[44px] md:min-h-0"
-              >
-                <span>Start on the free plan</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+            <PhoneVisualMockup />
+          </motion.div>
+
+          {/* RIGHT SIDE: Headline, Value Prop & Business Overview Stats */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="lg:col-span-7 space-y-8 text-left"
+          >
+            <div>
+              <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
+                ABRAM FOR CREATORS & INFLUENCERS
+              </span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-white leading-[1.08] mb-4 font-sans">
+                Run your social media like a production company.
+              </h1>
+              <p className="text-base sm:text-lg text-zinc-400 font-sans leading-relaxed">
+                Brand deal projects, deliverable status tracking, passwordless client portals, and Stripe invoicing. The Link Hub bio page is free on every plan.
+              </p>
+            </div>
+
+            {/* Quick CTAs */}
+            <div className="flex flex-wrap gap-3.5 items-center">
+              <Link href="/pricing" className="btn-primary rounded-full px-7 py-3 text-xs font-medium flex items-center gap-2">
+                <span>Start Free Plan</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link
-                href="/alternatives/metricool"
-                className="btn-glass rounded-full px-4 py-1.5 text-xs font-medium w-full sm:w-auto min-h-[44px] md:min-h-0"
-              >
-                <span>Compare with Metricool</span>
+              <Link href="#features" className="btn-glass rounded-full px-7 py-3 text-xs font-medium">
+                Explore Features
               </Link>
-            </motion.div>
+            </div>
+
+            {/* Key Commercial Stats Grid */}
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/[0.08]">
+              <div className="p-4 rounded-xl bg-zinc-900/40 border border-white/[0.06]">
+                <div className="text-[10px] text-zinc-500 font-sans uppercase tracking-wider mb-1">Tracked Revenue (YTD)</div>
+                <div className="text-2xl font-mono font-semibold text-white">$42,800</div>
+                <div className="text-[10px] text-emerald-400 font-sans mt-1">+$8,500 this month</div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-zinc-900/40 border border-white/[0.06]">
+                <div className="text-[10px] text-zinc-500 font-sans uppercase tracking-wider mb-1">Outstanding Invoices</div>
+                <div className="text-2xl font-mono font-semibold text-amber-300">$12,500</div>
+                <div className="text-[10px] text-amber-300/80 font-sans mt-1">3 Pending settlements</div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-zinc-900/40 border border-white/[0.06]">
+                <div className="text-[10px] text-zinc-500 font-sans uppercase tracking-wider mb-1">Active Brand Deals</div>
+                <div className="text-2xl font-mono font-semibold text-white">4 Clients</div>
+                <div className="text-[10px] text-zinc-400 font-sans mt-1">Onyx, Helix, Aura, Sensa</div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-zinc-900/40 border border-white/[0.06]">
+                <div className="text-[10px] text-zinc-500 font-sans uppercase tracking-wider mb-1">Asset Approvals</div>
+                <div className="text-2xl font-mono font-semibold text-emerald-400">8 / 11</div>
+                <div className="text-[10px] text-emerald-400 font-sans mt-1">73% Campaign completion</div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* The problem */}
-      <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-20 md:mb-28">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-white font-sans mb-4">
-            Four live brand deals is a small business.
+      {/* Main Commercial Operations Features */}
+      <section id="features" className="w-full py-20 px-4 sm:px-6 lg:px-8 space-y-24 max-w-7xl mx-auto">
+        
+        {/* Module 1: Client CRM & Directory */}
+        <div className="w-full space-y-6">
+          <div className="border-b border-white/[0.06] pb-4">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans">01 · CLIENT DIRECTORY</span>
+            <h2 className="text-2xl sm:text-3xl font-medium text-white font-sans mt-1">Brand Client Directory & Deal Budgets</h2>
+          </div>
+
+          <div className="w-full p-6 rounded-2xl border border-white/10 bg-zinc-900/30 overflow-x-auto">
+            <p className="text-[10px] text-zinc-500 mb-2 md:hidden">Swipe to view →</p>
+            <div className="min-w-[700px] space-y-3">
+              <div className="grid grid-cols-12 text-[10px] uppercase font-semibold tracking-wider text-zinc-500 px-4 py-2 bg-white/[0.02] rounded-lg">
+                <div className="col-span-3">Brand Client</div>
+                <div className="col-span-3">Portal Access</div>
+                <div className="col-span-2">Engagement</div>
+                <div className="col-span-2">Deal Budget</div>
+                <div className="col-span-2 text-right">Project Status</div>
+              </div>
+
+              <div className="grid grid-cols-12 items-center px-4 py-3 bg-zinc-950/60 border border-white/[0.06] rounded-xl text-xs font-sans">
+                <div className="col-span-3 font-semibold text-white">Onyx Apparel</div>
+                <div className="col-span-3 text-zinc-300">nadia@onyxapparel.co</div>
+                <div className="col-span-2 text-zinc-400">Retainer</div>
+                <div className="col-span-2 font-mono font-bold text-white">$24,500</div>
+                <div className="col-span-2 text-right">
+                  <span className="text-[10px] px-2.5 py-1 rounded-full border font-sans font-medium text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                    In Progress
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-12 items-center px-4 py-3 bg-zinc-950/60 border border-white/[0.06] rounded-xl text-xs font-sans">
+                <div className="col-span-3 font-semibold text-white">Helix Technologies</div>
+                <div className="col-span-3 text-zinc-300">marcus@helixtech.io</div>
+                <div className="col-span-2 text-zinc-400">Project-based</div>
+                <div className="col-span-2 font-mono font-bold text-white">$18,000</div>
+                <div className="col-span-2 text-right">
+                  <span className="text-[10px] px-2.5 py-1 rounded-full border font-sans font-medium text-zinc-300 bg-white/[0.06] border-white/[0.12]">
+                    Planning
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-12 items-center px-4 py-3 bg-zinc-950/60 border border-white/[0.06] rounded-xl text-xs font-sans">
+                <div className="col-span-3 font-semibold text-white">Aura Audio</div>
+                <div className="col-span-3 text-zinc-300">elena@auraaudio.co</div>
+                <div className="col-span-2 text-zinc-400">Project-based</div>
+                <div className="col-span-2 font-mono font-bold text-white">$12,400</div>
+                <div className="col-span-2 text-right">
+                  <span className="text-[10px] px-2.5 py-1 rounded-full border font-sans font-medium text-zinc-300 bg-white/[0.06] border-white/[0.12]">
+                    On Hold
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Module 2: Deliverable Lifecycle Statuses */}
+        <div className="w-full space-y-6">
+          <div className="border-b border-white/[0.06] pb-4">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans">02 · PROOFING & LIFECYCLE</span>
+            <h2 className="text-2xl sm:text-3xl font-medium text-white font-sans mt-1">5-Stage Deliverable Status Lifecycle</h2>
+          </div>
+
+          <div className="w-full p-6 sm:p-8 rounded-2xl border border-white/10 bg-zinc-900/30 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-5 rounded-xl bg-zinc-950/80 border border-white/[0.08] space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <span className="font-semibold text-white font-sans text-xs">YouTube Dedicated Review</span>
+                  </div>
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-sans shrink-0">
+                    Approved
+                  </span>
+                </div>
+                <div className="text-[11px] text-zinc-400 font-sans">Stage 4 of 5 · Revision Round 1 Completed & Signed Off</div>
+                <div className="text-[11px] text-zinc-500 font-sans pt-1 border-t border-white/[0.04]">
+                  Client note: &ldquo;Intro hook is sharp. Approved for publish on Sept 14.&rdquo;
+                </div>
+              </div>
+
+              <div className="p-5 rounded-xl bg-zinc-950/80 border border-white/[0.08] space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-amber-400" />
+                    <span className="font-semibold text-white font-sans text-xs">TikTok Story & Reel Cutdown</span>
+                  </div>
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-sans shrink-0">
+                    In Review
+                  </span>
+                </div>
+                <div className="text-[11px] text-zinc-400 font-sans">Stage 3 of 5 · Token portal review link active</div>
+                <div className="text-[11px] text-zinc-500 font-sans pt-1 border-t border-white/[0.04]">
+                  Client note: &ldquo;Draft received. Reviewing copy before final sign-off.&rdquo;
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Module 3: Client Portal */}
+        <div className="w-full space-y-6">
+          <div className="border-b border-white/[0.06] pb-4">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans">03 · CLIENT PORTAL</span>
+            <h2 className="text-2xl sm:text-3xl font-medium text-white font-sans mt-1">Passwordless Brand Approval Link</h2>
+          </div>
+
+          <div className="w-full p-6 sm:p-8 rounded-2xl border border-white/10 bg-zinc-900/30 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/[0.06] gap-3">
+              <div>
+                <div className="text-sm font-semibold text-white font-sans">Onyx Apparel · Autumn Campaign Portal</div>
+                <div className="text-xs text-zinc-400 font-sans mt-0.5">Client Contact: Nadia Ruiz (Zero-login token verified)</div>
+              </div>
+              <div className="sm:text-right">
+                <div className="text-xs text-zinc-400 font-sans">Approval Progress</div>
+                <div className="text-sm font-mono font-semibold text-emerald-400">75% Approved (3/4 Assets)</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Portal Asset 01 */}
+              <div className="p-5 rounded-xl bg-zinc-950/80 border border-white/[0.08] space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-white font-sans">Asset 01: YouTube Dedicated Review</span>
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-sans font-medium">
+                    1-Click Approved
+                  </span>
+                </div>
+                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-xs text-zinc-300 font-sans italic">
+                  &ldquo;Approved for publish on Sept 14.&rdquo;
+                </div>
+                <div className="text-[10px] text-zinc-500 font-sans">
+                  Approved by Nadia Ruiz · Sept 10, 2026
+                </div>
+              </div>
+
+              {/* Portal Asset 02 */}
+              <div className="p-5 rounded-xl bg-zinc-950/80 border border-white/[0.08] space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-white font-sans">Asset 02: TikTok Cutdown 01</span>
+                  <button
+                    type="button"
+                    onClick={() => setApproved(!approved)}
+                    className={`px-3 py-1 rounded-full text-xs font-sans transition-all flex items-center gap-1.5 cursor-pointer ${
+                      approved
+                        ? "bg-emerald-500 text-zinc-950 font-semibold shadow-md"
+                        : "bg-white/10 hover:bg-white/20 text-white border border-white/10"
+                    }`}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{approved ? "Approved by Brand" : "Click to Approve Asset"}</span>
+                  </button>
+                </div>
+                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-xs text-zinc-300 font-sans italic">
+                  &ldquo;Intro hook is sharp. Ready to approve.&rdquo;
+                </div>
+                <div className="text-[10px] text-zinc-500 font-sans">
+                  Token Link: <span className="font-mono text-zinc-400">abram.network/portal/token_8f92a4</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Module 4: Invoices & Stripe Ledger */}
+        <div className="w-full space-y-6">
+          <div className="border-b border-white/[0.06] pb-4">
+            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans">04 · FINANCIAL ENGINE</span>
+            <h2 className="text-2xl sm:text-3xl font-medium text-white font-sans mt-1">Invoicing & Stripe Card Payments</h2>
+          </div>
+
+          <div className="w-full p-6 rounded-2xl border border-white/10 bg-zinc-900/30 overflow-x-auto">
+            <p className="text-[10px] text-zinc-500 mb-2 md:hidden">Swipe to view →</p>
+            <div className="min-w-[700px] space-y-3">
+              <div className="grid grid-cols-12 text-[10px] uppercase font-semibold tracking-wider text-zinc-500 px-4 py-2 bg-white/[0.02] rounded-lg">
+                <div className="col-span-3">Invoice Number</div>
+                <div className="col-span-4">Brand Client</div>
+                <div className="col-span-2">Amount</div>
+                <div className="col-span-3 text-right">Status</div>
+              </div>
+
+              <div className="grid grid-cols-12 items-center px-4 py-3 bg-zinc-950/60 border border-white/[0.06] rounded-xl text-xs font-sans">
+                <div className="col-span-3 font-mono text-zinc-400">INV-2026-004</div>
+                <div className="col-span-4 font-semibold text-white">Onyx Apparel</div>
+                <div className="col-span-2 font-mono font-bold text-white">$8,500</div>
+                <div className="col-span-3 text-right">
+                  <span className="text-[10px] px-2.5 py-1 rounded-full border font-sans font-medium text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                    Paid (Stripe card)
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-12 items-center px-4 py-3 bg-zinc-950/60 border border-white/[0.06] rounded-xl text-xs font-sans">
+                <div className="col-span-3 font-mono text-zinc-400">INV-2026-005</div>
+                <div className="col-span-4 font-semibold text-white">Helix Tech</div>
+                <div className="col-span-2 font-mono font-bold text-white">$3,200</div>
+                <div className="col-span-3 text-right">
+                  <span className="text-[10px] px-2.5 py-1 rounded-full border font-sans font-medium text-zinc-300 bg-white/[0.06] border-white/[0.12]">
+                    Sent · Due Sept 12
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-12 items-center px-4 py-3 bg-zinc-950/60 border border-white/[0.06] rounded-xl text-xs font-sans">
+                <div className="col-span-3 font-mono text-zinc-400">INV-2026-002</div>
+                <div className="col-span-4 font-semibold text-white">Aura Audio</div>
+                <div className="col-span-2 font-mono font-bold text-zinc-200">$4,500</div>
+                <div className="col-span-3 text-right">
+                  <span className="text-[10px] px-2.5 py-1 rounded-full border font-sans font-medium text-amber-300 bg-amber-500/10 border-amber-500/20">
+                    Sent · Overdue since Jul 8
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* System Scope Grid */}
+      <section className="w-full py-16 px-4 sm:px-6 lg:px-8 border-t border-white/[0.06] max-w-7xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+            SYSTEM SCOPE
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-medium text-white font-sans">
+            Everything you need to run your social media
           </h2>
-          <p className="text-sm sm:text-base text-zinc-400 leading-7 font-sans max-w-2xl mx-auto">
-            Each one carries its own asset list, its own approval thread, its own
-            payment terms and its own brand contact asking where things stand.
-            The filming is the part you signed up for. The rest is chasing an
-            invoice at day 92, digging through a DM thread to prove you already
-            sent the second cut, and answering the same status question four
-            times a week from a notes app, a spreadsheet and a payment link.
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {scopeItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.title}
+                className="p-6 rounded-2xl border border-white/10 bg-zinc-900/30 flex flex-col justify-between space-y-4"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white mb-4">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-semibold text-white font-sans mb-1.5">{item.title}</h3>
+                  <p className="text-xs text-zinc-400 font-sans leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Solo Creator Pricing Cards (Removed "Seat" phrasing) */}
+      <section className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+            SOLO CREATOR PRICING
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-medium text-white font-sans mb-3">
+            Plans built for solo creator operations
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-400 font-sans">
+            Start free with Link Hub included. Upgrade as your invoicing and brand client portal needs scale.
           </p>
         </div>
-      </section>
 
-      {/* Numbered workflow */}
-      <div className="flex flex-col gap-20 md:gap-32 mb-20 md:mb-32">
-        {steps.map((step, i) => {
-          const visualFirst = i % 2 === 1;
-          return (
-            <section key={step.index} className="relative w-full px-4 sm:px-6 lg:px-8">
-              <div className="max-w-7xl mx-auto">
-                <motion.div
-                  variants={staggerContainer}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-80px" }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center"
-                >
-                  <motion.div
-                    variants={revealVariants}
-                    custom={0.0}
-                    className={`space-y-4 ${visualFirst ? "md:order-2" : "md:order-1"}`}
-                  >
-                    <span className="text-[10px] font-semibold tracking-[0.2em] text-zinc-600 font-sans block">
-                      {step.index}
-                    </span>
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-white leading-[1.15] font-sans select-text">
-                      {step.heading}
-                    </h2>
-                    <p className="text-sm sm:text-base leading-7 text-zinc-400 max-w-md font-sans select-text">
-                      {step.body}
-                    </p>
-                  </motion.div>
-
-                  <motion.div
-                    variants={revealVariants}
-                    custom={0.15}
-                    className={visualFirst ? "md:order-1" : "md:order-2"}
-                  >
-                    {step.visual}
-                  </motion.div>
-                </motion.div>
-              </div>
-            </section>
-          );
-        })}
-      </div>
-
-      {/* Scope honesty */}
-      <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-20 md:mb-28">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10 max-w-2xl mx-auto">
-            <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-white font-sans mb-3">
-              What ABRAM handles, and what your other tools keep
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-              ABRAM covers the business side of creator work. Scheduling and
-              audience analytics belong to the apps you already pay for.
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+          {/* Free Plan */}
+          <div className="rounded-2xl border border-white/10 bg-zinc-900/30 p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+              <div className="text-xs font-semibold text-zinc-400 font-sans mb-1">Free</div>
+              <div className="text-3xl font-bold text-white font-sans mb-1">$0 <span className="text-xs font-normal text-zinc-500">/mo</span></div>
+              <div className="text-[11px] text-zinc-500 font-mono mb-6">80 trial AI credits · 500 MB Storage</div>
+              <ul className="space-y-3 text-xs text-zinc-300 font-sans mb-8">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Free Link Hub bio page (abram.network/l/you)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Link & social media profile buttons</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> 1 Active brand sponsorship project</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Issue up to 3 brand invoices / month</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-500 shrink-0" /> 3% Processing Fee on payments received</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-500 shrink-0" /> Watermarked PDF quotes, invoices & exports</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-500 shrink-0" /> View-only resource scheduler</li>
+              </ul>
+            </div>
+            <Link href="/pricing" className="btn-glass rounded-full text-center py-2.5 text-xs font-medium w-full">Start Free</Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="rounded-2xl border border-white/8 bg-zinc-900/30 backdrop-blur-md p-6">
-              <h3 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-4">
-                ABRAM handles
-              </h3>
-              <ul className="text-xs text-zinc-400 space-y-2.5 font-sans leading-relaxed">
-                {covers.map((c) => (
-                  <li key={c} className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>{c}</span>
-                  </li>
-                ))}
+
+          {/* Solo Lite Plan */}
+          <div className="rounded-2xl border border-white/20 bg-zinc-900/60 p-6 sm:p-8 flex flex-col justify-between shadow-xl">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-semibold text-zinc-200 font-sans">Solo Lite</span>
+                <span className="text-[10px] text-zinc-400 font-sans font-medium">$17/mo billed annually</span>
+              </div>
+              <div className="text-3xl font-bold text-white font-sans mb-1">$19 <span className="text-xs font-normal text-zinc-500">/mo</span></div>
+              <div className="text-[11px] text-zinc-400 font-mono mb-6">300 monthly AI credits · 3 GB Storage</div>
+              <ul className="space-y-3 text-xs text-zinc-300 font-sans mb-8">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Full Link Hub custom themes, fonts & styling</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Scheduled start & end dates on promo links</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Up to 3 active brand campaign projects</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Issue up to 10 brand invoices / month</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Track up to 30 gear & resource items</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-500 shrink-0" /> 3% Processing Fee on payments received</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Up to 10 crew per brand project</li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-6">
-              <h3 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans mb-4">
-                Your other tools keep
-              </h3>
-              <ul className="text-xs text-zinc-500 space-y-2.5 font-sans leading-relaxed">
-                {stays.map((s) => (
-                  <li key={s}>{s}</li>
-                ))}
+            <Link href="/pricing" className="btn-glass rounded-full text-center py-2.5 text-xs font-medium w-full">Choose Lite</Link>
+          </div>
+
+          {/* Solo Pro Plan */}
+          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.02] p-6 sm:p-8 flex flex-col justify-between shadow-2xl">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-semibold text-emerald-400 font-sans">Solo Pro</span>
+                <span className="text-[10px] text-emerald-400/80 font-sans font-medium">$31/mo billed annually</span>
+              </div>
+              <div className="text-3xl font-bold text-white font-sans mb-1">$34 <span className="text-xs font-normal text-zinc-500">/mo</span></div>
+              <div className="text-[11px] text-emerald-400/80 font-mono mb-6">600 monthly AI credits · 10 GB Storage</div>
+              <ul className="space-y-3 text-xs text-zinc-300 font-sans mb-8">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Unlimited active brand campaign projects</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> 5 Brand Client Portals (zero-login review links)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Unlimited invoicing & CSV financial exports</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Watermark-free exports & hide Link Hub branding</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> 1% Processing Fee (first $10,000/mo fee-free)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> AI brief parser & AI talent search</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> Calendar feed sync, Slack & Frame.io review</li>
               </ul>
             </div>
+            <Link href="/pricing" className="btn-primary rounded-full text-center py-2.5 text-xs font-medium w-full">Get Solo Pro</Link>
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="relative w-full px-4 sm:px-6 lg:px-8 mb-20 md:mb-28">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10 max-w-2xl mx-auto">
-            <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-white font-sans mb-3">
-              Priced for one person running the whole operation
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-              The Link Hub is free on every plan, including the free one. The
-              paid tiers are where the brand portals, the invoicing and the page
-              styling start earning their keep.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="rounded-2xl border border-white/5 bg-zinc-950/20 backdrop-blur-md p-6">
-              <div className="flex items-baseline gap-2 mb-3">
-                <h3 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans">
-                  Solo Lite
-                </h3>
-                <span className="text-lg font-medium text-white font-sans">$19</span>
-                <span className="text-[10px] text-zinc-500 font-sans">per month</span>
-              </div>
-              <ul className="text-xs text-zinc-400 space-y-2 font-sans leading-relaxed">
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                  <span>Projects, deliverables and the calendar</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                  <span>
-                    Link Hub styling: themes, backgrounds, buttons, highlights
-                    and scheduling
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                  <span>Ten invoices a month, paid by card</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
-                  <span>3 GB of storage for cuts and stills</span>
-                </li>
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-white/8 bg-zinc-900/30 backdrop-blur-md p-6">
-              <div className="flex items-baseline gap-2 mb-3">
-                <h3 className="text-sm font-semibold tracking-tight text-zinc-100 font-sans">
-                  Solo Pro
-                </h3>
-                <span className="text-lg font-medium text-white font-sans">$34</span>
-                <span className="text-[10px] text-zinc-500 font-sans">per month</span>
-              </div>
-              <ul className="text-xs text-zinc-400 space-y-2 font-sans leading-relaxed">
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                  <span>Portals for five brands at once</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                  <span>Unlimited invoices and financial exports</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                  <span>PDF exports that carry your name alone</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                  <span>1% Processing Fee, first $10k a month free</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="text-center mt-8">
-            <Link
-              href="/pricing"
-              className="inline-flex items-center gap-1 text-sm font-medium text-zinc-200 hover:text-white transition-colors font-sans min-h-[44px]"
-            >
-              <span>See every plan and limit</span>
-              <ArrowUpRight className="w-4 h-4 text-zinc-400" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div className="text-center mb-10">
-          <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white font-sans">
-            Frequently asked questions
+      {/* FAQ Section */}
+      <section className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+            FREQUENTLY ASKED QUESTIONS
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-medium text-white font-sans">
+            Questions & Answers
           </h2>
         </div>
-        <div className="space-y-4">
+
+        <div className="space-y-3">
           {faqs.map((faq, i) => (
-            <div
-              key={i}
-              className="glass-panel rounded-2xl border border-white/5 overflow-hidden transition-all duration-300"
-            >
+            <div key={faq.q} className="rounded-xl border border-white/[0.06] bg-zinc-900/40 overflow-hidden">
               <button
-                onClick={() => toggleFaq(i)}
                 type="button"
-                className="w-full flex items-center justify-between p-5 text-left text-sm font-medium text-zinc-200 hover:text-white transition-colors focus:outline-none"
+                onClick={() => toggleFaq(i)}
+                className="w-full flex items-center justify-between p-4 text-left font-sans text-xs sm:text-sm font-medium text-zinc-200 hover:text-white"
               >
                 <span>{faq.q}</span>
-                <ChevronDown
-                  className={`h-4 w-4 text-zinc-500 transition-transform duration-300 ${
-                    activeFaq === i ? "rotate-180" : ""
-                  }`}
-                />
+                <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-200 ${activeFaq === i ? "rotate-180" : ""}`} />
               </button>
-              <AnimatePresence initial={false}>
+              <AnimatePresence>
                 {activeFaq === i && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden border-t border-white/[0.03]"
+                    className="px-4 pb-4 text-xs text-zinc-400 font-sans leading-relaxed border-t border-white/[0.04] pt-3"
                   >
-                    <p className="p-5 text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-                      {faq.a}
-                    </p>
+                    {faq.a}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -608,50 +795,31 @@ export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative w-full px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto">
-          <div className="rounded-2xl border border-white/8 bg-gradient-to-b from-zinc-900/40 to-zinc-950/20 backdrop-blur-md p-8 md:p-12 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[250px] h-[250px] bg-white/[0.01] rounded-full blur-[80px] pointer-events-none -z-10" />
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <AbramMark size={16} />
-            </div>
-            <h2 className="text-2xl font-medium tracking-tight text-white font-sans mb-4">
-              Claim your link, then put a deal behind it.
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8 font-sans leading-relaxed">
-              The Link Hub takes ten minutes and costs nothing. The deal, the
-              assets, the brand portal and the invoice sit on the same account
-              the day your next partnership lands.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-              <a
-                href="https://app.abram.network"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-glass rounded-full px-4 py-1.5 text-xs font-medium w-full sm:w-auto min-h-[44px] md:min-h-0"
-              >
-                <span>Open ABRAM</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
-              <Link
-                href="/pricing"
-                className="btn-glass rounded-full px-4 py-1.5 text-xs font-medium w-full sm:w-auto min-h-[44px] md:min-h-0"
-              >
-                <span>See pricing</span>
-              </Link>
-            </div>
+      {/* Bottom CTA Banner */}
+      <section className="w-full py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+        <div className="rounded-3xl border border-white/10 bg-zinc-900/40 p-8 sm:p-12">
+          <h2 className="text-2xl sm:text-4xl font-medium text-white font-sans mb-3">
+            Claim your link, then run your business behind it.
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8 font-sans leading-relaxed">
+            Claim your link in two minutes for free. Bring your brand deals, deliverable approvals, and Stripe invoices under one home.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <a href="https://app.abram.network" target="_blank" rel="noopener noreferrer" className="btn-primary rounded-full px-6 py-2.5 text-xs font-medium w-full sm:w-auto flex items-center justify-center gap-2">
+              <span>Open ABRAM</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+            <Link href="/pricing" className="btn-glass rounded-full px-6 py-2.5 text-xs font-medium w-full sm:w-auto">
+              See All Plans
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Disclaimer */}
-      <section className="max-w-5xl mx-auto px-4 mt-12 text-center">
-        <p className="text-[10px] text-zinc-500/80 leading-relaxed font-light">
-          Brand and campaign names shown in product figures are invented. Plan
-          prices and limits on this page reflect the published ABRAM pricing page
-          as of August 2026. The Processing Fee applies to payments you receive
-          and is computed on your own plan.
+      <section className="max-w-4xl mx-auto px-4 text-center">
+        <p className="text-[10px] text-zinc-500 leading-relaxed font-sans">
+          Brand and campaign names shown in product figures are invented placeholders. Plan prices and limits reflect the published ABRAM pricing page as of August 2026. The Processing Fee applies to payments you receive and is computed on your own plan.
         </p>
       </section>
     </main>

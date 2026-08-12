@@ -47,7 +47,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // navigation and no competing call to action.
   const isCampaignPage = cleanPathname === "/start" || cleanPathname.startsWith("/start/");
   // Marketing routes that need clean, un-padded full width presentation
-  const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/production-brain" || cleanPathname === "/film-production" || cleanPathname.startsWith("/film-production/") || cleanPathname === "/agency" || cleanPathname.startsWith("/agency/") || cleanPathname === "/intelligence" || cleanPathname.startsWith("/intelligence/") || isCampaignPage;
+  const isMarketingPage = cleanPathname === "/" || cleanPathname === "/landing" || cleanPathname === "/pricing" || cleanPathname === "/creators" || cleanPathname.startsWith("/creators/") || cleanPathname === "/production-brain" || cleanPathname === "/film-production" || cleanPathname.startsWith("/film-production/") || cleanPathname === "/agency" || cleanPathname.startsWith("/agency/") || cleanPathname === "/intelligence" || cleanPathname.startsWith("/intelligence/") || cleanPathname === "/alternatives" || cleanPathname.startsWith("/alternatives/") || isCampaignPage;
   const isDocsPage = cleanPathname.startsWith("/docs");
 
   // Keyboard shortcut listener for search modal
