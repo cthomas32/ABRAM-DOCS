@@ -371,7 +371,18 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
               )}
             </AnimatePresence>
           </div>
-          <div 
+          <Link
+            href="/creators"
+            title="ABRAM for Creators and Brand Deals"
+            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden md:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
+              pathname.startsWith("/creators")
+                ? "bg-white/10 text-white border-white/10"
+                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+            }`}
+          >
+            Creators
+          </Link>
+          <div
             className="relative"
             onMouseEnter={handleIntelligenceMouseEnter}
             onMouseLeave={handleIntelligenceMouseLeave}

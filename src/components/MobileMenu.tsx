@@ -110,6 +110,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Client Portal", href: "/agency/client-portal", desc: "Secure, password-free client dashboards", title: "Secure Client Portal & Branded Dashboards" },
       ]
     },
+    { name: "Creators", href: "/creators", title: "ABRAM for Creators and Brand Deals" },
     {
       name: "Intelligence",
       href: "/intelligence",

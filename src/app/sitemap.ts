@@ -9,6 +9,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const DEFAULT_RELEASE_DATE = new Date('2026-06-23');
   // Conversion landing pages under /start
   const CAMPAIGN_PAGE_DATE = new Date('2026-07-28');
+  // Creator vertical landing page and its comparison
+  const CREATOR_PAGE_DATE = new Date('2026-08-12');
 
   // Track the latest overall modified date for the homepage and /docs index
   let latestModifiedOverall = new Date(DEFAULT_RELEASE_DATE);
@@ -249,6 +251,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/creators`,
+      lastModified: CREATOR_PAGE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/intelligence`,
       lastModified: intelligenceDate,
       changeFrequency: 'monthly' as const,
@@ -353,6 +361,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}/alternatives/sethero`,
       lastModified: DEFAULT_RELEASE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/alternatives/rentman`,
+      lastModified: DEFAULT_RELEASE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/alternatives/metricool`,
+      lastModified: CREATOR_PAGE_DATE,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },

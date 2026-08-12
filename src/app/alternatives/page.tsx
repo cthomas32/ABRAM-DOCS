@@ -4,10 +4,11 @@ import AlternativesHubClient from './AlternativesHubClient';
 export const metadata: Metadata = {
   title: 'ABRAM Alternatives | Production & Agency Software',
   description:
-    'Compare ABRAM to legacy film production and agency management tools like StudioBinder, Movie Magic, Workfront, Celtx, and SetHero.',
+    'Compare ABRAM to film production, agency management, and equipment inventory tools like StudioBinder, Movie Magic, Workfront, Celtx, SetHero, and Rentman.',
   keywords: [
     'ABRAM alternatives', 'StudioBinder alternative', 'Movie Magic alternative',
     'Adobe Workfront alternative', 'Celtx alternative', 'SetHero alternative',
+    'Rentman alternative', 'Metricool alternative', 'equipment inventory management software',
     'film production software comparison', 'creative ops platform', 'crew payouts software',
   ],
   alternates: {
@@ -39,6 +40,8 @@ const alternativesList = [
   { slug: 'workfront', name: 'Adobe Workfront' },
   { slug: 'celtx', name: 'Celtx' },
   { slug: 'sethero', name: 'SetHero' },
+  { slug: 'rentman', name: 'Rentman' },
+  { slug: 'metricool', name: 'Metricool' },
 ];
 
 export default function AlternativesHubPage() {
@@ -94,6 +97,7 @@ export default function AlternativesHubPage() {
           <li><strong>ABRAM vs Movie Magic:</strong> Replaces legacy offline desktop software with cloud real-time collaboration, AI script breakdown, and DOOD cast matrices.</li>
           <li><strong>ABRAM vs Adobe Workfront:</strong> Replaces heavy enterprise ticket queues with creative brief scoping wizards, freelancer utilization calendars, and automated invoicing.</li>
           <li><strong>ABRAM vs Celtx:</strong> Expands screenplay editing into full operational management, linking script revisions to budget variance and rest window tracking.</li>
+          <li><strong>ABRAM vs Metricool:</strong> Adds the business side of creator work to a scheduling and analytics tool: brand deals as projects, per asset delivery status, brand approval portals, invoicing and Stripe payments.</li>
           <li><strong>ABRAM vs SetHero:</strong> Upgrades static call sheets into connected live schedules with automatic SAG-AFTRA/DGA rest period compliance alerts.</li>
         </ul>
       </AgentOnly>

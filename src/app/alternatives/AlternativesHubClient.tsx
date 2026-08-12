@@ -54,6 +54,20 @@ const alternativesList: AltItem[] = [
     summary: "Upgrades isolated call sheets into connected live schedules with turnaround violation warnings and automated Slack/email dispatch.",
     highlights: ["SAG-AFTRA/DGA Rest Period Alerts", "Slack & Email Dispatch", "Live Stripboard Schedule Sync", "One-Click RSVP Tracking"],
   },
+  {
+    slug: "rentman",
+    name: "Rentman",
+    tagline: "Equipment & Warehouse Inventory",
+    summary: "Moves the kit list off the warehouse floor and into the production, where day rates hit the budget and availability is enforced by the database.",
+    highlights: ["Overbooking Rejected at Write Time", "Kits & AI Kit Builder", "Barcode Batch Allocation", "Crew & Payouts Without Add-Ons"],
+  },
+  {
+    slug: "metricool",
+    name: "Metricool",
+    tagline: "Creator Scheduling & Analytics",
+    summary: "Covers the half of creator work Metricool leaves out: the brand deal, the asset approvals, the invoice and the payment.",
+    highlights: ["Brand Deal as a Tracked Project", "Per Asset Delivery Status", "Brand Approval Portals", "Invoices & Stripe Payments"],
+  },
 ];
 
 type ShowcaseTab = "breakdown" | "callsheets" | "portals";
