@@ -26,6 +26,7 @@ import {
   Tag,
 } from "lucide-react";
 import AbramMark from "@/components/AbramMark";
+import LinkHubDesignControls from "@/components/LinkHubDesignControls";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 type Faq = { q: string; a: string };
@@ -642,6 +643,31 @@ export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Link Hub Design Controls */}
+      <section className="w-full py-16 px-4 sm:px-6 lg:px-8 border-t border-white/[0.06] max-w-7xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2 inline-block font-sans">
+            LINK HUB DESIGN
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-medium text-white font-sans mb-3">
+            Make the page look like you
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-400 font-sans">
+            The page is free on every plan. These controls unlock at Solo Lite, and Solo Pro removes the
+            Powered by ABRAM credit.{" "}
+            <Link
+              href="/alternatives/linktree"
+              className="text-zinc-300 hover:text-white underline underline-offset-2"
+            >
+              Compare Link Hub
+            </Link>
+            .
+          </p>
+        </div>
+
+        <LinkHubDesignControls />
       </section>
 
       {/* System Scope Grid */}

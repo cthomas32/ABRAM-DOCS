@@ -2,22 +2,201 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import LinkHubDesignControls from "@/components/LinkHubDesignControls";
 import {
   ArrowRight,
   ArrowUpRight,
+  ArrowUpRight as ArrowOut,
   Check,
   ChevronDown,
   Palette,
   CalendarClock,
   MousePointerClick,
-  Layers,
   Briefcase,
   Globe,
+  Link2,
+  Heading,
+  Share2,
+  Mail,
+  Phone,
+  PlayCircle,
+  FolderOpen,
+  Tag,
+  Video,
+  Clock,
 } from "lucide-react";
 import { revealVariants, staggerContainer } from "@/lib/motion";
 
 type Faq = { q: string; a: string };
+
+/* =========================================================================
+   PHONE MOCKUP: a Link Hub page showing several block types at once.
+   Themes mirror THEME_PRESETS in abram-network/src/lib/apps/linkHub.ts.
+   ========================================================================= */
+const mockThemes = [
+  {
+    id: "midnight",
+    bg: "bg-[#0A0A0A]",
+    header: "text-white",
+    sub: "text-blue-200/70",
+    card: "bg-[#111C33]/40 border border-white/10 rounded-2xl",
+    cardText: "text-[#8ECAFF]",
+    cardSub: "text-zinc-400",
+    icon: "bg-[#8ECAFF]/20 text-[#8ECAFF] rounded-xl",
+    social: "bg-[#111C33]/40 border border-white/10 text-[#8ECAFF]",
+    rule: "bg-white/10",
+    light: false,
+  },
+  {
+    id: "paper",
+    bg: "bg-[#F5F4F0]",
+    header: "text-[#0A0A0A]",
+    sub: "text-zinc-600",
+    card: "bg-white border-2 border-[#0A0A0A] rounded-sm shadow-[3px_3px_0px_#0A0A0A]",
+    cardText: "text-[#0A0A0A]",
+    cardSub: "text-zinc-600",
+    icon: "bg-[#0A0A0A] text-white rounded-sm",
+    social: "bg-white border-2 border-[#0A0A0A] text-[#0A0A0A]",
+    rule: "bg-black/15",
+    light: true,
+  },
+  {
+    id: "reel",
+    bg: "bg-[#07110D]",
+    header: "text-[#EAFFF5]",
+    sub: "text-emerald-400/80",
+    card: "bg-[#07110D] border border-[#4ADE80] rounded-none",
+    cardText: "text-[#4ADE80]",
+    cardSub: "text-emerald-200/60",
+    icon: "bg-[#4ADE80]/20 text-[#4ADE80] rounded-none",
+    social: "bg-[#07110D] border border-[#4ADE80] text-[#4ADE80]",
+    rule: "bg-[#4ADE80]/25",
+    light: false,
+  },
+  {
+    id: "signal",
+    bg: "bg-[#0A0A0A]",
+    header: "text-white",
+    sub: "text-zinc-400",
+    card: "bg-white rounded-full",
+    cardText: "text-[#0A0A0A]",
+    cardSub: "text-zinc-600",
+    icon: "bg-[#0A0A0A] text-white rounded-full",
+    social: "bg-white text-[#0A0A0A]",
+    rule: "bg-white/15",
+    light: false,
+  },
+];
+
+function PhoneMockup() {
+  const [i, setI] = React.useState(0);
+  React.useEffect(() => {
+    const t = setInterval(() => setI((p) => (p + 1) % mockThemes.length), 3600);
+    return () => clearInterval(t);
+  }, []);
+  const th = mockThemes[i];
+
+  return (
+    <div
+      className={`w-[280px] sm:w-[300px] h-[580px] rounded-[48px] border-[9px] border-zinc-800 border-t-zinc-700 border-b-zinc-900 p-4 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.95)] relative overflow-hidden select-none flex flex-col justify-between transition-colors duration-700 ${th.bg}`}
+    >
+      <div>
+        <div className="w-24 h-4 bg-zinc-900 rounded-full mx-auto flex items-center justify-end px-2 shadow-inner">
+          <div className="w-2 h-2 rounded-full bg-zinc-950 border border-zinc-800/80" />
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={th.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45 }}
+            className="pt-4 text-center space-y-3.5"
+          >
+            {/* avatar block */}
+            <div className="w-14 h-14 rounded-full border-2 border-white/20 shadow-xl overflow-hidden relative mx-auto shrink-0">
+              <Image
+                src="/creators/alexa-avatar.jpg"
+                alt="Alexa Rivera profile photo"
+                fill
+                sizes="56px"
+                className="object-cover"
+                priority
+              />
+            </div>
+            <div>
+              <div className={`text-sm font-semibold tracking-tight ${th.header}`}>Alexa Rivera</div>
+              <div className={`text-[10px] mt-0.5 ${th.sub}`}>Tech &amp; Lifestyle Creator · 420K</div>
+            </div>
+
+            {/* social block */}
+            <div className="flex items-center justify-center gap-2">
+              {[Video, Share2, Globe].map((Ic, n) => (
+                <div key={n} className={`w-7 h-7 rounded-full flex items-center justify-center ${th.social}`}>
+                  <Ic className="w-3 h-3" />
+                </div>
+              ))}
+            </div>
+
+            {/* header block */}
+            <div className="flex items-center gap-2 pt-1 px-1">
+              <div className={`h-px flex-1 ${th.rule}`} />
+              <span className={`text-[8px] font-semibold uppercase tracking-[0.18em] ${th.sub}`}>
+                Live now
+              </span>
+              <div className={`h-px flex-1 ${th.rule}`} />
+            </div>
+
+            {/* featured link with thumbnail */}
+            <div className={`p-2.5 text-left flex items-center gap-2.5 ${th.card}`}>
+              <div className={`w-9 h-9 flex items-center justify-center shrink-0 ${th.icon}`}>
+                <Tag className="w-4 h-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className={`text-[10px] font-semibold truncate ${th.cardText}`}>20% off Onyx Gear</div>
+                <div className={`text-[8.5px] truncate ${th.cardSub}`}>Ends Sunday · code ALEXA20</div>
+              </div>
+              <ArrowOut className={`w-3 h-3 shrink-0 ${th.cardText}`} />
+            </div>
+
+            {/* video block */}
+            <div className={`p-2.5 text-left flex items-center gap-2.5 ${th.card}`}>
+              <div className={`w-9 h-9 flex items-center justify-center shrink-0 ${th.icon}`}>
+                <PlayCircle className="w-4 h-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className={`text-[10px] font-semibold truncate ${th.cardText}`}>Winter routine</div>
+                <div className={`text-[8.5px] truncate ${th.cardSub}`}>Embedded video</div>
+              </div>
+            </div>
+
+            {/* collection block */}
+            <div className={`p-2.5 text-left flex items-center gap-2.5 ${th.card}`}>
+              <div className={`w-9 h-9 flex items-center justify-center shrink-0 ${th.icon}`}>
+                <FolderOpen className="w-4 h-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className={`text-[10px] font-semibold truncate ${th.cardText}`}>All my gear</div>
+                <div className={`text-[8.5px] truncate ${th.cardSub}`}>Collection · 9 links</div>
+              </div>
+              <ChevronDown className={`w-3 h-3 shrink-0 ${th.cardText}`} />
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="pb-1 text-center">
+        <div className={`text-[8px] tracking-wide mb-2 ${th.light ? "text-zinc-600 font-semibold" : "text-zinc-500"}`}>
+          Powered by ABRAM
+        </div>
+        <div className={`w-24 h-1 rounded-full mx-auto ${th.light ? "bg-black/30" : "bg-white/20"}`} />
+      </div>
+    </div>
+  );
+}
 
 /* =========================================================================
    Every capability below is read from the Link Hub source of truth in
@@ -26,24 +205,13 @@ type Faq = { q: string; a: string };
    ========================================================================= */
 
 const blockTypes = [
-  { name: "Link", desc: "A destination with a label, description, icon and thumbnail." },
-  { name: "Header", desc: "A titled divider that groups the blocks beneath it." },
-  { name: "Social", desc: "The icon strip that sits under your bio." },
-  { name: "Email", desc: "Opens a addressed mail draft rather than a web page." },
-  { name: "Phone", desc: "Dials straight from a phone browser." },
-  { name: "Video", desc: "An embedded video that plays on the page." },
-  { name: "Collection", desc: "A folder holding links, contacts and videos together." },
-];
-
-const designControls = [
-  { label: "Themes", value: "7 presets, from Midnight to Paper to Reel" },
-  { label: "Backgrounds", value: "Solid, gradient, glow or your own image" },
-  { label: "Button style", value: "Glass, fill, outline, soft shadow, hard shadow" },
-  { label: "Button shape", value: "Sharp, rounded or pill" },
-  { label: "Button size", value: "Compact, regular or large" },
-  { label: "Layout", value: "List or grid, and classic or featured per block" },
-  { label: "Highlights", value: "Pulse, shine or bounce on the blocks that matter" },
-  { label: "Avatar", value: "Your own image, or none at all" },
+  { name: "Link", icon: Link2, desc: "A destination with a label, description, icon and thumbnail." },
+  { name: "Header", icon: Heading, desc: "A titled divider that groups the blocks beneath it." },
+  { name: "Social", icon: Share2, desc: "The icon strip that sits under your bio." },
+  { name: "Email", icon: Mail, desc: "Opens an addressed mail draft rather than a web page." },
+  { name: "Phone", icon: Phone, desc: "Dials straight from a phone browser." },
+  { name: "Video", icon: PlayCircle, desc: "An embedded video that plays on the page." },
+  { name: "Collection", icon: FolderOpen, desc: "A folder holding links, contacts and videos together." },
 ];
 
 const capabilities = [
@@ -97,18 +265,27 @@ export default function LinktreeClient({ faqs }: { faqs: Faq[] }) {
       <div className="absolute top-12 left-1/4 w-[300px] md:w-[600px] h-[300px] bg-gradient-to-tr from-white/[0.01] via-zinc-800/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" />
 
       {/* Hero */}
-      <section className="relative w-full py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06]">
-        <div className="max-w-6xl mx-auto w-full text-center">
+      <section className="relative w-full py-12 md:py-20 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-5 flex justify-center order-first lg:order-none"
+          >
+            <PhoneMockup />
+          </motion.div>
+
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            className="flex flex-col items-center max-w-4xl mx-auto w-full space-y-6"
+            className="lg:col-span-7 space-y-6 text-left"
           >
             <motion.span
               variants={revealVariants}
               custom={0.0}
-              className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans"
+              className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 font-sans inline-block"
             >
               LINKTREE ALTERNATIVE
             </motion.span>
@@ -116,7 +293,7 @@ export default function LinktreeClient({ faqs }: { faqs: Faq[] }) {
             <motion.h1
               variants={revealVariants}
               custom={0.05}
-              className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.08] font-sans"
+              className="text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-white leading-[1.08] font-sans"
             >
               A link in bio page with the business attached.
             </motion.h1>
@@ -124,16 +301,12 @@ export default function LinktreeClient({ faqs }: { faqs: Faq[] }) {
             <motion.p
               variants={revealVariants}
               custom={0.15}
-              className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto font-sans leading-relaxed"
+              className="text-base sm:text-lg text-zinc-400 font-sans leading-relaxed"
             >
               Link Hub is ABRAM&apos;s link in bio page, free on every plan. What makes it different is not the page. It is that the brand deals arriving through it are run in the same account: scope, approvals, invoices and payment.
             </motion.p>
 
-            <motion.div
-              variants={revealVariants}
-              custom={0.3}
-              className="flex flex-wrap gap-3 justify-center items-center pt-2"
-            >
+            <motion.div variants={revealVariants} custom={0.3} className="flex flex-wrap gap-3 items-center">
               <Link
                 href="/pricing"
                 className="btn-primary rounded-full px-7 py-3 text-xs font-medium flex items-center gap-2"
@@ -144,6 +317,23 @@ export default function LinktreeClient({ faqs }: { faqs: Faq[] }) {
               <Link href="/creators" className="btn-glass rounded-full px-7 py-3 text-xs font-medium">
                 ABRAM for Influencers
               </Link>
+            </motion.div>
+
+            <motion.div
+              variants={revealVariants}
+              custom={0.4}
+              className="grid grid-cols-3 gap-4 pt-6 border-t border-white/[0.08]"
+            >
+              {[
+                { v: "7", l: "Block types" },
+                { v: "$0", l: "On every plan" },
+                { v: "7", l: "Theme presets" },
+              ].map((s) => (
+                <div key={s.l}>
+                  <div className="text-2xl font-mono font-semibold text-white">{s.v}</div>
+                  <div className="text-[10px] text-zinc-500 font-sans uppercase tracking-wider mt-1">{s.l}</div>
+                </div>
+              ))}
             </motion.div>
           </motion.div>
         </div>
@@ -203,16 +393,42 @@ export default function LinktreeClient({ faqs }: { faqs: Faq[] }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {blockTypes.map((b) => (
-            <div key={b.name} className="p-5 rounded-xl border border-white/10 bg-zinc-900/30">
-              <div className="flex items-center gap-2 mb-1.5">
-                <Layers className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-                <h3 className="text-sm font-semibold text-white font-sans">{b.name}</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {blockTypes.map((b) => {
+            const Icon = b.icon;
+            return (
+              <div
+                key={b.name}
+                className="p-5 rounded-xl border border-white/10 bg-zinc-900/30 hover:border-white/20 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white mb-3">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold text-white font-sans mb-1">{b.name}</h3>
+                <p className="text-xs text-zinc-400 font-sans leading-relaxed">{b.desc}</p>
               </div>
-              <p className="text-xs text-zinc-400 font-sans leading-relaxed">{b.desc}</p>
+            );
+          })}
+
+          {/* Scheduling visual, sharing the grid so the row completes at 8 */}
+          <div className="p-5 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.02]">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-3">
+              <Clock className="w-5 h-5" />
             </div>
-          ))}
+            <h3 className="text-sm font-semibold text-white font-sans mb-1">Any block, scheduled</h3>
+            <div className="mt-2.5 space-y-1.5">
+              <div className="flex items-center gap-2">
+                <div className="h-1.5 flex-1 rounded-full bg-white/[0.06] overflow-hidden">
+                  <div className="h-full w-1/2 rounded-full bg-emerald-400/70 ml-[22%]" />
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-[9px] font-mono text-zinc-500">
+                <span>Sep 01</span>
+                <span className="text-emerald-400">LIVE</span>
+                <span>Sep 14</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -230,19 +446,7 @@ export default function LinktreeClient({ faqs }: { faqs: Faq[] }) {
           </p>
         </div>
 
-        <div className="w-full p-6 rounded-2xl border border-white/10 bg-zinc-900/30">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
-            {designControls.map((d) => (
-              <div
-                key={d.label}
-                className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 py-2.5 border-b border-white/[0.04]"
-              >
-                <span className="text-xs font-semibold text-white font-sans shrink-0">{d.label}</span>
-                <span className="text-xs text-zinc-400 font-sans sm:text-right break-words">{d.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <LinkHubDesignControls />
       </section>
 
       {/* Honest fit */}
