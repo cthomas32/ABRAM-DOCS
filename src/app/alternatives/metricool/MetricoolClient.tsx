@@ -87,13 +87,6 @@ const comparison = [
     themYes: true,
   },
   {
-    feature: "Link in bio page",
-    abram: "Not offered",
-    them: "SmartLinks bio page included in the plans",
-    abramYes: false,
-    themYes: true,
-  },
-  {
     feature: "Brand deal as a tracked project",
     abram: "Each deal is a project carrying the fee, live date, brand contact and asset list",
     them: "Not offered. Content is organised by brand and calendar rather than by deal",
@@ -141,6 +134,13 @@ const comparison = [
     them: "Not offered",
     abramYes: true,
     themYes: false,
+  },
+  {
+    feature: "Link in bio page",
+    abram: "Link Hub page at abram.network/l/yourname, free on every plan, with themes, backgrounds, button styling and scheduled blocks from Solo Lite up",
+    them: "SmartLinks bio page with custom URL, design options and click analytics",
+    abramYes: true,
+    themYes: true,
   },
   {
     feature: "Free plan",
@@ -282,7 +282,7 @@ export default function MetricoolClient({ faqs }: { faqs: Faq[] }) {
               ABRAM and Metricool side by side
             </h2>
             <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-              The first five rows go to Metricool. Scheduling, publishing and
+              The first four rows go to Metricool. Scheduling, publishing and
               audience analytics are theirs, and ABRAM has none of it.
             </p>
           </div>

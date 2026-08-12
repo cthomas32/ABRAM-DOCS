@@ -33,7 +33,47 @@ function PreviewPanel({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ---- Step 01 · The deal becomes a project ---- */
+/* ---- Step 01 · The link in bio ---- */
+function LinkHubPreview() {
+  const blocks = [
+    { label: "Work with me", note: "Rates and booking form" },
+    { label: "Latest video", note: "Scheduled, live until Friday" },
+    { label: "Discount code", note: "Highlight on" },
+    { label: "Instagram, TikTok, YouTube", note: "Social row" },
+  ];
+  return (
+    <PreviewPanel>
+      <div className="flex items-center justify-between mb-4">
+        <MicroLabel>Link Hub</MicroLabel>
+        <span className="text-[10px] text-zinc-400 font-sans">Free on every plan</span>
+      </div>
+
+      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 mb-4">
+        <div className="text-xs font-medium text-zinc-100 font-sans mb-1">
+          abram.network/l/yourname
+        </div>
+        <p className="text-[11px] leading-relaxed text-zinc-400 font-sans">
+          The link you put in three bios, holding whatever you are pointing
+          people at this week.
+        </p>
+      </div>
+
+      <div className="space-y-2">
+        {blocks.map((b) => (
+          <div
+            key={b.label}
+            className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-zinc-900/40 px-3 py-2.5"
+          >
+            <span className="text-xs text-zinc-200 font-sans truncate">{b.label}</span>
+            <span className="text-[9px] text-zinc-500 font-sans shrink-0">{b.note}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewPanel>
+  );
+}
+
+/* ---- Step 02 · The deal becomes a project ---- */
 function DealPreview() {
   const rows = [
     { k: "Brand contact", v: "Nadia Ruiz" },
@@ -80,7 +120,7 @@ function DealPreview() {
   );
 }
 
-/* ---- Step 02 · Every asset carries a status ---- */
+/* ---- Step 03 · Every asset carries a status ---- */
 function DeliverablesPreview() {
   const assets = [
     { name: "YouTube review, 8 min", state: "Approved" },
@@ -127,7 +167,7 @@ function DeliverablesPreview() {
   );
 }
 
-/* ---- Step 03 · The brand watches from a portal ---- */
+/* ---- Step 04 · The brand watches from a portal ---- */
 function BrandPortalPreview() {
   const items = [
     { name: "YouTube review", state: "Approved" },
@@ -177,7 +217,7 @@ function BrandPortalPreview() {
   );
 }
 
-/* ---- Step 04 · The money sits with the deal ---- */
+/* ---- Step 05 · The money sits with the deal ---- */
 function MoneyPreview() {
   const invoices = [
     { ref: "Halcyon Motors", amount: "$6,500", state: "Paid", days: "Paid Mar 21" },
@@ -231,6 +271,7 @@ function MoneyPreview() {
 }
 
 const covers = [
+  "A link in bio at abram.network/l/yourname, free on every plan",
   "A project per brand deal, with its own dates, fee and notes",
   "A deliverable per post, video or story, carrying a status through approval",
   "A private portal link for the brand contact to follow and approve",
@@ -255,26 +296,32 @@ export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
   const steps: Step[] = [
     {
       index: "01",
+      heading: "Your link in bio is free, and it is the front of the business.",
+      body: "Publish a page at abram.network/l/yourname on the free plan and put it in every bio. From $19 a month you style it: themes, backgrounds, button shapes and colours, fonts, block highlights, and start and end dates so a launch link appears and retires on its own.",
+      visual: <LinkHubPreview />,
+    },
+    {
+      index: "02",
       heading: "A brand deal becomes a project the day you sign it.",
       body: "The fee, the live date, the brand contact and the asset list sit on one record, so the whole deal has a single home instead of a Notion page, a spreadsheet tab and a DM thread.",
       visual: <DealPreview />,
     },
     {
-      index: "02",
+      index: "03",
       heading: "Every post, video and story carries its own status.",
       body: "Each asset moves through not started, in progress, in review, approved and completed. A five post campaign shows you which two are still waiting on the brand.",
       visual: <DeliverablesPreview />,
     },
     {
-      index: "03",
+      index: "04",
       heading: "The brand contact checks progress from a portal link.",
       body: "Send one private link. They see current status, leave notes, and approve the assets they are happy with, which ends the round of status emails you were answering by hand.",
       visual: <BrandPortalPreview />,
     },
     {
-      index: "04",
-      heading: "The invoice and the payment stay attached to the deal.",
-      body: "Raise a quote, turn it into an invoice, and take payment by card through Stripe into your own account. The deal page shows what is paid and how long the rest has been outstanding.",
+      index: "05",
+      heading: "You can say what you are owed and how late it is.",
+      body: "Raise a quote, turn it into an invoice, and take payment by card through Stripe into your own account. The deal page shows what has landed, what has not, and the day count on every invoice still outstanding. You are the merchant of record, so the money arrives in your bank, not in a balance we hold.",
       visual: <MoneyPreview />,
     },
   ];
@@ -298,15 +345,15 @@ export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
               custom={0.0}
               className="text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
             >
-              Run your brand deals like the business they are.
+              Know what you are owed, and how late it is.
             </motion.h1>
             <motion.p
               variants={revealVariants}
               custom={0.15}
               className="text-base sm:text-lg md:text-xl font-normal leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans select-text"
             >
-              Each deal gets a project, each post gets a status, and each brand
-              gets a portal link and an invoice.
+              Every deal, every deliverable, every dollar on one screen. Your
+              link in bio comes free with it, at abram.network/l/yourname.
             </motion.p>
             <motion.div
               variants={revealVariants}
@@ -340,9 +387,10 @@ export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
           <p className="text-sm sm:text-base text-zinc-400 leading-7 font-sans max-w-2xl mx-auto">
             Each one carries its own asset list, its own approval thread, its own
             payment terms and its own brand contact asking where things stand.
-            The software built for this market points at brands, so creators end
-            up stitching a business together from a notes app, a spreadsheet, a
-            DM inbox and a generic invoicing tool.
+            The filming is the part you signed up for. The rest is chasing an
+            invoice at day 92, digging through a DM thread to prove you already
+            sent the second cut, and answering the same status question four
+            times a week from a notes app, a spreadsheet and a payment link.
           </p>
         </div>
       </section>
@@ -439,8 +487,9 @@ export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
               Priced for one person running the whole operation
             </h2>
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-              Start free, then move up when the brand portals and the invoicing
-              start earning their keep.
+              The Link Hub is free on every plan, including the free one. The
+              paid tiers are where the brand portals, the invoicing and the page
+              styling start earning their keep.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -456,6 +505,13 @@ export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
                 <li className="flex items-start gap-2">
                   <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
                   <span>Projects, deliverables and the calendar</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
+                  <span>
+                    Link Hub styling: themes, backgrounds, buttons, highlights
+                    and scheduling
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />
@@ -561,11 +617,12 @@ export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
               <AbramMark size={16} />
             </div>
             <h2 className="text-2xl font-medium tracking-tight text-white font-sans mb-4">
-              Put your next brand deal somewhere it can be tracked.
+              Claim your link, then put a deal behind it.
             </h2>
             <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8 font-sans leading-relaxed">
-              Set up one deal, add the assets, send the brand a portal link, and
-              invoice from the same page when the posts go live.
+              The Link Hub takes ten minutes and costs nothing. The deal, the
+              assets, the brand portal and the invoice sit on the same account
+              the day your next partnership lands.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <a

@@ -102,7 +102,9 @@ const FEATURES_SCHEMA: Category[] = [
       { id: "slack_integration", name: "Slack Integration" },
       { id: "frameio_integration", name: "Frame.io Integration" },
       { id: "client_portal", name: "Client Portal" },
-      { id: "client_portal_messaging", name: "Client Portal Messaging" }
+      { id: "client_portal_messaging", name: "Client Portal Messaging" },
+      { id: "link_hub", name: "Link Hub Page" },
+      { id: "link_hub_customization", name: "Link Hub Customization" }
     ]
   },
   {
@@ -166,6 +168,8 @@ const PLANS: Plan[] = [
       frameio_integration: false,
       client_portal: false,
       client_portal_messaging: false,
+      link_hub: true,
+      link_hub_customization: false,
       quotes_estimates: false,
       stripe_express: true,
       invoicing: "3 / month",
@@ -183,6 +187,7 @@ const PLANS: Plan[] = [
       "1 seat & 1 Active Project",
       "80 trial AI credits for Brief Intelligence",
       "View-only Advanced Scheduling Access",
+      "Link Hub page at abram.network/l/yourname",
       "500 MB Workspace Storage limit"
     ]
   },
@@ -227,6 +232,8 @@ const PLANS: Plan[] = [
       frameio_integration: false,
       client_portal: false,
       client_portal_messaging: false,
+      link_hub: true,
+      link_hub_customization: true,
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "10 / month",
@@ -243,6 +250,7 @@ const PLANS: Plan[] = [
     marketingFeatures: [
       "1 seat & Up to 3 Active Projects",
       "View-only Advanced Scheduling Access",
+      "Link Hub customization: themes, backgrounds, buttons, scheduling",
       "Up to 10 external crew per project",
       "3 GB Workspace Storage"
     ]
@@ -288,6 +296,8 @@ const PLANS: Plan[] = [
       frameio_integration: true,
       client_portal: "5 clients",
       client_portal_messaging: true,
+      link_hub: true,
+      link_hub_customization: true,
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "Unlimited",
@@ -355,6 +365,8 @@ const PLANS: Plan[] = [
       frameio_integration: true,
       client_portal: "15 clients",
       client_portal_messaging: true,
+      link_hub: true,
+      link_hub_customization: true,
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "Unlimited",
@@ -424,6 +436,8 @@ const PLANS: Plan[] = [
       frameio_integration: true,
       client_portal: "50 clients",
       client_portal_messaging: true,
+      link_hub: true,
+      link_hub_customization: true,
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "Unlimited",
@@ -493,6 +507,8 @@ const PLANS: Plan[] = [
       frameio_integration: true,
       client_portal: "Unlimited",
       client_portal_messaging: true,
+      link_hub: true,
+      link_hub_customization: true,
       quotes_estimates: true,
       stripe_express: true,
       invoicing: "Unlimited",
@@ -558,6 +574,8 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   frameio_integration: "Connect project files and timeline reviews directly with Frame.io review links and status updates.",
   client_portal: "Secure client portal access to share schedules, media approvals, quotes, and invoices. Limits specify the maximum number of active client accounts.",
   client_portal_messaging: "Two-way messaging thread between your team and each client directly inside their client portal.",
+  link_hub: "A public link-in-bio page at abram.network/l/yourname. Build it from link, header and social blocks, and publish it. Included on every plan, Free upward.",
+  link_hub_customization: "Themes, background styles and images, button styles and colours, fonts, avatars, block highlights, and scheduled start and end dates on individual blocks. Free publishes on the default theme; Solo Lite and above unlock the design controls.",
 
   // Financials & Payments
   quotes_estimates: "Create and send itemized quotes and estimates to clients or contractors, with accept/decline tracking.",

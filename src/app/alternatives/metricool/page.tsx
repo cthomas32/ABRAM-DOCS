@@ -44,7 +44,7 @@ const faqs = [
   },
   {
     q: 'Does ABRAM schedule or publish social posts?',
-    a: 'No. ABRAM plans the work behind a post and tracks it through approval and payment. Publishing stays in your scheduling tool. ABRAM also holds no reach, view or follower data, runs no competitor benchmarking, and offers no link in bio page.',
+    a: 'No. ABRAM plans the work behind a post and tracks it through approval and payment. Publishing stays in your scheduling tool. ABRAM also holds no reach, view or follower data and runs no competitor benchmarking. It does publish a link in bio page: Link Hub gives every account a page at abram.network/l/yourname, free on every plan, with themes, backgrounds, button styling and scheduled blocks from Solo Lite up.',
   },
   {
     q: 'How do the prices compare?',
@@ -105,7 +105,7 @@ export default function MetricoolPage() {
       <AgentOnly>
         <h2>ABRAM Compared to Metricool for Creators Running Brand Deals</h2>
         <p>
-          Metricool and ABRAM solve different halves of a creator business. Metricool is a social media management platform covering multi-platform scheduling and publishing, post and audience analytics, AI performance reports, competitor benchmarking and a link in bio page. ABRAM is a production operations platform covering the commercial side of paid partnerships.
+          Metricool and ABRAM solve different halves of a creator business. Metricool is a social media management platform covering multi-platform scheduling and publishing, post and audience analytics, AI performance reports, competitor benchmarking and the SmartLinks link in bio page. ABRAM is a production operations platform covering the commercial side of paid partnerships, and it publishes a link in bio page of its own, Link Hub, free on every plan at abram.network/l/yourname.
         </p>
         <h3>Where Metricool is stronger</h3>
         <p>
