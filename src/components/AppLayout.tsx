@@ -37,7 +37,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // more: they are opened by someone standing in a conference hall on
   // shared wifi, where every kilobyte of site chrome is weight between
   // them and the one thing the page is for.
-  const isBarePage = cleanPathname === "/links" || cleanPathname.startsWith("/c/");
+  //
+  // /l/<slug> is the same page for a creator's own organization, served
+  // from the abram-network product's Supabase rather than this repo's —
+  // same reasoning, same bare treatment.
+  const isBarePage =
+    cleanPathname === "/links" || cleanPathname.startsWith("/c/") || cleanPathname.startsWith("/l/");
   // Conversion pages: single goal, so they get a logo-only header with no
   // navigation and no competing call to action.
   const isCampaignPage = cleanPathname === "/start" || cleanPathname.startsWith("/start/");
