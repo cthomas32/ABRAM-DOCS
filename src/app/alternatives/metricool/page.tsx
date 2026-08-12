@@ -4,7 +4,7 @@ import MetricoolClient from './MetricoolClient';
 export const metadata: Metadata = {
   title: 'Metricool Alternative | ABRAM for Brand Deals',
   description:
-    'Metricool schedules posts and reports performance. ABRAM runs the brand deal behind them: asset list, brand approvals, invoices and payments. An honest side by side comparison.',
+    'Metricool schedules posts and reports performance. ABRAM runs the brand deal behind them: asset scope, client portals, and Stripe payments.',
   keywords: [
     'Metricool alternative', 'Metricool vs ABRAM', 'brand deal management software',
     'creator invoicing software', 'influencer deal tracker', 'social media management alternative',
