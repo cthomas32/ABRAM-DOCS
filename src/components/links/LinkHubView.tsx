@@ -118,7 +118,7 @@ export default function LinkHubView({
 
   return (
     <div
-      className={`lh-page ${theme.fontClass} relative w-full px-5 pb-16 ${preview ? "min-h-0" : ""}`}
+      className={`lh-page relative w-full px-5 pb-16 ${preview ? "min-h-0" : ""}`}
       style={
         {
           ...theme.vars,
@@ -128,6 +128,9 @@ export default function LinkHubView({
         } as React.CSSProperties
       }
     >
+      {/* The one webfont this page asked for, if any. See LinkPageView. */}
+      {theme.fontStylesheet ? <link rel="stylesheet" href={theme.fontStylesheet} /> : null}
+
       {backgroundImage ? (
         <div className="lh-bg-lock" aria-hidden="true">
           <div

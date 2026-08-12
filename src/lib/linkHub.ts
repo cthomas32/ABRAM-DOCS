@@ -62,7 +62,28 @@ export type ButtonShadow = "none" | "soft" | "hard";
 export type ButtonRadius = "sharp" | "rounded" | "pill";
 export type ButtonSize = "compact" | "regular" | "large";
 export type LinkDisplay = "list" | "grid";
-export type LinkFont = "sans" | "display" | "mono";
+/**
+ * The page's typeface.
+ *
+ * The first three are faces this site already serves; the rest are Google
+ * fonts, fetched only by a page that asks for one. MIRRORS abram-network's
+ * `src/lib/apps/linkHub.ts` FONT_OPTIONS and the CHECK on
+ * `link_pages.font_family` (their migration 20270825000100). A key only one
+ * renderer knows renders one way in that app's editor and another way here,
+ * to the visitor — the three move together.
+ */
+export type LinkFont =
+  | "sans"
+  | "display"
+  | "mono"
+  | "inter"
+  | "space_grotesk"
+  | "outfit"
+  | "sora"
+  | "dm_serif"
+  | "playfair"
+  | "fraunces"
+  | "bebas";
 export type AvatarShape = "circle" | "rounded" | "square";
 export type AvatarKind = "none" | "image" | "abram";
 
@@ -796,11 +817,50 @@ export const AVATAR_KIND_OPTIONS: { key: AvatarKind; name: string }[] = [
   { key: "image", name: "Upload" },
 ];
 
-export const FONT_OPTIONS: { key: LinkFont; name: string; className: string }[] = [
-  { key: "sans", name: "Geist Sans", className: "font-sans" },
-  { key: "display", name: "Archivo", className: "font-display" },
-  { key: "mono", name: "Geist Mono", className: "font-mono" },
+/**
+ * The typefaces a page can be set in.
+ *
+ * `stack` is what actually renders — it lands on `--lh-font` and everything
+ * inside `.lh-page` inherits it. A Tailwind class was the wrong carrier:
+ * globals.css styles headings directly, and a direct rule beats an inherited
+ * family, so the page heading ignored the choice. `google` is null for the
+ * faces this site already serves.
+ */
+export const FONT_OPTIONS: {
+  key: LinkFont;
+  name: string;
+  stack: string;
+  google: { family: string; weights: string } | null;
+}[] = [
+  { key: "sans",          name: "Geist Sans",    stack: "var(--font-sans)",                              google: null },
+  { key: "display",       name: "Archivo",       stack: "var(--font-display)",                           google: null },
+  { key: "mono",          name: "Geist Mono",    stack: "var(--font-mono, ui-monospace, monospace)",     google: null },
+  { key: "inter",         name: "Inter",         stack: '"Inter", ui-sans-serif, system-ui, sans-serif',  google: { family: "Inter", weights: "400;500;600;700" } },
+  { key: "space_grotesk", name: "Space Grotesk", stack: '"Space Grotesk", ui-sans-serif, sans-serif',     google: { family: "Space+Grotesk", weights: "400;500;600;700" } },
+  { key: "outfit",        name: "Outfit",        stack: '"Outfit", ui-sans-serif, system-ui, sans-serif', google: { family: "Outfit", weights: "400;500;600;700" } },
+  { key: "sora",          name: "Sora",          stack: '"Sora", ui-sans-serif, system-ui, sans-serif',   google: { family: "Sora", weights: "400;500;600;700" } },
+  { key: "dm_serif",      name: "DM Serif",      stack: '"DM Serif Display", ui-serif, Georgia, serif',   google: { family: "DM+Serif+Display", weights: "400" } },
+  { key: "playfair",      name: "Playfair",      stack: '"Playfair Display", ui-serif, Georgia, serif',   google: { family: "Playfair+Display", weights: "400;500;600;700" } },
+  { key: "fraunces",      name: "Fraunces",      stack: '"Fraunces", ui-serif, Georgia, serif',           google: { family: "Fraunces", weights: "400;500;600;700" } },
+  { key: "bebas",         name: "Bebas Neue",    stack: '"Bebas Neue", var(--font-display), sans-serif',  google: { family: "Bebas+Neue", weights: "400" } },
 ];
+
+/**
+ * The stylesheet a face needs, or null when this site already serves it.
+ *
+ * `display=swap`: a bio page shows its text immediately and re-draws it in the
+ * chosen face; it never holds the page blank on a third-party font.
+ */
+export function linkFontStylesheet(key: LinkFont | string): string | null {
+  const font = FONT_OPTIONS.find((option) => option.key === key);
+  if (!font?.google) return null;
+  return `https://fonts.googleapis.com/css2?family=${font.google.family}:wght@${font.google.weights}&display=swap`;
+}
+
+/** The CSS font stack for a stored key, falling back to this site's own. */
+export function linkFontStack(key: LinkFont | string): string {
+  return (FONT_OPTIONS.find((option) => option.key === key) ?? FONT_OPTIONS[0]).stack;
+}
 
 export const HIGHLIGHT_OPTIONS: { key: LinkHighlight; name: string }[] = [
   { key: "none", name: "None" },
@@ -818,8 +878,8 @@ export interface LinkHubTheme {
   vars: Record<string, string>;
   /** Background declaration for the page wrapper. */
   background: string;
-  /** Tailwind font class for the whole page. */
-  fontClass: string;
+  /** The stylesheet the chosen face needs, or null when this site serves it. */
+  fontStylesheet: string | null;
   /** True when the page is light, so overlays flip direction. */
   light: boolean;
   /** Pixel size for icons inside a button, which scale with button size. */
@@ -844,8 +904,6 @@ export function buildLinkHubTheme(settings: LinkHubSettings): LinkHubTheme {
 
   const radius =
     BUTTON_RADIUS_OPTIONS.find((option) => option.key === settings.button_radius)?.radius ?? "16px";
-  const fontClass =
-    FONT_OPTIONS.find((option) => option.key === settings.font_family)?.className ?? "font-sans";
   const size =
     BUTTON_SIZE_OPTIONS.find((option) => option.key === settings.button_size) ??
     BUTTON_SIZE_OPTIONS[1];
@@ -943,11 +1001,12 @@ export function buildLinkHubTheme(settings: LinkHubSettings): LinkHubTheme {
   return {
     light,
     background,
-    fontClass,
+    fontStylesheet: linkFontStylesheet(settings.font_family),
     iconSize: size.icon,
     vars: {
       ...surface,
       "--lh-btn-shadow": shadow,
+      "--lh-font": linkFontStack(settings.font_family),
       "--lh-bg": bg,
       "--lh-bg-alt": bgAlt,
       "--lh-accent": accent,

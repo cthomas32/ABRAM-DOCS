@@ -324,7 +324,7 @@ export default function LinkPageView({
 
   return (
     <div
-      className={`lh-page ${theme.fontClass} relative w-full`}
+      className="lh-page relative w-full"
       style={
         {
           ...theme.vars,
@@ -334,6 +334,14 @@ export default function LinkPageView({
         } as React.CSSProperties
       }
     >
+      {/* The one webfont this page asked for, if any. In the <body> rather
+          than the document head because this component is the only thing that
+          knows which face was chosen; React hoists it, and a page set to a
+          face we serve ourselves fetches nothing. */}
+      {theme.fontStylesheet ? (
+        <link rel="stylesheet" href={theme.fontStylesheet} />
+      ) : null}
+
       {backgroundImage ? (
         <div className="lh-bg-lock" aria-hidden="true">
           <div

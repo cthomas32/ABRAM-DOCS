@@ -510,6 +510,8 @@ body {
    ───────────────────────────────────────────── */
 .lh-page {
   color: var(--lh-text);
+  /* The chosen face, as a real stack rather than a Tailwind class. */
+  font-family: var(--lh-font, var(--font-sans));
   min-height: 100vh;
   /* dvh, so the last link is reachable when mobile Safari's toolbar is up. */
   min-height: 100dvh;
@@ -523,6 +525,18 @@ body {
   padding-left: max(1.25rem, env(safe-area-inset-left));
   padding-right: max(1.25rem, env(safe-area-inset-right));
   padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+
+/* THE SITE'S CASCADE STOPS HERE. Anything that styles headings by element
+   would beat the family the page inherits, and the owner's font choice would
+   silently skip the one line of type it most obviously should reach. */
+.lh-page h1,
+.lh-page h2,
+.lh-page h3,
+.lh-page h4,
+.lh-page h5,
+.lh-page h6 {
+  font-family: inherit;
 }
 
 /* The reading column. Narrow on purpose: a bio page is a thumb-width list. */
