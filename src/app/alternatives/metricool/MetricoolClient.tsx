@@ -49,7 +49,7 @@ const differentiators = [
   {
     icon: Wallet,
     title: "Quotes, invoices and payment on the deal",
-    body: "Raise a quote, convert it to an invoice, and take card payment through Stripe into your own account. The deal shows what has landed and how long the rest has been outstanding.",
+    body: "Raise a quote, convert it to an invoice, and take card payment through Stripe into your own account. The deal shows what has been paid and what is still open against its due date.",
     points: [
       "Card payment through your own Stripe account",
       "Outstanding balance shown per deal",
@@ -103,7 +103,7 @@ const comparison = [
   {
     feature: "Brand approval portal",
     abram: "Token based portal where the brand contact reads status, comments and approves without an account",
-    them: "Shareable and white label performance reports, with no deliverable approval flow",
+    them: "Post approval and collaborator access on Advanced, aimed at approving content before it publishes rather than signing off a deal's deliverables",
     abramYes: true,
     themYes: false,
   },
@@ -123,14 +123,14 @@ const comparison = [
   },
   {
     feature: "Payment tracking per deal",
-    abram: "Paid, sent and overdue shown against the deal, with the age of every outstanding invoice",
+    abram: "Draft, sent, paid and cancelled shown against the deal, with anything past its due date flagged overdue",
     them: "Not offered",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "Time tracking",
-    abram: "Log hours against a deal to see which brands eat the week",
+    abram: "Log hours against a deal to see which brands eat the week, from Solo Pro up",
     them: "Not offered",
     abramYes: true,
     themYes: false,
@@ -138,21 +138,21 @@ const comparison = [
   {
     feature: "Link in bio page",
     abram: "Link Hub page at abram.network/l/yourname, free on every plan, with themes, backgrounds, button styling and scheduled blocks from Solo Lite up",
-    them: "SmartLinks bio page with custom URL, design options and click analytics",
+    them: "SmartLinks bio page with custom URL, design options and click analytics, on paid plans",
     abramYes: true,
     themYes: true,
   },
   {
     feature: "Free plan",
-    abram: "Free plan with projects, deliverables and three invoices a month",
-    them: "Free plan covering one brand and 20 scheduled posts a month",
+    abram: "Free plan with one active project, deliverables and three invoices a month",
+    them: "Free plan covering one brand and 20 published posts a month",
     abramYes: true,
     themYes: true,
   },
   {
     feature: "Entry paid price",
     abram: "Solo Lite $19 a month, Solo Pro $34 a month",
-    them: "Starter from €16 a month billed annually, Advanced from €43 a month, X connection sold as a paid add-on",
+    them: "Starter from €16 a month, Advanced from €43 a month, both scaling with brand count. X connection is a paid add-on on Free and Starter, included on Advanced",
     abramYes: true,
     themYes: true,
   },
@@ -485,7 +485,7 @@ export default function MetricoolClient({ faqs }: { faqs: Faq[] }) {
             Give your brand deals a system of their own.
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8 font-sans leading-relaxed">
-            Deals, deliverables, brand approval portals, and Stripe invoices in one workspace — alongside whichever social scheduler you already use.
+            Deals, deliverables, brand approval portals, and Stripe invoices in one workspace, alongside whichever social scheduler you already use.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <a href="https://app.abram.network" target="_blank" rel="noopener noreferrer" className="btn-primary rounded-full px-6 py-2.5 text-xs font-medium w-full sm:w-auto flex items-center justify-center gap-2">
