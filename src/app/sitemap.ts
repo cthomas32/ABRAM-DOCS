@@ -251,7 +251,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/creators`,
+      url: `${baseUrl}/influencers`,
       lastModified: CREATOR_PAGE_DATE,
       changeFrequency: 'monthly' as const,
       priority: 0.9,

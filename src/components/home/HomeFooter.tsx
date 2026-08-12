@@ -114,7 +114,7 @@ export default function HomeFooter({
           <Link href="/pricing" title="ABRAM Platform Pricing Plans" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Pricing
           </Link>
-          <Link href="/creators" title="ABRAM for Creators and Influencers Running Brand Deals" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
+          <Link href="/influencers" title="ABRAM for Influencers Running Brand Deals" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">
             Influencers
           </Link>
           <Link href="/alternatives" title="ABRAM Platform Alternatives & Comparisons" className="text-zinc-400 hover:text-abram-accent transition-colors duration-200 text-xs w-fit">

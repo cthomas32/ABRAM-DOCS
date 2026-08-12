@@ -231,10 +231,10 @@ export default function MetricoolClient({ faqs }: { faqs: Faq[] }) {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                href="/creators"
+                href="/influencers"
                 className="btn-glass rounded-full px-7 py-3 text-xs font-medium"
               >
-                ABRAM for Creators
+                ABRAM for Influencers
               </Link>
             </motion.div>
 

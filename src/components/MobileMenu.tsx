@@ -122,7 +122,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Crew Matchmaking", href: "/intelligence/crew-matchmaking", desc: "Rank crew fit for every role", title: "Crew Matchmaking" },
       ]
     },
-    { name: "Influencers", href: "/creators", title: "ABRAM for Creators and Influencers Running Brand Deals" },
+    { name: "Influencers", href: "/influencers", title: "ABRAM for Influencers Running Brand Deals" },
     { name: "Blog", href: "/blog", title: "ABRAM Network Blog & Insights" },
     { name: "Pricing", href: "/pricing", title: "ABRAM Platform Pricing Plans" },
   ];

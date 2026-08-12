@@ -470,10 +470,10 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           </div>
 
           <Link
-            href="/creators"
-            title="ABRAM for Creators and Influencers Running Brand Deals"
+            href="/influencers"
+            title="ABRAM for Influencers Running Brand Deals"
             className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden lg:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
-              pathname.startsWith("/creators")
+              pathname.startsWith("/influencers")
                 ? "bg-white/10 text-white border-white/10"
                 : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
             }`}

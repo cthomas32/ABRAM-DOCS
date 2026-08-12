@@ -314,7 +314,7 @@ export default function LinktreeClient({ faqs }: { faqs: Faq[] }) {
                 <span>Claim your link free</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link href="/creators" className="btn-glass rounded-full px-7 py-3 text-xs font-medium">
+              <Link href="/influencers" className="btn-glass rounded-full px-7 py-3 text-xs font-medium">
                 ABRAM for Influencers
               </Link>
             </motion.div>

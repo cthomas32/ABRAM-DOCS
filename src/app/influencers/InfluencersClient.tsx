@@ -339,7 +339,7 @@ const scopeItems = [
   },
 ];
 
-export default function CreatorsClient({ faqs }: { faqs: Faq[] }) {
+export default function InfluencersClient({ faqs }: { faqs: Faq[] }) {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [approved, setApproved] = useState(false);
   const toggleFaq = (i: number) => setActiveFaq(activeFaq === i ? null : i);
