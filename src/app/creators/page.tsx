@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import CreatorsClient from './CreatorsClient';
 
 export const metadata: Metadata = {
-  title: 'Brand Deal Management for Creators',
+  title: 'Brand Deal Management for Creators | ABRAM',
   description:
-    'Know what every brand owes you and how late it is. Each deal becomes a project, each post a tracked deliverable, each brand a portal link, with invoices, Stripe payments and a free link in bio at abram.network/l/yourname.',
+    'Know what you are owed, and how late it is. Track brand deals, asset statuses, token client portals, invoices, and Stripe payments with a free link in bio.',
   keywords: [
     'brand deal management', 'creator business software', 'influencer brand deal tracker',
     'content creator project management', 'creator invoicing software', 'brand deal invoice',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Brand Deal Management for Creators | ABRAM',
     description:
-      'Each brand deal becomes a project, each post a deliverable with a status, each brand a portal link with an invoice attached, and a free link in bio on every plan.',
+      'Track brand deals, deliverable statuses, token client portals, invoices, and Stripe payments with a free link in bio.',
     type: 'website',
     url: 'https://abram.network/creators',
     siteName: 'ABRAM Network',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Brand Deal Management for Creators | ABRAM',
     description:
-      'Track every post through approval, invoice the brand, and see which deals are still outstanding.',
+      'Track brand deals, deliverable statuses, token client portals, invoices, and Stripe payments with a free link in bio.',
   },
 };
 
@@ -38,31 +38,27 @@ function AgentOnly({ children }: { children: React.ReactNode }) {
 const faqs = [
   {
     q: 'Does ABRAM include a link in bio page?',
-    a: 'Yes. Link Hub gives every account a public page at abram.network/l/yourname, free on every plan including the free one. You build it from link, header and social blocks, add descriptions and thumbnails, and publish. Solo Lite at $19 a month and above unlocks the design controls: themes, background styles and images, button styles, shapes and colours, fonts, avatars, block highlights, and start and end dates so a launch link goes live and retires on schedule.',
+    a: 'Yes. Link Hub provides a public link at abram.network/l/yourname, free on all plans. Solo Lite ($19/mo) unlocks full design customization and scheduled links.',
   },
   {
-    q: 'What is the best software for managing brand deals as a creator?',
-    a: 'ABRAM manages brand deals the way a production company manages projects. Each deal is a project holding the fee, the live date and the brand contact. Each post, video or story is a deliverable that moves through not started, in progress, in review, approved and completed. The brand contact follows progress through a private portal link, and quotes, invoices and card payments through Stripe sit on the same deal. Solo Lite is $19 a month and Solo Pro is $34 a month.',
+    q: 'What is the best way to manage brand deals as a solo creator?',
+    a: 'ABRAM runs each deal as a project with tracked deliverable statuses and integrated Stripe invoicing, starting at $19/mo on Solo Lite. Brand approval portals are a Solo Pro feature at $34/mo.',
   },
   {
-    q: 'Does ABRAM schedule or publish posts?',
-    a: 'No. ABRAM covers the business side of a deal: scope, deliverable status, brand approvals, invoicing and payment. Publishing and scheduling stay in whichever scheduling tool you already use, and audience analytics stay in the platform apps. Many creators run both, with ABRAM replacing the notes app, the spreadsheet and the generic invoicing tool.',
+    q: 'Does ABRAM schedule or publish social media posts?',
+    a: 'ABRAM handles scope, approvals, invoicing, and client portals. Post publishing and audience analytics stay in your existing social tools.',
   },
   {
     q: 'How does ABRAM help with late brand payments?',
-    a: 'Every invoice is raised from the deal it belongs to, so the amount, the terms and the age of the invoice sit next to the work. A Net-90 invoice sitting at day 92 shows on the same page as the posts that earned it, and the brand can settle it by card through Stripe into your own account rather than waiting on a finance portal.',
+    a: 'Every invoice lives on its deal and carries a due date. Anything still unpaid past that date is flagged as overdue on the financial view, and brands can settle it by card through Stripe.',
   },
   {
-    q: 'Can a brand see progress without creating an account?',
-    a: 'Yes. Client portals are token based. You send the brand contact a private link, they see current deliverable status and progress, leave notes, and approve the assets they are happy with. No password and no account. Solo Pro covers five active brand portals, Team fifteen, Studio fifty.',
+    q: 'Can brands review deliverables without creating an account?',
+    a: 'Yes. Token-based client portals let brand contacts view status, leave notes, and approve assets through a private link without a password. Portals start on Solo Pro, which covers five brands.',
   },
   {
-    q: 'Does ABRAM track usage rights and exclusivity terms?',
-    a: 'There are no dedicated usage rights fields today. Creators record the usage window and exclusivity terms as project notes on the deal, next to the deliverables they apply to, and hold the signed contract in the project files. Dedicated rights tracking is on the roadmap rather than in the product.',
-  },
-  {
-    q: 'What does ABRAM cost for a solo creator?',
-    a: 'There is a free plan to start, and it includes the Link Hub link in bio page. Solo Lite is $19 a month and adds ten invoices a month, 3 GB of storage and full Link Hub customization. Solo Pro is $34 a month and adds portals for five brands, unlimited invoicing, financial exports, PDF exports without an ABRAM watermark, and a 1% Processing Fee on payments you receive with the first $10,000 a month free.',
+    q: 'What does ABRAM cost for solo creators?',
+    a: 'The Free plan includes Link Hub, 1 active project and 3 invoices a month. Solo Lite is $19/mo ($17/mo billed annually) for Link Hub customization, 3 projects and 10 invoices a month. Solo Pro is $34/mo ($31/mo billed annually) for 5 brand portals, unlimited projects and invoices, and a 1% Processing Fee with the first $10k/mo fee-free.',
   },
 ];
 
@@ -126,7 +122,7 @@ export default function CreatorsPage() {
         </p>
         <h3>Brand contacts use a token based portal</h3>
         <p>
-          The brand contact opens a private link with no account and no password, reads current status, leaves comments and approves deliverables. Solo Pro covers five active client portals, Team fifteen, Studio fifty, Enterprise unlimited.
+          The brand contact opens a private link with no account and no password, reads current status, leaves comments and approves deliverables. Client portals begin on Solo Pro; the Free and Solo Lite plans do not include them. Solo Pro covers five active client portals, Team fifteen, Studio fifty, Enterprise unlimited.
         </p>
         <h3>Quotes, invoices and Stripe payments</h3>
         <p>
@@ -138,7 +134,7 @@ export default function CreatorsPage() {
         </p>
         <h3>Pricing for solo creators</h3>
         <p>
-          Free plan to start, including the Link Hub link-in-bio page. Solo Lite $19 per month, adding full Link Hub customization. Solo Pro $34 per month, adding client portals for five brands, unlimited invoicing, financial exports and watermark free PDF exports.
+          Free plan to start, including the Link Hub link-in-bio page, one active project, three invoices a month, 80 trial AI credits and 500 MB of storage. Solo Lite $19 per month, or $17 per month billed annually, adding full Link Hub customization, three active projects, ten invoices a month, 300 monthly AI credits and 3 GB of storage. Solo Pro $34 per month, or $31 per month billed annually, adding client portals for five brands, unlimited active projects, unlimited invoicing, financial exports, watermark free PDF exports, 600 monthly AI credits and 10 GB of storage.
         </p>
       </AgentOnly>
     </>

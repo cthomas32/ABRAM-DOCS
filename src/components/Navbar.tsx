@@ -110,7 +110,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           ) : (
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="sm:hidden h-11 w-11 flex items-center justify-center -ml-3 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer"
+              className="lg:hidden h-11 w-11 flex items-center justify-center -ml-3 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {mobileMenuOpen ? (
@@ -137,7 +137,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
         </div>
 
         {/* Right Section: External App Button & Mobile Menu */}
-        <nav aria-label="Main Navigation" className="flex items-center gap-1 sm:gap-4">
+        <nav aria-label="Main Navigation" className="flex items-center gap-1 lg:gap-4">
           <div 
             className="relative"
             onMouseEnter={handleFilmMouseEnter}
@@ -146,7 +146,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             <Link
               href="/film-production"
               title="Film Production Suite"
-              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden lg:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
                 pathname.startsWith("/film-production")
                   ? "bg-white/10 text-white border-white/10"
                   : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
@@ -245,7 +245,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             <Link
               href="/agency"
               title="Creative Agency Operations Suite"
-              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden lg:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
                 pathname.startsWith("/agency")
                   ? "bg-white/10 text-white border-white/10"
                   : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
@@ -371,17 +371,6 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
               )}
             </AnimatePresence>
           </div>
-          <Link
-            href="/creators"
-            title="ABRAM for Creators and Brand Deals"
-            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden md:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
-              pathname.startsWith("/creators")
-                ? "bg-white/10 text-white border-white/10"
-                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-            }`}
-          >
-            Creators
-          </Link>
           <div
             className="relative"
             onMouseEnter={handleIntelligenceMouseEnter}
@@ -390,7 +379,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             <Link
               href="/intelligence"
               title="Creative Intelligence Suite"
-              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden lg:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
                 pathname.startsWith("/intelligence")
                   ? "bg-white/10 text-white border-white/10"
                   : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
@@ -481,9 +470,20 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           </div>
 
           <Link
+            href="/creators"
+            title="ABRAM for Creators and Influencers Running Brand Deals"
+            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden lg:inline-flex items-center gap-1 whitespace-nowrap border border-transparent ${
+              pathname.startsWith("/creators")
+                ? "bg-white/10 text-white border-white/10"
+                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+            }`}
+          >
+            Influencers
+          </Link>
+          <Link
             href="/blog"
             title="ABRAM Network Blog & Insights"
-            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
+            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden lg:inline-flex ${
               pathname.startsWith("/blog")
                 ? "bg-white/10 text-white border border-white/10"
                 : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
@@ -494,7 +494,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
           <Link
             href="/pricing"
             title="ABRAM Platform Pricing Plans"
-            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden sm:inline-flex ${
+            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-200 hidden lg:inline-flex ${
               pathname === "/pricing"
                 ? "bg-white/10 text-white border border-white/10"
                 : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
@@ -511,7 +511,7 @@ export default function Navbar({ onSearchClick, onMenuClick, mobileMenuOpen, set
             // header sits above it, so this one steps aside rather than
             // floating over the panel.
             className={`items-center gap-1.5 whitespace-nowrap rounded-full bg-white text-black px-4 py-1.5 text-xs font-semibold hover:bg-zinc-200 transition-all duration-200 shadow-md shadow-white/5 outline-none focus-visible:ring-2 focus-visible:ring-white ${
-              mobileMenuOpen ? "hidden sm:inline-flex" : "inline-flex"
+              mobileMenuOpen ? "hidden lg:inline-flex" : "inline-flex"
             }`}
           >
             Get Started
