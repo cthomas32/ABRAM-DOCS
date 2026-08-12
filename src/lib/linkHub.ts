@@ -7,7 +7,26 @@
  * editor and the live preview.
  */
 
-export type LinkBlockType = "link" | "header" | "social";
+/**
+ * Block types.
+ *
+ * The last four arrived with the abram-network Link Hub options wave
+ * (supabase/migrations/20270824000100_link_hub_options.sql over there) and are
+ * rendered by /l/<slug> in this repo. This repo's OWN link hub — the one the
+ * admin panel edits — only ever writes the first three, and nothing here
+ * requires it to learn the rest: a union that is wider than one writer needs
+ * costs nothing, and keeping ONE vocabulary is what lets the two renderers stay
+ * identical.
+ */
+export type LinkBlockType =
+  | "link"
+  | "header"
+  | "social"
+  | "email"
+  | "phone"
+  | "embed_video"
+  | "collection";
+export type LinkBlockLayout = "classic" | "featured";
 export type LinkHighlight = "none" | "pulse" | "shine" | "bounce";
 
 export interface LinkHubLink {
@@ -18,6 +37,9 @@ export interface LinkHubLink {
   icon: string;
   thumbnail_url: string | null;
   block_type: LinkBlockType;
+  layout: LinkBlockLayout;
+  /** The collection this block sits in, or null. One level deep only. */
+  parent_id: string | null;
   highlight: LinkHighlight;
   is_active: boolean;
   is_featured: boolean;
@@ -28,10 +50,18 @@ export interface LinkHubLink {
   ends_at: string | null;
 }
 
+/** One entry in the icon strip under the bio. */
+export interface SocialLink {
+  platform: string;
+  url: string;
+}
+
 export type BackgroundStyle = "solid" | "gradient" | "glow" | "image";
 export type ButtonStyle = "glass" | "fill" | "outline" | "soft" | "hard";
+export type ButtonShadow = "none" | "soft" | "hard";
 export type ButtonRadius = "sharp" | "rounded" | "pill";
 export type ButtonSize = "compact" | "regular" | "large";
+export type LinkDisplay = "list" | "grid";
 export type LinkFont = "sans" | "display" | "mono";
 export type AvatarShape = "circle" | "rounded" | "square";
 export type AvatarKind = "none" | "image" | "abram";
@@ -51,18 +81,33 @@ export interface LinkHubSettings {
   background_blur: number;
   background_overlay: number;
   button_style: ButtonStyle;
+  button_shadow: ButtonShadow;
   button_radius: ButtonRadius;
   button_size: ButtonSize;
   button_color: string;
   button_text_color: string;
+  link_display: LinkDisplay;
   accent_color: string;
   text_color: string;
   font_family: LinkFont;
+  socials: SocialLink[];
   show_icons: boolean;
   share_enabled: boolean;
   seo_title: string | null;
   seo_description: string | null;
   og_image_url: string | null;
+  /** Which curated swatch is lit in the editor. Presentation only. */
+  background_preset: string;
+  /**
+   * Whether the public page draws the "Powered by ABRAM" credit.
+   *
+   * Computed by `public_link_pages` in the abram-network project — the wish
+   * AND the plan, resolved per read — so this repo never sees a tier and never
+   * decides. Defaults to TRUE: a row that predates the column, or a view that
+   * failed to return it, shows the credit. The paid state is the one that has
+   * to be earned.
+   */
+  show_branding: boolean;
   views: number;
 }
 
@@ -81,18 +126,23 @@ export const DEFAULT_SETTINGS: LinkHubSettings = {
   background_blur: 0,
   background_overlay: 55,
   button_style: "glass",
+  button_shadow: "none",
   button_radius: "rounded",
   button_size: "regular",
   button_color: "#141414",
   button_text_color: "#FFFFFF",
+  link_display: "list",
   accent_color: "#8ECAFF",
   text_color: "#FFFFFF",
   font_family: "sans",
+  socials: [],
   show_icons: true,
   share_enabled: true,
   seo_title: null,
   seo_description: null,
   og_image_url: null,
+  background_preset: "none",
+  show_branding: true,
   views: 0,
 };
 
@@ -160,7 +210,16 @@ export const SOCIAL_ICON_KEYS: readonly string[] = [
 /*  Row normalisation                                                  */
 /* ------------------------------------------------------------------ */
 
-const BLOCK_TYPES: LinkBlockType[] = ["link", "header", "social"];
+const BLOCK_TYPES: LinkBlockType[] = [
+  "link",
+  "header",
+  "social",
+  "email",
+  "phone",
+  "embed_video",
+  "collection",
+];
+const BLOCK_LAYOUTS: LinkBlockLayout[] = ["classic", "featured"];
 const HIGHLIGHTS: LinkHighlight[] = ["none", "pulse", "shine", "bounce"];
 
 /**
@@ -186,6 +245,10 @@ export function normalizeLink(row: Partial<LinkHubLink> & { id: string }): LinkH
     icon: row.icon ?? "link",
     thumbnail_url: row.thumbnail_url ?? null,
     block_type: blockType,
+    layout: BLOCK_LAYOUTS.includes(row.layout as LinkBlockLayout)
+      ? (row.layout as LinkBlockLayout)
+      : "classic",
+    parent_id: row.parent_id ?? null,
     highlight,
     is_active: row.is_active ?? true,
     is_featured: row.is_featured ?? false,
@@ -219,17 +282,46 @@ export function normalizeSettings(row: Partial<LinkHubSettings> | null): LinkHub
     background_blur: merged.background_blur ?? 0,
     background_overlay: merged.background_overlay ?? 55,
     button_style: merged.button_style || DEFAULT_SETTINGS.button_style,
+    button_shadow: merged.button_shadow || DEFAULT_SETTINGS.button_shadow,
     button_radius: merged.button_radius || DEFAULT_SETTINGS.button_radius,
     button_size: merged.button_size || DEFAULT_SETTINGS.button_size,
     button_color: merged.button_color || DEFAULT_SETTINGS.button_color,
     button_text_color: merged.button_text_color || DEFAULT_SETTINGS.button_text_color,
+    link_display: merged.link_display || DEFAULT_SETTINGS.link_display,
     accent_color: merged.accent_color || DEFAULT_SETTINGS.accent_color,
     text_color: merged.text_color || DEFAULT_SETTINGS.text_color,
     font_family: merged.font_family || DEFAULT_SETTINGS.font_family,
+    // jsonb arrives as whatever was stored, and every entry ends up in an
+    // href — so it is re-validated here rather than trusted.
+    socials: normalizeSocials((row as { socials?: unknown }).socials),
+    background_preset: merged.background_preset || "none",
     show_icons: merged.show_icons ?? true,
     share_enabled: merged.share_enabled ?? true,
+    // Absent means shown. Only an explicit false takes the credit away.
+    show_branding: merged.show_branding !== false,
     views: merged.views ?? 0,
   };
+}
+
+/** Whatever came out of the jsonb column, turned into something renderable. */
+export function normalizeSocials(raw: unknown): SocialLink[] {
+  if (!Array.isArray(raw)) return [];
+  const out: SocialLink[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== "object") continue;
+    const platform = String((entry as Record<string, unknown>).platform ?? "").trim();
+    const value = String((entry as Record<string, unknown>).url ?? "");
+    const url =
+      platform === "mail"
+        ? contactHref("email", value)
+        : platform === "phone"
+          ? contactHref("phone", value)
+          : normalizeLinkUrl(value);
+    if (!platform || !url) continue;
+    out.push({ platform, url });
+    if (out.length >= 12) break;
+  }
+  return out;
 }
 
 /* ------------------------------------------------------------------ */
@@ -272,6 +364,123 @@ export function normalizeImageUrl(raw: string): string | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * What an `email` or `phone` block actually links to.
+ *
+ * Mirrors contactHref in abram-network's src/lib/apps/linkHub.ts. Both
+ * renderers have to agree on what a stored value means, so the rule lives in
+ * both repos in the same shape rather than in one and approximated in the
+ * other.
+ */
+export function contactHref(blockType: LinkBlockType, raw: string): string | null {
+  const trimmed = (raw ?? "").trim();
+  if (!trimmed) return null;
+
+  if (blockType === "email") {
+    if (/^mailto:/i.test(trimmed)) return trimmed;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return null;
+    return `mailto:${trimmed}`;
+  }
+
+  if (blockType === "phone") {
+    if (/^(tel|sms):/i.test(trimmed)) return trimmed;
+    const digits = trimmed.replace(/(?!^\+)[^\d]/g, "");
+    return digits.replace(/^\+?/, "").length >= 4 ? `tel:${digits}` : null;
+  }
+
+  return normalizeLinkUrl(trimmed);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Video embeds                                                       */
+/* ------------------------------------------------------------------ */
+
+export interface VideoEmbed {
+  provider: "youtube" | "vimeo";
+  id: string;
+  watchUrl: string;
+  thumbnailUrl: string | null;
+}
+
+/**
+ * NO IFRAMES ON THE PUBLIC PAGE.
+ *
+ * An `embed_video` block renders as the provider's own still, a play glyph and
+ * a link out — never a player. A YouTube or Vimeo embed is a third-party
+ * document with its own scripts, cookies and consent obligations, dropped onto
+ * a page a stranger opened from someone's bio, and it costs several hundred
+ * kilobytes before anyone has decided to watch. This gets the visitor the same
+ * video and loads nothing from a third party until they ask.
+ *
+ * Vimeo has no unauthenticated thumbnail endpoint, so a Vimeo block falls back
+ * to the owner's uploaded cover rather than a guessed URL that 404s.
+ *
+ * Kept identical to parseVideoEmbed in abram-network.
+ */
+export function parseVideoEmbed(raw: string): VideoEmbed | null {
+  const trimmed = (raw ?? "").trim();
+  if (!trimmed) return null;
+
+  let url: URL;
+  try {
+    url = new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+
+  const host = url.hostname.replace(/^www\./, "").toLowerCase();
+
+  if (host === "youtu.be") return youtubeEmbed(url.pathname.slice(1).split("/")[0]);
+
+  if (host === "youtube.com" || host === "m.youtube.com" || host === "youtube-nocookie.com") {
+    if (url.pathname === "/watch") return youtubeEmbed(url.searchParams.get("v") ?? "");
+    const match = url.pathname.match(/^\/(?:embed|shorts|live|v)\/([^/?#]+)/);
+    return match ? youtubeEmbed(match[1]) : null;
+  }
+
+  if (host === "vimeo.com" || host === "player.vimeo.com") {
+    const match = url.pathname.match(/(\d{6,})/);
+    if (!match) return null;
+    return {
+      provider: "vimeo",
+      id: match[1],
+      watchUrl: `https://vimeo.com/${match[1]}`,
+      thumbnailUrl: null,
+    };
+  }
+
+  return null;
+}
+
+function youtubeEmbed(rawId: string): VideoEmbed | null {
+  const id = rawId.trim();
+  // The id is interpolated into a URL, so it is checked against YouTube's own
+  // alphabet rather than used as typed.
+  if (!/^[A-Za-z0-9_-]{6,20}$/.test(id)) return null;
+  return {
+    provider: "youtube",
+    id,
+    watchUrl: `https://www.youtube.com/watch?v=${id}`,
+    thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+  };
+}
+
+/**
+ * Where a block actually points, whatever its type. One function so the two
+ * renderers can never disagree about a destination. Null means there is
+ * nothing safe to link to, and the block is drawn inert.
+ */
+export function blockHref(block: Pick<LinkHubLink, "block_type" | "url">): string | null {
+  if (block.block_type === "embed_video") {
+    return parseVideoEmbed(block.url)?.watchUrl ?? normalizeLinkUrl(block.url);
+  }
+  if (block.block_type === "email" || block.block_type === "phone") {
+    return contactHref(block.block_type, block.url);
+  }
+  return normalizeLinkUrl(block.url);
 }
 
 /** Host shown as a hint under a link, e.g. "instagram.com". */
@@ -712,13 +921,33 @@ export function buildLinkHubTheme(settings: LinkHubSettings): LinkHubTheme {
     },
   };
 
+  // Button shadow is a SEPARATE axis from button style: it layers on top of
+  // whatever the surface asked for instead of replacing it, so a glass button
+  // can have a drop shadow. Identical to the abram-network implementation —
+  // the two renderers must produce the same box-shadow list.
+  const surface = surfaces[settings.button_style] ?? surfaces.glass;
+  const baseShadow = surface["--lh-btn-shadow"];
+  const extraShadow =
+    settings.button_shadow === "soft"
+      ? `0 18px 40px -20px ${withAlpha("#000000", light ? 0.32 : 0.85)}`
+      : settings.button_shadow === "hard"
+        ? `4px 4px 0 0 ${withAlpha(btnFg, 0.9)}`
+        : null;
+
+  const shadow = !extraShadow
+    ? baseShadow
+    : baseShadow === "none"
+      ? extraShadow
+      : `${baseShadow}, ${extraShadow}`;
+
   return {
     light,
     background,
     fontClass,
     iconSize: size.icon,
     vars: {
-      ...surfaces[settings.button_style],
+      ...surface,
+      "--lh-btn-shadow": shadow,
       "--lh-bg": bg,
       "--lh-bg-alt": bgAlt,
       "--lh-accent": accent,

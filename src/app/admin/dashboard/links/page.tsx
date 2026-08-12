@@ -82,11 +82,29 @@ const EMPTY_DRAFT: Draft = {
   ends_at: "",
 };
 
-const BLOCK_LABELS: Record<LinkBlockType, { name: string; icon: React.ReactNode }> = {
+/**
+ * The three block types THIS admin panel writes.
+ *
+ * LinkBlockType is deliberately wider — it also covers the email, phone,
+ * video and collection blocks the abram-network Link Hub adds, because both
+ * repos render from one vocabulary. This panel edits a different table and has
+ * no editor for those, so it is typed to what it can actually create rather
+ * than to the whole union.
+ */
+type AdminBlockType = Extract<LinkBlockType, "link" | "header" | "social">;
+
+const ADMIN_BLOCK_TYPES: AdminBlockType[] = ["link", "header", "social"];
+
+const BLOCK_LABELS: Record<AdminBlockType, { name: string; icon: React.ReactNode }> = {
   link: { name: "Link", icon: <Link2 className="w-3.5 h-3.5" /> },
   header: { name: "Header", icon: <Heading className="w-3.5 h-3.5" /> },
   social: { name: "Social", icon: <Share2 className="w-3.5 h-3.5" /> },
 };
+
+/** Names a stored block for the list, including types this panel cannot make. */
+function blockTypeName(type: LinkBlockType): string {
+  return BLOCK_LABELS[type as AdminBlockType]?.name ?? type.replace(/_/g, " ");
+}
 
 /** datetime-local wants a local wall-clock string, the database stores UTC. */
 function toLocalInput(iso: string | null): string {
@@ -123,7 +141,7 @@ export default function LinkHubAdminPage() {
   const [notice, setNotice] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const [draftType, setDraftType] = useState<LinkBlockType | null>(null);
+  const [draftType, setDraftType] = useState<AdminBlockType | null>(null);
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editDraft, setEditDraft] = useState<Draft>(EMPTY_DRAFT);
@@ -608,11 +626,11 @@ function ContentTab({
   links: LinkHubLink[];
   busy: boolean;
   draft: Draft;
-  draftType: LinkBlockType | null;
+  draftType: AdminBlockType | null;
   editingId: string | null;
   editDraft: Draft;
   setDraft: React.Dispatch<React.SetStateAction<Draft>>;
-  setDraftType: (type: LinkBlockType | null) => void;
+  setDraftType: (type: AdminBlockType | null) => void;
   setEditDraft: React.Dispatch<React.SetStateAction<Draft>>;
   setConfirmDeleteId: (id: string | null) => void;
   onStartEdit: (block: LinkHubLink) => void;
@@ -640,7 +658,7 @@ function ContentTab({
       title="Blocks"
       action={
         <div className="flex items-center gap-1.5">
-          {(["link", "header", "social"] as LinkBlockType[]).map((type) => (
+          {ADMIN_BLOCK_TYPES.map((type) => (
             <button
               key={type}
               onClick={() => setDraftType(draftType === type ? null : type)}
@@ -845,7 +863,7 @@ function BlockRow({
                   {block.label}
                 </span>
                 {block.block_type !== "link" ? (
-                  <Badge>{BLOCK_LABELS[block.block_type].name}</Badge>
+                  <Badge>{blockTypeName(block.block_type)}</Badge>
                 ) : null}
                 {block.is_featured ? <Badge>Featured</Badge> : null}
                 {block.highlight && block.highlight !== "none" ? (

@@ -511,7 +511,33 @@ body {
 .lh-page {
   color: var(--lh-text);
   min-height: 100vh;
+  /* dvh, so the last link is reachable when mobile Safari's toolbar is up. */
   min-height: 100dvh;
+  /* MOST VISITORS ARRIVE ON A PHONE, from a bio link, one-handed.
+     `overflow-x: clip` is the belt to the braces of every min-width: 0 in the
+     markup: a long unbroken URL in a label must never make the page scroll
+     sideways. The horizontal padding respects notch cutouts on a landscape
+     iPhone, and the bottom padding clears the home indicator so the last
+     button is not sitting under it. */
+  overflow-x: clip;
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+
+/* The reading column. Narrow on purpose: a bio page is a thumb-width list. */
+.lh-col {
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+  min-width: 0;
+}
+
+/* Every tappable thing clears 44px. The button height variable can go below
+   that on the compact size, so the floor is stated separately. */
+.lh-tap {
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .lh-btn {
@@ -537,23 +563,40 @@ body {
   cursor: pointer;
   overflow: hidden;
 }
-.lh-btn:hover {
-  background: var(--lh-btn-bg-hover);
-  border-color: var(--lh-btn-border-hover, var(--lh-btn-border));
-  /* A single pixel of lift. Anything more reads as playful. */
-  transform: translateY(-1px);
+/* A phone has no hover, and a sticky :hover left behind after a tap is the
+   classic mobile artefact. Lift only where there is a real pointer. */
+@media (hover: hover) and (pointer: fine) {
+  .lh-btn:hover {
+    background: var(--lh-btn-bg-hover);
+    border-color: var(--lh-btn-border-hover, var(--lh-btn-border));
+    /* A single pixel of lift. Anything more reads as playful. */
+    transform: translateY(-1px);
+  }
+  .lh-btn:hover .lh-btn-icon {
+    opacity: 0.85;
+  }
+  .lh-social:hover {
+    background: var(--lh-hairline);
+    transform: translateY(-2px);
+  }
 }
 .lh-btn:active {
-  transform: translateY(0);
+  /* On touch this is the only feedback there is. */
+  transform: scale(0.985);
+}
+.lh-btn,
+.lh-social,
+.lh-tile {
+  /* Stops the grey flash iOS paints over a tapped link, and the 300ms
+     double-tap-to-zoom delay. */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* Icons stay quiet so the label carries the button. */
 .lh-btn-icon {
   opacity: 0.55;
   transition: opacity 0.25s ease;
-}
-.lh-btn:hover .lh-btn-icon {
-  opacity: 0.85;
 }
 .lh-btn--featured .lh-btn-icon {
   opacity: 0.75;
@@ -563,15 +606,191 @@ body {
   outline-offset: 3px;
 }
 
-/* Featured blocks invert to the accent colour so one link can lead. */
+/* Featured blocks lead. A featured block is a tall card with its thumbnail as
+   the background rather than a 44px square beside the label, so it reads as a
+   poster instead of a row. Kept identical to abram-network's linkHub.css. */
 .lh-btn--featured {
-  background: var(--lh-accent);
-  border-color: transparent;
-  color: var(--lh-accent-fg);
+  min-height: 148px;
+  align-items: flex-end;
+  padding: 1rem;
+  background-size: cover;
+  background-position: center;
 }
-.lh-btn--featured:hover {
-  background: var(--lh-accent);
-  filter: brightness(1.08);
+.lh-btn--featured .lh-btn-label {
+  font-size: 1.0625rem;
+}
+/* Legibility over the picture without darkening the whole card: a gradient
+   only where the text is. */
+.lh-btn--featured::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.15) 55%, transparent 100%);
+  pointer-events: none;
+}
+.lh-btn--featured > * {
+  position: relative;
+  z-index: 1;
+}
+/* With a picture behind it the button's own colours cannot be trusted to stay
+   readable, so featured text is pinned to white over the scrim. */
+.lh-btn--featured.lh-btn--photo {
+  color: #ffffff;
+}
+
+/* ── Grid display and collection tiles ───────────────────────────────
+   Two columns at every width. Not three: at 375px a third column leaves a
+   tile about 105px wide, which cannot hold a two-word label. */
+.lh-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--lh-stack);
+}
+/* Anything that is not a tile takes the full width. */
+.lh-span,
+.lh-grid > .lh-btn--featured {
+  grid-column: 1 / -1;
+}
+.lh-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-height: 108px;
+  padding: 0.75rem;
+  border-radius: var(--lh-radius);
+  border: 1px solid var(--lh-btn-border);
+  background: var(--lh-btn-bg);
+  color: var(--lh-btn-fg);
+  box-shadow: var(--lh-btn-shadow);
+  backdrop-filter: var(--lh-btn-blur);
+  -webkit-backdrop-filter: var(--lh-btn-blur);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    background-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lh-tile--photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 70%);
+}
+.lh-tile--photo {
+  color: #ffffff;
+}
+.lh-tile > * {
+  position: relative;
+  z-index: 1;
+}
+.lh-tile:active {
+  transform: scale(0.985);
+}
+.lh-tile:focus-visible {
+  outline: 2px solid var(--lh-accent);
+  outline-offset: 3px;
+}
+.lh-tile-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  /* Two lines then ellipsis: a tile has to stay a tile. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+/* ── Video cards ─────────────────────────────────────────────────────
+   A still and a play glyph, never an iframe. See parseVideoEmbed for why. */
+.lh-video {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-radius: var(--lh-radius);
+  border: 1px solid var(--lh-btn-border);
+  background: var(--lh-btn-bg);
+  box-shadow: var(--lh-btn-shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lh-video:active {
+  transform: scale(0.99);
+}
+.lh-video:focus-visible {
+  outline: 2px solid var(--lh-accent);
+  outline-offset: 3px;
+}
+/* Fixed ratio, declared: the space is reserved before the still loads, so the
+   list never jumps under a thumb. */
+.lh-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--lh-hairline);
+  background-size: cover;
+  background-position: center;
+}
+.lh-video-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lh-video-play span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.lh-video-caption {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.625rem 0.875rem;
+  color: var(--lh-btn-fg);
+  font-size: var(--lh-btn-font, 0.875rem);
+}
+
+/* ── Collections ─────────────────────────────────────────────────────── */
+.lh-collection-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lh-faint);
+  margin-bottom: 0.625rem;
+}
+
+/* ── Branding footer ─────────────────────────────────────────────────
+   A credit, not an advertisement. This is what a Solo Pro subscription
+   removes. */
+.lh-credit {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 0.6875rem;
+  color: var(--lh-faint);
+}
+
+/* Reserve the box before the picture arrives, so a slow thumbnail never
+   reflows the list under a thumb already moving toward a link. */
+.lh-thumb {
+  flex: 0 0 auto;
+  background: var(--lh-hairline);
 }
 
 .lh-social {
@@ -586,10 +805,6 @@ body {
     background-color 0.2s ease,
     transform 0.2s ease;
   cursor: pointer;
-}
-.lh-social:hover {
-  background: var(--lh-hairline);
-  transform: translateY(-2px);
 }
 .lh-social:focus-visible {
   outline: 2px solid var(--lh-accent);
@@ -660,7 +875,10 @@ body {
   .lh-highlight-shine::after {
     animation: none;
   }
-  .lh-btn:hover {
+  .lh-btn:hover,
+  .lh-btn:active,
+  .lh-tile:active,
+  .lh-video:active {
     transform: none;
   }
 }

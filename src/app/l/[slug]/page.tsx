@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getNetworkSupabase } from "@/utils/supabase/network";
-import { normalizeLink, normalizeSettings, type LinkHubLink, type LinkHubSettings } from "@/lib/linkHub";
+import {
+  normalizeImageUrl,
+  normalizeLink,
+  normalizeSettings,
+  type LinkHubLink,
+  type LinkHubSettings,
+} from "@/lib/linkHub";
 import LinkPageView from "@/components/linkPage/LinkPageView";
 
 /**
@@ -80,6 +86,21 @@ export async function generateMetadata({ params }: LinkPageProps): Promise<Metad
   const title = page.settings.seo_title?.trim() || page.settings.heading || "ABRAM";
   const description = page.settings.seo_description?.trim() || page.settings.subheading || undefined;
 
+  // The owner's share image if they set one, otherwise their avatar — a bio
+  // link is pasted into chats far more often than it is crawled, and a card
+  // with a face on it is the difference between a tap and a scroll past.
+  // Normalized, not passed through: this value comes from a text column and
+  // ends up in a meta tag.
+  const shareImage =
+    normalizeImageUrl(page.settings.og_image_url || "") ||
+    (page.settings.avatar_kind === "image"
+      ? normalizeImageUrl(page.settings.avatar_url || "")
+      : null);
+
+  // A wide custom image earns a large card; a fallback avatar is square and
+  // would be cropped into nonsense by one.
+  const cardType = page.settings.og_image_url ? "summary_large_image" : "summary";
+
   return {
     title,
     description,
@@ -90,11 +111,13 @@ export async function generateMetadata({ params }: LinkPageProps): Promise<Metad
       description,
       type: "website",
       url: page.shareUrl,
+      ...(shareImage ? { images: [{ url: shareImage }] } : {}),
     },
     twitter: {
-      card: "summary",
+      card: cardType,
       title,
       description,
+      ...(shareImage ? { images: [shareImage] } : {}),
     },
   };
 }

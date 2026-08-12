@@ -4,6 +4,7 @@ import {
   BookOpen,
   Boxes,
   Building2,
+  Camera,
   CalendarDays,
   Clapperboard,
   CreditCard,
@@ -16,6 +17,7 @@ import {
   MapPin,
   MessageSquare,
   Mic,
+  Music,
   Phone,
   PlayCircle,
   Rocket,
@@ -68,6 +70,18 @@ const LUCIDE_ICONS: Record<
   file: FileText,
   globe: Globe,
   podcast: Mic,
+  camera: Camera,
+  music: Music,
+};
+
+/**
+ * Spellings that predate the two repos reconciling their icon vocabularies.
+ * Stored rows are never rewritten, so the old key keeps resolving — and
+ * resolves to the SAME glyph abram-network draws for it (see the matching
+ * ALIASES map in that repo's LinkBlockIcon).
+ */
+const ALIASES: Record<string, string> = {
+  twitter: "x",
 };
 
 function Glyph({
@@ -162,9 +176,11 @@ export default function LinkHubIcon({
     return <AbramMark size={size} className="rounded-[3px] shrink-0" />;
   }
 
-  const brand = BRAND_ICONS[icon];
+  const key = ALIASES[icon] ?? icon;
+
+  const brand = BRAND_ICONS[key];
   if (brand) return brand(className, style);
 
-  const Icon = LUCIDE_ICONS[icon] || LinkIcon;
+  const Icon = LUCIDE_ICONS[key] || LinkIcon;
   return <Icon className={className} style={style} strokeWidth={STROKE} />;
 }
