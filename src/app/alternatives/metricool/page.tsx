@@ -4,7 +4,7 @@ import MetricoolClient from './MetricoolClient';
 export const metadata: Metadata = {
   title: 'Metricool Alternative | ABRAM for Brand Deals',
   description:
-    'Metricool schedules posts and reports performance. ABRAM runs the brand deal behind them: asset list, brand approvals, invoices and payments. An honest side by side comparison.',
+    'Metricool schedules posts and reports performance. ABRAM runs the brand deal behind them: asset scope, client portals, and Stripe payments.',
   keywords: [
     'Metricool alternative', 'Metricool vs ABRAM', 'brand deal management software',
     'creator invoicing software', 'influencer deal tracker', 'social media management alternative',
@@ -48,11 +48,11 @@ const faqs = [
   },
   {
     q: 'How do the prices compare?',
-    a: 'Metricool has a free plan covering one brand and 20 scheduled posts a month, with Starter from €16 a month billed annually and Advanced from €43 a month, and sells the X connection as a paid add-on. ABRAM has a free plan, Solo Lite at $19 a month and Solo Pro at $34 a month, where Solo Pro adds portals for five brands, unlimited invoicing, financial exports and watermark free PDF exports. Metricool prices are set in euros and ABRAM prices in US dollars.',
+    a: 'Metricool has a free plan covering one brand and 20 published posts a month, with Starter from €16 a month and Advanced from €43 a month, both scaling with how many brands you manage. The X connection is a paid add-on on Free and Starter and is included on Advanced. ABRAM has a free plan, Solo Lite at $19 a month and Solo Pro at $34 a month, where Solo Pro adds portals for five brands, unlimited invoicing, financial exports and watermark free PDF exports. Metricool lists prices in euros and US dollars; ABRAM prices in US dollars.',
   },
   {
     q: 'Can the brand see progress without an account?',
-    a: 'Yes, in ABRAM. Client portals are token based, so the brand contact opens a private link, reads deliverable status, leaves notes and approves. Metricool shares performance reports, including white label reports on higher plans, and has no deliverable approval flow.',
+    a: 'Yes, in ABRAM. Client portals are token based, so the brand contact opens a private link, reads deliverable status, leaves notes and approves. Metricool shares performance reports, with white label reporting on its Custom plan, and its Advanced plan has a post approval system and collaborator access. That approval step is aimed at signing off content before it publishes, rather than tracking a deal’s deliverables through to invoice.',
   },
   {
     q: 'Does ABRAM track usage rights or exclusivity windows?',
@@ -109,7 +109,7 @@ export default function MetricoolPage() {
         </p>
         <h3>Where Metricool is stronger</h3>
         <p>
-          Metricool schedules and publishes to Instagram, TikTok, YouTube, Facebook, LinkedIn, Pinterest and more, reports post and audience performance with historical data, benchmarks competitor accounts, and generates AI reports. ABRAM offers none of these. Metricool has a free plan for one brand and 20 scheduled posts a month, Starter from €16 a month billed annually, Advanced from €43 a month, and sells the X connection as a paid add-on.
+          Metricool schedules and publishes to Instagram, TikTok, YouTube, Facebook, LinkedIn, Pinterest and more, reports post and audience performance with historical data, benchmarks competitor accounts, and generates AI reports. ABRAM offers none of these. Its Advanced plan also carries a post approval system and collaborator access for clients and teams. Metricool has a free plan for one brand and 20 published posts a month, Starter from €16 a month, and Advanced from €43 a month, both scaling with brand count; the X connection is a paid add-on on Free and Starter and included on Advanced.
         </p>
         <h3>Where ABRAM is stronger</h3>
         <p>

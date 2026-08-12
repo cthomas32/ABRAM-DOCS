@@ -110,7 +110,6 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Client Portal", href: "/agency/client-portal", desc: "Secure, password-free client dashboards", title: "Secure Client Portal & Branded Dashboards" },
       ]
     },
-    { name: "Creators", href: "/creators", title: "ABRAM for Creators and Brand Deals" },
     {
       name: "Intelligence",
       href: "/intelligence",
@@ -123,6 +122,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: MobileMenuProp
         { name: "Crew Matchmaking", href: "/intelligence/crew-matchmaking", desc: "Rank crew fit for every role", title: "Crew Matchmaking" },
       ]
     },
+    { name: "Influencers", href: "/influencers", title: "ABRAM for Influencers Running Brand Deals" },
     { name: "Blog", href: "/blog", title: "ABRAM Network Blog & Insights" },
     { name: "Pricing", href: "/pricing", title: "ABRAM Platform Pricing Plans" },
   ];
