@@ -7,6 +7,7 @@ import { IDENTITY_SELECT, resolveIdentity } from "@/lib/crm/identity";
 import {
   CRM_EMAIL_TEMPLATES,
   crmEmailProblem,
+  crmEmailTemplateSpec,
   defaultCrmEmailContent,
   renderCrmEmail,
   sampleValues,
@@ -127,7 +128,7 @@ export async function saveCrmEmailTemplate(
   /* Refused here rather than repaired later. Anything that would fall back
      at send time is something the person editing it wants to know about
      while they still have the words in front of them. */
-  const problem = crmEmailProblem(trimmed);
+  const problem = crmEmailProblem(trimmed, crmEmailTemplateSpec(key)?.variables);
   if (problem) return { error: problem };
 
   const { error } = await saveCrmEmailContent(supabase, key, trimmed, user.id);
@@ -171,7 +172,7 @@ export async function sendCrmEmailTest(
   if (!defaultCrmEmailContent(key)) return { error: "That email is not one this build sends." };
 
   const trimmed = trimCrmEmailContent(content);
-  const problem = crmEmailProblem(trimmed);
+  const problem = crmEmailProblem(trimmed, crmEmailTemplateSpec(key)?.variables);
   if (problem) return { error: problem };
 
   const apiKey = process.env.RESEND_API_KEY || process.env.RESEND_MARKETING_API_KEY;

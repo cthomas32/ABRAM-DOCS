@@ -66,9 +66,54 @@ export const CRM_EMAIL_VARIABLES: CrmEmailVariable[] = [
     sample: "https://abram.network/c/connor/vcf",
   },
   { name: "card_link", label: "The address of your card", sample: "https://abram.network/c/connor" },
+
+  /* The list half. A newsletter signup has no event, no booth and nobody
+     standing in front of them, so none of the contact variables above mean
+     anything in that email. They stay in one catalogue all the same, because
+     the renderer takes a flat bag of values and a second catalogue would be a
+     second place to forget to add something. What each template may actually
+     say is narrowed by `variables` on the spec. */
+  { name: "subscriber_first_name", label: "Their first name", sample: "Sam" },
+  { name: "subscriber_name", label: "Their full name", sample: "Sam Whitlock" },
+  { name: "subscriber_email", label: "The address they signed up with", sample: "sam@vesperpictures.com" },
+  {
+    name: "unsubscribe_link",
+    label: "The one-click way off the list",
+    sample: "https://abram.network/api/newsletter/unsubscribe?token=sample",
+  },
 ];
 
 export const CRM_EMAIL_VARIABLE_NAMES = CRM_EMAIL_VARIABLES.map((v) => v.name);
+
+/** The variables a conference email may refer to. The original set. */
+export const CAPTURE_VARIABLE_NAMES = [
+  "contact_first_name",
+  "contact_name",
+  "contact_company",
+  "contact_job_title",
+  "event_name",
+  "sender_first_name",
+  "sender_name",
+  "sender_job_title",
+  "sender_city",
+  "sender_email",
+  "sender_phone",
+  "save_contact_link",
+  "card_link",
+];
+
+/** The variables a list email may refer to. No event, no vCard, no phone. */
+export const SUBSCRIBER_VARIABLE_NAMES = [
+  "subscriber_first_name",
+  "subscriber_name",
+  "subscriber_email",
+  "sender_first_name",
+  "sender_name",
+  "sender_job_title",
+  "sender_city",
+  "sender_email",
+  "unsubscribe_link",
+];
 
 /** What the renderer is handed. Anything absent renders as nothing. */
 export type CrmEmailValues = Partial<Record<string, string | null | undefined>>;
@@ -104,6 +149,16 @@ export interface CrmEmailTemplateSpec extends CrmEmailContent {
   key: string;
   name: string;
   description: string;
+  /**
+   * Which variables this email may refer to, out of the shared catalogue.
+   *
+   * The editor offers exactly these and the guard below rejects a saved edit
+   * that reaches for anything else. Without it every template would offer
+   * every variable, and a welcome email quietly inviting somebody to write
+   * `{{save_contact_link}}` renders an empty space in a stranger's inbox
+   * rather than an error anybody sees.
+   */
+  variables: string[];
 }
 
 /**
@@ -125,6 +180,7 @@ const CAPTURE_FOLLOW_UP: CrmEmailTemplateSpec = {
   name: "Follow up after a scan",
   description:
     "Sent to somebody who left their details on your card, once, a moment after they hand them over.",
+  variables: CAPTURE_VARIABLE_NAMES,
   subject: "Great to meet you{{#event_name}} at {{event_name}}{{/event_name}}",
   /* The blank lines are deliberate. An earlier version filtered empty
      strings out of this array, which quietly collapsed the plain text part
@@ -164,10 +220,83 @@ const CAPTURE_FOLLOW_UP: CrmEmailTemplateSpec = {
   ].join("\n"),
 };
 
-export const CRM_EMAIL_TEMPLATES: CrmEmailTemplateSpec[] = [CAPTURE_FOLLOW_UP];
+/**
+ * The welcome.
+ *
+ * The first rung of the funnel, and for now the only automatic email the list
+ * ever sends. Three rules shaped the copy and none of them are style
+ * preferences:
+ *
+ * 1. **It sets the frequency expectation in the first two lines.** The single
+ *    biggest cause of a spam complaint is an email somebody does not remember
+ *    asking for. Telling them what they will get, and how rarely, is worth
+ *    more to the sending domain than anything persuasive we could put here.
+ * 2. **Every claim is one we can defend.** What ABRAM is comes from
+ *    `abram-network/.agents/brain/BUSINESS.md:14`, and it is deliberately the
+ *    plain description rather than the positioning line, which BUSINESS.md
+ *    marks as not verified customer-facing. No metric, no customer count, no
+ *    roadmap date. See `.agents/brand-voice.md` §1.
+ * 3. **Both links go somewhere that exists today.** `/docs` and `/changelog`
+ *    are real routes. A welcome email is the worst possible place for a 404,
+ *    because it is the first thing a new subscriber ever clicks.
+ *
+ * No button, no hero image, no marketing footer. Same reasoning as the
+ * follow up above: a plain note reads as though a person sent it, and this
+ * one genuinely is sent on a person's behalf.
+ */
+const NEWSLETTER_WELCOME: CrmEmailTemplateSpec = {
+  key: "newsletter_welcome",
+  name: "Welcome to the list",
+  description:
+    "Sent once, a moment after somebody subscribes on the site. Sets the expectation of what arrives and how often.",
+  variables: SUBSCRIBER_VARIABLE_NAMES,
+  subject: "You're on the list",
+  bodyText: [
+    "Hi {{subscriber_first_name}},",
+    "",
+    "Thanks for signing up. Here is what you have actually signed up for: a note when we ship",
+    "something worth reading about, and not much else. No weekly roundup, no drip of tips.",
+    "",
+    "ABRAM is a production management platform for film and media — the clients, production",
+    "companies, creative teams and contractors on a job, in one place.",
+    "",
+    "If you would rather not wait for the next note:",
+    "",
+    "The user guide, which is the honest version of how it works: https://abram.network/docs",
+    "What we have shipped recently: https://abram.network/changelog",
+    "",
+    "{{sender_name}}",
+    "{{sender_job_title}}",
+    "{{sender_city}}",
+    "",
+    "abram.network",
+    "",
+    "No longer want these? {{unsubscribe_link}}",
+  ].join("\n"),
+  bodyHtml: [
+    '<div style="font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.65;color:#18181b;max-width:480px">',
+    '<p style="margin:0 0 14px">Hi {{subscriber_first_name}},</p>',
+    '<p style="margin:0 0 14px">Thanks for signing up. Here is what you have actually signed up for: a note when we ship something worth reading about, and not much else. No weekly roundup, no drip of tips.</p>',
+    '<p style="margin:0 0 14px">ABRAM is a production management platform for film and media — the clients, production companies, creative teams and contractors on a job, in one place.</p>',
+    '<p style="margin:0 0 8px">If you would rather not wait for the next note:</p>',
+    '<p style="margin:0 0 22px"><a href="https://abram.network/docs" style="color:#18181b">The user guide</a>, which is the honest version of how it works.<br><a href="https://abram.network/changelog" style="color:#18181b">What we have shipped recently</a>.</p>',
+    '<p style="margin:0 0 14px;color:#3f3f46">{{sender_name}}<br>{{sender_job_title}}<br>{{sender_city}}</p>',
+    '<p style="margin:0 0 10px"><img src="https://abram.network/brand/lockup-black.png" alt="ABRAM" width="104" style="display:block;height:auto;border:0" /></p>',
+    '<p style="margin:0;font-size:13px;color:#71717a"><a href="https://abram.network" style="color:#71717a">abram.network</a><br><a href="{{unsubscribe_link}}" style="color:#71717a">Unsubscribe</a></p>',
+    "</div>",
+  ].join("\n"),
+};
+
+export const CRM_EMAIL_TEMPLATES: CrmEmailTemplateSpec[] = [
+  CAPTURE_FOLLOW_UP,
+  NEWSLETTER_WELCOME,
+];
 
 /** The follow up sent when somebody leaves their details. */
 export const CAPTURE_FOLLOW_UP_KEY = CAPTURE_FOLLOW_UP.key;
+
+/** The note sent once when somebody subscribes on the site. */
+export const NEWSLETTER_WELCOME_KEY = NEWSLETTER_WELCOME.key;
 
 export function crmEmailTemplateSpec(key: string): CrmEmailTemplateSpec | null {
   return CRM_EMAIL_TEMPLATES.find((template) => template.key === key) ?? null;
@@ -333,7 +462,38 @@ export function renderCrmEmail(content: CrmEmailContent, values: CrmEmailValues)
  * Returns null when the template is fine. Anything else is a reason to fall
  * back to the built in copy, and the caller sends either way.
  */
-export function crmEmailProblem(content: CrmEmailContent | null | undefined): string | null {
+/** Every name the copy reaches for, whether as a value or as a block. */
+const ANY_TAG = /\{\{\s*[#^/]?\s*([a-zA-Z0-9_]+)\s*\}\}/g;
+
+/**
+ * Which variables a piece of copy actually refers to.
+ *
+ * Read off the raw template rather than the rendered output, because the
+ * whole point is to catch a name that renders as nothing.
+ */
+export function referencedVariables(content: CrmEmailContent): string[] {
+  const found = new Set<string>();
+  for (const part of [content.subject, content.bodyText, content.bodyHtml]) {
+    if (typeof part !== "string") continue;
+    for (const match of part.matchAll(ANY_TAG)) found.add(match[1]);
+  }
+  return [...found];
+}
+
+/**
+ * What is wrong with this copy, in the words the editor shows, or null.
+ *
+ * `allowed` narrows the check to one template's variables. It is optional
+ * because the renderer does not care, but every caller that knows which
+ * template it is holding should pass it: a variable outside the list is the
+ * one class of mistake that survives every other guard here. It has matched
+ * braces, it renders without error, and it leaves a silent hole in a
+ * stranger's inbox.
+ */
+export function crmEmailProblem(
+  content: CrmEmailContent | null | undefined,
+  allowed?: string[],
+): string | null {
   if (!content) return "There is no saved wording for this email.";
 
   const parts: [string, unknown][] = [
@@ -347,6 +507,16 @@ export function crmEmailProblem(content: CrmEmailContent | null | undefined): st
 
   if (!content.subject.trim()) return "The subject line is empty.";
   if (!content.bodyText.trim() && !content.bodyHtml.trim()) return "The email has no body.";
+
+  if (allowed) {
+    const unknown = referencedVariables(content).filter((name) => !allowed.includes(name));
+    if (unknown.length) {
+      const named = unknown.map((name) => `{{${name}}}`).join(", ");
+      return unknown.length === 1
+        ? `${named} is not something this email knows about, so it would arrive as a blank space. Use one of the variables listed beside the editor.`
+        : `${named} are not things this email knows about, so they would arrive as blank spaces. Use the variables listed beside the editor.`;
+    }
+  }
 
   /* Rendered against a full set of values and against an empty one, because
      a template can be well formed with an event running and broken without

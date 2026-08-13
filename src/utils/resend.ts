@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "./supabase/server";
+import { sendWelcomeEmail } from "@/lib/funnel/welcomeEmail";
 
 /**
  * Creates a service-role Supabase client to execute database operations
@@ -88,8 +89,8 @@ export async function addContactToAudience(input: {
 }
 
 // Canonical Resend segment IDs (overridable via environment).
-const MARKETING_SEGMENT_ID = process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
-const APPLICATION_SEGMENT_ID = process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8";
+export const MARKETING_SEGMENT_ID = process.env.RESEND_MARKETING_SEGMENT_ID || "8324468f-0399-4c05-9b98-3e17e76ffa41";
+export const APPLICATION_SEGMENT_ID = process.env.RESEND_APPLICATION_SEGMENT_ID || "42a3da82-ad27-475f-b2ad-113c9c8fa6b8";
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -288,6 +289,19 @@ export async function addSubscriber(input: SubscribeInput) {
     lastName: input.lastName,
     isMarketing,
     isApp,
+  });
+
+  /* 6. The welcome.
+     Last, and deliberately unawaited in spirit though awaited in fact: it
+     never throws and never returns anything this function acts on, so a
+     mail service having a bad afternoon cannot turn a successful signup
+     into an error in somebody's browser. Sending once is guarded inside,
+     by a conditional claim on welcome_email_sent_at, which is what makes a
+     double submit safe. */
+  await sendWelcomeEmail(supabase, {
+    email: subscriberData.email,
+    firstName: input.firstName,
+    lastName: input.lastName,
   });
 
   return { success: true, message: "Successfully subscribed!" };

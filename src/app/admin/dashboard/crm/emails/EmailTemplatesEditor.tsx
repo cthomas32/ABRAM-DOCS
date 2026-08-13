@@ -19,6 +19,7 @@ import {
 import {
   CRM_EMAIL_VARIABLES,
   crmEmailProblem,
+  crmEmailTemplateSpec,
   renderCrmEmail,
   type CrmEmailContent,
   type CrmEmailValues,
@@ -147,7 +148,28 @@ export default function EmailTemplatesEditor() {
   );
 
   const rendered = useMemo(() => renderCrmEmail(draft, values), [draft, values]);
-  const problem = useMemo(() => crmEmailProblem(draft), [draft]);
+
+  /* Which variables this email is allowed to use. A conference note and a
+     welcome to the list share a renderer and almost nothing else, so the
+     list beside the editor and the check below are both narrowed to the
+     template in front of you rather than to everything the system knows. */
+  const allowedVariables = useMemo(
+    () => (activeKey ? crmEmailTemplateSpec(activeKey)?.variables : undefined),
+    [activeKey],
+  );
+
+  const availableVariables = useMemo(
+    () =>
+      allowedVariables
+        ? CRM_EMAIL_VARIABLES.filter((v) => allowedVariables.includes(v.name))
+        : CRM_EMAIL_VARIABLES,
+    [allowedVariables],
+  );
+
+  const problem = useMemo(
+    () => crmEmailProblem(draft, allowedVariables),
+    [draft, allowedVariables],
+  );
 
   /* The preview is somebody else's HTML in an iframe, so it is sandboxed
      with nothing granted. It is a picture of an email and never a page. */
@@ -472,7 +494,7 @@ export default function EmailTemplatesEditor() {
                     blank, and takes its comma or its line break with it.
                   </p>
                   <div className="flex flex-wrap gap-1.5">
-                    {CRM_EMAIL_VARIABLES.map((variable) => (
+                    {availableVariables.map((variable) => (
                       <button
                         key={variable.name}
                         type="button"

@@ -16,6 +16,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   crmEmailProblem,
+  crmEmailTemplateSpec,
   defaultCrmEmailContent,
   type CrmEmailContent,
 } from "./emailTemplates";
@@ -87,7 +88,10 @@ export async function loadCrmEmailContent(
     if (!data) return asDefault(null);
 
     const content = asContent(data as Partial<CrmEmailTemplateRow>);
-    const problem = crmEmailProblem(content);
+    /* Scoped to this template's own variables, the same way the save was.
+       A row can predate a variable being narrowed, and a saved edit that no
+       longer fits its template has to fall back rather than send a hole. */
+    const problem = crmEmailProblem(content, crmEmailTemplateSpec(key)?.variables);
     if (problem) {
       console.error(`Capture email: the saved wording for ${key} was refused. ${problem}`);
       return asDefault(problem);
