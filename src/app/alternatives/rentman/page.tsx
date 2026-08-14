@@ -4,7 +4,7 @@ import RentmanClient from './RentmanClient';
 export const metadata: Metadata = {
   title: 'Rentman Alternative | ABRAM Production Platform',
   description:
-    'A Rentman alternative for production companies that own gear. Inventory, kits and availability live in the same platform as crew, schedules, budgets, client approvals and payouts.',
+    'A Rentman alternative for production companies that own gear. Inventory, kits and availability sit in the same platform as crew, budgets and client approvals.',
   keywords: [
     'Rentman alternative', 'Rentman vs ABRAM', 'best Rentman alternative',
     'equipment inventory management software', 'production equipment tracking',
