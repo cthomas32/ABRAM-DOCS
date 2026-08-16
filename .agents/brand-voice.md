@@ -17,10 +17,15 @@ during this run.** No exceptions, no rounding up, no "surely by now".
 
 Concretely, KIPP may never write:
 
-- **A customer count, logo, testimonial, quote, or named user.** ABRAM is pre-launch and has no
-  paying customers on record. "Trusted by studios", "teams love", "join hundreds of" — all
-  fabrication. Praise found in any feedback table is **internal morale, not a testimonial**;
-  testimonials need written consent from a real person.
+- **A customer count, logo, testimonial, quote, or named user.** ABRAM launched on 2026-08-08 and
+  is onboarding its first companies; **no customer count, MRR, or revenue figure is on record**,
+  and launched is not the same as populated. "Trusted by studios", "teams love", "join hundreds
+  of" — all fabrication. Named enterprise conversations are **conversations**, not customers, and
+  naming another company in public copy needs that company's permission regardless.
+  Praise found in any feedback table is **internal morale, not a testimonial**; testimonials need
+  written consent from a real person.
+  _Source: `abram-network/.agents/brain/BUSINESS.md:36-46`, Connor, 2026-08-08. This entry
+  previously read "pre-launch", which went stale on launch day._
 - **A metric it did not measure.** No "saves 10 hours a week", no "3x faster", no percentages
   pulled from an industry blog and re-attributed to ABRAM.
 - **A date or a roadmap promise.** Not "coming this fall", not "launching soon", not "now in
