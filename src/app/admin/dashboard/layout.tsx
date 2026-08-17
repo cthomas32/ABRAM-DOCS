@@ -1,316 +1,37 @@
-"use client";
+import { redirect } from "next/navigation";
+import { getConsoleUser } from "@/lib/auth/consoleUser";
+import { can, permissionsFor } from "@/lib/auth/permissions";
+import AdminShell from "./AdminShell";
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
-import { signOut as signOutAction } from "../actions";
-import SessionGuard, { useSessionGuard } from "@/components/admin/SessionGuard";
-import {
-  Newspaper,
-  BookOpen,
-  Tag,
-  Users,
-  Mail,
-  LogOut,
-  User,
-  LayoutDashboard,
-  Link as LinkIcon,
-  Megaphone,
-  BadgePercent,
-  Contact,
-  Image as ImageIcon,
-  Menu,
-  X,
-  ChevronRight,
-  UsersRound
-} from "lucide-react";
+/**
+ * The admin console.
+ *
+ * Gated here as well as in the middleware, deliberately. A server action
+ * or a page rendered inside this layout does not inherit the middleware's
+ * decision — the middleware guards a navigation, and this guards a
+ * render. Between them, and row level security underneath, there is no
+ * single check whose failure opens the console.
+ *
+ * A growth partner never reaches this layout. They hold `workspace.growth`
+ * and not `console.admin`, which sends them to /growth instead. That
+ * split is the whole point: the partnership terms grant the CRM and
+ * withhold the admin console, and those two facts have to be expressible
+ * separately.
+ */
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const user = await getConsoleUser();
 
-const NAV_GROUPS = [
-  {
-    id: "main",
-    label: null as string | null,
-    links: [
-      { id: "overview", label: "Overview", href: "/admin/dashboard", icon: LayoutDashboard, hint: "Marketing telemetry" },
-    ],
-  },
-  {
-    id: "content",
-    label: "Content",
-    links: [
-      { id: "docs", label: "Docs Editor", href: "/admin/dashboard/docs", icon: BookOpen, hint: "Help centre guides" },
-      { id: "blog", label: "Blog Posts", href: "/admin/dashboard/blog", icon: Newspaper, hint: "Articles & announcements" },
-      { id: "changelog", label: "Release Notes", href: "/admin/dashboard/changelog", icon: Tag, hint: "Version changelogs" },
-      { id: "social", label: "Social Studio", href: "/admin/dashboard/social", icon: ImageIcon, hint: "Post images & carousels" },
-      { id: "team", label: "Team", href: "/admin/dashboard/team", icon: UsersRound, hint: "People & bylines" },
-    ],
-  },
-  {
-    id: "audience",
-    label: "Audience",
-    links: [
-      { id: "crm", label: "Contacts", href: "/admin/dashboard/crm", icon: Contact, hint: "Conference pipeline" },
-      { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone, hint: "Landing page funnels" },
-      { id: "links", label: "Link Hub", href: "/admin/dashboard/links", icon: LinkIcon, hint: "Your one bio link" },
-      { id: "promotions", label: "Promotions", href: "/admin/dashboard/promotions", icon: BadgePercent, hint: "Discount codes" },
-      { id: "subscribers", label: "Subscribers", href: "/admin/dashboard/subscribers", icon: Users, hint: "Newsletter contacts" },
-      { id: "broadcasts", label: "Email Broadcasts", href: "/admin/dashboard/broadcasts", icon: Mail, hint: "Compose & send" },
-    ],
-  },
-];
+  if (!user) redirect("/admin");
 
-const ALL_LINKS = NAV_GROUPS.flatMap((group) => group.links);
-
-function isLinkActive(href: string, pathname: string | null) {
-  const cleanPath = pathname ? pathname.replace(/\/$/, "") : "";
-  const cleanHref = href.replace(/\/$/, "");
-  if (cleanHref === "/admin/dashboard") return cleanPath === "/admin/dashboard";
-  return cleanPath === cleanHref || cleanPath.startsWith(cleanHref + "/");
-}
-
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <SessionGuard>
-      <DashboardChrome>{children}</DashboardChrome>
-    </SessionGuard>
-  );
-}
-
-function DashboardChrome({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [currentUserEmail, setCurrentUserEmail] = useState<string>("ABRAM Team");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { markSigningOut } = useSessionGuard();
-  const supabase = createClient();
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
-  // Close the mobile drawer whenever the route changes
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
-
-  // Lock body scroll while the mobile drawer is open
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [mobileMenuOpen]);
-
-  // Escape closes the drawer
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [mobileMenuOpen]);
-
-  const fetchUser = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email) {
-        setCurrentUserEmail(user.email);
-      }
-    } catch (err) {
-      console.error("Error fetching user session:", err);
-    }
-  };
-
-  const handleSignOut = async () => {
-    markSigningOut();
-    const result = await signOutAction();
-    if (!result.error) {
-      router.push("/admin");
-      router.refresh();
-    }
-  };
-
-  // The label of the section currently open, shown in the mobile header
-  const activeLink = ALL_LINKS.find((link) => isLinkActive(link.href, pathname));
+  if (!can(user, "console.admin")) {
+    // Somebody with a live login but no business here. Send them to their
+    // own workspace rather than to an error.
+    redirect(can(user, "workspace.growth") ? "/growth" : "/admin/no-access");
+  }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-zinc-100 font-sans flex flex-col md:flex-row relative">
-      {/* Mobile Top Header — shows where you are, not every place you could go */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-black/70 backdrop-blur-xl border-b border-white/5 pl-4 pr-2 flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <span className="block text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-500">
-            ABRAM Admin
-          </span>
-          <span className="block text-sm font-bold tracking-tight text-white truncate">
-            {activeLink?.label || "Dashboard"}
-          </span>
-        </div>
-        <button
-          onClick={() => setMobileMenuOpen(true)}
-          aria-label="Open navigation menu"
-          aria-expanded={mobileMenuOpen}
-          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full text-zinc-300 hover:text-white active:bg-white/[0.08] transition-colors"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-      </header>
-
-      {/* Left Navigation Sidebar (Desktop) */}
-      <aside className="hidden md:flex w-[204px] xl:w-56 border-r border-white/5 bg-zinc-950/40 flex-col h-screen sticky top-0 justify-between shrink-0 px-3 py-5">
-        <div className="space-y-5 min-h-0 overflow-y-auto">
-          <div className="flex flex-col gap-1.5 px-2 pb-4 border-b border-white/5">
-            <span className="font-bold tracking-tight text-white text-[13px] leading-snug">
-              ABRAM Marketing Engine
-            </span>
-            <span className="text-[9px] bg-white/[0.04] border border-white/10 px-2 py-0.5 rounded text-zinc-400 font-mono w-max">
-              ADMIN PANEL
-            </span>
-          </div>
-
-          <nav className="flex flex-col gap-4">
-            {NAV_GROUPS.map((group) => (
-              <div key={group.id} className="flex flex-col gap-1.5">
-                {group.label && (
-                  <span className="text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-600 px-3 mb-0.5">
-                    {group.label}
-                  </span>
-                )}
-                {group.links.map((link) => {
-                  const Icon = link.icon;
-                  const isActive = isLinkActive(link.href, pathname);
-                  return (
-                    <Link
-                      key={link.id}
-                      href={link.href}
-                      // The transparent border keeps active and inactive rows
-                      // the same height, so selecting one does not nudge the list.
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-full text-[11px] font-semibold select-none border transition-colors duration-200 ${
-                        isActive
-                          ? "bg-white text-black font-bold border-white"
-                          : "border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      <Icon className="w-3.5 h-3.5 shrink-0" />
-                      <span className="truncate">{link.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            ))}
-          </nav>
-        </div>
-
-        <div className="flex flex-col gap-2.5 pt-4 border-t border-white/5 shrink-0">
-          <div className="flex items-center gap-2 px-2 text-zinc-400 text-[11px] min-w-0">
-            <User className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-            <span className="truncate" title={currentUserEmail}>
-              {currentUserEmail}
-            </span>
-          </div>
-          <button
-            onClick={handleSignOut}
-            className="btn-glass flex items-center justify-center gap-2 px-3 py-2 text-[11px] font-semibold rounded-full w-full"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Sign Out</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Mobile Navigation Sheet — full-screen list, one tap per destination */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[60] flex flex-col">
-          <div
-            onClick={() => setMobileMenuOpen(false)}
-            aria-hidden="true"
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-          />
-
-          <div className="relative mt-auto max-h-[92vh] flex flex-col bg-[#0C0C0C] border-t border-white/10 rounded-t-3xl shadow-2xl">
-            {/* Grab handle + close */}
-            <div className="shrink-0 px-5 pt-3 pb-2">
-              <div className="w-10 h-1 rounded-full bg-white/15 mx-auto mb-4" />
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500">
-                  Go to
-                </span>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-label="Close navigation menu"
-                  className="w-11 h-11 -mr-2 flex items-center justify-center rounded-full text-zinc-400 hover:text-white active:bg-white/[0.08] transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-
-            <nav className="flex-1 overflow-y-auto overscroll-contain px-3 pb-2">
-              {NAV_GROUPS.map((group) => (
-                <div key={group.id} className="mb-2">
-                  {group.label && (
-                    <span className="block text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-600 px-3 pt-4 pb-2">
-                      {group.label}
-                    </span>
-                  )}
-                  {group.links.map((link) => {
-                    const Icon = link.icon;
-                    const isActive = isLinkActive(link.href, pathname);
-                    return (
-                      <Link
-                        key={link.id}
-                        href={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-3.5 px-3 py-3 rounded-2xl min-h-[56px] transition-colors ${
-                          isActive ? "bg-white/[0.06]" : "active:bg-white/[0.04]"
-                        }`}
-                      >
-                        <span
-                          className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
-                            isActive
-                              ? "bg-white text-black border-white"
-                              : "bg-white/[0.03] text-zinc-400 border-white/8"
-                          }`}
-                        >
-                          <Icon className="w-4 h-4" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className={`block text-sm font-semibold truncate ${isActive ? "text-white" : "text-zinc-200"}`}>
-                            {link.label}
-                          </span>
-                          <span className="block text-[11px] text-zinc-500 truncate">{link.hint}</span>
-                        </span>
-                        <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
-                      </Link>
-                    );
-                  })}
-                </div>
-              ))}
-            </nav>
-
-            <div className="shrink-0 border-t border-white/5 px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-zinc-400 text-xs min-w-0">
-                <User className="w-4 h-4 text-zinc-500 shrink-0" />
-                <span className="truncate">{currentUserEmail}</span>
-              </div>
-              <button
-                onClick={handleSignOut}
-                className="btn-glass flex items-center justify-center gap-2 px-4 h-10 text-xs font-semibold rounded-full shrink-0"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content Area */}
-      <main className="flex-1 min-w-0 pt-16 md:pt-0 flex flex-col h-auto md:h-screen md:overflow-hidden">
-        {children}
-      </main>
-    </div>
+    <AdminShell user={user} permissions={Array.from(permissionsFor(user))}>
+      {children}
+    </AdminShell>
   );
 }

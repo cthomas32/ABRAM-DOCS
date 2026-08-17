@@ -37,12 +37,36 @@ export function cardUrl(slug: string, code?: string | null): string {
 /* ------------------------------------------------------------------ */
 
 export type CrmStage =
+  | "subscriber"
   | "new"
   | "contacted"
   | "qualified"
+  | "demo"
   | "opportunity"
   | "won"
   | "lost";
+
+/**
+ * Which journey somebody is on.
+ *
+ * Two funnels, one spine: the same people table, a stage set per motion.
+ * Forcing a newsletter signup and a production company through identical
+ * stages makes both boards lie.
+ */
+export type CrmMotion = "self_serve" | "enterprise";
+
+export const CRM_MOTIONS: { id: CrmMotion; label: string; hint: string }[] = [
+  {
+    id: "self_serve",
+    label: "Self serve",
+    hint: "Found us, signed up, may never speak to anybody.",
+  },
+  {
+    id: "enterprise",
+    label: "Enterprise",
+    hint: "A conversation that runs from first contact to a signed order.",
+  },
+];
 
 export interface StageSpec {
   id: CrmStage;
@@ -54,9 +78,22 @@ export interface StageSpec {
   badge: string;
   /** Stages past this point no longer count as open pipeline. */
   terminal?: boolean;
+  /**
+   * Which motions show this column. Absent means both — most of the
+   * pipeline is shared, and only the ends of it differ.
+   */
+  motions?: CrmMotion[];
 }
 
 export const CRM_STAGES: StageSpec[] = [
+  {
+    id: "subscriber",
+    label: "Subscriber",
+    description: "On the mailing list and nothing more. Nobody has spoken to them.",
+    dot: "bg-zinc-400",
+    badge: "bg-zinc-500/10 text-zinc-300 border-zinc-500/20",
+    motions: ["self_serve"],
+  },
   {
     id: "new",
     label: "New",
@@ -77,6 +114,14 @@ export const CRM_STAGES: StageSpec[] = [
     description: "They replied and there is a real reason to keep talking.",
     dot: "bg-amber-400",
     badge: "bg-amber-500/10 text-amber-300 border-amber-500/20",
+  },
+  {
+    id: "demo",
+    label: "Demo",
+    description: "A walkthrough is booked or has happened.",
+    dot: "bg-orange-400",
+    badge: "bg-orange-500/10 text-orange-300 border-orange-500/20",
+    motions: ["enterprise"],
   },
   {
     id: "opportunity",
@@ -108,6 +153,138 @@ export const OPEN_STAGE_IDS = CRM_STAGES.filter((s) => !s.terminal).map((s) => s
 
 export function stageSpec(id: string): StageSpec {
   return CRM_STAGES.find((s) => s.id === id) ?? CRM_STAGES[0];
+}
+
+/** The columns a board shows for one motion. */
+export function stagesForMotion(motion: CrmMotion): StageSpec[] {
+  return CRM_STAGES.filter((s) => !s.motions || s.motions.includes(motion));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Deals                                                              */
+/* ------------------------------------------------------------------ */
+
+export type DealStage = "opportunity" | "proposal" | "negotiation" | "won" | "lost";
+
+export const DEAL_STAGES: { id: DealStage; label: string; badge: string; terminal?: boolean }[] = [
+  { id: "opportunity", label: "Opportunity", badge: "bg-sky-500/10 text-sky-300 border-sky-500/20" },
+  { id: "proposal", label: "Proposal", badge: "bg-violet-500/10 text-violet-300 border-violet-500/20" },
+  { id: "negotiation", label: "Negotiation", badge: "bg-amber-500/10 text-amber-300 border-amber-500/20" },
+  { id: "won", label: "Won", badge: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30", terminal: true },
+  { id: "lost", label: "Lost", badge: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20", terminal: true },
+];
+
+export type BillingPeriod = "one_off" | "monthly" | "annual";
+
+export const BILLING_PERIODS: { id: BillingPeriod; label: string }[] = [
+  { id: "one_off", label: "One off" },
+  { id: "monthly", label: "Monthly" },
+  { id: "annual", label: "Annual" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Attribution                                                        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The three ways a deal can belong to somebody, and the order they are
+ * tested in.
+ *
+ * "First match governs. No discretionary override." The order below is
+ * that sentence, and it is the order `resolveAttribution` walks. Anything
+ * that matches none of them is unattributed and pays nothing — which is
+ * a real outcome rather than an error, and the interface says so plainly
+ * rather than leaving a blank.
+ */
+export type AttributionRule = "promo_code" | "utm_link" | "registered_account" | "unattributed";
+
+export const ATTRIBUTION_RULES: {
+  id: AttributionRule;
+  order: number;
+  label: string;
+  description: string;
+  badge: string;
+}[] = [
+  {
+    id: "promo_code",
+    order: 1,
+    label: "Promo code",
+    description: "Their code was redeemed at checkout. The strongest signal there is — it is on the receipt.",
+    badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+  },
+  {
+    id: "utm_link",
+    order: 2,
+    label: "Tracked link",
+    description: "Their link was the recorded source at signup.",
+    badge: "bg-sky-500/10 text-sky-300 border-sky-500/20",
+  },
+  {
+    id: "registered_account",
+    order: 3,
+    label: "Registered account",
+    description: "Named in writing before first contact, approved, and closed inside 120 days.",
+    badge: "bg-violet-500/10 text-violet-300 border-violet-500/20",
+  },
+  {
+    id: "unattributed",
+    order: 4,
+    label: "Unattributed",
+    description: "Matches none of the three rules. Pays nothing.",
+    badge: "bg-zinc-500/10 text-zinc-500 border-zinc-500/20",
+  },
+];
+
+export function attributionSpec(id: string) {
+  return ATTRIBUTION_RULES.find((r) => r.id === id) ?? ATTRIBUTION_RULES[3];
+}
+
+/** How long an approved registration has to close before it lapses. */
+export const REGISTRATION_VALID_DAYS = 120;
+
+/** How long the company has to decline a filed registration. Business days. */
+export const REGISTRATION_DECLINE_BUSINESS_DAYS = 5;
+
+export type RegistrationStatus = "pending" | "approved" | "declined" | "expired" | "converted";
+
+export const REGISTRATION_STATUSES: { id: RegistrationStatus; label: string; badge: string }[] = [
+  { id: "pending", label: "Awaiting decision", badge: "bg-amber-500/10 text-amber-300 border-amber-500/20" },
+  { id: "approved", label: "Approved", badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" },
+  { id: "declined", label: "Declined", badge: "bg-rose-500/10 text-rose-300 border-rose-500/20" },
+  { id: "expired", label: "Expired", badge: "bg-zinc-500/10 text-zinc-500 border-zinc-500/20" },
+  { id: "converted", label: "Became a deal", badge: "bg-sky-500/10 text-sky-300 border-sky-500/20" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Money                                                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Cents to a readable figure.
+ *
+ * Everything financial in this system is stored as integer cents, so this
+ * is the only place a division by a hundred happens. One place means one
+ * chance to get it wrong rather than one per screen.
+ */
+export function formatMoney(cents: number | null | undefined, currency = "USD"): string {
+  const value = (cents ?? 0) / 100;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency,
+      maximumFractionDigits: value % 1 === 0 ? 0 : 2,
+    }).format(value);
+  } catch {
+    // An unknown currency code must not take a page down over a label.
+    return `${currency} ${value.toFixed(2)}`;
+  }
+}
+
+/** A rate held as a fraction, shown as a percentage. 0.3 becomes "30%". */
+export function formatRate(rate: number | null | undefined): string {
+  if (rate === null || rate === undefined) return "—";
+  const pct = rate * 100;
+  return `${Number.isInteger(pct) ? pct : pct.toFixed(1)}%`;
 }
 
 /* ------------------------------------------------------------------ */
