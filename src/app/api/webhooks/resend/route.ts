@@ -20,6 +20,11 @@ interface ResendWebhookPayload {
       message: string;
       code: string;
     };
+    // Present on email.clicked. The link that was followed.
+    click?: {
+      link?: string;
+      timestamp?: string;
+    };
   };
 }
 
@@ -229,6 +234,40 @@ export async function POST(request: Request) {
           `Failed to reconcile recipient count for campaign ${campaignId}:`,
           reconcileError.message
         );
+      }
+    }
+
+    // 4c. Put the engagement on the person's timeline.
+    //
+    // campaign_logs answers "how did that broadcast do". This answers the
+    // question somebody actually asks while looking at a contact: has
+    // this one read anything I sent them?
+    //
+    // Deduplication is the database's job, not this handler's — an open
+    // is a pixel that loads every time the message is scrolled past, and
+    // Resend retries, so two deliveries regularly arrive together and a
+    // read-then-write here would let both through. See
+    // crm_record_email_engagement and the unique index behind it.
+    //
+    // Wrapped so that a failure here can never fail the webhook. Resend
+    // retries a non-200, and retrying a delivery because a timeline write
+    // failed would replay the campaign log too.
+    if (recipientEmail && (type === "email.opened" || type === "email.clicked")) {
+      try {
+        const { error: engagementError } = await supabase.rpc("crm_record_email_engagement", {
+          p_email: recipientEmail,
+          p_kind: type === "email.opened" ? "email_opened" : "email_clicked",
+          p_email_id: emailId ?? null,
+          p_url: data?.click?.link ?? null,
+          p_subject: data?.subject ?? null,
+          p_occurred_at: data?.click?.timestamp || payload.created_at || null,
+        });
+
+        if (engagementError) {
+          console.error("Failed to record CRM engagement:", engagementError.message);
+        }
+      } catch (err: unknown) {
+        console.error("Unexpected error recording CRM engagement:", err);
       }
     }
 
