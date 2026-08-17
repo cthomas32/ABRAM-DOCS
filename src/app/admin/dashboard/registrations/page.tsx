@@ -43,7 +43,7 @@ function formatDay(iso: string): string {
 export default async function RegistrationsPage() {
   const user = await getConsoleUser();
   if (!user) redirect("/admin");
-  if (!can(user, "crm.registrations.file")) redirect("/growth");
+  if (!can(user, "crm.registrations.file")) redirect("/admin/dashboard");
 
   const supabase = await createClient();
 

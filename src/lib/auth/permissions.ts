@@ -46,9 +46,17 @@ export interface ConsoleUser {
 /* ------------------------------------------------------------------ */
 
 export type Permission =
-  /* Shells. Which building you are allowed inside. */
+  /* The console itself. Everyone who works here holds this; what differs
+   * is which of the surfaces below they also hold, and the navigation is
+   * filtered accordingly.
+   *
+   * There was briefly a second shell at /growth, built because the
+   * partnership terms say "Admin console — Never". That line turned out
+   * to mean the platform super-admin over in abram-network — plan tiers,
+   * entitlements, other people's organisations — and not this marketing
+   * console at all. One console with real roles is the simpler answer and
+   * the correct reading, so the second shell is gone. */
   | "console.admin"
-  | "workspace.growth"
 
   /* Pipeline */
   | "crm.contacts.read.all"
@@ -63,9 +71,16 @@ export type Permission =
   | "crm.registrations.file"
   | "crm.registrations.decide"
 
-  /* Email */
+  /* Email.
+   *
+   * Drafting a broadcast and sending one are deliberately separate. A
+   * draft is editable and deletable; a send spends sending-domain
+   * reputation that takes months to rebuild and reaches people who
+   * cannot un-receive it. Anybody trusted to write the words is not
+   * automatically trusted to press the button. */
   | "crm.email.send"
   | "crm.email.edit"
+  | "broadcasts.draft"
   | "broadcasts.send"
   | "subscribers.read"
 
@@ -94,15 +109,15 @@ export type Permission =
  * What each role carries before any stage modifier is applied.
  *
  * The `growth` row is the one worth reading closely, because it is the
- * one a written agreement constrains. Everything absent from it is absent
- * on purpose: no content surfaces, no subscriber table, no broadcast, no
- * role management, and no commission management — a partner reads their
- * own statement and can do nothing to it.
+ * one a written agreement constrains. Read it for what is *absent*: no
+ * role management, no commission management, no release notes, no team
+ * record, and `broadcasts.draft` without `broadcasts.send`. A partner
+ * reads their own commission statement and can do nothing to it, and can
+ * write a broadcast without being able to post it.
  */
 const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
   owner: [
     "console.admin",
-    "workspace.growth",
     "crm.contacts.read.all",
     "crm.contacts.read.own",
     "crm.contacts.write.own",
@@ -114,6 +129,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "crm.registrations.decide",
     "crm.email.send",
     "crm.email.edit",
+    "broadcasts.draft",
     "broadcasts.send",
     "subscribers.read",
     "content.docs",
@@ -134,7 +150,6 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
   // Runs the site. Does not decide who else runs the site.
   admin: [
     "console.admin",
-    "workspace.growth",
     "crm.contacts.read.all",
     "crm.contacts.read.own",
     "crm.contacts.write.own",
@@ -146,6 +161,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "crm.registrations.decide",
     "crm.email.send",
     "crm.email.edit",
+    "broadcasts.draft",
     "broadcasts.send",
     "subscribers.read",
     "content.docs",
@@ -162,19 +178,25 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "commission.manage",
   ],
 
-  // The Growth workspace and nothing else. Note what is missing.
+  // Acquisition, end to end. Note what is missing rather than what is
+  // here: no roles, no commission management, no release notes, no team
+  // record, and drafting a broadcast without being able to send it.
   growth: [
-    "workspace.growth",
+    "console.admin",
     "crm.contacts.read.own",
     "crm.contacts.write.own",
     "crm.accounts.manage",
     "crm.deals.manage",
     "crm.events.manage",
     "crm.registrations.file",
+    "content.docs",
+    "content.blog",
     "social.manage",
     "campaigns.manage",
     "links.manage",
     "promotions.manage",
+    "subscribers.read",
+    "broadcasts.draft",
     "analytics.read",
     "commission.read.own",
   ],
@@ -189,7 +211,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
   ],
 
   // Can look at the pipeline and change nothing.
-  viewer: ["workspace.growth", "crm.contacts.read.own", "analytics.read"],
+  viewer: ["console.admin", "crm.contacts.read.own", "analytics.read"],
 };
 
 /**
@@ -263,28 +285,9 @@ export function seesWholePipeline(user: Pick<ConsoleUser, "role" | "growthStage"
  * immediately, instead of shipping open and nobody noticing at all.
  */
 export const ROUTE_PERMISSIONS: { prefix: string; permission: Permission }[] = [
-  /* The growth workspace */
-  { prefix: "/growth/pipeline", permission: "crm.contacts.read.own" },
-  { prefix: "/growth/accounts", permission: "crm.accounts.manage" },
-  { prefix: "/growth/deals", permission: "crm.deals.manage" },
-  { prefix: "/growth/registrations", permission: "crm.registrations.file" },
-  { prefix: "/growth/events", permission: "crm.events.manage" },
-  { prefix: "/growth/earnings", permission: "commission.read.own" },
-  { prefix: "/growth/campaigns", permission: "campaigns.manage" },
-  { prefix: "/growth/links", permission: "links.manage" },
-  { prefix: "/growth/promotions", permission: "promotions.manage" },
-  { prefix: "/growth/social", permission: "social.manage" },
-  { prefix: "/growth/analytics", permission: "analytics.read" },
-  { prefix: "/growth", permission: "workspace.growth" },
-
-  /* The admin console.
-   *
-   * Note that /admin/dashboard/crm requires console.admin rather than a
-   * CRM permission. A growth partner reaches the same pipeline through
-   * /growth/pipeline, which renders the identical component inside the
-   * Growth shell. Two doors into one room, and only one of them is in the
-   * admin console — which is what the partnership terms require. */
-  { prefix: "/admin/dashboard/crm", permission: "console.admin" },
+  { prefix: "/admin/dashboard/crm", permission: "crm.contacts.read.own" },
+  { prefix: "/admin/dashboard/registrations", permission: "crm.registrations.file" },
+  { prefix: "/admin/dashboard/earnings", permission: "commission.read.own" },
   { prefix: "/admin/dashboard/docs", permission: "content.docs" },
   { prefix: "/admin/dashboard/blog", permission: "content.blog" },
   { prefix: "/admin/dashboard/changelog", permission: "content.changelog" },
@@ -294,7 +297,7 @@ export const ROUTE_PERMISSIONS: { prefix: string; permission: Permission }[] = [
   { prefix: "/admin/dashboard/links", permission: "links.manage" },
   { prefix: "/admin/dashboard/promotions", permission: "promotions.manage" },
   { prefix: "/admin/dashboard/subscribers", permission: "subscribers.read" },
-  { prefix: "/admin/dashboard/broadcasts", permission: "broadcasts.send" },
+  { prefix: "/admin/dashboard/broadcasts", permission: "broadcasts.draft" },
   { prefix: "/admin/dashboard/people", permission: "roles.manage" },
   { prefix: "/admin/dashboard/revenue", permission: "commission.manage" },
   { prefix: "/admin/dashboard", permission: "console.admin" },
@@ -319,9 +322,7 @@ export function permissionForPath(pathname: string): Permission | null {
  */
 export function landingPathFor(user: Pick<ConsoleUser, "role" | "growthStage" | "isActive"> | null): string {
   if (!user || !user.isActive) return "/admin";
-  if (can(user, "console.admin")) return "/admin/dashboard";
-  if (can(user, "workspace.growth")) return "/growth";
-  return "/admin";
+  return can(user, "console.admin") ? "/admin/dashboard" : "/admin";
 }
 
 /* ------------------------------------------------------------------ */

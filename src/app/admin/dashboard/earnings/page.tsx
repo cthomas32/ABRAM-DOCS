@@ -70,7 +70,7 @@ function monthLabel(iso: string): string {
 export default async function EarningsPage() {
   const user = await getConsoleUser();
   if (!user) redirect("/admin");
-  if (!can(user, "commission.read.own")) redirect("/growth");
+  if (!can(user, "commission.read.own")) redirect("/admin/dashboard");
 
   const supabase = await createClient();
 

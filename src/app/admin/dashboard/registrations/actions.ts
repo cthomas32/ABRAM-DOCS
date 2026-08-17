@@ -134,7 +134,7 @@ export async function fileRegistration(input: {
     return { ok: false, error: "Could not file the registration. Try again." };
   }
 
-  revalidatePath("/growth/registrations");
+  revalidatePath("/admin/dashboard/registrations");
   return { ok: true };
 }
 
@@ -196,6 +196,6 @@ export async function decideRegistration(input: {
 
   if (error) return { ok: false, error: "Could not record the decision. Try again." };
 
-  revalidatePath("/growth/registrations");
+  revalidatePath("/admin/dashboard/registrations");
   return { ok: true };
 }

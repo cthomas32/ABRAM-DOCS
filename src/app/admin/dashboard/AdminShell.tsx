@@ -26,7 +26,8 @@ import {
   ChevronRight,
   UsersRound,
   KeyRound,
-  Banknote
+  Banknote,
+  Stamp
 } from "lucide-react";
 
 /**
@@ -69,12 +70,20 @@ const NAV_GROUPS: { id: string; label: string | null; links: AdminNavLink[] }[] 
     id: "audience",
     label: "Audience",
     links: [
-      { id: "crm", label: "Contacts", href: "/admin/dashboard/crm", icon: Contact, hint: "Conference pipeline" , permission: "console.admin" },
+      { id: "crm", label: "Contacts", href: "/admin/dashboard/crm", icon: Contact, hint: "Pipeline & accounts", permission: "crm.contacts.read.own" },
+      { id: "registrations", label: "Registrations", href: "/admin/dashboard/registrations", icon: Stamp, hint: "Claim a named account", permission: "crm.registrations.file" },
       { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone, hint: "Landing page funnels" , permission: "campaigns.manage" },
       { id: "links", label: "Link Hub", href: "/admin/dashboard/links", icon: LinkIcon, hint: "Your one bio link" , permission: "links.manage" },
       { id: "promotions", label: "Promotions", href: "/admin/dashboard/promotions", icon: BadgePercent, hint: "Discount codes" , permission: "promotions.manage" },
       { id: "subscribers", label: "Subscribers", href: "/admin/dashboard/subscribers", icon: Users, hint: "Newsletter contacts" , permission: "subscribers.read" },
-      { id: "broadcasts", label: "Email Broadcasts", href: "/admin/dashboard/broadcasts", icon: Mail, hint: "Compose & send" , permission: "broadcasts.send" },
+      { id: "broadcasts", label: "Email Broadcasts", href: "/admin/dashboard/broadcasts", icon: Mail, hint: "Compose & send", permission: "broadcasts.draft" },
+    ],
+  },
+  {
+    id: "numbers",
+    label: "Numbers",
+    links: [
+      { id: "earnings", label: "Your Earnings", href: "/admin/dashboard/earnings", icon: Banknote, hint: "Commission statement", permission: "commission.read.own" },
     ],
   },
   {

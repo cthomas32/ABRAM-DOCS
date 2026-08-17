@@ -18,7 +18,9 @@ Before 20260817, every policy in this database read:
 FOR ALL TO authenticated USING (true) WITH CHECK (true)
 ```
 
-That is not an access rule, it is the absence of one. It was correct while exactly one person had a login. It stopped being correct the moment a second did — and the second person arrives with a written agreement saying they never touch the admin console, Stripe, or the database.
+That is not an access rule, it is the absence of one. It was correct while exactly one person had a login. It stopped being correct the moment a second did — and the second person arrives with a written agreement listing, surface by surface, what they may and may not reach.
+
+Note what that means even for surfaces nobody is arguing about: before this, a login created for somebody to write blog posts also handed them the subscriber list and the broadcast sender.
 
 ## Roles
 
@@ -28,7 +30,7 @@ One row per person in `admin_users`. An `auth.users` row with **no** row there i
 |---|---|
 | `owner` | Everything, including handing out roles. |
 | `admin` | Everything except roles. |
-| `growth` | The Growth workspace. Never the admin console. |
+| `growth` | Acquisition, end to end. See the grant table below. |
 | `contributor` | Docs, blog, release notes. Nothing about people or money. |
 | `viewer` | Reads the pipeline, changes nothing. |
 
@@ -52,15 +54,40 @@ Add it to a group in `20260817120000_role_aware_rls.sql`. A table with RLS on an
 
 **The sweep only drops policies whose role list is exactly `{authenticated}`.** Public policies were written `TO public` or with no `TO` clause, so anonymous reads — published posts, active contact cards, the link hub, the newsletter signup insert — survive untouched. Do not "simplify" this into dropping every policy on the table; the failure mode is a marketing site that 404s its own content, and it will not be noticed for a day.
 
-## Two doors into one room
+## One console, not two
 
-The partnership terms say **Admin console — Never** in the same table that grants the CRM, tracked links, promotions and the Social Studio. Those two facts had to be expressible separately, so:
+The partnership terms say **Admin console — Never**. That was first read as meaning *this* console, and a second shell was built at `/growth` so a partner never saw admin chrome.
 
-- `/admin/dashboard/*` requires `console.admin`. A growth partner never renders that layout at all.
-- `/growth/*` requires `workspace.growth`.
-- `/growth/pipeline` renders **the same component** as the admin CRM screen, not a copy. Two boards meant to be identical are two boards that stop being identical, usually in the month somebody is relying on one of them.
+**That reading was wrong, and the correction is worth keeping written down.** It means the platform super-admin in `abram-network` — other people's organisations, plan tiers, entitlements, `is_platform_admin` — which is a different system that this repository holds no credentials for and cannot reach from any page. The marketing console here was never what that line was about.
 
-That is safe to share because the component does no filtering of its own and never has. It asks for contacts and renders what comes back; RLS decides what comes back.
+So there is one console. `/admin/dashboard/*` requires `console.admin`, which every working role holds, and what differs is the navigation and the data:
+
+- **The navigation** is filtered from the permissions the person holds, so a link that would be refused is never drawn.
+- **The data** is decided independently by row level security, so the same CRM screen shows an advisor their own accounts and a Head of Growth the whole board.
+
+`/growth` is gone. Do not recreate it. Two shells meant to show the same board are two shells that stop showing the same board, usually in the month somebody is relying on one of them.
+
+## What a growth partner actually gets
+
+| Surface | Grant |
+|---|---|
+| Contacts, accounts, deals, events | Full, scoped by stage |
+| Registrations | File, never decide |
+| Campaign pages, tracked links, promo codes | Full |
+| Social Studio | Full |
+| Blog, help docs | Full — content is an acquisition channel |
+| Subscribers | **Read only.** Enough to size a segment, not enough to move anybody's consent |
+| Email broadcasts | **Draft only.** See below |
+| Their own commission statement | Read |
+| Release notes, team record, roles, commission management | **None** |
+
+### "Draft only" is a state machine, not a permission
+
+A partner may create and edit a campaign **while it is a draft**. The `UPDATE` policy's `USING` clause limits which rows they may touch (drafts), and the `WITH CHECK` clause limits what those rows may become (still drafts). Both halves are needed — `USING` alone would let a draft be updated straight to `sending`.
+
+The consequence is that the irreversible act is refused by Postgres rather than hidden by the interface. The guard in `approveAndSendCampaignAction` produces a readable sentence instead of a policy violation; it is **not** what stops the send. Verified: a growth session moving a draft to `sending` gets `new row violates row-level security policy`.
+
+A sent campaign becomes read-only history for them at the same moment, which also means they cannot rewrite the subject line of something already in people's inboxes.
 
 ## Attribution
 
@@ -142,7 +169,6 @@ The agreement says **Stripe — Never** and **Customer payment data — Never**.
 - **No terms row means no commission, silently.** The recompute returns 0 and writes nothing. The earnings page says so in an amber panel; nothing else does. Set rates at the moment somebody is given the `growth` role.
 - **`attributed MRR` reads deals, not collections.** MRR is a run rate, and a run rate computed from last month's cash lags reality by a month in the one direction that matters — it is what the equity tranches and the Advisor→Head of Growth promotion trigger on.
 - **A growth partner can write `closed_by` and `attribution_rule` on their own deals.** Deliberate: the alternative is the founder transcribing every close by hand. What protects it is that `sourced_by` is immutable, stage changes are logged to `crm_stage_changes`, and the ledger runs off collected cash that only ever arrives from the payment processor.
-- **The CRM utility sub-routes are still admin-only.** `print`, `capture`, `emails` and `design` live under `/admin/dashboard/crm/*` and need growth-reachable equivalents before a partner runs a conference alone.
 - **`crm_contacts.motion` defaults to `enterprise`.** Anything creating a contact from a newsletter signup should set `self_serve` and stage `subscriber`, or the self-serve board will look empty while the enterprise one fills with people nobody has met.
 
 ## Reading order for a new session

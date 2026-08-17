@@ -3,6 +3,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { addSubscriber, addContactToAudience, createDraftCampaign, approveAndSendCampaign, getResendClient } from "@/utils/resend";
 import { headers } from "next/headers";
+import { readConsoleUser } from "@/lib/auth/consoleUser";
+import { can } from "@/lib/auth/permissions";
 
 /**
  * Server Action: Validates Resend client integration status.
@@ -790,6 +792,20 @@ export async function approveAndSendCampaignAction(campaignId: string, confirmat
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       throw new Error("Unauthorized. Admin privileges are required to send campaigns.");
+    }
+
+    // Drafting a broadcast and posting one are separate permissions. A
+    // growth partner writes the words; the button belongs to an owner.
+    //
+    // This check produces a sentence rather than a policy violation — it
+    // is not what stops the send. The campaigns table refuses a growth
+    // partner any update that moves a row out of 'draft', so removing
+    // this guard would change the error message and nothing else.
+    const consoleUser = await readConsoleUser(supabase);
+    if (!can(consoleUser, "broadcasts.send")) {
+      throw new Error(
+        "You can draft a broadcast but not send one. Ask an owner to review and post it."
+      );
     }
 
     // Capture request audit details

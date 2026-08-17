@@ -12,11 +12,18 @@ import AdminShell from "./AdminShell";
  * render. Between them, and row level security underneath, there is no
  * single check whose failure opens the console.
  *
- * A growth partner never reaches this layout. They hold `workspace.growth`
- * and not `console.admin`, which sends them to /growth instead. That
- * split is the whole point: the partnership terms grant the CRM and
- * withhold the admin console, and those two facts have to be expressible
- * separately.
+ * Everybody who works here reaches this layout, including a growth
+ * partner. What differs is the navigation, which is built from the
+ * permissions passed in below, and the data, which row level security
+ * decides independently.
+ *
+ * That is a deliberate reversal. This console was briefly split in two so
+ * that a partner never saw admin chrome, on the reading that the
+ * partnership terms' "Admin console — Never" meant this console. It means
+ * the platform super-admin in abram-network — other people's
+ * organisations, plan tiers, entitlements — which is a different system
+ * this repository has no access to at all. One console with real roles is
+ * both simpler and the correct reading.
  */
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await getConsoleUser();
@@ -24,9 +31,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!user) redirect("/admin");
 
   if (!can(user, "console.admin")) {
-    // Somebody with a live login but no business here. Send them to their
-    // own workspace rather than to an error.
-    redirect(can(user, "workspace.growth") ? "/growth" : "/admin/no-access");
+    redirect("/admin/no-access");
   }
 
   return (
