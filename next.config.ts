@@ -21,6 +21,22 @@ const nextConfig: NextConfig = {
     appIsrStatus: false,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any,
+  /**
+   * The console's navigation was regrouped and two rows were renamed:
+   * Contacts became People and Accounts became Companies. The URLs did
+   * not move — renaming a route to match a label is how bookmarks and
+   * pasted links die — so these are aliases for the names people now
+   * read in the sidebar and will type into the address bar.
+   */
+  async redirects() {
+    return [
+      { source: "/admin/dashboard/contacts", destination: "/admin/dashboard/crm", permanent: false },
+      { source: "/admin/dashboard/people-crm", destination: "/admin/dashboard/crm", permanent: false },
+      { source: "/admin/dashboard/companies", destination: "/admin/dashboard/accounts", permanent: false },
+      { source: "/admin/dashboard/board", destination: "/admin/dashboard/deals/board", permanent: false },
+      { source: "/admin/dashboard/access", destination: "/admin/dashboard/people", permanent: false },
+    ];
+  },
   outputFileTracingIncludes: {
     "/docs": ["./index.mdx", "./docs.json"],
     "/docs/[...slug]": ["./user-guide/**/*", "./content/**/*", "./docs.json"],

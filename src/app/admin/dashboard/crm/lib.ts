@@ -8,8 +8,9 @@
  * the CSV column order, and the rules for what counts as due.
  */
 
+import { sourceLabel } from "@/lib/crm/people";
 import type { CrmContact } from "@/lib/crm/types";
-import { CRM_SOURCES, stageSpec } from "@/lib/crm/constants";
+import { stageSpec } from "@/lib/crm/constants";
 
 /* ------------------------------------------------------------------ */
 /*  Shapes the console passes around                                   */
@@ -153,9 +154,15 @@ export function randomCode(length = 5): string {
   return out;
 }
 
-export function sourceLabel(id: string): string {
-  return CRM_SOURCES.find((s) => s.id === id)?.label ?? id;
-}
+/**
+ * Re-exported rather than reimplemented.
+ *
+ * The vocabulary grew when subscribers and event signups became feeds
+ * into the person record, and the CSV export was reading a shorter copy
+ * of the list, so a converted subscriber exported as the raw string
+ * `newsletter`. `@/lib/crm/people` is the one list now.
+ */
+export { sourceLabel };
 
 /** Percentage as a whole number, or null when the denominator is zero. */
 export function ratePct(part: number, whole: number): number | null {

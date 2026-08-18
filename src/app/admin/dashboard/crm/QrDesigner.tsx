@@ -418,14 +418,14 @@ export default function QrDesigner({
           {guard && guard.reasons.length > 0 && (
             <div
               className={`rounded-xl border px-3 py-2.5 ${
-                guard.ok ? "border-white/8 bg-white/[0.02]" : "border-red-500/30 bg-red-500/[0.06]"
+                guard.ok ? "border-white/8 bg-white/[0.02]" : "border-amber-500/30 bg-amber-500/[0.06]"
               }`}
             >
               <div className="flex items-start gap-2">
                 {guard.ok ? (
                   <Info className="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" />
                 ) : (
-                  <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-300 shrink-0 mt-0.5" />
                 )}
                 <div className="min-w-0 space-y-1">
                   {guard.reasons.map((reason) => (
@@ -469,7 +469,7 @@ export default function QrDesigner({
               type="button"
               onClick={() => void savePng()}
               disabled={!scene || exporting !== null || blocked}
-              className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-semibold rounded-full disabled:opacity-50"
+              className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-medium rounded-full disabled:opacity-50"
             >
               {exporting === "png" ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -482,7 +482,7 @@ export default function QrDesigner({
               type="button"
               onClick={() => void saveSvg()}
               disabled={!scene || exporting !== null || blocked}
-              className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-semibold rounded-full disabled:opacity-50"
+              className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-medium rounded-full disabled:opacity-50"
             >
               {exporting === "svg" ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -521,7 +521,7 @@ export default function QrDesigner({
             value={spec.format}
             aria-label="Size"
             onChange={(e) => set("format", e.target.value as QrFormatId)}
-            className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+            className="admin-input h-9 py-0 cursor-pointer"
           >
             <optgroup label="Phone lock screen">
               {QR_FORMAT_IDS.filter((id) => QR_FORMATS[id].kind === "wallpaper").map((id) => (
@@ -640,7 +640,7 @@ export default function QrDesigner({
                     value={String(spec.backdropCrop)}
                     aria-label="Crop"
                     onChange={(e) => set("backdropCrop", Number(e.target.value))}
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {BACKDROP_CROPS.map((crop) => (
                       <option key={crop.value} value={crop.value}>
@@ -654,7 +654,7 @@ export default function QrDesigner({
                     value={spec.backdropFocus}
                     aria-label="Focus"
                     onChange={(e) => set("backdropFocus", e.target.value as BackdropFocus)}
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {BACKDROP_FOCUS_IDS.map((id) => (
                       <option key={id} value={id}>
@@ -668,7 +668,7 @@ export default function QrDesigner({
                     value={String(spec.backdropDim)}
                     aria-label="Darkening"
                     onChange={(e) => set("backdropDim", Number(e.target.value))}
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {BACKDROP_DIMS.map((dim) => (
                       <option key={dim.value} value={dim.value}>
@@ -682,7 +682,7 @@ export default function QrDesigner({
                     value={String(spec.backdropBlur)}
                     aria-label="Focus depth"
                     onChange={(e) => set("backdropBlur", Number(e.target.value))}
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {BACKDROP_BLURS.map((blur) => (
                       <option key={blur.value} value={blur.value}>
@@ -788,7 +788,7 @@ export default function QrDesigner({
                       value={String(spec.plateOpacity)}
                       aria-label="How dense the plate is"
                       onChange={(e) => set("plateOpacity", Number(e.target.value))}
-                      className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                      className="admin-input h-9 py-0 cursor-pointer"
                     >
                       {plateChoices.opacities.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -802,7 +802,7 @@ export default function QrDesigner({
                       value={String(spec.plateBlur)}
                       aria-label="Blur behind the plate"
                       onChange={(e) => set("plateBlur", Number(e.target.value))}
-                      className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                      className="admin-input h-9 py-0 cursor-pointer"
                     >
                       {plateChoices.blurs.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -877,7 +877,7 @@ export default function QrDesigner({
               placeholder="#1B2A4A"
               maxLength={7}
               aria-label="Ink colour as a hex value"
-              className="admin-input h-11 sm:h-9 py-0 w-32 font-mono"
+              className="admin-input h-9 py-0 w-32 font-mono"
             />
             {spec.inkCustom && (
               <button
@@ -922,7 +922,7 @@ export default function QrDesigner({
                 value={spec.prompt}
                 onChange={(e) => set("prompt", e.target.value)}
                 maxLength={80}
-                className="admin-input h-11 sm:h-9 py-0"
+                className="admin-input h-9 py-0"
               />
             </Mini>
             <Mini label="Name">
@@ -930,7 +930,7 @@ export default function QrDesigner({
                 value={spec.name}
                 onChange={(e) => set("name", e.target.value)}
                 maxLength={80}
-                className="admin-input h-11 sm:h-9 py-0"
+                className="admin-input h-9 py-0"
               />
             </Mini>
             <Mini label="Role and company">
@@ -938,7 +938,7 @@ export default function QrDesigner({
                 value={spec.subtitle}
                 onChange={(e) => set("subtitle", e.target.value)}
                 maxLength={120}
-                className="admin-input h-11 sm:h-9 py-0"
+                className="admin-input h-9 py-0"
               />
             </Mini>
             <label className="flex items-center gap-2.5 cursor-pointer pt-1">
@@ -1065,7 +1065,7 @@ function Readout({
   return (
     <div
       className={`rounded-lg border px-2.5 py-1.5 ${
-        tone === "bad" ? "border-red-500/30 bg-red-500/[0.06]" : "border-white/5 bg-white/[0.02]"
+        tone === "bad" ? "border-amber-500/30 bg-amber-500/[0.06]" : "border-white/5 bg-white/[0.02]"
       }`}
     >
       <dt className="text-[9px] font-semibold uppercase tracking-wider text-zinc-600">{label}</dt>

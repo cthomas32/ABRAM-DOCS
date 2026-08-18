@@ -58,7 +58,7 @@ export default function PeopleManager({
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-8 lg:py-12 max-w-5xl mx-auto">
       <header className="mb-8">
-        <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
+        <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-3 inline-block font-sans">
           People &amp; Access
         </span>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
@@ -76,13 +76,13 @@ export default function PeopleManager({
           className={`rounded-xl border p-3 flex gap-2.5 mb-6 ${
             feedback.tone === "success"
               ? "border-emerald-500/20 bg-emerald-500/5"
-              : "border-rose-500/20 bg-rose-500/5"
+              : "border-amber-500/20 bg-amber-500/5"
           }`}
         >
           {feedback.tone === "success" ? (
             <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
           )}
           <p
             className={`text-[11px] leading-relaxed ${
@@ -138,7 +138,7 @@ export default function PeopleManager({
                       {person.fullName || person.email}
                     </h2>
                     {isSelf && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded-full border border-white/10 text-zinc-500">
+                      <span className="text-[9px] px-1.5 py-0.5 rounded-full border border-white/10 text-zinc-400">
                         you
                       </span>
                     )}
@@ -149,7 +149,7 @@ export default function PeopleManager({
                     )}
                   </div>
                   {person.fullName && (
-                    <p className="text-[11px] text-zinc-500 mt-0.5 break-words">{person.email}</p>
+                    <p className="text-[11px] text-zinc-400 mt-0.5 break-words">{person.email}</p>
                   )}
                 </div>
 
@@ -177,7 +177,7 @@ export default function PeopleManager({
               {/* Role */}
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
+                  <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
                     Role
                   </label>
                   <select
@@ -203,14 +203,14 @@ export default function PeopleManager({
                       </option>
                     ))}
                   </select>
-                  <p className="text-[10px] text-zinc-600 mt-1.5 leading-relaxed">
+                  <p className="text-[10px] text-zinc-400 mt-1.5 leading-relaxed">
                     {ROLE_DESCRIPTIONS[person.role]}
                   </p>
                 </div>
 
                 {person.role === "growth" && (
                   <div>
-                    <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
+                    <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
                       Stage
                     </label>
                     <select
@@ -235,7 +235,7 @@ export default function PeopleManager({
                         </option>
                       ))}
                     </select>
-                    <p className="text-[10px] text-zinc-600 mt-1.5 leading-relaxed">
+                    <p className="text-[10px] text-zinc-400 mt-1.5 leading-relaxed">
                       {GROWTH_STAGE_DESCRIPTIONS[person.growthStage ?? "advisor"]}
                     </p>
                   </div>
@@ -247,7 +247,7 @@ export default function PeopleManager({
                 <div className="mt-4 pt-4 border-t border-white/5">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-2 min-w-0">
-                      <Percent className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                      <Percent className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
                       {person.terms ? (
                         <span className="text-[11px] text-zinc-400">
                           <strong className="text-zinc-200">
@@ -335,7 +335,7 @@ function InviteForm({
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label htmlFor="inv-email" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
+          <label htmlFor="inv-email" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
             Email
           </label>
           <input
@@ -345,11 +345,11 @@ function InviteForm({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="name@abram.network"
-            className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/25 min-h-11"
+            className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-400 focus:outline-none focus:border-white/25 min-h-11"
           />
         </div>
         <div>
-          <label htmlFor="inv-name" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
+          <label htmlFor="inv-name" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
             Name
           </label>
           <input
@@ -363,7 +363,7 @@ function InviteForm({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label htmlFor="inv-role" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
+          <label htmlFor="inv-role" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
             Role
           </label>
           <select
@@ -378,12 +378,12 @@ function InviteForm({
               </option>
             ))}
           </select>
-          <p className="text-[10px] text-zinc-600 mt-1.5 leading-relaxed">{ROLE_DESCRIPTIONS[role]}</p>
+          <p className="text-[10px] text-zinc-400 mt-1.5 leading-relaxed">{ROLE_DESCRIPTIONS[role]}</p>
         </div>
 
         {role === "growth" && (
           <div>
-            <label htmlFor="inv-stage" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
+            <label htmlFor="inv-stage" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
               Stage
             </label>
             <select
@@ -398,7 +398,7 @@ function InviteForm({
                 </option>
               ))}
             </select>
-            <p className="text-[10px] text-zinc-600 mt-1.5 leading-relaxed">
+            <p className="text-[10px] text-zinc-400 mt-1.5 leading-relaxed">
               {GROWTH_STAGE_DESCRIPTIONS[growthStage]}
             </p>
           </div>
@@ -415,7 +415,7 @@ function InviteForm({
         </button>
       </div>
 
-      <p className="text-[10px] text-zinc-600 leading-relaxed flex gap-1.5">
+      <p className="text-[10px] text-zinc-400 leading-relaxed flex gap-1.5">
         <KeyRound className="w-3 h-3 shrink-0 mt-0.5" />
         They receive an email to set a password. Their role is saved immediately, so they land in
         the right place the first time they sign in.
@@ -480,7 +480,7 @@ function TermsForm({
         <Field label="Clawback days" value={clawbackDays} onChange={setClawbackDays} type="number" />
         <Field label="From" value={effectiveFrom} onChange={setEffectiveFrom} type="date" />
         <div>
-          <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
+          <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
             Stage
           </label>
           <select
@@ -498,18 +498,18 @@ function TermsForm({
       </div>
 
       <div>
-        <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
-          Note <span className="text-zinc-600 normal-case tracking-normal">(optional)</span>
+        <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
+          Note <span className="text-zinc-400 normal-case tracking-normal">(optional)</span>
         </label>
         <input
           value={note}
           onChange={(e) => setNote(e.target.value)}
           placeholder="Advanced to Head of Growth on reaching $1,000 MRR."
-          className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/25 min-h-11"
+          className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-400 focus:outline-none focus:border-white/25 min-h-11"
         />
       </div>
 
-      <p className="text-[10px] text-zinc-500 leading-relaxed">
+      <p className="text-[10px] text-zinc-400 leading-relaxed">
         The current rates stop the day before this date. Nothing already calculated changes — every
         commission line keeps the rate it was worked out at.
       </p>
@@ -540,7 +540,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
+      <label className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-400 block mb-1.5">
         {label}
       </label>
       <input

@@ -319,7 +319,7 @@ export default function DealDrawer({
                 <h2 className="text-base font-bold tracking-tight text-white break-words">
                   {isNew ? "New deal" : deal?.name}
                 </h2>
-                <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[11px] text-zinc-500">
+                <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[11px] text-zinc-400">
                   <span className="break-words">{accountName ?? "No account picked yet"}</span>
                   {!isNew && deal?.expected_close_on && (
                     <>
@@ -397,13 +397,13 @@ export default function DealDrawer({
                 </div>
 
                 {stage === "won" && (
-                  <p className="text-[11px] text-zinc-500 leading-relaxed">
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
                     Closed {formatDay(deal?.closed_at ?? null)} by{" "}
                     {(deal?.closed_by && memberNameById[deal.closed_by]) || "somebody no longer listed"}.
                   </p>
                 )}
                 {stage === "lost" && deal?.lost_reason && (
-                  <p className="text-[11px] text-zinc-500 leading-relaxed">{deal.lost_reason}</p>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">{deal.lost_reason}</p>
                 )}
 
                 <div className="flex flex-wrap gap-2">
@@ -484,7 +484,7 @@ export default function DealDrawer({
                   value={fields.name}
                   onChange={(e) => setFields((f) => ({ ...f, name: e.target.value }))}
                   placeholder="Helix, 40 seat rollout"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
 
@@ -492,7 +492,7 @@ export default function DealDrawer({
                 <select
                   value={fields.accountId}
                   onChange={(e) => setFields((f) => ({ ...f, accountId: e.target.value }))}
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">Pick an account</option>
                   {accounts.map((account) => (
@@ -508,7 +508,7 @@ export default function DealDrawer({
                 <select
                   value={fields.primaryContactId}
                   onChange={(e) => setFields((f) => ({ ...f, primaryContactId: e.target.value }))}
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">Nobody named yet</option>
                   {contactOptions.map((contact) => (
@@ -526,7 +526,7 @@ export default function DealDrawer({
                     onChange={(e) =>
                       setFields((f) => ({ ...f, motion: e.target.value as CrmMotion }))
                     }
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {CRM_MOTIONS.map((motion) => (
                       <option key={motion.id} value={motion.id}>
@@ -541,7 +541,7 @@ export default function DealDrawer({
                     type="date"
                     value={fields.expectedCloseOn}
                     onChange={(e) => setFields((f) => ({ ...f, expectedCloseOn: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
 
@@ -551,7 +551,7 @@ export default function DealDrawer({
                     value={fields.amount}
                     onChange={(e) => setFields((f) => ({ ...f, amount: e.target.value }))}
                     placeholder="0"
-                    className="admin-input h-11 sm:h-9 py-0 tabular-nums"
+                    className="admin-input h-9 py-0 tabular-nums"
                   />
                 </Field>
 
@@ -561,7 +561,7 @@ export default function DealDrawer({
                     value={fields.mrr}
                     onChange={(e) => setFields((f) => ({ ...f, mrr: e.target.value }))}
                     placeholder="0"
-                    className="admin-input h-11 sm:h-9 py-0 tabular-nums"
+                    className="admin-input h-9 py-0 tabular-nums"
                   />
                 </Field>
 
@@ -571,7 +571,7 @@ export default function DealDrawer({
                     onChange={(e) =>
                       setFields((f) => ({ ...f, billingPeriod: e.target.value as BillingPeriod }))
                     }
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {BILLING_PERIODS.map((period) => (
                       <option key={period.id} value={period.id}>
@@ -586,7 +586,7 @@ export default function DealDrawer({
                     value={fields.currency}
                     onChange={(e) => setFields((f) => ({ ...f, currency: e.target.value }))}
                     maxLength={3}
-                    className="admin-input h-11 sm:h-9 py-0 uppercase"
+                    className="admin-input h-9 py-0 uppercase"
                   />
                 </Field>
 
@@ -595,7 +595,7 @@ export default function DealDrawer({
                     value={fields.planTier}
                     onChange={(e) => setFields((f) => ({ ...f, planTier: e.target.value }))}
                     placeholder="Studio"
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
 
@@ -605,12 +605,12 @@ export default function DealDrawer({
                     value={fields.seats}
                     onChange={(e) => setFields((f) => ({ ...f, seats: e.target.value }))}
                     placeholder="0"
-                    className="admin-input h-11 sm:h-9 py-0 tabular-nums"
+                    className="admin-input h-9 py-0 tabular-nums"
                   />
                 </Field>
               </div>
 
-              <p className="text-[11px] text-zinc-500 leading-relaxed">
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 Amounts here are a forecast. The commission ledger pays on cash that arrived and
                 never reads these figures.
               </p>
@@ -629,7 +629,7 @@ export default function DealDrawer({
                   type="button"
                   onClick={() => void save()}
                   disabled={saving}
-                  className="btn-primary h-11 sm:h-9 px-4 text-xs disabled:opacity-50"
+                  className="btn-primary h-9 px-4 text-xs disabled:opacity-50"
                 >
                   {saving ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -668,7 +668,7 @@ export default function DealDrawer({
                         </button>
                       )}
                       {deal?.attribution_locked_at && (
-                        <p className="text-[11px] text-zinc-500 leading-relaxed">
+                        <p className="text-[11px] text-zinc-400 leading-relaxed">
                           Settled {formatDay(deal.attribution_locked_at)}. The ledger reads this
                           rather than working it out again.
                         </p>
@@ -687,18 +687,18 @@ export default function DealDrawer({
                     <input
                       value={fields.promoCode}
                       onChange={(e) => setFields((f) => ({ ...f, promoCode: e.target.value }))}
-                      className="admin-input h-11 sm:h-9 py-0"
+                      className="admin-input h-9 py-0"
                     />
                   </Field>
                   <Field label="Tracked source">
                     <input
                       value={fields.utmSource}
                       onChange={(e) => setFields((f) => ({ ...f, utmSource: e.target.value }))}
-                      className="admin-input h-11 sm:h-9 py-0"
+                      className="admin-input h-9 py-0"
                     />
                   </Field>
                 </div>
-                <p className="text-[11px] text-zinc-500 leading-relaxed">
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
                   These two are the evidence the rules read. Save the deal after changing them, then
                   recheck.
                 </p>
@@ -765,9 +765,9 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Line({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-2 py-1.5 border-b border-white/5 last:border-0">
-      <span className="text-[11px] text-zinc-500">{label}</span>
+      <span className="text-[11px] text-zinc-400">{label}</span>
       <span className="text-[11px] text-zinc-300 text-right">{value}</span>
-      {hint && <span className="w-full text-[11px] text-zinc-600 leading-relaxed">{hint}</span>}
+      {hint && <span className="w-full text-[11px] text-zinc-400 leading-relaxed">{hint}</span>}
     </div>
   );
 }

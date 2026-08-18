@@ -14,8 +14,10 @@ import {
 } from "@/lib/crm/constants";
 import type { CrmDeal } from "@/lib/crm/types";
 import DealDrawer, { type AccountOption, type ContactOption } from "./DealDrawer";
+import { rows, readWarning } from "@/lib/supabase/rows";
 import { StatRow } from "@/components/admin/StatTile";
 import Money from "@/components/admin/Money";
+import ViewSwitch, { DEAL_VIEWS } from "@/components/admin/ViewSwitch";
 
 /**
  * Every deal, and what each one is worth.
@@ -108,17 +110,13 @@ export default function DealsPage() {
       supabase.auth.getUser(),
     ]);
 
-    if (dealRows.error) {
-      setWarning("Deals could not be read. Sign in again, or ask an owner to check your access.");
-    } else {
-      setWarning(null);
-    }
+    setWarning(readWarning(dealRows, "Deals"));
 
-    setDeals((dealRows.data as CrmDeal[] | null) ?? []);
-    setAccounts((accountRows.data as AccountOption[] | null) ?? []);
-    setContacts((contactRows.data as ContactOption[] | null) ?? []);
+    setDeals(rows<CrmDeal>(dealRows));
+    setAccounts(rows<AccountOption>(accountRows));
+    setContacts(rows<ContactOption>(contactRows));
 
-    const people = (memberRows.data as MemberRow[] | null) ?? [];
+    const people = rows<MemberRow>(memberRows);
     setMembers(people);
 
     const me = people.find((person) => person.user_id === session.data.user?.id);
@@ -220,6 +218,25 @@ export default function DealsPage() {
     };
   }, [visible]);
 
+  /**
+   * Arriving from the command palette with a row already chosen.
+   *
+   * Read once, after the first load, and only when the id is one the
+   * reader may actually see — row level security decided that, and a
+   * guessed id in the address bar must not open an empty drawer that
+   * looks like a record.
+   */
+  const [deepLinkDone, setDeepLinkDone] = useState(false);
+  useEffect(() => {
+    if (deepLinkDone || loading) return;
+    setDeepLinkDone(true);
+    const wanted = new URLSearchParams(window.location.search).get("deal");
+    if (wanted && deals.some((row) => row.id === wanted)) {
+      setSelectedId(wanted);
+      setDrawerOpen(true);
+    }
+  }, [deepLinkDone, loading, deals]);
+
   const selected = selectedId ? deals.find((deal) => deal.id === selectedId) ?? null : null;
   const filtered = stage !== ALL || owner !== ALL || motion !== ALL || closeMonth !== ALL;
 
@@ -248,6 +265,7 @@ export default function DealsPage() {
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Deals</h1>
         </div>
         <div className="flex items-center gap-2">
+          <ViewSwitch options={DEAL_VIEWS} />
           <button
             type="button"
             onClick={() => void load(true)}
@@ -385,7 +403,7 @@ export default function DealsPage() {
           <h3 className="text-xs font-medium text-zinc-400 mb-1">
             {filtered ? "Nothing matches these filters" : "No deals yet"}
           </h3>
-          <p className="text-[11px] text-zinc-600 max-w-xs mx-auto leading-relaxed">
+          <p className="text-[11px] text-zinc-400 max-w-xs mx-auto leading-relaxed">
             {filtered
               ? "Widen the filters to see the rest of the pipeline."
               : "Deals appear here with what each is worth and when it is due to close."}
@@ -483,7 +501,7 @@ export default function DealsPage() {
                         <span className="block text-xs font-medium text-white break-words">
                           {deal.name}
                         </span>
-                        <span className="block text-[11px] text-zinc-600 mt-0.5">
+                        <span className="block text-[11px] text-zinc-400 mt-0.5">
                           {attribution.label}
                         </span>
                       </td>
@@ -497,16 +515,16 @@ export default function DealsPage() {
                           {spec.label}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-300 text-right tabular-nums whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-white text-right tabular-nums whitespace-nowrap">
                         {deal.amount_cents ? <Money cents={deal.amount_cents} currency={deal.currency} /> : "—"}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-zinc-400 text-right tabular-nums whitespace-nowrap">
                         {deal.mrr_cents ? <Money cents={deal.mrr_cents} currency={deal.currency} /> : "—"}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-zinc-400 whitespace-nowrap">
                         {formatDay(deal.expected_close_on)}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 break-words">
+                      <td className="px-4 py-3 text-xs text-zinc-400 break-words">
                         {(deal.owner_user_id && memberNameById[deal.owner_user_id]) || "Unassigned"}
                       </td>
                     </tr>

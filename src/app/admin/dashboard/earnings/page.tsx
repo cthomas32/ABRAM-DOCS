@@ -1,3 +1,4 @@
+import { rows } from "@/lib/supabase/rows";
 import { createClient } from "@/utils/supabase/server";
 import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
@@ -80,11 +81,11 @@ export default async function EarningsPage() {
       .order("trigger_mrr_cents", { ascending: true, nullsFirst: true }),
   ]);
 
-  const statement = (statementRes.data ?? []) as CommissionStatementRow[];
-  const entries = (entriesRes.data ?? []) as CommissionEntry[];
+  const statement = rows<CommissionStatementRow>(statementRes);
+  const entries = rows<CommissionEntry>(entriesRes);
   const terms = (termsRes.data ?? null) as GrowthPartnerTerms | null;
   const mrr = (mrrRes.data ?? null) as AttributedMrrRow | null;
-  const tranches = (tranchesRes.data ?? []) as GrowthEquityTranche[];
+  const tranches = rows<GrowthEquityTranche>(tranchesRes);
 
   const currency = statement[0]?.currency ?? "USD";
   const lifetime = statement.reduce((sum, row) => sum + (row.total_cents ?? 0), 0);
@@ -151,12 +152,12 @@ export default async function EarningsPage() {
               <span className="text-2xl font-bold tracking-tight text-white tabular-nums">
                 {formatMoney(mrr.attributed_mrr_cents, currency)}
               </span>
-              <span className="text-xs text-zinc-500">
+              <span className="text-xs text-zinc-400">
                 across {mrr.won_deals} won {mrr.won_deals === 1 ? "deal" : "deals"}
                 {mrr.open_deals > 0 && `, ${mrr.open_deals} still open`}
               </span>
             </div>
-            <p className="text-[11px] text-zinc-500 leading-relaxed">
+            <p className="text-[11px] text-zinc-400 leading-relaxed">
               Recurring revenue on won, attributed deals you sourced. Comped, company-managed and
               carved-out accounts are excluded.
             </p>
@@ -176,11 +177,11 @@ export default async function EarningsPage() {
                       <div className="flex items-center justify-between gap-3 mb-1.5">
                         <span className="text-xs text-zinc-300 truncate">
                           {tranche.label}
-                          <span className="text-zinc-500 ml-2">{tranche.size_pct}%</span>
+                          <span className="text-zinc-400 ml-2">{tranche.size_pct}%</span>
                         </span>
                         <span
                           className={`text-[10px] font-semibold shrink-0 ${
-                            reached ? "text-emerald-400" : "text-zinc-500"
+                            reached ? "text-emerald-400" : "text-zinc-400"
                           }`}
                         >
                           {reached
@@ -234,7 +235,7 @@ export default async function EarningsPage() {
                     <td className="px-4 py-3 text-xs text-zinc-300 whitespace-nowrap">
                       {monthLabel(row.collection_month)}
                     </td>
-                    <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums">
+                    <td className="px-4 py-3 text-xs text-zinc-400 text-right tabular-nums">
                       {formatMoney(row.basis_cents, row.currency)}
                     </td>
                     <td className="px-4 py-3 text-xs font-semibold text-white text-right tabular-nums">
@@ -252,14 +253,14 @@ export default async function EarningsPage() {
             </table>
           </div>
         )}
-        <p className="md:hidden text-[10px] text-zinc-600 mt-2">Swipe to see the rest.</p>
+        <p className="md:hidden text-[10px] text-zinc-400 mt-2">Swipe to see the rest.</p>
       </section>
 
       {/* Every line, with its arithmetic */}
       {entries.length > 0 && (
         <section>
           <Overline>Every line</Overline>
-          <p className="text-[11px] text-zinc-500 mb-4 max-w-2xl leading-relaxed">
+          <p className="text-[11px] text-zinc-400 mb-4 max-w-2xl leading-relaxed">
             One row per payment. &ldquo;Closed&rdquo; is the higher rate and applies when you both
             sourced and closed the account; &ldquo;sourced&rdquo; applies when you originated it and
             somebody else closed it.
@@ -293,20 +294,20 @@ export default async function EarningsPage() {
                         {entry.credit_type === "closed" ? "Closed" : "Sourced"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums">
+                    <td className="px-4 py-3 text-xs text-zinc-400 text-right tabular-nums">
                       {formatMoney(entry.basis_cents, entry.currency)}
                     </td>
-                    <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums">
+                    <td className="px-4 py-3 text-xs text-zinc-400 text-right tabular-nums">
                       {formatRate(entry.rate_applied)}
                     </td>
                     <td
                       className={`px-4 py-3 text-xs font-semibold text-right tabular-nums ${
-                        entry.amount_cents < 0 ? "text-zinc-500" : "text-white"
+                        entry.amount_cents < 0 ? "text-zinc-400" : "text-white"
                       }`}
                     >
                       {formatMoney(entry.amount_cents, entry.currency)}
                     </td>
-                    <td className="px-4 py-3 text-[11px] text-zinc-500 capitalize">
+                    <td className="px-4 py-3 text-[11px] text-zinc-400 capitalize">
                       {entry.status.replace(/_/g, " ")}
                     </td>
                   </tr>
@@ -314,12 +315,12 @@ export default async function EarningsPage() {
               </tbody>
             </table>
           </div>
-          <p className="md:hidden text-[10px] text-zinc-600 mt-2">Swipe to see the rest.</p>
+          <p className="md:hidden text-[10px] text-zinc-400 mt-2">Swipe to see the rest.</p>
         </section>
       )}
 
       <footer className="mt-12 pt-6 border-t border-white/5">
-        <p className="text-[11px] text-zinc-600 leading-relaxed max-w-2xl">
+        <p className="text-[11px] text-zinc-400 leading-relaxed max-w-2xl">
           Figures are derived from collected payments and are not a statement of account. A payment
           reversed within the clawback window removes the commission accrued on it, which will show
           here as a negative line rather than as a changed figure.

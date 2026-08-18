@@ -4,6 +4,9 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
 import { readConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
+// A `"use server"` module may only export async functions, so the
+// lifecycle list lives in a plain module that both sides may import.
+import type { AccountLifecycle } from "./lifecycles";
 
 /**
  * Writing a company record.
@@ -30,21 +33,6 @@ const MAX_NAME = 200;
 const MAX_DOMAIN = 200;
 const MAX_SHORT = 120;
 const MAX_NOTES = 4000;
-
-export type AccountLifecycle =
-  | "prospect"
-  | "engaged"
-  | "customer"
-  | "churned"
-  | "disqualified";
-
-export const ACCOUNT_LIFECYCLES: { id: AccountLifecycle; label: string }[] = [
-  { id: "prospect", label: "Prospect" },
-  { id: "engaged", label: "Engaged" },
-  { id: "customer", label: "Customer" },
-  { id: "churned", label: "Churned" },
-  { id: "disqualified", label: "Disqualified" },
-];
 
 export interface AccountResult {
   ok: boolean;

@@ -104,9 +104,9 @@ export default function CodesTab({ profile, codes, events, onChanged, notify }: 
   if (!profile) {
     return (
       <div className="rounded-2xl border border-white/8 bg-zinc-950/40 p-8 sm:p-10 text-center">
-        <QrIcon className="w-6 h-6 text-zinc-600 mx-auto" />
+        <QrIcon className="w-6 h-6 text-zinc-400 mx-auto" />
         <h3 className="text-sm font-semibold text-white mt-3">No card to point at yet</h3>
-        <p className="text-xs text-zinc-500 leading-relaxed mt-2 max-w-md mx-auto">
+        <p className="text-xs text-zinc-400 leading-relaxed mt-2 max-w-md mx-auto">
           A code is a link to your card with a label on it. Open the Your card tab and fill it in
           first.
         </p>
@@ -117,14 +117,14 @@ export default function CodesTab({ profile, codes, events, onChanged, notify }: 
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <p className="text-xs text-zinc-500 leading-relaxed max-w-2xl">
+        <p className="text-xs text-zinc-400 leading-relaxed max-w-2xl">
           One code per thing you print. They all open the same card, and the code is what tells you
           which sticker, badge or banner did the work.
         </p>
         <button
           type="button"
           onClick={() => setCreating((v) => !v)}
-          className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-semibold rounded-full shrink-0 self-start"
+          className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-medium rounded-full shrink-0 self-start"
         >
           {creating ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
           {creating ? "Cancel" : "New code"}
@@ -139,14 +139,14 @@ export default function CodesTab({ profile, codes, events, onChanged, notify }: 
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 placeholder="Badge sticker, batch one"
-                className="admin-input h-11 sm:h-9 py-0"
+                className="admin-input h-9 py-0"
               />
             </Field>
             <Field label="Where it goes">
               <select
                 value={placement}
                 onChange={(e) => setPlacement(e.target.value as CodePlacement)}
-                className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                className="admin-input h-9 py-0 cursor-pointer"
               >
                 {CODE_PLACEMENTS.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -159,7 +159,7 @@ export default function CodesTab({ profile, codes, events, onChanged, notify }: 
               <select
                 value={eventId}
                 onChange={(e) => setEventId(e.target.value)}
-                className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                className="admin-input h-9 py-0 cursor-pointer"
               >
                 <option value="">Whichever event is active when it is scanned</option>
                 {events.map((event) => (
@@ -170,7 +170,7 @@ export default function CodesTab({ profile, codes, events, onChanged, notify }: 
               </select>
             </Field>
             <div>
-              <span className="block text-[10px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5">
+              <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 mb-1.5">
                 Code
               </span>
               <div className="flex gap-2">
@@ -179,19 +179,19 @@ export default function CodesTab({ profile, codes, events, onChanged, notify }: 
                   onChange={(e) => setToken(e.target.value.replace(/[^a-z0-9]/gi, "").toLowerCase())}
                   maxLength={12}
                   aria-label="Code"
-                  className="admin-input h-11 sm:h-9 py-0 font-mono tracking-widest"
+                  className="admin-input h-9 py-0 font-mono tracking-widest"
                 />
                 <button
                   type="button"
                   onClick={() => setToken(randomCode())}
-                  className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-lg shrink-0"
+                  className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-lg shrink-0"
                 >
                   Roll
                 </button>
               </div>
             </div>
           </div>
-          <p className="text-[10px] text-zinc-600 leading-relaxed">
+          <p className="text-[10px] text-zinc-400 leading-relaxed">
             {CODE_PLACEMENTS.find((p) => p.id === placement)?.hint} Short codes stay easy to scan,
             so five characters is the default.
           </p>
@@ -293,10 +293,10 @@ function CodeCard({
         <div className="min-w-0 flex-1 space-y-3">
           <div>
             <h3 className="text-sm font-semibold text-white break-words">{code.label}</h3>
-            <p className="text-[11px] text-zinc-500 mt-1 break-words">
+            <p className="text-[11px] text-zinc-400 mt-1 break-words">
               {[placement?.label, eventName].filter(Boolean).join(" / ") || "No placement noted"}
             </p>
-            <p className="text-[10px] font-mono text-zinc-600 mt-1 break-all">{url}</p>
+            <p className="text-[10px] font-mono text-zinc-400 mt-1 break-all">{url}</p>
           </div>
 
           <div className="grid grid-cols-3 gap-2">
@@ -306,7 +306,7 @@ function CodeCard({
           </div>
 
           {code.last_scanned_at && (
-            <p className="text-[10px] text-zinc-600">
+            <p className="text-[10px] text-zinc-400">
               Last scanned {formatDateTime(code.last_scanned_at)}
             </p>
           )}
@@ -322,7 +322,7 @@ function CodeCard({
             <button
               type="button"
               onClick={saveSvg}
-              className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+              className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
             >
               <Download className="w-3.5 h-3.5" />
               Plain SVG
@@ -330,14 +330,14 @@ function CodeCard({
             <button
               type="button"
               onClick={() => void savePng()}
-              className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+              className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
             >
               <Download className="w-3.5 h-3.5" />
               Plain PNG
             </button>
             <Link
               href={`/admin/dashboard/crm/print?k=${encodeURIComponent(code.code)}`}
-              className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+              className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
             >
               <Printer className="w-3.5 h-3.5" />
               Print sheet
@@ -345,7 +345,7 @@ function CodeCard({
             <button
               type="button"
               onClick={() => void copy()}
-              className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+              className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               {copied ? "Copied" : "Copy link"}
@@ -367,7 +367,7 @@ function CodeCard({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-[10px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5">
+      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 mb-1.5">
         {label}
       </span>
       {children}
@@ -389,9 +389,9 @@ function Stat({ label, value }: { label: string; value: number | string }) {
 function EmptyCodes({ onStart }: { onStart: () => void }) {
   return (
     <div className="rounded-2xl border border-white/8 bg-zinc-950/40 p-8 sm:p-10 text-center">
-      <QrIcon className="w-6 h-6 text-zinc-600 mx-auto" />
+      <QrIcon className="w-6 h-6 text-zinc-400 mx-auto" />
       <h3 className="text-sm font-semibold text-white mt-3">No codes yet</h3>
-      <p className="text-xs text-zinc-500 leading-relaxed mt-2 max-w-md mx-auto">
+      <p className="text-xs text-zinc-400 leading-relaxed mt-2 max-w-md mx-auto">
         Make one for each place a code will live: the back of your badge, your lock screen, the
         banner. They all open the same card, and separate codes are the only way to find out which
         one people actually scan.

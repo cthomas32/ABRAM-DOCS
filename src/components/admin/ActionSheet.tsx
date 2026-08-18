@@ -81,7 +81,7 @@ export default function ActionSheet({ open, onClose, title, subtitle, actions }:
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-white truncate">{title}</p>
-                  {subtitle && <p className="text-[11px] text-zinc-500 truncate mt-0.5">{subtitle}</p>}
+                  {subtitle && <p className="text-[11px] text-zinc-400 truncate mt-0.5">{subtitle}</p>}
                 </div>
                 <button
                   onClick={onClose}
@@ -101,17 +101,17 @@ export default function ActionSheet({ open, onClose, title, subtitle, actions }:
                     <span
                       className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
                         action.danger
-                          ? "bg-red-500/10 text-red-400 border-red-500/20"
+                          ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
                           : "bg-white/[0.03] text-zinc-300 border-white/8"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
                     </span>
                     <span className="min-w-0 flex-1 text-left">
-                      <span className={`block text-sm font-semibold truncate ${action.danger ? "text-red-400" : "text-zinc-100"}`}>
+                      <span className={`block text-sm font-semibold truncate ${action.danger ? "text-amber-300" : "text-zinc-100"}`}>
                         {action.label}
                       </span>
-                      {action.hint && <span className="block text-[11px] text-zinc-500 truncate">{action.hint}</span>}
+                      {action.hint && <span className="block text-[11px] text-zinc-400 truncate">{action.hint}</span>}
                     </span>
                   </>
                 );
@@ -156,7 +156,7 @@ export default function ActionSheet({ open, onClose, title, subtitle, actions }:
             <div className="sm:hidden shrink-0 border-t border-white/5 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
               <button
                 onClick={onClose}
-                className="btn-glass w-full h-12 text-xs font-semibold rounded-full"
+                className="btn-glass w-full h-12 text-xs font-medium rounded-full"
               >
                 Cancel
               </button>

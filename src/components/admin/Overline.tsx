@@ -51,7 +51,7 @@ export function FieldLabel({
       className={`block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-1.5 ${className}`}
     >
       {children}
-      {hint && <span className="text-zinc-600 normal-case tracking-normal font-medium"> {hint}</span>}
+      {hint && <span className="text-zinc-400 normal-case tracking-normal font-medium"> {hint}</span>}
     </label>
   );
 }

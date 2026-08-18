@@ -99,10 +99,10 @@ export function EmptyPanel({
 }) {
   return (
     <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.01] p-8 text-center">
-      {icon && <div className="flex justify-center mb-3 text-zinc-600">{icon}</div>}
-      <p className="text-sm text-zinc-300">{title}</p>
+      {icon && <div className="flex justify-center mb-3 text-zinc-400">{icon}</div>}
+      <p className="text-sm text-white">{title}</p>
       {children && (
-        <p className="text-[11px] text-zinc-500 mt-1.5 max-w-md mx-auto leading-relaxed">
+        <p className="text-[11px] text-zinc-400 mt-1.5 max-w-md mx-auto leading-relaxed">
           {children}
         </p>
       )}

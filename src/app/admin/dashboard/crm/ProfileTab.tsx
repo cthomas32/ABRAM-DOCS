@@ -267,7 +267,7 @@ export default function ProfileTab({
               <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
                 What a scan shows
               </span>
-              <p className="text-[11px] text-zinc-600 leading-relaxed mt-1.5">
+              <p className="text-[11px] text-zinc-400 leading-relaxed mt-1.5">
                 Live, as you type. Anything left blank borrows from your team profile.
               </p>
             </div>
@@ -287,14 +287,14 @@ export default function ProfileTab({
                   <QrCode value={url} size={140} rounded={false} />
                 </div>
 
-                <p className="text-[10px] font-mono text-zinc-500 break-all text-center">{url}</p>
+                <p className="text-[10px] font-mono text-zinc-400 break-all text-center">{url}</p>
 
                 <div className="flex flex-wrap gap-2 justify-center">
                   <a
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+                    className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                     Open
@@ -308,7 +308,7 @@ export default function ProfileTab({
                         buildProfileVCard({ ...profile, ...payload() }, url)
                       )
                     }
-                    className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+                    className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
                   >
                     <Download className="w-3.5 h-3.5" />
                     vCard
@@ -327,7 +327,7 @@ export default function ProfileTab({
                     <button
                       type="button"
                       onClick={onGoToCodes}
-                      className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+                      className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
                     >
                       <QrIcon className="w-3.5 h-3.5" />
                       Make a code first
@@ -336,14 +336,14 @@ export default function ProfileTab({
                 </div>
 
                 {codeToDesign && (
-                  <p className="text-[10px] text-zinc-600 text-center leading-relaxed">
+                  <p className="text-[10px] text-zinc-400 text-center leading-relaxed">
                     Opens the designer on {codeToDesign.label}. Every code on this card opens the
                     same designer from the Codes tab.
                   </p>
                 )}
 
                 <div className="pt-3 border-t border-white/5">
-                  <p className="text-[11px] text-zinc-500 leading-relaxed">
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
                     {filled === 0
                       ? "Every field is empty, so a scan shows your name and nothing to do next."
                       : `${filled} of 7 useful fields filled. Empty ones simply do not appear on the card.`}
@@ -352,7 +352,7 @@ export default function ProfileTab({
               </div>
             ) : (
               <div className="pt-3 border-t border-white/5">
-                <p className="text-[11px] text-zinc-500 leading-relaxed">
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
                   Nothing is saved yet, so this is what the card would look like. Pick a short
                   address below and create it.
                 </p>
@@ -373,12 +373,12 @@ export default function ProfileTab({
             {!profile && (
               <Field label="Card address">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono text-zinc-600 shrink-0">/c/</span>
+                  <span className="text-[11px] font-mono text-zinc-400 shrink-0">/c/</span>
                   <input
                     value={newSlug}
                     onChange={(e) => setNewSlug(slugify(e.target.value))}
                     placeholder="your-name"
-                    className="admin-input h-11 sm:h-9 py-0 font-mono"
+                    className="admin-input h-9 py-0 font-mono"
                   />
                 </div>
               </Field>
@@ -394,7 +394,7 @@ export default function ProfileTab({
                   height={36}
                   className="w-9 h-9 rounded-full object-cover shrink-0"
                 />
-                <p className="text-[11px] text-zinc-500 leading-relaxed">
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
                   This photograph comes from your team profile. Change it there and the card, the
                   byline and the vCard all follow.
                 </p>
@@ -407,7 +407,7 @@ export default function ProfileTab({
                   value={draft.full_name}
                   onChange={(e) => set({ full_name: e.target.value })}
                   placeholder={member?.full_name || ""}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="Job title" inherited={jobTitle.inherited ? jobTitle.value : null}>
@@ -415,14 +415,14 @@ export default function ProfileTab({
                   value={draft.job_title}
                   onChange={(e) => set({ job_title: e.target.value })}
                   placeholder={member?.job_title || "Founder"}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="Company">
                 <input
                   value={draft.company}
                   onChange={(e) => set({ company: e.target.value })}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="Tagline">
@@ -430,7 +430,7 @@ export default function ProfileTab({
                   value={draft.tagline}
                   onChange={(e) => set({ tagline: e.target.value })}
                   placeholder="One line on what you do"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
             </div>
@@ -458,7 +458,7 @@ export default function ProfileTab({
                   value={draft.email}
                   onChange={(e) => set({ email: e.target.value })}
                   placeholder={member?.email || ""}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="Phone">
@@ -467,7 +467,7 @@ export default function ProfileTab({
                   inputMode="tel"
                   value={draft.phone}
                   onChange={(e) => set({ phone: e.target.value })}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="Website" inherited={website.inherited ? website.value : null}>
@@ -476,7 +476,7 @@ export default function ProfileTab({
                   value={draft.website}
                   onChange={(e) => set({ website: e.target.value })}
                   placeholder={member?.website || "https://abram.network"}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="LinkedIn" inherited={linkedin.inherited ? linkedin.value : null}>
@@ -485,7 +485,7 @@ export default function ProfileTab({
                   value={draft.linkedin_url}
                   onChange={(e) => set({ linkedin_url: e.target.value })}
                   placeholder={member?.linkedin_url || ""}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="X" inherited={xUrl.inherited ? xUrl.value : null}>
@@ -494,7 +494,7 @@ export default function ProfileTab({
                   value={draft.x_url}
                   onChange={(e) => set({ x_url: e.target.value })}
                   placeholder={member?.x_url || ""}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="Calendar">
@@ -503,7 +503,7 @@ export default function ProfileTab({
                   value={draft.calendar_url}
                   onChange={(e) => set({ calendar_url: e.target.value })}
                   placeholder="Link that books a slot"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="Button label">
@@ -511,7 +511,7 @@ export default function ProfileTab({
                   value={draft.cta_label}
                   onChange={(e) => set({ cta_label: e.target.value })}
                   placeholder="See what ABRAM does"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <Field label="Button link">
@@ -519,7 +519,7 @@ export default function ProfileTab({
                   inputMode="url"
                   value={draft.cta_url}
                   onChange={(e) => set({ cta_url: e.target.value })}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
             </div>
@@ -543,9 +543,9 @@ export default function ProfileTab({
 
           {!profile && (
             <div className="rounded-2xl border border-white/8 bg-zinc-950/40 p-6 text-center">
-              <IdCard className="w-6 h-6 text-zinc-600 mx-auto" />
+              <IdCard className="w-6 h-6 text-zinc-400 mx-auto" />
               <h3 className="text-sm font-semibold text-white mt-3">No card yet</h3>
-              <p className="text-xs text-zinc-500 leading-relaxed mt-2">
+              <p className="text-xs text-zinc-400 leading-relaxed mt-2">
                 Pick a short address and fill in the fields above. Codes and scans all hang off the
                 card, so this comes first.
               </p>
@@ -579,18 +579,18 @@ function Field({
   return (
     <label className="block">
       <span className="flex items-center gap-2 mb-1.5">
-        <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
+        <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
           {label}
         </span>
         {inherited ? (
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-zinc-600 rounded-full border border-white/10 px-1.5 py-px">
+          <span className="text-[9px] font-semibold uppercase tracking-wider text-zinc-400 rounded-full border border-white/10 px-1.5 py-px">
             Inherited
           </span>
         ) : null}
       </span>
       {children}
       {inherited ? (
-        <span className="block text-[10px] text-zinc-600 leading-relaxed mt-1 break-words">
+        <span className="block text-[10px] text-zinc-400 leading-relaxed mt-1 break-words">
           Showing {inherited} from your team profile. Type here to override it on this card only.
         </span>
       ) : null}

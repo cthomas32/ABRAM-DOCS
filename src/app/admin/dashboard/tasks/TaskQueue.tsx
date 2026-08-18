@@ -424,7 +424,7 @@ function TaskRow({
           onClick={onComplete}
           disabled={busy}
           aria-label={`Mark ${task.title} done`}
-          className="mt-0.5 h-5 w-5 shrink-0 rounded-full border border-white/15 text-zinc-500 hover:border-white/35 hover:text-white transition-colors flex items-center justify-center disabled:opacity-50"
+          className="mt-0.5 h-5 w-5 shrink-0 rounded-full border border-white/15 text-zinc-400 hover:border-white/35 hover:text-white transition-colors flex items-center justify-center disabled:opacity-50"
         >
           {busy ? (
             <Loader2 className="h-3 w-3 animate-spin" />
@@ -456,7 +456,7 @@ function TaskRow({
         </div>
 
         {/* Row 2 — the thing to do */}
-        <p className={`${BLOCK_TITLE} mt-1.5 ${done ? "text-zinc-500 line-through" : ""}`}>
+        <p className={`${BLOCK_TITLE} mt-1.5 ${done ? "text-zinc-400 line-through" : ""}`}>
           {task.title}
         </p>
 

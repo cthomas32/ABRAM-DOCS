@@ -44,7 +44,7 @@ export default function RegistrationForm() {
   if (!open) {
     return (
       <div className="space-y-3">
-        <button onClick={() => setOpen(true)} className="btn-primary rounded-full text-xs font-medium px-4 inline-flex items-center gap-1.5 h-11 sm:h-9">
+        <button onClick={() => setOpen(true)} className="btn-primary rounded-full text-xs font-medium px-4 inline-flex items-center gap-1.5 h-9">
           <Plus className="w-3.5 h-3.5" />
           Register an account
         </button>
@@ -69,7 +69,7 @@ export default function RegistrationForm() {
           required
           maxLength={200}
           placeholder="Helix Studios"
-          className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/25"
+          className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-400 focus:outline-none focus:border-white/25"
         />
       </div>
 
@@ -82,9 +82,9 @@ export default function RegistrationForm() {
           required
           maxLength={200}
           placeholder="helix.com"
-          className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/25"
+          className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-400 focus:outline-none focus:border-white/25"
         />
-        <p className="text-[10px] text-zinc-600 mt-1.5 leading-relaxed">
+        <p className="text-[10px] text-zinc-400 mt-1.5 leading-relaxed">
           Company names get typed three different ways. The web address is what stops two people
           claiming the same account without noticing.
         </p>
@@ -99,7 +99,7 @@ export default function RegistrationForm() {
           maxLength={1000}
           rows={3}
           placeholder="Where the introduction is coming from, and roughly what you expect."
-          className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/25 resize-y"
+          className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-zinc-400 focus:outline-none focus:border-white/25 resize-y"
         />
       </div>
 
@@ -111,7 +111,7 @@ export default function RegistrationForm() {
       )}
 
       <div className="flex flex-wrap gap-2 pt-1">
-        <button type="submit" disabled={pending} className="btn-primary rounded-full text-xs font-medium px-4 inline-flex items-center gap-1.5 h-11 sm:h-9 disabled:opacity-60">
+        <button type="submit" disabled={pending} className="btn-primary rounded-full text-xs font-medium px-4 inline-flex items-center gap-1.5 h-9 disabled:opacity-60">
           {pending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
           File registration
         </button>
@@ -121,7 +121,7 @@ export default function RegistrationForm() {
             setOpen(false);
             setError("");
           }}
-          className="btn-ghost rounded-full text-xs font-medium px-4 h-11 sm:h-9"
+          className="btn-ghost rounded-full text-xs font-medium px-4 h-9"
         >
           Cancel
         </button>

@@ -5,6 +5,8 @@ import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
 import type { DealStage } from "@/lib/crm/constants";
 import { StatRow } from "@/components/admin/StatTile";
+import ViewSwitch, { DEAL_VIEWS } from "@/components/admin/ViewSwitch";
+import { rows, firstRow } from "@/lib/supabase/rows";
 import DealBoard, { type BoardPerson, type DealBoardRow } from "../DealBoard";
 
 /**
@@ -20,12 +22,8 @@ export const dynamic = "force-dynamic";
 
 /** The account arrives as a to-one relation the client types as an array. */
 function accountName(value: unknown): string | null {
-  const record = Array.isArray(value) ? value[0] : value;
-  if (record && typeof record === "object" && "name" in record) {
-    const name = (record as { name?: unknown }).name;
-    return typeof name === "string" ? name : null;
-  }
-  return null;
+  const record = firstRow<{ name?: unknown }>(value);
+  return typeof record?.name === "string" ? record.name : null;
 }
 
 function money(cents: number, currency = "USD"): string {
@@ -67,7 +65,7 @@ export default async function DealBoardPage() {
     supabase.from("admin_users").select("user_id, full_name, email"),
   ]);
 
-  const deals: DealBoardRow[] = (dealsRes.data ?? []).map((row) => ({
+  const deals: DealBoardRow[] = rows<Record<string, unknown>>(dealsRes).map((row) => ({
     id: row.id as string,
     name: row.name as string,
     stage: row.stage as DealStage,
@@ -78,7 +76,7 @@ export default async function DealBoardPage() {
     account_name: accountName(row.account),
   }));
 
-  const people = ((peopleRes.data ?? []) as BoardPerson[]) ?? [];
+  const people = rows<BoardPerson>(peopleRes);
   const currency = deals[0]?.currency ?? "USD";
 
   const open = deals.filter((deal) => deal.stage !== "won" && deal.stage !== "lost");
@@ -98,13 +96,9 @@ export default async function DealBoardPage() {
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-8 lg:py-12 flex-1 min-w-0 overflow-y-auto">
       <header className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-          Where every deal stands
-        </h1>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Deals</h1>
         <div className="flex items-center gap-2">
-          <Link href="/admin/dashboard/deals" className="btn-glass h-9 px-4 text-xs font-medium">
-            Deal list
-          </Link>
+          <ViewSwitch options={DEAL_VIEWS} />
           <Link href="/admin/dashboard/tasks" className="btn-glass h-9 px-4 text-xs font-medium">
             Follow ups
           </Link>

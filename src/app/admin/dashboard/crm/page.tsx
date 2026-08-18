@@ -37,6 +37,8 @@ import type {
   CrmTask,
 } from "@/lib/crm/types";
 import { buildContactVCardBundle } from "@/lib/crm/vcard";
+import { rows, firstRow } from "@/lib/supabase/rows";
+import { CONTACT_SOURCES, LIFECYCLE_STAGES } from "@/lib/crm/people";
 import PipelineBoard from "./PipelineBoard";
 import ContactDrawer from "./ContactDrawer";
 import { StatRow } from "@/components/admin/StatTile";
@@ -91,11 +93,8 @@ const TABS: { id: Tab; label: string; icon: React.ComponentType<{ className?: st
  * nicety and no shape of answer here is worth an exception.
  */
 function readMember(data: unknown): TeamMemberIdentity | null {
-  const rows = Array.isArray(data) ? data : [];
-  const first = rows[0] as { member?: unknown } | undefined;
-  const member = first?.member;
-  const record = Array.isArray(member) ? member[0] : member;
-  return record && typeof record === "object" ? (record as TeamMemberIdentity) : null;
+  const first = firstRow<{ member?: unknown }>(data);
+  return firstRow<TeamMemberIdentity>(first?.member);
 }
 
 export default function CrmPage() {
@@ -129,6 +128,11 @@ export default function CrmPage() {
   const [query, setQuery] = useState("");
   const [eventFilter, setEventFilter] = useState("");
   const [stageFilter, setStageFilter] = useState("");
+  /* The person ladder and the way in, which the pipeline stage does not
+     say: somebody at "new" may be a subscriber who has never spoken to us
+     or a customer whose second deal is starting. */
+  const [lifecycleFilter, setLifecycleFilter] = useState("");
+  const [sourceFilter, setSourceFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
   const [needsFollowUp, setNeedsFollowUp] = useState(false);
@@ -149,6 +153,21 @@ export default function CrmPage() {
     const wanted = new URLSearchParams(window.location.search).get("tab");
     if (wanted && TABS.some((option) => option.id === wanted)) setTab(wanted as Tab);
   }, []);
+
+  /* Arriving from the command palette with a person already chosen. Read
+     once, after the first load, and only when the id is one row level
+     security actually returned — a guessed id in the address bar must not
+     open an empty drawer that looks like a record. */
+  const [deepLinkDone, setDeepLinkDone] = useState(false);
+  useEffect(() => {
+    if (deepLinkDone || loading) return;
+    setDeepLinkDone(true);
+    const wanted = new URLSearchParams(window.location.search).get("contact");
+    if (wanted && contacts.some((contact) => contact.id === wanted)) {
+      setTab("pipeline");
+      setSelectedId(wanted);
+    }
+  }, [deepLinkDone, loading, contacts]);
 
   /* ---------------------------------------------------------------- */
   /*  Load                                                             */
@@ -193,21 +212,27 @@ export default function CrmPage() {
         supabase.auth.getUser(),
       ]);
 
+      // A raw PostgREST message ("permission denied for table crm_contacts")
+      // is accurate and tells the reader nothing they can act on.
       const firstError =
         profileRes.error || eventsRes.error || codesRes.error || contactsRes.error || tasksRes.error;
-      setWarning(firstError ? firstError.message : null);
+      setWarning(
+        firstError
+          ? "Some of the contact tables could not be read. Sign in again, or ask an owner to check your access."
+          : null
+      );
 
-      setProfile(((profileRes.data as CrmProfile[] | null) ?? [])[0] ?? null);
+      setProfile(rows<CrmProfile>(profileRes)[0] ?? null);
       // Inheriting a job title is a nicety. Failing to read it is not worth
       // an alarm, and never worth taking the console down with it.
       setMember(identityRes.error ? null : readMember(identityRes.data));
-      setEvents((eventsRes.data as CrmEvent[] | null) ?? []);
-      setCodes((codesRes.data as CrmCaptureCode[] | null) ?? []);
-      setContacts((contactsRes.data as CrmContact[] | null) ?? []);
-      setOpenTasks((tasksRes.data as CrmTask[] | null) ?? []);
+      setEvents(rows<CrmEvent>(eventsRes));
+      setCodes(rows<CrmCaptureCode>(codesRes));
+      setContacts(rows<CrmContact>(contactsRes));
+      setOpenTasks(rows<CrmTask>(tasksRes));
       // The rollup view is a convenience. If it is unreadable the rest of the
       // console still works, so its failure is not worth an alarm.
-      setEventStats(statsRes.error ? [] : ((statsRes.data as EventStatRow[] | null) ?? []));
+      setEventStats(statsRes.error ? [] : rows<EventStatRow>(statsRes));
       setScanTotals(
         scansRes.error || convertedRes.error
           ? null
@@ -259,6 +284,8 @@ export default function CrmPage() {
       if (contact.archived !== showArchived) return false;
       if (eventFilter && contact.event_id !== eventFilter) return false;
       if (stageFilter && contact.stage !== stageFilter) return false;
+      if (lifecycleFilter && contact.lifecycle_stage !== lifecycleFilter) return false;
+      if (sourceFilter && !(contact.sources ?? []).includes(sourceFilter as never)) return false;
       if (priorityFilter && contact.priority !== priorityFilter) return false;
       if (tagFilter && !contact.tags.includes(tagFilter)) return false;
       if (needsFollowUp) {
@@ -279,6 +306,8 @@ export default function CrmPage() {
     showArchived,
     eventFilter,
     stageFilter,
+    lifecycleFilter,
+    sourceFilter,
     priorityFilter,
     tagFilter,
     needsFollowUp,
@@ -317,7 +346,9 @@ export default function CrmPage() {
     : "/admin/dashboard/crm/capture";
 
   const filtersActive =
-    Boolean(query || eventFilter || stageFilter || priorityFilter || tagFilter) ||
+    Boolean(
+      query || eventFilter || stageFilter || lifecycleFilter || sourceFilter || priorityFilter || tagFilter
+    ) ||
     needsFollowUp ||
     showArchived;
 
@@ -325,6 +356,8 @@ export default function CrmPage() {
     setQuery("");
     setEventFilter("");
     setStageFilter("");
+    setLifecycleFilter("");
+    setSourceFilter("");
     setPriorityFilter("");
     setTagFilter("");
     setNeedsFollowUp(false);
@@ -429,7 +462,7 @@ export default function CrmPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-500 bg-[#0A0A0A]">
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-400 bg-[#0A0A0A]">
         <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
         <span className="text-xs font-medium">Reading your contacts...</span>
       </div>
@@ -485,7 +518,7 @@ export default function CrmPage() {
               <ContactIcon className="w-5 h-5 text-zinc-400 shrink-0" />
               Conference Contacts
             </h1>
-            <p className="hidden sm:block text-xs text-zinc-500 mt-1 font-sans max-w-2xl leading-relaxed">
+            <p className="hidden sm:block text-xs text-zinc-400 mt-1 font-sans max-w-2xl leading-relaxed">
               Everyone who scanned your code or handed you their details, from the hallway to the
               follow up. Capture mode works with the signal off, so a bad hall is not a lost lead.
             </p>
@@ -494,7 +527,7 @@ export default function CrmPage() {
           <div className="flex flex-wrap gap-2 shrink-0">
             <Link
               href={captureHref}
-              className="btn-primary px-4 h-11 sm:h-9 text-xs rounded-full"
+              className="btn-primary px-4 h-9 text-xs rounded-full"
             >
               <UserPlus className="w-3.5 h-3.5" />
               Capture mode
@@ -503,7 +536,7 @@ export default function CrmPage() {
               type="button"
               onClick={() => void load()}
               disabled={refreshing}
-              className="btn-glass px-4 h-11 sm:h-9 text-xs font-medium rounded-full disabled:opacity-50"
+              className="btn-glass px-4 h-9 text-xs font-medium rounded-full disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
               {refreshing ? "Updating" : "Refresh"}
@@ -525,7 +558,7 @@ export default function CrmPage() {
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-11 sm:h-9 shrink-0 ${
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-9 shrink-0 ${
                 tab === id
                   ? "bg-white text-black border-white"
                   : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
@@ -537,7 +570,7 @@ export default function CrmPage() {
           ))}
           <Link
             href="/admin/dashboard/crm/emails"
-            className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-11 sm:h-9 shrink-0 bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-9 shrink-0 bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
           >
             <Mail className="w-3.5 h-3.5" />
             Emails
@@ -550,20 +583,20 @@ export default function CrmPage() {
             <div className="space-y-3">
               <div className="flex flex-col sm:flex-row gap-2">
                 <div className="relative flex-1 min-w-0">
-                  <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search name, company or email"
                     aria-label="Search contacts"
-                    className="admin-input h-11 sm:h-9 py-0 pl-9"
+                    className="admin-input h-9 py-0 pl-9"
                   />
                 </div>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={exportCsv}
-                    className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full flex-1 sm:flex-none"
+                    className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full flex-1 sm:flex-none"
                   >
                     <FileDown className="w-3.5 h-3.5" />
                     CSV
@@ -571,7 +604,7 @@ export default function CrmPage() {
                   <button
                     type="button"
                     onClick={exportVcf}
-                    className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full flex-1 sm:flex-none"
+                    className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full flex-1 sm:flex-none"
                   >
                     <Download className="w-3.5 h-3.5" />
                     vCards
@@ -579,12 +612,38 @@ export default function CrmPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                <select
+                  value={lifecycleFilter}
+                  onChange={(e) => setLifecycleFilter(e.target.value)}
+                  aria-label="Filter by lifecycle"
+                  className="admin-input h-9 py-0 cursor-pointer"
+                >
+                  <option value="">Every lifecycle</option>
+                  {LIFECYCLE_STAGES.map((entry) => (
+                    <option key={entry.id} value={entry.id}>
+                      {entry.label}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={sourceFilter}
+                  onChange={(e) => setSourceFilter(e.target.value)}
+                  aria-label="Filter by source"
+                  className="admin-input h-9 py-0 cursor-pointer"
+                >
+                  <option value="">Any source</option>
+                  {CONTACT_SOURCES.map((entry) => (
+                    <option key={entry.id} value={entry.id}>
+                      {entry.label}
+                    </option>
+                  ))}
+                </select>
                 <select
                   value={eventFilter}
                   onChange={(e) => setEventFilter(e.target.value)}
                   aria-label="Filter by event"
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">All events</option>
                   {events.map((event) => (
@@ -597,7 +656,7 @@ export default function CrmPage() {
                   value={stageFilter}
                   onChange={(e) => setStageFilter(e.target.value)}
                   aria-label="Filter by stage"
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">All stages</option>
                   {CRM_STAGES.map((stage) => (
@@ -610,7 +669,7 @@ export default function CrmPage() {
                   value={priorityFilter}
                   onChange={(e) => setPriorityFilter(e.target.value)}
                   aria-label="Filter by priority"
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">Any priority</option>
                   {CRM_PRIORITIES.map((p) => (
@@ -624,7 +683,7 @@ export default function CrmPage() {
                   onChange={(e) => setTagFilter(e.target.value)}
                   aria-label="Filter by tag"
                   disabled={allTags.length === 0}
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer disabled:opacity-50"
+                  className="admin-input h-9 py-0 cursor-pointer disabled:opacity-50"
                 >
                   <option value="">{allTags.length ? "Any tag" : "No tags yet"}</option>
                   {allTags.map((tag) => (
@@ -670,7 +729,7 @@ export default function CrmPage() {
                     Clear
                   </button>
                 )}
-                <span className="text-[11px] text-zinc-600 ml-auto">
+                <span className="text-[11px] text-zinc-400 ml-auto">
                   {filtered.length} of {contacts.length} shown
                 </span>
               </div>
@@ -756,7 +815,7 @@ export default function CrmPage() {
                 type="button"
                 onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
                 aria-label="Dismiss"
-                className="text-zinc-500 hover:text-zinc-200 transition-colors shrink-0"
+                className="text-zinc-400 hover:text-zinc-200 transition-colors shrink-0"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -791,7 +850,7 @@ function FirstRunEmpty({
       title: "Fill in your card",
       body: "Job title, email, phone, a link that books a slot. This is what a stranger sees three seconds after scanning.",
       action: (
-        <button type="button" onClick={onGoToCard} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
+        <button type="button" onClick={onGoToCard} className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full">
           Open your card
         </button>
       ),
@@ -801,7 +860,7 @@ function FirstRunEmpty({
       title: "Make a code and print it",
       body: "One per place it will live: the back of your badge, your lock screen, the banner. Each one gets its own scan count.",
       action: (
-        <button type="button" onClick={onGoToCodes} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
+        <button type="button" onClick={onGoToCodes} className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full">
           Open codes
         </button>
       ),
@@ -811,7 +870,7 @@ function FirstRunEmpty({
       title: "Meet people",
       body: "They scan and leave their details, or you open capture mode and type for them. It works with the signal fully off.",
       action: (
-        <Link href={captureHref} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
+        <Link href={captureHref} className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full">
           Open capture mode
         </Link>
       ),
@@ -821,9 +880,9 @@ function FirstRunEmpty({
   return (
     <div className="rounded-2xl border border-white/8 bg-zinc-950/40 p-6 sm:p-8">
       <div className="text-center max-w-md mx-auto">
-        <ContactIcon className="w-6 h-6 text-zinc-600 mx-auto" />
+        <ContactIcon className="w-6 h-6 text-zinc-400 mx-auto" />
         <h3 className="text-sm font-semibold text-white mt-3">Nobody in the pipeline yet</h3>
-        <p className="text-xs text-zinc-500 leading-relaxed mt-2">
+        <p className="text-xs text-zinc-400 leading-relaxed mt-2">
           Three things stand between here and a board full of people. None of them take long.
         </p>
       </div>
@@ -846,7 +905,7 @@ function FirstRunEmpty({
               </span>
               <span className="text-xs font-semibold text-white">{step.title}</span>
             </span>
-            <span className="text-[11px] text-zinc-500 leading-relaxed flex-1">{step.body}</span>
+            <span className="text-[11px] text-zinc-400 leading-relaxed flex-1">{step.body}</span>
             <span className="pt-1">{step.action}</span>
           </li>
         ))}
@@ -858,9 +917,9 @@ function FirstRunEmpty({
 function FilteredEmpty({ onClear }: { onClear: () => void }) {
   return (
     <div className="rounded-2xl border border-white/8 bg-zinc-950/40 p-8 sm:p-10 text-center">
-      <Search className="w-6 h-6 text-zinc-600 mx-auto" />
+      <Search className="w-6 h-6 text-zinc-400 mx-auto" />
       <h3 className="text-sm font-semibold text-white mt-3">Nobody matches that</h3>
-      <p className="text-xs text-zinc-500 leading-relaxed mt-2 max-w-md mx-auto">
+      <p className="text-xs text-zinc-400 leading-relaxed mt-2 max-w-md mx-auto">
         There are contacts on the board, just none inside the current filters.
       </p>
       <button type="button" onClick={onClear} className="btn-glass px-5 min-h-[44px] text-xs rounded-full mt-5">

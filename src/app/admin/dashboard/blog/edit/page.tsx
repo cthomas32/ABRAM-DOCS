@@ -559,12 +559,12 @@ function BlogEditorContent() {
 
   const renderMarkdownPreview = () => {
     if (!content.trim()) {
-      return <p className="text-zinc-600 italic font-sans">Start typing content in the markdown editor...</p>;
+      return <p className="text-zinc-400 italic font-sans">Start typing content in the markdown editor...</p>;
     }
 
     if (previewError) {
       return (
-        <div className="bg-red-500/5 border border-red-500/10 rounded-xl p-4 my-3 text-xs text-red-400 font-mono space-y-2">
+        <div className="bg-amber-500/5 border border-amber-500/10 rounded-xl p-4 my-3 text-xs text-amber-300 font-mono space-y-2">
           <div className="flex items-center gap-2 font-bold text-red-500">
             <AlertTriangle className="w-4 h-4" />
             <span>MDX Syntax Error</span>
@@ -577,7 +577,7 @@ function BlogEditorContent() {
     return (
       <div className="relative">
         {isCompiling && (
-          <div className="absolute top-2 right-2 flex items-center gap-1.5 text-[10px] text-zinc-500 bg-zinc-950/60 backdrop-blur border border-white/5 rounded-full px-2 py-0.5 animate-pulse z-10">
+          <div className="absolute top-2 right-2 flex items-center gap-1.5 text-[10px] text-zinc-400 bg-zinc-950/60 backdrop-blur border border-white/5 rounded-full px-2 py-0.5 animate-pulse z-10">
             <Loader2 className="w-3 h-3 animate-spin" />
             <span>Compiling...</span>
           </div>
@@ -587,7 +587,7 @@ function BlogEditorContent() {
           {previewSource ? (
             <MDXRemote {...previewSource} components={mdxComponents} />
           ) : (
-            <div className="flex items-center justify-center py-12 text-zinc-500 gap-2">
+            <div className="flex items-center justify-center py-12 text-zinc-400 gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span className="text-xs">Preparing preview...</span>
             </div>
@@ -601,11 +601,11 @@ function BlogEditorContent() {
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Navbar Sub Header */}
       <div className="bg-[#0C0C0C] border-b border-white/5 px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center gap-x-3 gap-y-2 shrink-0 z-10">
-        <Link href="/admin/dashboard/blog" className="btn-glass px-3 h-9 flex items-center gap-1.5 text-xs font-semibold rounded-full font-sans shrink-0">
+        <Link href="/admin/dashboard/blog" className="btn-glass px-3 h-9 flex items-center gap-1.5 text-xs font-medium rounded-full font-sans shrink-0">
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Blog List</span>
         </Link>
-        <span className="text-zinc-600 text-xs hidden sm:inline">/</span>
+        <span className="text-zinc-400 text-xs hidden sm:inline">/</span>
         <span className="hidden sm:block text-xs font-semibold text-zinc-400 truncate max-w-xs">{title || `Edit Post`}</span>
 
         <div className="flex items-center gap-2 ml-auto shrink-0">
@@ -639,7 +639,7 @@ function BlogEditorContent() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="btn-primary h-11 sm:h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+            className="btn-primary h-9 px-3 sm:px-4 text-xs font-medium rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             <span>Save<span className="hidden sm:inline"> Post</span></span>
@@ -657,7 +657,7 @@ function BlogEditorContent() {
         {/* Left Side Editing Pane */}
         <div className={`flex-1 flex flex-col h-full bg-[#0E0E0E] overflow-y-auto md:overflow-hidden ${previewMode === "preview" ? "hidden" : ""}`}>
           {loading ? (
-            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-zinc-500">
+            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-zinc-400">
               <Loader2 className="w-6 h-6 animate-spin" />
               <span className="text-xs font-sans">Loading post details...</span>
             </div>
@@ -667,7 +667,7 @@ function BlogEditorContent() {
               <div className="p-4 sm:p-5 border-b border-white/5 bg-zinc-950/20 space-y-4 shrink-0 md:overflow-y-auto md:max-h-[60%]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Post Title</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Post Title</label>
                     <input
                       type="text"
                       value={title}
@@ -677,7 +677,7 @@ function BlogEditorContent() {
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Slug URL</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Slug URL</label>
                     <input
                       type="text"
                       value={slug}
@@ -690,8 +690,8 @@ function BlogEditorContent() {
 
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Summary / Intro text</label>
-                    <span className={`text-[9px] font-mono ${summary.length > 160 ? "text-red-400 font-bold" : "text-zinc-500"}`}>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Summary / Intro text</label>
+                    <span className={`text-[9px] font-mono ${summary.length > 160 ? "text-amber-300 font-bold" : "text-zinc-400"}`}>
                       {summary.length} / 160
                     </span>
                   </div>
@@ -707,7 +707,7 @@ function BlogEditorContent() {
                 {/* Who wrote it. A team member, or a one-off guest name. */}
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Written by</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Written by</label>
                     <div className="flex bg-white/[0.04] p-1 rounded-full border border-white/10">
                       {([
                         { id: "member", label: "Team member" },
@@ -746,7 +746,7 @@ function BlogEditorContent() {
                               </option>
                             ))}
                         </select>
-                        <p className="text-[9px] text-zinc-600 mt-1.5 leading-relaxed font-sans">
+                        <p className="text-[9px] text-zinc-400 mt-1.5 leading-relaxed font-sans">
                           {members.length === 0
                             ? "No team members yet. "
                             : "Name, job title and headshot all come from the team record. "}
@@ -765,14 +765,14 @@ function BlogEditorContent() {
                           />
                         ) : (
                           <div className="w-6 h-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center shrink-0">
-                            <UsersRound className="w-3.5 h-3.5 text-zinc-500" />
+                            <UsersRound className="w-3.5 h-3.5 text-zinc-400" />
                           </div>
                         )}
                         <div className="min-w-0 leading-tight">
                           <span className="block text-[11px] text-white font-semibold truncate font-sans">
                             {selectedMember?.full_name || "Nobody selected"}
                           </span>
-                          <span className="block text-[9px] text-zinc-500 truncate font-sans">
+                          <span className="block text-[9px] text-zinc-400 truncate font-sans">
                             {selectedMember?.job_title || "Byline preview"}
                           </span>
                         </div>
@@ -781,7 +781,7 @@ function BlogEditorContent() {
                   ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Guest Author Name</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Guest Author Name</label>
                     <input
                       type="text"
                       value={author}
@@ -791,7 +791,7 @@ function BlogEditorContent() {
                     />
                     {existingAuthors.length > 0 && (
                       <div className="mt-1.5 flex flex-wrap gap-1.5">
-                        <span className="text-[9px] text-zinc-500 self-center mr-1">Quick Select:</span>
+                        <span className="text-[9px] text-zinc-400 self-center mr-1">Quick Select:</span>
                         {existingAuthors.map((item) => (
                           <button
                             key={item.name}
@@ -813,7 +813,7 @@ function BlogEditorContent() {
                   </div>
 
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Author Headshot</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Author Headshot</label>
                     <div className="flex items-center gap-3 bg-[#121212] border border-white/8 rounded-lg p-2 h-[38px] relative">
                       {authorAvatar ? (
                         <img
@@ -823,7 +823,7 @@ function BlogEditorContent() {
                         />
                       ) : (
                         <div className="w-6 h-6 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center shrink-0">
-                          <User className="w-3.5 h-3.5 text-zinc-500" />
+                          <User className="w-3.5 h-3.5 text-zinc-400" />
                         </div>
                       )}
                       
@@ -835,7 +835,7 @@ function BlogEditorContent() {
                             fileInput?.click();
                           }}
                           disabled={uploadingAvatar}
-                          className="btn-glass px-2.5 py-1 text-[9px] font-bold rounded-full flex items-center gap-1 cursor-pointer h-6"
+                          className="btn-glass px-2.5 py-1 text-[9px] font-medium rounded-full flex items-center gap-1 cursor-pointer h-6"
                         >
                           {uploadingAvatar ? <Loader2 className="w-2.5 h-2.5 animate-spin" /> : <Upload className="w-2.5 h-2.5" />}
                           <span>Upload</span>
@@ -851,7 +851,7 @@ function BlogEditorContent() {
                         <button
                           type="button"
                           onClick={toggleAvatarSelector}
-                          className="btn-glass px-2.5 py-1 text-[9px] font-bold rounded-full cursor-pointer h-6"
+                          className="btn-glass px-2.5 py-1 text-[9px] font-medium rounded-full cursor-pointer h-6"
                         >
                           <span>Select Existing</span>
                         </button>
@@ -867,7 +867,7 @@ function BlogEditorContent() {
                             className="absolute top-[42px] right-0 z-20 w-64 p-3 bg-zinc-950 border border-white/10 rounded-xl shadow-2xl space-y-2 max-h-48 overflow-y-auto"
                           >
                             <div className="flex justify-between items-center pb-1 border-b border-white/5">
-                              <span className="text-[9px] uppercase font-bold text-zinc-500">Select Headshot</span>
+                              <span className="text-[9px] uppercase font-bold text-zinc-400">Select Headshot</span>
                               <button
                                 type="button"
                                 onClick={() => setShowAvatarSelector(false)}
@@ -878,7 +878,7 @@ function BlogEditorContent() {
                             </div>
                             
                             {existingAvatars.length === 0 ? (
-                              <p className="text-[9px] text-zinc-600 text-center py-2 italic font-sans">No uploaded headshots found.</p>
+                              <p className="text-[9px] text-zinc-400 text-center py-2 italic font-sans">No uploaded headshots found.</p>
                             ) : (
                               <div className="grid grid-cols-4 gap-2">
                                 {existingAvatars.map((av) => (
@@ -909,7 +909,7 @@ function BlogEditorContent() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Status</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Status</label>
                     <select
                       value={status}
                       onChange={(e) => setStatus(e.target.value as any)}
@@ -920,7 +920,7 @@ function BlogEditorContent() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Publish date</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Publish date</label>
                     <input
                       type="date"
                       value={publishedAt}
@@ -934,7 +934,7 @@ function BlogEditorContent() {
               {/* Markdown Body Textarea */}
               <div className="flex flex-col relative md:flex-1 md:overflow-hidden">
                 <div className="bg-zinc-950 px-4 py-2 border-b border-white/5 flex gap-2 items-center justify-between shrink-0">
-                  <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Article Content (Markdown)</span>
+                  <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Article Content (Markdown)</span>
                 </div>
                 <textarea
                   value={content}
@@ -974,7 +974,7 @@ function BlogEditorContent() {
                     key={warn.id}
                     className={`border rounded-xl p-3 text-xs flex gap-2 items-start transition-colors duration-200 ${
                       warn.type === "error"
-                        ? "bg-red-500/5 border-red-500/15 text-red-400"
+                        ? "bg-amber-500/5 border-amber-500/15 text-amber-300"
                         : "bg-yellow-500/5 border-yellow-500/15 text-yellow-400"
                     }`}
                   >
@@ -1008,11 +1008,11 @@ function BlogEditorContent() {
 
           {/* live rendered Preview Component */}
           <div className="flex-1 p-5 overflow-y-auto space-y-4 prose prose-invert prose-zinc max-w-none bg-black/10">
-            <span className={`text-[9px] uppercase font-bold text-zinc-500 tracking-widest block mb-2 font-sans ${previewMode === "preview" ? "max-w-3xl mx-auto px-1" : ""}`}>Live Blog Article Preview</span>
+            <span className={`text-[9px] uppercase font-bold text-zinc-400 tracking-widest block mb-2 font-sans ${previewMode === "preview" ? "max-w-3xl mx-auto px-1" : ""}`}>Live Blog Article Preview</span>
             <div className={`border border-white/5 bg-[#0E0E0E] rounded-2xl space-y-4 leading-relaxed text-zinc-300 text-xs min-h-[300px] break-words transition-all duration-300 ${
               previewMode === "preview" ? "max-w-3xl w-full mx-auto my-4 p-8 sm:p-10 border-white/10" : "w-full p-5"
             }`}>
-              <div className="flex items-center justify-between text-[10px] text-zinc-500 gap-3">
+              <div className="flex items-center justify-between text-[10px] text-zinc-400 gap-3">
                 <div className="flex items-center gap-2 min-w-0">
                   {previewPhoto ? (
                     <img
@@ -1029,7 +1029,7 @@ function BlogEditorContent() {
                   {previewJobTitle && (
                     <>
                       <span className="w-1 h-1 rounded-full bg-zinc-700 shrink-0" />
-                      <span className="truncate text-zinc-600">{previewJobTitle}</span>
+                      <span className="truncate text-zinc-400">{previewJobTitle}</span>
                     </>
                   )}
                 </div>
@@ -1039,7 +1039,7 @@ function BlogEditorContent() {
                 {title || "Untitled Blog Post"}
               </h1>
               {summary && (
-                <p className="text-zinc-500 italic text-[11px] leading-relaxed mb-4 font-sans">
+                <p className="text-zinc-400 italic text-[11px] leading-relaxed mb-4 font-sans">
                   {summary}
                 </p>
               )}
@@ -1065,7 +1065,7 @@ function BlogEditorContent() {
                   <CheckCircle className="w-3.5 h-3.5" />
                 </div>
               ) : (
-                <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 shrink-0">
+                <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-300 shrink-0">
                   <AlertTriangle className="w-3.5 h-3.5" />
                 </div>
               )}
@@ -1083,7 +1083,7 @@ function BlogEditorContent() {
 export default function BlogEditorPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-zinc-500 text-xs">
+      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-zinc-400 text-xs">
         <Loader2 className="w-5 h-5 animate-spin mr-2" />
         <span>Loading Editor...</span>
       </div>

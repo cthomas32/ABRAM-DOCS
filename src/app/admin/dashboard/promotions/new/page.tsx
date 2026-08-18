@@ -150,12 +150,12 @@ export default function NewCampaignPage() {
       <div className="bg-[#0C0C0C] border-b border-white/5 px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center gap-x-3 gap-y-2 shrink-0 z-10">
         <Link
           href="/admin/dashboard/promotions"
-          className="btn-glass px-3 h-9 flex items-center gap-1.5 text-xs font-semibold rounded-full font-sans shrink-0"
+          className="btn-glass px-3 h-9 flex items-center gap-1.5 text-xs font-medium rounded-full font-sans shrink-0"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Promotions</span>
         </Link>
-        <span className="text-zinc-600 text-xs hidden sm:inline">/</span>
+        <span className="text-zinc-400 text-xs hidden sm:inline">/</span>
         <span className="hidden sm:block text-xs font-semibold text-zinc-400 truncate max-w-xs">
           {name || "New campaign"}
         </span>
@@ -164,7 +164,7 @@ export default function NewCampaignPage() {
           <button
             onClick={() => void submit()}
             disabled={blocked}
-            className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full disabled:opacity-40 flex items-center gap-2"
+            className="btn-primary h-9 px-4 text-xs font-medium rounded-full disabled:opacity-40 flex items-center gap-2"
           >
             {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
             Create draft
@@ -176,7 +176,7 @@ export default function NewCampaignPage() {
         <div className="max-w-3xl mx-auto space-y-8 pb-16">
           <div>
             <h1 className="text-xl font-bold tracking-tight text-white font-sans">New campaign</h1>
-            <p className="text-xs text-zinc-500 mt-1 font-sans">
+            <p className="text-xs text-zinc-400 mt-1 font-sans">
               Created as a draft. Nothing is redeemable until you mint a code and activate it.
             </p>
           </div>
@@ -190,7 +190,7 @@ export default function NewCampaignPage() {
                 className="admin-input"
                 autoFocus
               />
-              {slug && <p className="text-[11px] text-zinc-600 mt-1.5 font-mono">{slug}</p>}
+              {slug && <p className="text-[11px] text-zinc-400 mt-1.5 font-mono">{slug}</p>}
             </Field>
           </Section>
 
@@ -212,7 +212,7 @@ export default function NewCampaignPage() {
                 </button>
               ))}
             </div>
-            <p className="text-[11px] text-zinc-500 mt-3 leading-relaxed">
+            <p className="text-[11px] text-zinc-400 mt-3 leading-relaxed">
               {OFFER_TYPES.find((o) => o.id === offerType)?.blurb}
             </p>
 
@@ -298,7 +298,7 @@ export default function NewCampaignPage() {
                       onClick={() =>
                         setTiers((prev) => (prev.includes(t.id) ? prev.filter((x) => x !== t.id) : [...prev, t.id]))
                       }
-                      className={`h-11 sm:h-9 px-3.5 text-xs font-medium rounded-lg border transition-colors ${
+                      className={`h-9 px-3.5 text-xs font-medium rounded-lg border transition-colors ${
                         on ? "border-white/25 bg-white/[0.08] text-white" : "border-white/10 text-zinc-400 hover:bg-white/[0.03]"
                       }`}
                     >
@@ -308,7 +308,7 @@ export default function NewCampaignPage() {
                   );
                 })}
               </div>
-              <p className="text-[11px] text-zinc-600 mt-2">
+              <p className="text-[11px] text-zinc-400 mt-2">
                 {tiers.length === 0 ? "Any paid plan. Free and Enterprise are never eligible." : "Only the plans selected."}
               </p>
             </Field>
@@ -340,7 +340,7 @@ export default function NewCampaignPage() {
                 onChange={(e) => setEndsAt(e.target.value)}
                 className="admin-input sm:max-w-xs"
               />
-              <p className="text-[11px] text-zinc-600 mt-1.5 leading-relaxed">
+              <p className="text-[11px] text-zinc-400 mt-1.5 leading-relaxed">
                 After this date the code stops being redeemable. Discounts already running are unaffected —
                 someone who redeemed keeps what they were sold.
               </p>
@@ -367,11 +367,11 @@ export default function NewCampaignPage() {
           </Section>
 
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-            <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans block mb-1.5">
+            <span className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans block mb-1.5">
               This reads as
             </span>
             <p className="text-sm text-white font-sans">{preview}</p>
-            <p className="text-[11px] text-zinc-600 mt-2">
+            <p className="text-[11px] text-zinc-400 mt-2">
               {newOnly ? "New customers only. " : ""}
               One redemption per workspace.
             </p>
@@ -394,7 +394,7 @@ export default function NewCampaignPage() {
             <button
               onClick={() => void submit()}
               disabled={blocked}
-              className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full disabled:opacity-40 flex items-center gap-2"
+              className="btn-primary h-9 px-4 text-xs font-medium rounded-full disabled:opacity-40 flex items-center gap-2"
             >
               {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Create draft
@@ -409,7 +409,7 @@ export default function NewCampaignPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-3">
-      <h2 className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans">{title}</h2>
+      <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">{title}</h2>
       <div className="glass-panel rounded-2xl border border-white/5 p-5">{children}</div>
     </section>
   );
@@ -418,7 +418,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans block mb-1.5">
+      <label className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans block mb-1.5">
         {label}
       </label>
       {children}
@@ -457,7 +457,7 @@ function Toggle({
       </span>
       <span className="min-w-0">
         <span className="text-xs text-white font-sans block">{label}</span>
-        {hint && <span className="text-[11px] text-zinc-600 leading-relaxed block mt-0.5">{hint}</span>}
+        {hint && <span className="text-[11px] text-zinc-400 leading-relaxed block mt-0.5">{hint}</span>}
       </span>
     </button>
   );

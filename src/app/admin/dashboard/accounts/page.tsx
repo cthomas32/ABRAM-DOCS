@@ -7,9 +7,10 @@ import { can, type ConsoleRole, type GrowthStage } from "@/lib/auth/permissions"
 import { formatMoney } from "@/lib/crm/constants";
 import type { CrmAccount, CrmContact, CrmDeal } from "@/lib/crm/types";
 import AccountDrawer from "./AccountDrawer";
+import { rows, readWarning } from "@/lib/supabase/rows";
 import { StatRow } from "@/components/admin/StatTile";
 import Money from "@/components/admin/Money";
-import { ACCOUNT_LIFECYCLES, type AccountLifecycle } from "./actions";
+import { ACCOUNT_LIFECYCLES, type AccountLifecycle } from "./lifecycles";
 
 /**
  * The companies, as distinct from the people at them.
@@ -85,17 +86,13 @@ export default function AccountsPage() {
       supabase.auth.getUser(),
     ]);
 
-    if (accountRows.error) {
-      setWarning("Accounts could not be read. Sign in again, or ask an owner to check your access.");
-    } else {
-      setWarning(null);
-    }
+    setWarning(readWarning(accountRows, "Accounts"));
 
-    setAccounts((accountRows.data as CrmAccount[] | null) ?? []);
-    setContacts((contactRows.data as CrmContact[] | null) ?? []);
-    setDeals((dealRows.data as CrmDeal[] | null) ?? []);
+    setAccounts(rows<CrmAccount>(accountRows));
+    setContacts(rows<CrmContact>(contactRows));
+    setDeals(rows<CrmDeal>(dealRows));
 
-    const people = (memberRows.data as MemberRow[] | null) ?? [];
+    const people = rows<MemberRow>(memberRows);
     setMembers(people);
 
     const me = people.find((person) => person.user_id === session.data.user?.id);
@@ -116,6 +113,25 @@ export default function AccountsPage() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  /**
+   * Arriving from the command palette with a row already chosen.
+   *
+   * Read once, after the first load, and only when the id is one the
+   * reader may actually see — row level security decided that, and a
+   * guessed id in the address bar must not open an empty drawer that
+   * looks like a record.
+   */
+  const [deepLinkDone, setDeepLinkDone] = useState(false);
+  useEffect(() => {
+    if (deepLinkDone || loading) return;
+    setDeepLinkDone(true);
+    const wanted = new URLSearchParams(window.location.search).get("account");
+    if (wanted && accounts.some((row) => row.id === wanted)) {
+      setSelectedId(wanted);
+      setDrawerOpen(true);
+    }
+  }, [deepLinkDone, loading, accounts]);
 
   const memberNameById = useMemo(() => {
     const map: Record<string, string> = {};
@@ -289,7 +305,7 @@ export default function AccountsPage() {
       {/* One toolbar row, one control height. */}
       <div className="flex flex-wrap gap-2 mb-5">
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -350,7 +366,7 @@ export default function AccountsPage() {
           <h3 className="text-xs font-medium text-zinc-400 mb-1">
             {filtered ? "Nothing matches these filters" : "No accounts yet"}
           </h3>
-          <p className="text-[11px] text-zinc-600 max-w-xs mx-auto leading-relaxed">
+          <p className="text-[11px] text-zinc-400 max-w-xs mx-auto leading-relaxed">
             {filtered
               ? "Widen the filters to see the rest of the list."
               : "Companies appear here, with the people and deals that roll up to each."}
@@ -401,7 +417,7 @@ export default function AccountsPage() {
                         <span className="block text-xs font-medium text-white break-words">
                           {account.name}
                         </span>
-                        <span className="block text-[11px] text-zinc-600 mt-0.5 break-words">
+                        <span className="block text-[11px] text-zinc-400 mt-0.5 break-words">
                           {account.domain ?? "No web address"}
                           {excluded && " · Pays no commission"}
                         </span>
@@ -411,20 +427,20 @@ export default function AccountsPage() {
                           {account.lifecycle}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums">
+                      <td className="px-4 py-3 text-xs text-zinc-400 text-right tabular-nums">
                         {entry?.contacts.length ?? 0}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums">
+                      <td className="px-4 py-3 text-xs text-zinc-400 text-right tabular-nums">
                         {entry?.deals.length ?? 0}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-300 text-right tabular-nums whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-white text-right tabular-nums whitespace-nowrap">
                         {entry?.openValue ? (
                           <Money cents={entry.openValue} currency={entry.currency} />
                         ) : (
                           "—"
                         )}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-zinc-400 whitespace-nowrap">
                         {formatDay(account.first_contact_at)}
                       </td>
                     </tr>

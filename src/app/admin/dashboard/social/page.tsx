@@ -131,7 +131,7 @@ export default function SocialPage() {
             </h1>
             {/* Two screens of scrolling before the week starts on a phone,
                 for a sentence that is only ever read once. */}
-            <p className="hidden sm:block text-xs text-zinc-500 mt-1 font-sans max-w-2xl leading-relaxed">
+            <p className="hidden sm:block text-xs text-zinc-400 mt-1 font-sans max-w-2xl leading-relaxed">
               What goes out and when, and the images that go with it. Mark a post ready and it arrives in
               Slack the morning it is due, with the words, the link and the card already on it.
             </p>
@@ -140,7 +140,7 @@ export default function SocialPage() {
             <button
               type="button"
               onClick={startBlank}
-              className="btn-glass flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-full shrink-0"
+              className="btn-glass flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-full shrink-0"
             >
               <Wand2 className="w-3.5 h-3.5" />
               Start fresh
@@ -208,7 +208,7 @@ export default function SocialPage() {
                 </button>
               ))}
             </div>
-            <span className="text-[11px] text-zinc-600 leading-relaxed -mt-4">
+            <span className="text-[11px] text-zinc-400 leading-relaxed -mt-4">
               {libraryView === "cards"
                 ? "Everything made here, and whatever KIPP has proposed since the last look."
                 : "The pictures that go behind a card. Upload as many as you like, then title them and say who took them."}
@@ -233,7 +233,7 @@ export default function SocialPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
               className={`glass-panel rounded-xl px-4 py-3 flex items-start gap-3 border ${
-                toast.tone === "error" ? "border-red-500/30" : "border-white/10"
+                toast.tone === "error" ? "border-amber-500/30" : "border-white/10"
               }`}
             >
               <p className="text-xs text-zinc-200 leading-relaxed flex-1">{toast.message}</p>
@@ -241,7 +241,7 @@ export default function SocialPage() {
                 type="button"
                 onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
                 aria-label="Dismiss"
-                className="text-zinc-500 hover:text-zinc-200 transition-colors shrink-0"
+                className="text-zinc-400 hover:text-zinc-200 transition-colors shrink-0"
               >
                 <X className="w-3.5 h-3.5" />
               </button>

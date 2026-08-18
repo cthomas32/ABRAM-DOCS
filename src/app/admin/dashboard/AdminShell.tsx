@@ -1,119 +1,25 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { signOut as signOutAction } from "../actions";
 import SessionGuard, { useSessionGuard } from "@/components/admin/SessionGuard";
+import CommandPalette, { openCommandPalette } from "@/components/admin/CommandPalette";
 import type { ConsoleUser, Permission } from "@/lib/auth/permissions";
-import {
-  Newspaper,
-  BookOpen,
-  Tag,
-  Users,
-  Mail,
-  LogOut,
-  User,
-  LayoutDashboard,
-  Link as LinkIcon,
-  Megaphone,
-  BadgePercent,
-  Contact,
-  Image as ImageIcon,
-  Menu,
-  X,
-  ChevronRight,
-  UsersRound,
-  KeyRound,
-  Banknote,
-  Building2,
-  Handshake,
-  Stamp,
-  Columns3,
-  CheckSquare
-} from "lucide-react";
+import { activeLinkFor, visibleGroups } from "./nav";
+import { ChevronRight, LogOut, Menu, Search, User, X } from "lucide-react";
 
 /**
- * Every destination declares the permission it needs.
+ * The chrome around every console screen.
  *
- * The list is filtered before it is rendered, so a link that would be
- * refused is never drawn. That is not only politeness: a menu showing
- * doors somebody cannot open also tells them the shape of what everybody
- * else can do, which is not information a console should volunteer.
+ * The navigation itself moved to `nav.ts`, so the sidebar, the mobile
+ * sheet and the ⌘K palette all read one list and cannot drift. What is
+ * left here is the frame: the mark, the six groups, who is signed in, and
+ * the way out.
  */
-interface AdminNavLink {
-  id: string;
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  hint: string;
-  permission: Permission;
-  /** Draws the open follow up count beside the label. One link uses this. */
-  countsTasks?: boolean;
-}
-
-const NAV_GROUPS: { id: string; label: string | null; links: AdminNavLink[] }[] = [
-  {
-    id: "main",
-    label: null as string | null,
-    links: [
-      { id: "overview", label: "Overview", href: "/admin/dashboard", icon: LayoutDashboard, hint: "Marketing telemetry" , permission: "console.admin" },
-    ],
-  },
-  {
-    id: "content",
-    label: "Content",
-    links: [
-      { id: "docs", label: "Docs Editor", href: "/admin/dashboard/docs", icon: BookOpen, hint: "Help centre guides" , permission: "content.docs" },
-      { id: "blog", label: "Blog Posts", href: "/admin/dashboard/blog", icon: Newspaper, hint: "Articles & announcements" , permission: "content.blog" },
-      { id: "changelog", label: "Release Notes", href: "/admin/dashboard/changelog", icon: Tag, hint: "Version changelogs" , permission: "content.changelog" },
-      { id: "social", label: "Social Studio", href: "/admin/dashboard/social", icon: ImageIcon, hint: "Post images & carousels" , permission: "social.manage" },
-      { id: "team", label: "Team", href: "/admin/dashboard/team", icon: UsersRound, hint: "People & bylines" , permission: "content.team" },
-    ],
-  },
-  {
-    id: "audience",
-    label: "Audience",
-    links: [
-      { id: "crm", label: "Contacts", href: "/admin/dashboard/crm", icon: Contact, hint: "People and the pipeline", permission: "crm.contacts.read.own" },
-      { id: "accounts", label: "Accounts", href: "/admin/dashboard/accounts", icon: Building2, hint: "Companies and exclusions", permission: "crm.accounts.manage" },
-      { id: "deals", label: "Deals", href: "/admin/dashboard/deals", icon: Handshake, hint: "What is open and what it is worth", permission: "crm.deals.manage" },
-      { id: "deal-board", label: "Deal board", href: "/admin/dashboard/deals/board", icon: Columns3, hint: "Deals by stage", permission: "crm.deals.manage" },
-      { id: "tasks", label: "Tasks", href: "/admin/dashboard/tasks", icon: CheckSquare, hint: "Follow ups due", permission: "crm.contacts.read.own", countsTasks: true },
-      { id: "registrations", label: "Registrations", href: "/admin/dashboard/registrations", icon: Stamp, hint: "Claim a named account", permission: "crm.registrations.file" },
-      { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone, hint: "Landing page funnels" , permission: "campaigns.manage" },
-      { id: "links", label: "Link Hub", href: "/admin/dashboard/links", icon: LinkIcon, hint: "Your one bio link" , permission: "links.manage" },
-      { id: "promotions", label: "Promotions", href: "/admin/dashboard/promotions", icon: BadgePercent, hint: "Discount codes" , permission: "promotions.manage" },
-      { id: "subscribers", label: "Subscribers", href: "/admin/dashboard/subscribers", icon: Users, hint: "Newsletter contacts" , permission: "subscribers.read" },
-      { id: "broadcasts", label: "Email Broadcasts", href: "/admin/dashboard/broadcasts", icon: Mail, hint: "Compose & send", permission: "broadcasts.draft" },
-    ],
-  },
-  {
-    id: "numbers",
-    label: "Numbers",
-    links: [
-      { id: "earnings", label: "Your Earnings", href: "/admin/dashboard/earnings", icon: Banknote, hint: "Commission statement", permission: "commission.read.own" },
-    ],
-  },
-  {
-    id: "company",
-    label: "Company",
-    links: [
-      { id: "people", label: "People & Access", href: "/admin/dashboard/people", icon: KeyRound, hint: "Logins and roles", permission: "roles.manage" },
-      { id: "revenue", label: "Revenue & Commission", href: "/admin/dashboard/revenue", icon: Banknote, hint: "Collections and payouts", permission: "commission.manage" },
-    ],
-  },
-];
-
-
-
-function isLinkActive(href: string, pathname: string | null) {
-  const cleanPath = pathname ? pathname.replace(/\/$/, "") : "";
-  const cleanHref = href.replace(/\/$/, "");
-  if (cleanHref === "/admin/dashboard") return cleanPath === "/admin/dashboard";
-  return cleanPath === cleanHref || cleanPath.startsWith(cleanHref + "/");
-}
 
 export default function AdminShell({
   user,
@@ -136,6 +42,32 @@ export default function AdminShell({
   );
 }
 
+/**
+ * The mark, top left, linking home.
+ *
+ * The lockup the marketing site uses, on its dark background, because a
+ * console that looks like a different product from the site it
+ * administers is a console people hesitate in.
+ */
+function BrandMark({ className = "" }: { className?: string }) {
+  return (
+    <Link
+      href="/admin/dashboard"
+      aria-label="ABRAM admin, overview"
+      className={`inline-flex items-center gap-2 rounded-full transition-opacity hover:opacity-80 ${className}`}
+    >
+      <Image
+        src="/abram-logo-lockup-cream.png"
+        alt="ABRAM"
+        width={96}
+        height={19}
+        priority
+        className="h-[18px] w-auto select-none"
+      />
+    </Link>
+  );
+}
+
 function DashboardChrome({
   user,
   permissions,
@@ -151,22 +83,27 @@ function DashboardChrome({
   const router = useRouter();
 
   // Drawn from what this person holds, not from the full catalog.
-  const held = new Set(permissions);
-  const visibleGroups = NAV_GROUPS.map((group) => ({
-    ...group,
-    links: group.links.filter((link) => held.has(link.permission)),
-  })).filter((group) => group.links.length > 0);
-  const visibleLinks = visibleGroups.flatMap((group) => group.links);
+  const groups = visibleGroups(permissions);
+  const links = groups.flatMap((group) => group.links);
+  const activeLink = activeLinkFor(links, pathname);
+  const activeHref = activeLink?.href ?? null;
 
   const [currentUserEmail, setCurrentUserEmail] = useState<string>(
     user.fullName || user.email || "ABRAM Team"
   );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { markSigningOut } = useSessionGuard();
-  const supabase = createClient();
 
   useEffect(() => {
-    fetchUser();
+    const supabase = createClient();
+    supabase.auth
+      .getUser()
+      .then(({ data }) => {
+        if (data.user?.email) setCurrentUserEmail(data.user.email);
+      })
+      .catch(() => {
+        // The name passed in from the server is already a correct answer.
+      });
   }, []);
 
   // Close the mobile drawer whenever the route changes
@@ -194,17 +131,6 @@ function DashboardChrome({
     return () => window.removeEventListener("keydown", onKey);
   }, [mobileMenuOpen]);
 
-  const fetchUser = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email) {
-        setCurrentUserEmail(user.email);
-      }
-    } catch (err) {
-      console.error("Error fetching user session:", err);
-    }
-  };
-
   const handleSignOut = async () => {
     markSigningOut();
     const result = await signOutAction();
@@ -214,51 +140,55 @@ function DashboardChrome({
     }
   };
 
-  // The label of the section currently open, shown in the mobile header.
-  //
-  // Longest match wins, so /deals/board lights the board row rather than
-  // lighting both it and its parent Deals row.
-  const activeLink = visibleLinks
-    .filter((link) => isLinkActive(link.href, pathname))
-    .sort((a, b) => b.href.length - a.href.length)[0];
-  const activeHref = activeLink?.href ?? null;
-
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-zinc-100 font-sans flex flex-col md:flex-row relative">
+      <CommandPalette permissions={permissions} />
+
       {/* Mobile Top Header — shows where you are, not every place you could go */}
       <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-black/70 backdrop-blur-xl border-b border-white/5 pl-4 pr-2 flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <span className="block text-xs uppercase font-bold tracking-widest text-gray-400">
-            ABRAM Admin
-          </span>
-          <span className="block text-sm font-bold tracking-tight text-white truncate">
-            {activeLink?.label || "Dashboard"}
+        <div className="min-w-0 flex items-center gap-3">
+          <BrandMark className="shrink-0" />
+          <span className="block text-sm font-medium tracking-tight text-white truncate">
+            {activeLink?.label || "Overview"}
           </span>
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(true)}
-          aria-label="Open navigation menu"
-          aria-expanded={mobileMenuOpen}
-          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full text-zinc-300 hover:text-white active:bg-white/[0.08] transition-colors"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
+        <div className="flex items-center shrink-0">
+          <button
+            onClick={openCommandPalette}
+            aria-label="Search the console"
+            className="w-11 h-11 flex items-center justify-center rounded-full text-zinc-300 hover:text-white active:bg-white/[0.08] transition-colors"
+          >
+            <Search className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            aria-label="Open navigation menu"
+            aria-expanded={mobileMenuOpen}
+            className="w-11 h-11 flex items-center justify-center rounded-full text-zinc-300 hover:text-white active:bg-white/[0.08] transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
       </header>
 
       {/* Left Navigation Sidebar (Desktop) */}
       <aside className="hidden md:flex w-[204px] xl:w-56 border-r border-white/5 bg-zinc-950/40 flex-col h-screen sticky top-0 justify-between shrink-0 px-3 py-5">
-        <div className="space-y-5 min-h-0 overflow-y-auto">
-          <div className="flex flex-col gap-1.5 px-2 pb-4 border-b border-white/5">
-            <span className="font-bold tracking-tight text-white text-[13px] leading-snug">
-              ABRAM Marketing Engine
-            </span>
-            <span className="text-[9px] bg-white/[0.04] border border-white/10 px-2 py-0.5 rounded text-zinc-400 font-mono w-max">
-              ADMIN PANEL
-            </span>
+        <div className="space-y-4 min-h-0 overflow-y-auto">
+          <div className="flex flex-col gap-3 px-2 pb-4 border-b border-white/5">
+            <BrandMark />
+            <button
+              type="button"
+              onClick={openCommandPalette}
+              className="flex items-center gap-2 h-9 px-3 rounded-full border border-white/8 bg-white/[0.02] text-[11px] text-zinc-400 hover:text-white hover:border-white/15 transition-colors"
+            >
+              <Search className="w-3.5 h-3.5 shrink-0" />
+              <span>Search</span>
+              <kbd className="ml-auto text-[10px] text-zinc-400 tracking-wider">⌘K</kbd>
+            </button>
           </div>
 
           <nav className="flex flex-col gap-4">
-            {visibleGroups.map((group) => (
+            {groups.map((group) => (
               <div key={group.id} className="flex flex-col gap-1.5">
                 {group.label && (
                   <span className="text-xs uppercase font-bold tracking-widest text-gray-400 px-3 mb-0.5">
@@ -277,7 +207,7 @@ function DashboardChrome({
                       className={`flex items-center gap-2.5 px-3 py-2 rounded-full text-[11px] font-medium select-none border transition-colors duration-200 ${
                         isActive
                           ? "bg-white text-black border-white"
-                          : "border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+                          : "border-transparent text-zinc-300 hover:text-white hover:bg-white/[0.04]"
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -285,7 +215,7 @@ function DashboardChrome({
                       {link.countsTasks && taskCount > 0 && (
                         <span
                           className={`ml-auto shrink-0 rounded-full px-1.5 text-[10px] tabular-nums ${
-                            isActive ? "bg-black/10 text-black/70" : "bg-white/[0.06] text-zinc-300"
+                            isActive ? "bg-black/10 text-black/70" : "bg-white/[0.06] text-zinc-200"
                           }`}
                         >
                           {taskCount}
@@ -301,7 +231,7 @@ function DashboardChrome({
 
         <div className="flex flex-col gap-2.5 pt-4 border-t border-white/5 shrink-0">
           <div className="flex items-center gap-2 px-2 text-zinc-400 text-[11px] min-w-0">
-            <User className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+            <User className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
             <span className="truncate" title={currentUserEmail}>
               {currentUserEmail}
             </span>
@@ -344,7 +274,7 @@ function DashboardChrome({
             </div>
 
             <nav className="flex-1 overflow-y-auto overscroll-contain px-3 pb-2">
-              {visibleGroups.map((group) => (
+              {groups.map((group) => (
                 <div key={group.id} className="mb-2">
                   {group.label && (
                     <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 px-3 pt-4 pb-2">
@@ -367,23 +297,23 @@ function DashboardChrome({
                           className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
                             isActive
                               ? "bg-white text-black border-white"
-                              : "bg-white/[0.03] text-zinc-400 border-white/8"
+                              : "bg-white/[0.03] text-zinc-300 border-white/8"
                           }`}
                         >
                           <Icon className="w-4 h-4" />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className={`block text-sm font-medium truncate ${isActive ? "text-white" : "text-zinc-200"}`}>
+                          <span className="block text-sm font-medium truncate text-white">
                             {link.label}
                           </span>
-                          <span className="block text-[11px] text-zinc-500 truncate">{link.hint}</span>
+                          <span className="block text-[11px] text-zinc-400 truncate">{link.hint}</span>
                         </span>
                         {link.countsTasks && taskCount > 0 && (
-                          <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] tabular-nums text-zinc-300">
+                          <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] tabular-nums text-zinc-200">
                             {taskCount}
                           </span>
                         )}
-                        <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-zinc-400 shrink-0" />
                       </Link>
                     );
                   })}
@@ -393,12 +323,12 @@ function DashboardChrome({
 
             <div className="shrink-0 border-t border-white/5 px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 text-zinc-400 text-xs min-w-0">
-                <User className="w-4 h-4 text-zinc-500 shrink-0" />
+                <User className="w-4 h-4 text-zinc-400 shrink-0" />
                 <span className="truncate">{currentUserEmail}</span>
               </div>
               <button
                 onClick={handleSignOut}
-                className="btn-glass flex items-center justify-center gap-2 px-4 h-11 sm:h-9 text-xs font-medium rounded-full shrink-0"
+                className="btn-glass flex items-center justify-center gap-2 px-4 h-9 text-xs font-medium rounded-full shrink-0"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Sign Out</span>

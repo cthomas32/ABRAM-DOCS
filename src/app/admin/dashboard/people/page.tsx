@@ -4,6 +4,7 @@ import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
 import type { ConsoleUser } from "@/lib/auth/permissions";
 import type { GrowthPartnerTerms } from "@/lib/growth/types";
+import { rows } from "@/lib/supabase/rows";
 import PeopleManager from "./PeopleManager";
 
 /**
@@ -48,11 +49,11 @@ export default async function PeoplePage() {
   ]);
 
   const openTerms = new Map<string, GrowthPartnerTerms>();
-  for (const row of (termsRes.data ?? []) as GrowthPartnerTerms[]) {
+  for (const row of rows<GrowthPartnerTerms>(termsRes)) {
     openTerms.set(row.user_id, row);
   }
 
-  const people: PersonRow[] = (usersRes.data ?? []).map((row) => ({
+  const people: PersonRow[] = rows<Record<string, unknown>>(usersRes).map((row) => ({
     userId: row.user_id as string,
     email: row.email as string,
     fullName: (row.full_name as string | null) ?? null,

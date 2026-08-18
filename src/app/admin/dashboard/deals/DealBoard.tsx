@@ -236,7 +236,7 @@ export default function DealBoard({ deals, people, loadError = null }: DealBoard
                 </p>
                 <span className={BLOCK_COUNT_PILL}>{column.length}</span>
               </div>
-              <p className="mb-2.5 px-0.5 text-[11px] tabular-nums text-zinc-500">
+              <p className="mb-2.5 px-0.5 text-[11px] tabular-nums text-zinc-400">
                 {money(total, currency)}
               </p>
 
@@ -260,7 +260,7 @@ export default function DealBoard({ deals, people, loadError = null }: DealBoard
         })}
       </div>
 
-      <p className="text-[11px] text-zinc-600">
+      <p className="text-[11px] text-zinc-400">
         Drag a card to move it, or use the stage dropdown on the card. Won asks for a close date.
       </p>
 
@@ -325,7 +325,7 @@ function DealCard({
             title="Nobody owns this yet"
             className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border border-dashed border-white/[0.14]"
           >
-            <User className="h-3 w-3 text-zinc-600" />
+            <User className="h-3 w-3 text-zinc-400" />
           </span>
         )}
       </div>
@@ -340,7 +340,7 @@ function DealCard({
         </span>
         <span
           title={late ? "Past the expected close date" : undefined}
-          className={`${BLOCK_CHIP} ${late ? OVERDUE_TEXT : due ? "" : "text-zinc-500"}`}
+          className={`${BLOCK_CHIP} ${late ? OVERDUE_TEXT : due ? "" : "text-zinc-400"}`}
         >
           {late ? (
             <AlertCircle className="h-3 w-3 shrink-0" />

@@ -246,13 +246,13 @@ export default function BlogManagerPage() {
               <Newspaper className="w-5 h-5 text-zinc-400" />
               Blog Posts
             </h1>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-xs text-zinc-400 mt-1">
               Manage your announcement articles, custom workflows, and marketing content inside Supabase.
             </p>
           </div>
           <button
             onClick={handleCreatePost}
-            className="btn-primary h-11 sm:h-9 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+            className="btn-primary h-9 w-full sm:w-auto px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>New Post</span>
@@ -262,7 +262,7 @@ export default function BlogManagerPage() {
         {/* Filter / Search Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
           <div className="relative w-full sm:max-w-xs">
-            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchTerm}
@@ -283,7 +283,7 @@ export default function BlogManagerPage() {
                 className={`px-2 sm:px-3.5 min-h-[44px] sm:min-h-0 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   statusFilter === opt.id
                     ? "bg-white/10 text-white border border-white/10"
-                    : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+                    : "text-zinc-400 hover:text-zinc-300 border border-transparent"
                 }`}
               >
                 {opt.label}
@@ -294,12 +294,12 @@ export default function BlogManagerPage() {
 
         {/* Blog List Grid */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-500">
+          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-400">
             <Loader2 className="w-5 h-5 animate-spin" />
             <span className="text-xs">Loading database records...</span>
           </div>
         ) : filteredPosts.length === 0 ? (
-          <div className="text-center py-16 text-zinc-500 text-xs border border-dashed border-white/5 rounded-2xl">
+          <div className="text-center py-16 text-zinc-400 text-xs border border-dashed border-white/5 rounded-2xl">
             No blog posts found matching the filters.
           </div>
         ) : (
@@ -334,9 +334,9 @@ export default function BlogManagerPage() {
                       </p>
                     )}
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] text-zinc-500 pt-1">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] text-zinc-400 pt-1">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-zinc-600" />
+                      <Clock className="w-3 h-3 text-zinc-400" />
                       {new Date(post.created_at).toLocaleDateString()}
                     </span>
                     <span className="flex items-center gap-1.5 truncate max-w-[170px]">
@@ -347,15 +347,15 @@ export default function BlogManagerPage() {
                           className="w-3.5 h-3.5 rounded-full object-cover border border-white/10 shrink-0"
                         />
                       ) : (
-                        <User className="w-3 h-3 text-zinc-600 shrink-0" />
+                        <User className="w-3 h-3 text-zinc-400 shrink-0" />
                       )}
                       <span className="truncate">{post.byline.name}</span>
                       {post.byline.jobTitle && (
-                        <span className="truncate text-zinc-600">{post.byline.jobTitle}</span>
+                        <span className="truncate text-zinc-400">{post.byline.jobTitle}</span>
                       )}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Eye className="w-3 h-3 text-zinc-600" />
+                      <Eye className="w-3 h-3 text-zinc-400" />
                       {post.views || 0} views
                     </span>
                   </div>
@@ -373,7 +373,7 @@ export default function BlogManagerPage() {
                 <div className="flex mx-5 mb-5 pt-4 border-t border-white/5 gap-2">
                   <Link
                     href={`/admin/dashboard/blog/edit?id=${post.id}`}
-                    className="btn-glass flex-1 h-10 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
+                    className="btn-glass flex-1 h-10 sm:h-8 px-3 text-[10px] font-medium rounded-full flex items-center justify-center gap-1.5 hover:text-white"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     <span>Edit</span>
@@ -382,7 +382,7 @@ export default function BlogManagerPage() {
                     <button
                       onClick={() => handlePublish(post.id)}
                       disabled={publishingId === post.id}
-                      className="btn-primary flex-1 h-10 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      className="btn-primary flex-1 h-10 sm:h-8 px-3 text-[10px] font-medium rounded-full flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
                       {publishingId === post.id ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -413,10 +413,10 @@ export default function BlogManagerPage() {
           onClose={() => setConfirmDelete(null)}
           size="sm"
           labelledBy="delete-post-title"
-          panelClassName="border-red-500/20"
+          panelClassName="border-amber-500/20"
         >
           <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4">
+            <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-300 mb-4">
               <Trash2 className="w-6 h-6" />
             </div>
             <h3 id="delete-post-title" className="text-sm font-bold text-white tracking-tight mb-2">
@@ -428,7 +428,7 @@ export default function BlogManagerPage() {
             <div className="flex gap-3 w-full">
               <button
                 onClick={() => setConfirmDelete(null)}
-                className="btn-glass flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full"
+                className="btn-glass flex-1 h-11 sm:h-10 text-xs font-medium rounded-full"
               >
                 Cancel
               </button>
@@ -455,7 +455,7 @@ export default function BlogManagerPage() {
                 className="pointer-events-auto w-full p-4 rounded-xl border glass-panel flex items-start gap-3 shadow-2xl"
               >
                 <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                  t.type === "success" ? "bg-green-500/10 text-green-400 border border-green-500/10" : "bg-red-500/10 text-red-400 border border-red-500/10"
+                  t.type === "success" ? "bg-green-500/10 text-green-400 border border-green-500/10" : "bg-amber-500/10 text-amber-300 border border-amber-500/10"
                 }`}>
                   <CheckCircle className="w-3 h-3" />
                 </div>

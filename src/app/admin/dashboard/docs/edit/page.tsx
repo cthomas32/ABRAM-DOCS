@@ -205,10 +205,10 @@ function DocsEditorContent() {
 
   if (!fileParam) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-zinc-500 gap-4">
-        <AlertTriangle className="w-8 h-8 text-zinc-600" />
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-zinc-400 gap-4">
+        <AlertTriangle className="w-8 h-8 text-zinc-400" />
         <span className="text-xs">No file specified in query path.</span>
-        <Link href="/admin/dashboard/docs" className="btn-glass px-4 py-2 text-xs font-semibold rounded-full">
+        <Link href="/admin/dashboard/docs" className="btn-glass px-4 py-2 text-xs font-medium rounded-full">
           Back to Docs Manager
         </Link>
       </div>
@@ -219,11 +219,11 @@ function DocsEditorContent() {
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Navbar Sub Header */}
       <div className="bg-[#0C0C0C] border-b border-white/5 px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center gap-x-3 gap-y-2 shrink-0 z-10">
-        <Link href="/admin/dashboard/docs" className="btn-glass px-3 h-9 flex items-center gap-1.5 text-xs font-semibold rounded-full shrink-0">
+        <Link href="/admin/dashboard/docs" className="btn-glass px-3 h-9 flex items-center gap-1.5 text-xs font-medium rounded-full shrink-0">
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Docs list</span>
         </Link>
-        <span className="text-zinc-600 text-xs hidden sm:inline">/</span>
+        <span className="text-zinc-400 text-xs hidden sm:inline">/</span>
         <span className="hidden sm:block text-xs font-semibold text-zinc-400 truncate max-w-xs">{fileParam.replace("user-guide/", "")}</span>
 
         <div className="flex items-center gap-2 ml-auto shrink-0">
@@ -257,7 +257,7 @@ function DocsEditorContent() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="btn-primary h-11 sm:h-9 px-3 sm:px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer"
+            className="btn-primary h-9 px-3 sm:px-4 text-xs font-medium rounded-full flex items-center gap-1.5 cursor-pointer"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             <span>Save<span className="hidden sm:inline"> Draft</span></span>
@@ -275,7 +275,7 @@ function DocsEditorContent() {
         {/* Left Side Editing Pane */}
         <div className={`flex-1 flex flex-col h-full bg-[#0E0E0E] overflow-y-auto md:overflow-hidden ${previewMode === "preview" ? "hidden" : ""}`}>
           {loading ? (
-            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-zinc-500">
+            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-zinc-400">
               <Loader2 className="w-6 h-6 animate-spin" />
               <span className="text-xs">Loading document...</span>
             </div>
@@ -285,7 +285,7 @@ function DocsEditorContent() {
               <div className="p-4 sm:p-5 border-b border-white/5 bg-zinc-950/20 space-y-4 shrink-0 md:overflow-y-auto md:max-h-[60%]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Document Title</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Document Title</label>
                     <input
                       type="text"
                       value={title}
@@ -295,7 +295,7 @@ function DocsEditorContent() {
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Sidebar Title</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Sidebar Title</label>
                     <input
                       type="text"
                       value={sidebarTitle}
@@ -308,8 +308,8 @@ function DocsEditorContent() {
 
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Meta Description</label>
-                    <span className={`text-[9px] font-mono ${description.length > 160 ? "text-red-400 font-bold" : "text-zinc-500"}`}>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Meta Description</label>
+                    <span className={`text-[9px] font-mono ${description.length > 160 ? "text-amber-300 font-bold" : "text-zinc-400"}`}>
                       {description.length} / 160
                     </span>
                   </div>
@@ -324,7 +324,7 @@ function DocsEditorContent() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
-                    <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Keywords</label>
+                    <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Keywords</label>
                     <input
                       type="text"
                       value={keywords}
@@ -335,7 +335,7 @@ function DocsEditorContent() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Status</label>
+                      <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Status</label>
                       <select
                         value={status}
                         onChange={(e) => setStatus(e.target.value as any)}
@@ -346,7 +346,7 @@ function DocsEditorContent() {
                       </select>
                     </div>
                     <div>
-                      <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1">Publish Date</label>
+                      <label className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1">Publish Date</label>
                       <input
                         type="date"
                         value={publishDate}
@@ -361,10 +361,10 @@ function DocsEditorContent() {
               {/* Markdown Body Textarea */}
               <div className="flex flex-col relative md:flex-1 md:overflow-hidden">
                 <div className="bg-zinc-950 px-4 py-2 border-b border-white/5 flex flex-wrap gap-2 items-center justify-between shrink-0 md:sticky md:top-0 z-[1]">
-                  <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Markdown/MDX Body</span>
+                  <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Markdown/MDX Body</span>
                   <button
                     onClick={insertAgentOnly}
-                    className="btn-glass px-2.5 min-h-[44px] sm:min-h-[32px] py-1 text-[9px] font-semibold rounded-full flex items-center gap-1.5 hover:text-white shrink-0"
+                    className="btn-glass px-2.5 min-h-[44px] sm:min-h-[32px] py-1 text-[9px] font-medium rounded-full flex items-center gap-1.5 hover:text-white shrink-0"
                   >
                     <Cpu className="w-3.5 h-3.5 text-zinc-400" />
                     <span>Wrap AgentOnly</span>
@@ -407,7 +407,7 @@ function DocsEditorContent() {
                     key={warn.id}
                     className={`border rounded-xl p-3 text-xs flex gap-2 items-start transition-colors duration-200 ${
                       warn.type === "error"
-                        ? "bg-red-500/5 border-red-500/15 text-red-400"
+                        ? "bg-amber-500/5 border-amber-500/15 text-amber-300"
                         : "bg-yellow-500/5 border-yellow-500/15 text-yellow-400"
                     }`}
                   >
@@ -441,13 +441,13 @@ function DocsEditorContent() {
 
           {/* live rendered Preview Component */}
           <div className="flex-1 p-5 overflow-y-auto space-y-4 prose prose-invert prose-zinc max-w-none bg-black/10">
-            <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest block mb-2">Live Article Preview</span>
+            <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-widest block mb-2">Live Article Preview</span>
             <div className="border border-white/5 bg-[#0E0E0E] p-5 rounded-2xl space-y-4 leading-relaxed text-zinc-300 text-xs min-h-[300px] break-words">
               <h1 className="text-base font-bold text-white mb-1 tracking-tight border-b border-white/5 pb-2">
                 {title || "Untitled Document"}
               </h1>
               {description && (
-                <p className="text-zinc-500 italic text-[11px] leading-relaxed mb-4">
+                <p className="text-zinc-400 italic text-[11px] leading-relaxed mb-4">
                   {description}
                 </p>
               )}
@@ -471,7 +471,7 @@ function DocsEditorContent() {
                   return <p key={idx} className="text-zinc-400 mb-2">{line}</p>;
                 })
               ) : (
-                <p className="text-zinc-600 italic">Start typing content in the markdown editor...</p>
+                <p className="text-zinc-400 italic">Start typing content in the markdown editor...</p>
               )}
             </div>
           </div>
@@ -494,7 +494,7 @@ function DocsEditorContent() {
                   <CheckCircle className="w-3.5 h-3.5" />
                 </div>
               ) : (
-                <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 shrink-0">
+                <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-300 shrink-0">
                   <AlertTriangle className="w-3.5 h-3.5" />
                 </div>
               )}
@@ -512,7 +512,7 @@ function DocsEditorContent() {
 export default function DocsEditorPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-zinc-500 text-xs">
+      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-zinc-400 text-xs">
         <Loader2 className="w-5 h-5 animate-spin mr-2" />
         <span>Loading Docs Editor...</span>
       </div>
