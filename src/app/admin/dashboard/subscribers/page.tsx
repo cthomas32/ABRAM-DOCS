@@ -5,7 +5,6 @@ import {
   Users, 
   Search, 
   Loader2, 
-  Mail, 
   CheckCircle, 
   AlertTriangle,
   UserPlus,
@@ -23,6 +22,8 @@ import {
 import { getSubscribers, manualAddSubscriber, checkResendIntegrationStatus, syncResendContacts } from "../../resend-actions";
 import { AnimatePresence, motion } from "framer-motion";
 import Modal from "@/components/admin/Modal";
+import { StatRow } from "@/components/admin/StatTile";
+import { convertAllSubscribers } from "./actions";
 
 interface Subscriber {
   id: string;
@@ -80,6 +81,10 @@ export default function SubscribersPage() {
   const [isApplicationInput, setIsApplicationInput] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [syncingContacts, setSyncingContacts] = useState(false);
+  /* Turning the list into people. A decision, not a background job: a
+     job that silently promoted every address into a worked lead would be
+     worse than the two objects it is meant to reconcile. */
+  const [convertingContacts, setConvertingContacts] = useState(false);
 
   // Sorting State
   const [sortField, setSortField] = useState<SortField>("created_at");
@@ -96,6 +101,42 @@ export default function SubscribersPage() {
     fetchData();
     checkResend();
   }, []);
+
+  /**
+   * Says what actually happened rather than "Done".
+   *
+   * Three outcomes are all correct and all different: somebody became a
+   * new person record, somebody was matched to one that already existed,
+   * and somebody was already linked. Reporting them as one number is how
+   * a reconciliation tool stops being trusted.
+   */
+  const handleConvertToContacts = async () => {
+    setConvertingContacts(true);
+    const result = await convertAllSubscribers();
+    setConvertingContacts(false);
+
+    if (!result.ok) {
+      showToast(result.error ?? "That could not be done.", "error");
+      return;
+    }
+
+    const created = result.created ?? 0;
+    const linked = result.linked ?? 0;
+    const refused = result.refused ?? 0;
+
+    if (created === 0 && linked === 0) {
+      showToast("Every subscriber is already a contact.", "info");
+      return;
+    }
+
+    const parts = [
+      created ? `${created} new ${created === 1 ? "contact" : "contacts"}` : null,
+      linked ? `${linked} matched to someone already here` : null,
+      refused ? `${refused} skipped for want of a usable address` : null,
+    ].filter(Boolean);
+
+    showToast(parts.join(", "), "success");
+  };
 
   const showToast = (message: string, type: "success" | "error" | "info") => {
     const id = Math.random().toString(36).substring(2, 9);
@@ -360,41 +401,44 @@ export default function SubscribersPage() {
               Manage your newsletter audience and monitor connection status with Resend.
             </p>
           </div>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="btn-primary h-11 sm:h-9 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans shrink-0"
-          >
-            <UserPlus className="w-4 h-4" />
-            <span>Add Subscriber</span>
-          </button>
-        </div>
-
-        {/* Segmented Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans">Total Subscribers</span>
-              <h2 className="text-2xl font-bold tracking-tight text-white mt-1 font-sans">{totalCount}</h2>
-            </div>
-            <Users className="w-7 h-7 text-zinc-500" />
-          </div>
-
-          <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans">Marketing List</span>
-              <h2 className="text-2xl font-bold tracking-tight text-white mt-1 font-sans">{marketingCount}</h2>
-            </div>
-            <Mail className="w-7 h-7 text-zinc-500" />
-          </div>
-
-          <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans">Application List</span>
-              <h2 className="text-2xl font-bold tracking-tight text-white mt-1 font-sans">{applicationCount}</h2>
-            </div>
-            <Globe className="w-7 h-7 text-zinc-500" />
+          <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+            {/* A subscriber is a row with an email on it; a contact is a
+                person. This is the bridge, and it is idempotent — run it
+                again and everything already matched comes back unchanged. */}
+            <button
+              onClick={handleConvertToContacts}
+              disabled={convertingContacts}
+              title="Match every subscriber to a person record, creating one where none exists"
+              className="btn-glass h-9 px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-50"
+            >
+              {convertingContacts ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <UserPlus className="w-3.5 h-3.5" />
+              )}
+              <span>Add to contacts</span>
+            </button>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="btn-primary h-9 px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans shrink-0"
+            >
+              <UserPlus className="w-3.5 h-3.5" />
+              <span>Add Subscriber</span>
+            </button>
           </div>
         </div>
+
+        {/* One card holding a row of readings, the same strip every other
+            console screen uses. Three separate boxes read as three
+            unrelated facts; this reads as a summary, which is what it is. */}
+        <StatRow
+          loading={loading}
+          stats={[
+            { label: "Subscribers", value: totalCount.toLocaleString() },
+            { label: "Marketing list", value: marketingCount.toLocaleString() },
+            { label: "Application list", value: applicationCount.toLocaleString() },
+          ]}
+        />
 
         {/* Integration Panel — one line when healthy, the detail only shows
             when something needs attention. */}

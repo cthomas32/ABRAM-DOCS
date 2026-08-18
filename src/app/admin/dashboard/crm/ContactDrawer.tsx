@@ -29,6 +29,8 @@ import {
 } from "@/lib/crm/constants";
 import type { CrmContact, CrmEvent, CrmInteraction, CrmTask } from "@/lib/crm/types";
 import { buildContactVCard, vcardFilename } from "@/lib/crm/vcard";
+import { LIFECYCLE_STAGES, lifecycleSpec, type LifecycleStage } from "@/lib/crm/people";
+import { LifecycleChip, SourceChips } from "@/components/admin/PersonChips";
 import {
   downloadFile,
   formatDate,
@@ -36,7 +38,6 @@ import {
   fromLocalInputValue,
   isOverdue,
   relativeTime,
-  sourceLabel,
   toLocalInputValue,
   type Notify,
 } from "./lib";
@@ -362,6 +363,11 @@ export default function ContactDrawer({
     void loadHistory();
   };
 
+  /** Set by hand here; every automatic feed only ever moves it forward. */
+  const setLifecycle = async (lifecycle_stage: LifecycleStage) => {
+    await patchContact({ lifecycle_stage, last_activity_at: new Date().toISOString() });
+  };
+
   const setPriority = async (priority: CrmPriority) => {
     await patchContact({ priority, last_activity_at: new Date().toISOString() });
   };
@@ -458,9 +464,11 @@ export default function ContactDrawer({
               >
                 {spec.label}
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.04] border border-white/8 text-zinc-400">
-                {sourceLabel(contact.source)}
-              </span>
+              <LifecycleChip stage={contact.lifecycle_stage} />
+              {/* Every way in, not only the first. Somebody who subscribed
+                  and then came to a conference is both, and showing one of
+                  them is how a funnel report ends up double counting. */}
+              <SourceChips sources={contact.sources?.length ? contact.sources : [contact.source]} limit={4} />
               {contact.event_id && eventNameById[contact.event_id] && (
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.04] border border-white/8 text-zinc-400 max-w-full truncate">
                   {eventNameById[contact.event_id]}
@@ -507,7 +515,7 @@ export default function ContactDrawer({
                   <select
                     value={contact.stage}
                     onChange={(e) => onMoveStage(contact, e.target.value as CrmStage)}
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {CRM_STAGES.map((s) => (
                       <option key={s.id} value={s.id}>
@@ -516,11 +524,29 @@ export default function ContactDrawer({
                     ))}
                   </select>
                 </Field>
+                {/* Two ladders, side by side and deliberately not merged.
+                    Stage is what this person is being worked towards;
+                    lifecycle is how far along they actually are. A
+                    subscriber sitting at "new" is a normal state and the
+                    old single column could not express it. */}
+                <Field label="Lifecycle">
+                  <select
+                    value={lifecycleSpec(contact.lifecycle_stage).id}
+                    onChange={(e) => void setLifecycle(e.target.value as LifecycleStage)}
+                    className="admin-input h-9 py-0 cursor-pointer"
+                  >
+                    {LIFECYCLE_STAGES.map((entry) => (
+                      <option key={entry.id} value={entry.id}>
+                        {entry.label}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
                 <Field label="Priority">
                   <select
                     value={contact.priority}
                     onChange={(e) => void setPriority(e.target.value as CrmPriority)}
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {CRM_PRIORITIES.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -665,7 +691,7 @@ export default function ContactDrawer({
                 <select
                   value={fields.account_id}
                   onChange={(e) => setFields((f) => ({ ...f, account_id: e.target.value }))}
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">No account</option>
                   {accounts.map((account) => (
@@ -681,7 +707,7 @@ export default function ContactDrawer({
                 <select
                   value={fields.event_id}
                   onChange={(e) => setFields((f) => ({ ...f, event_id: e.target.value }))}
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">No event</option>
                   {events.map((event) => (

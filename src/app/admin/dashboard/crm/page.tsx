@@ -38,6 +38,7 @@ import type {
 } from "@/lib/crm/types";
 import { buildContactVCardBundle } from "@/lib/crm/vcard";
 import { rows, firstRow } from "@/lib/supabase/rows";
+import { CONTACT_SOURCES, LIFECYCLE_STAGES } from "@/lib/crm/people";
 import PipelineBoard from "./PipelineBoard";
 import ContactDrawer from "./ContactDrawer";
 import { StatRow } from "@/components/admin/StatTile";
@@ -127,6 +128,11 @@ export default function CrmPage() {
   const [query, setQuery] = useState("");
   const [eventFilter, setEventFilter] = useState("");
   const [stageFilter, setStageFilter] = useState("");
+  /* The person ladder and the way in, which the pipeline stage does not
+     say: somebody at "new" may be a subscriber who has never spoken to us
+     or a customer whose second deal is starting. */
+  const [lifecycleFilter, setLifecycleFilter] = useState("");
+  const [sourceFilter, setSourceFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
   const [needsFollowUp, setNeedsFollowUp] = useState(false);
@@ -278,6 +284,8 @@ export default function CrmPage() {
       if (contact.archived !== showArchived) return false;
       if (eventFilter && contact.event_id !== eventFilter) return false;
       if (stageFilter && contact.stage !== stageFilter) return false;
+      if (lifecycleFilter && contact.lifecycle_stage !== lifecycleFilter) return false;
+      if (sourceFilter && !(contact.sources ?? []).includes(sourceFilter as never)) return false;
       if (priorityFilter && contact.priority !== priorityFilter) return false;
       if (tagFilter && !contact.tags.includes(tagFilter)) return false;
       if (needsFollowUp) {
@@ -298,6 +306,8 @@ export default function CrmPage() {
     showArchived,
     eventFilter,
     stageFilter,
+    lifecycleFilter,
+    sourceFilter,
     priorityFilter,
     tagFilter,
     needsFollowUp,
@@ -336,7 +346,9 @@ export default function CrmPage() {
     : "/admin/dashboard/crm/capture";
 
   const filtersActive =
-    Boolean(query || eventFilter || stageFilter || priorityFilter || tagFilter) ||
+    Boolean(
+      query || eventFilter || stageFilter || lifecycleFilter || sourceFilter || priorityFilter || tagFilter
+    ) ||
     needsFollowUp ||
     showArchived;
 
@@ -344,6 +356,8 @@ export default function CrmPage() {
     setQuery("");
     setEventFilter("");
     setStageFilter("");
+    setLifecycleFilter("");
+    setSourceFilter("");
     setPriorityFilter("");
     setTagFilter("");
     setNeedsFollowUp(false);
@@ -575,7 +589,7 @@ export default function CrmPage() {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search name, company or email"
                     aria-label="Search contacts"
-                    className="admin-input h-11 sm:h-9 py-0 pl-9"
+                    className="admin-input h-9 py-0 pl-9"
                   />
                 </div>
                 <div className="flex gap-2">
@@ -598,12 +612,38 @@ export default function CrmPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                <select
+                  value={lifecycleFilter}
+                  onChange={(e) => setLifecycleFilter(e.target.value)}
+                  aria-label="Filter by lifecycle"
+                  className="admin-input h-9 py-0 cursor-pointer"
+                >
+                  <option value="">Every lifecycle</option>
+                  {LIFECYCLE_STAGES.map((entry) => (
+                    <option key={entry.id} value={entry.id}>
+                      {entry.label}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={sourceFilter}
+                  onChange={(e) => setSourceFilter(e.target.value)}
+                  aria-label="Filter by source"
+                  className="admin-input h-9 py-0 cursor-pointer"
+                >
+                  <option value="">Any source</option>
+                  {CONTACT_SOURCES.map((entry) => (
+                    <option key={entry.id} value={entry.id}>
+                      {entry.label}
+                    </option>
+                  ))}
+                </select>
                 <select
                   value={eventFilter}
                   onChange={(e) => setEventFilter(e.target.value)}
                   aria-label="Filter by event"
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">All events</option>
                   {events.map((event) => (
@@ -616,7 +656,7 @@ export default function CrmPage() {
                   value={stageFilter}
                   onChange={(e) => setStageFilter(e.target.value)}
                   aria-label="Filter by stage"
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">All stages</option>
                   {CRM_STAGES.map((stage) => (
@@ -629,7 +669,7 @@ export default function CrmPage() {
                   value={priorityFilter}
                   onChange={(e) => setPriorityFilter(e.target.value)}
                   aria-label="Filter by priority"
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                  className="admin-input h-9 py-0 cursor-pointer"
                 >
                   <option value="">Any priority</option>
                   {CRM_PRIORITIES.map((p) => (
@@ -643,7 +683,7 @@ export default function CrmPage() {
                   onChange={(e) => setTagFilter(e.target.value)}
                   aria-label="Filter by tag"
                   disabled={allTags.length === 0}
-                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer disabled:opacity-50"
+                  className="admin-input h-9 py-0 cursor-pointer disabled:opacity-50"
                 >
                   <option value="">{allTags.length ? "Any tag" : "No tags yet"}</option>
                   {allTags.map((tag) => (

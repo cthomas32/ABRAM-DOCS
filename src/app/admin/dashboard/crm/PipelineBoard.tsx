@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { Flame, Loader2, MapPin, WifiOff } from "lucide-react";
 import { CRM_STAGES, stageSpec, type CrmStage } from "@/lib/crm/constants";
+import { LifecycleChip, SourceChips } from "@/components/admin/PersonChips";
 import type { CrmContact } from "@/lib/crm/types";
 import { formatDate, isOverdue, isDueOrOverdue } from "./lib";
 
@@ -238,6 +239,14 @@ function ContactCard({
           ) : contact.priority === "hot" ? (
             <Flame className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" aria-label="Hot lead" />
           ) : null}
+        </span>
+
+        {/* Where the person is, and how they got here. The pipeline
+            column already says what they are being worked towards; these
+            say who they are, which the column cannot. */}
+        <span className="flex flex-wrap items-center gap-1 mt-2">
+          <LifecycleChip stage={contact.lifecycle_stage} />
+          <SourceChips sources={contact.sources} limit={2} />
         </span>
 
         {(eventName || contact.met_context) && (

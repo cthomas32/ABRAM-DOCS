@@ -21,6 +21,7 @@ import type {
   RegistrationStatus,
   TaskStatus,
 } from "./constants";
+import type { ContactSource, LifecycleStage } from "./people";
 
 /** The person whose card gets scanned. One row today, a row per teammate later. */
 export interface CrmProfile {
@@ -122,8 +123,19 @@ export interface CrmContact {
   event_id: string | null;
   code_id: string | null;
   scan_id: string | null;
+  /** The first way in, written once at capture and never moved. */
   source: CrmSource;
+  /**
+   * Every way this person has reached us, accumulating, and always
+   * containing `source`. Somebody who subscribed, then came to a
+   * conference, then filled in a form is all three, and a report that
+   * has to pick one of them is a report that is wrong.
+   */
+  sources: ContactSource[];
+  /** Where their pipeline sits. Not the same ladder as `lifecycle_stage`. */
   stage: CrmStage;
+  /** How far along the person is, as distinct from their pipeline. */
+  lifecycle_stage: LifecycleStage;
   priority: CrmPriority;
   tags: string[];
   consent_marketing: boolean;
