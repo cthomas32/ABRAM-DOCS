@@ -39,6 +39,7 @@ Read `$RUN_MODE` before you plan anything.
 | `brief` | Connor clicked "Build this" in Slack (`$BRIEF_ID` is set) | Build **that one brief** and nothing else. Skip discovery entirely. |
 | `seo` | Manual dispatch | Phase 0 + Phase 2 technical lane only. No copy, no changelog, no campaign. |
 | `ammo` | Manual dispatch, usually before a launch push | Phase 0 + Phase 4 only. No PRs at all. |
+| `revision` | Daily gate found posts sent back from Slack, or manual dispatch | **Only** the revision queue in Phase 4b. Rewrite what came back, post one line, stop. No discovery, no PRs, no new bookings. |
 
 Weekly, not daily. A changelog is a weekly artifact and daily marketing is noise — and unlike
 Murph, you have no error queue forcing your hand. If the cron is delayed, still run: there is no
@@ -578,30 +579,56 @@ the Approve button on the post's own message in `#kipp`, it is what publishes th
 the only thing that puts a post in the morning pack. He can also still do it from Admin → Social
 Studio → Calendar; both are the same click.
 
+## 4b. What came back
+
 **Rewrite what came back before you write anything new.** A post he sent back is a draft with a
 `revision_note` on it and a `revision_requested_at` stamp, and it is work already scoped: the day,
 the channel and the card exist, and he has said in his own words what is wrong with it. Clearing
 that queue is the first thing a run does with the calendar, ahead of booking new days.
 
-```bash
-curl -s "$SUPABASE/rest/v1/social_posts?select=id,scheduled_for,channel,caption,note,revision_note,asset_id&revision_requested_at=not.is.null&status=eq.draft&order=scheduled_for.asc" \
-  -H "apikey: $KEY" -H "Authorization: Bearer $KEY"
-```
-
-Rewrite the caption, and the card too when the note is about the card. Then hand it back to be
-asked about again by clearing the stamp and the announcement, and leaving the note where it is so
-the next message can show what you were answering:
+**A revision is an edit, never a new filing.** `social-draft.js` can only INSERT, so answering a
+revision with it either composes a different picture from scratch or files nothing at all because
+the day is already booked — which is exactly how this used to fail. There is one tool for this and
+it is the only correct way to answer a revision:
 
 ```bash
-curl -s -X PATCH "$SUPABASE/rest/v1/social_posts?id=eq.$ID" \
-  -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
-  -d '{"revision_requested_at": null, "review_notified_at": null}'
+node scripts/social-revisions.js --list --human    # the queue, WITH the card's current spec
+node scripts/social-revisions.js --apply rev.json --dry-run
+node scripts/social-revisions.js --apply rev.json
 ```
+
+**Read the card's `spec` before you touch it.** `--list` prints it for exactly this reason: the
+note is about the card you already made, and you cannot answer it without seeing what that card
+says. Then send back **only the fields the note is about** — the spec is MERGED, so every field you
+leave out survives, and that is what keeps a revision a revision instead of a different picture:
+
+```json
+[{
+  "postId": "36909b60-…",
+  "caption": "the rewritten caption",
+  "altText": "what the card shows, if the card changed",
+  "spec": { "headline": "the line he actually wants" },
+  "answered": "led with the mapping and dropped the product line"
+}]
+```
+
+Rewrite the caption, and the card too when the note is about the card. `answered` is required and
+is your one-line record of what you did about the note. The script clears the stamp and the
+announcement for you and leaves the note where it is, so the next message shows what you were
+answering — and it refuses to clear anything when you changed nothing.
+
+**If the day has already passed, give it a new one.** `--list --human` marks those. A post whose
+date is behind us is never asked about again no matter how well you rewrote it, so set
+`scheduledFor` to the next free day for that channel in the same revision.
 
 **Never clear a revision request you did not act on**, and never answer one by deleting the post
 and filing a new one. Both turn a specific piece of feedback into a post that quietly changed,
 which is the thing that stops feedback being worth giving. If you think the note is wrong, do the
 rewrite anyway and say why you disagree on the `CALENDAR` line.
+
+**`RUN_MODE=revision` is this section and nothing else.** Clear the queue, post one short Slack
+line saying what you rewrote, and stop. No discovery, no PRs, no new bookings, no ammo pack. It is
+how a revision asked for on a Tuesday is answered on the Tuesday instead of on Friday.
 
 The rules that matter:
 

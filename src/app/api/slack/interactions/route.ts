@@ -10,9 +10,9 @@ import {
   BLOCK_REVISION_INPUT,
   REVIEW_POST_SELECT,
   approvedBlocks,
+  cardImageUrl,
   channelLabel,
   isApprover,
-  previewUrl,
   replaceMessage,
   replyPrivately,
   reviewBlocks,
@@ -79,10 +79,13 @@ async function loadPost(supabase: SupabaseClient, id: string): Promise<ReviewPos
   return toReviewPost(data as unknown as Record<string, unknown>);
 }
 
-/** The picture for a post: the published card once there is one, a drawn preview until then. */
+/**
+ * The picture for a post. A draft draws live from the spec so a rewritten card
+ * is the card you see; an approved post uses the published file. The rule lives
+ * in slackReview.ts so the dispatch route and this one cannot disagree.
+ */
 function cardUrl(post: ReviewPost): string | null {
-  if (!post.asset) return null;
-  return post.asset.public_url || previewUrl(post.asset.id, siteUrl());
+  return cardImageUrl(post, siteUrl());
 }
 
 // ---------------------------------------------------------------------

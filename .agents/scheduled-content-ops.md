@@ -131,6 +131,25 @@ self-rejecting guard is exactly what killed every scheduled run on the product s
 | `seo` | Phase 0 + the technical PR lane only. No copy, no changelog, no campaign. |
 | `ammo` | Phase 0 + the Slack ammo pack. **No PRs at all.** Use before a launch push. |
 | `brief` | Build one approved brief (`brief_id` required). Skips discovery entirely. |
+| `revision` | Clear the sent-back queue and stop. Runs on Sonnet, daily, and only when something is waiting. |
+
+### Asking for a revision — the runbook
+
+1. In `#kipp`, on the post's own message, press **Ask for a revision**, type what should change in
+   your own words, and press **Send it back**. That is the whole interface; a message typed into
+   the channel reaches nothing.
+2. Say what is wrong, not what to write: *"too much about us, lead with the mapping"* beats a
+   rewritten caption. If it is the picture, say so — *"the headline, not the backdrop"* — because
+   the note is the only thing that decides whether the card is touched.
+3. Nothing else needs doing. The daily 12:47 ET gate checks the queue, and only when something is
+   waiting does it wake KIPP in `revision` mode; on an empty day it costs a minute of Actions time
+   and no tokens.
+4. The rewrite is an **edit in place** (`scripts/social-revisions.js`): same card, same booking,
+   spec merged so everything the note did not mention survives. It comes back to `#kipp` for
+   approval with your note shown above it. If the day had already passed, it is moved to the next
+   free one.
+5. Need it now rather than after lunch: Actions → *KIPP — Content Ops & Search* → **Run workflow**
+   → `run_mode: revision`. A manual dispatch skips the gate.
 
 `brief` mode is the one that matters most. On the product side every PR that reached `main`
 fastest came from Connor clicking "Build this" and Murph shipping inside twenty minutes. KIPP is
@@ -144,6 +163,7 @@ there is a second workflow with no model in it.
 | Cadence | Who runs it | What happens |
 |---|---|---|
 | Every morning, 07:12 ET | [`social-daily.yml`](../.github/workflows/social-daily.yml) | Delivers the day's approved posts to `#kipp`, ready to paste. No model, no judgment, no credentials. Also names any coming stretch of unbooked days and any post still waiting on a click. |
+| Every day, 12:47 ET | The revision gate in KIPP's own workflow | One HTTP request against `social_posts`. On the ordinary day nothing was sent back and the job ends before Claude is installed. When something is waiting it runs `revision` mode on Sonnet — so a post sent back over coffee is rewritten the same day instead of on Friday. |
 | Every Friday | KIPP, Phase 0d | `seo-audit.js`, persisted to `seo_audit_runs` with the git SHA so the debt trends. `gsc-report.js` alongside it when Search Console is configured. |
 | Every Friday | KIPP, Phase 0g | Up to six web searches: the production conversation, the mood on AI in production, public competitor moves, and which post format is working. A trend changes the angle, the format and the day. It never becomes a claim. |
 | Every Friday | KIPP, Phase 4 | Books the next seven days of social as full packets. Five days is the floor, seven the target, and a shortfall leads the report. At most half of them may be about ABRAM: the rest are craft, market, story and the posts that point at something we wrote. |
