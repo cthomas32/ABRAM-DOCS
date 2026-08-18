@@ -207,7 +207,7 @@ function DashboardChrome({
       {/* Mobile Top Header — shows where you are, not every place you could go */}
       <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-black/70 backdrop-blur-xl border-b border-white/5 pl-4 pr-2 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <span className="block text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-500">
+          <span className="block text-xs uppercase font-bold tracking-widest text-gray-400">
             ABRAM Admin
           </span>
           <span className="block text-sm font-bold tracking-tight text-white truncate">
@@ -240,7 +240,7 @@ function DashboardChrome({
             {visibleGroups.map((group) => (
               <div key={group.id} className="flex flex-col gap-1.5">
                 {group.label && (
-                  <span className="text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-600 px-3 mb-0.5">
+                  <span className="text-xs uppercase font-bold tracking-widest text-gray-400 px-3 mb-0.5">
                     {group.label}
                   </span>
                 )}
@@ -253,9 +253,9 @@ function DashboardChrome({
                       href={link.href}
                       // The transparent border keeps active and inactive rows
                       // the same height, so selecting one does not nudge the list.
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-full text-[11px] font-semibold select-none border transition-colors duration-200 ${
+                      className={`flex items-center gap-2.5 px-3 py-2 rounded-full text-[11px] font-medium select-none border transition-colors duration-200 ${
                         isActive
-                          ? "bg-white text-black font-bold border-white"
+                          ? "bg-white text-black border-white"
                           : "border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                       }`}
                     >
@@ -278,7 +278,7 @@ function DashboardChrome({
           </div>
           <button
             onClick={handleSignOut}
-            className="btn-glass flex items-center justify-center gap-2 px-3 py-2 text-[11px] font-semibold rounded-full w-full"
+            className="btn-glass flex items-center justify-center gap-2 px-3 h-9 text-[11px] font-medium rounded-full w-full"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out</span>
@@ -300,7 +300,7 @@ function DashboardChrome({
             <div className="shrink-0 px-5 pt-3 pb-2">
               <div className="w-10 h-1 rounded-full bg-white/15 mx-auto mb-4" />
               <div className="flex items-center justify-between gap-3">
-                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500">
+                <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
                   Go to
                 </span>
                 <button
@@ -317,7 +317,7 @@ function DashboardChrome({
               {visibleGroups.map((group) => (
                 <div key={group.id} className="mb-2">
                   {group.label && (
-                    <span className="block text-[9px] font-semibold tracking-[0.2em] uppercase text-zinc-600 px-3 pt-4 pb-2">
+                    <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 px-3 pt-4 pb-2">
                       {group.label}
                     </span>
                   )}
@@ -343,7 +343,7 @@ function DashboardChrome({
                           <Icon className="w-4 h-4" />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className={`block text-sm font-semibold truncate ${isActive ? "text-white" : "text-zinc-200"}`}>
+                          <span className={`block text-sm font-medium truncate ${isActive ? "text-white" : "text-zinc-200"}`}>
                             {link.label}
                           </span>
                           <span className="block text-[11px] text-zinc-500 truncate">{link.hint}</span>
@@ -363,7 +363,7 @@ function DashboardChrome({
               </div>
               <button
                 onClick={handleSignOut}
-                className="btn-glass flex items-center justify-center gap-2 px-4 h-10 text-xs font-semibold rounded-full shrink-0"
+                className="btn-glass flex items-center justify-center gap-2 px-4 h-11 sm:h-9 text-xs font-medium rounded-full shrink-0"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Sign Out</span>
