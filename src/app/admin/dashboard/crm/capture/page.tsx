@@ -394,11 +394,11 @@ export default function CapturePage() {
             aria-pressed={hot}
             className={`w-full min-h-[56px] rounded-xl border flex items-center gap-3 px-4 transition-colors ${
               hot
-                ? "border-rose-500/40 bg-rose-500/10 text-rose-200"
+                ? "border-amber-500/30 bg-amber-500/[0.06] text-amber-100"
                 : "border-white/8 bg-white/[0.02] text-zinc-400"
             }`}
           >
-            <Flame className={`w-5 h-5 shrink-0 ${hot ? "text-rose-400" : "text-zinc-600"}`} />
+            <Flame className={`w-5 h-5 shrink-0 ${hot ? "text-amber-400" : "text-zinc-600"}`} />
             <span className="text-left min-w-0">
               <span className="block text-sm font-semibold">Hot lead</span>
               <span className="block text-[11px] leading-relaxed opacity-80">
@@ -407,7 +407,7 @@ export default function CapturePage() {
             </span>
             <span
               className={`ml-auto w-5 h-5 rounded-full border shrink-0 flex items-center justify-center ${
-                hot ? "bg-rose-400 border-rose-400" : "border-white/20"
+                hot ? "bg-amber-400 border-amber-400" : "border-white/20"
               }`}
             >
               {hot && <Check className="w-3 h-3 text-black" />}

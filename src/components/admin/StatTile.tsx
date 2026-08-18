@@ -1,17 +1,25 @@
 /**
- * One number, named.
+ * The summary figures at the top of a screen.
  *
- * Extracted from the earnings page, which was the only screen that had it
- * and the only screen that looked settled. Every stat on the console uses
- * this now, so a row of four on one page is the same object as a row of
- * four on another.
+ * Ported from `StatStrip` in the product app (abram-network,
+ * src/components/ui/stat-strip.tsx) so the console and the product read as
+ * one family. Two things came across from it and both matter more than
+ * they look:
  *
- * A tile is quiet on purpose. No coloured edge, no accent fill, no icon
- * badge. The number is the loud part.
+ * 1. **One card, a grid of readings.** Not four floating cards with four
+ *    borders. A row of separate boxes reads as four unrelated facts; one
+ *    quiet card reads as a summary, which is what it is.
+ * 2. **The number is not heavy.** `text-lg tabular-nums`, no bold display
+ *    size, no colour. A figure that shouts is a figure somebody has to
+ *    decide to ignore.
+ *
+ * `StatTile` stays exported under that name because the CRM plan names it
+ * and the deals, accounts and tasks screens are being written against it.
+ * A tile used on its own still draws its own card; inside `StatRow` it
+ * draws a cell.
  */
 
 import React from "react";
-import Overline from "./Overline";
 
 export default function StatTile({
   label,
@@ -19,39 +27,102 @@ export default function StatTile({
   hint,
 }: {
   label: string;
-  /** Already formatted. Pass `formatMoney(...)` or a `<Money />` element. */
+  /** Already formatted. The tile never formats: the caller owns units. */
   value: React.ReactNode;
   hint?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4">
-      <Overline>{label}</Overline>
-      <span className="block text-lg sm:text-2xl font-bold tracking-tight text-white mt-1.5 break-words tabular-nums">
-        {value}
+    <div className="rounded-2xl border border-white/5 bg-white/[0.02] px-6 py-4">
+      <StatCell label={label} value={value} hint={hint} />
+    </div>
+  );
+}
+
+/** One reading. Used by `StatRow`, which owns the card around it. */
+export function StatCell({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: React.ReactNode;
+  hint?: React.ReactNode;
+}) {
+  return (
+    <div className="min-w-0">
+      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-0.5">
+        {label}
       </span>
+      <div className="text-lg leading-snug tabular-nums text-white">{value}</div>
       {hint && (
-        <span className="block text-[11px] text-zinc-500 mt-1 leading-relaxed">{hint}</span>
+        <p className="mt-1 text-[11px] text-zinc-500 leading-relaxed">{hint}</p>
       )}
     </div>
   );
 }
 
-/** The row a set of tiles sits in, so the grid is not rewritten per page. */
-export function StatRow({ children }: { children: React.ReactNode }) {
+/**
+ * The strip. Two-up on a phone, N-up from `lg`, one card around the lot.
+ * Pass `StatTile` children and they are unwrapped into cells, or pass
+ * `stats` and let it build them.
+ */
+export function StatRow({
+  stats,
+  loading = false,
+  className = "",
+}: {
+  stats: { label: string; value: React.ReactNode; hint?: React.ReactNode }[];
+  /** Shows a shimmer where each figure will be. Never blanks the row. */
+  loading?: boolean;
+  className?: string;
+}) {
+  // Explicit, because Tailwind cannot see an interpolated class name.
+  const columns: Record<number, string> = {
+    1: "grid-cols-1",
+    2: "lg:grid-cols-2",
+    3: "lg:grid-cols-3",
+    4: "lg:grid-cols-4",
+    5: "lg:grid-cols-5",
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">{children}</div>
+    <div
+      className={`grid grid-cols-2 gap-3 rounded-2xl border border-white/5 bg-white/[0.02] px-6 py-4 ${
+        columns[stats.length] ?? "lg:grid-cols-4"
+      } ${className}`}
+    >
+      {stats.map((stat) => (
+        <div key={stat.label} className="min-w-0">
+          <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-0.5">
+            {stat.label}
+          </span>
+          {loading ? (
+            <div className="mt-1 h-5 w-16 rounded bg-white/[0.06] animate-pulse" />
+          ) : (
+            <div className="text-lg leading-snug tabular-nums text-white">{stat.value}</div>
+          )}
+          {stat.hint && !loading && (
+            <p className="mt-1 text-[11px] text-zinc-500 leading-relaxed">{stat.hint}</p>
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
 
-/**
- * The shape of a tile while its number is still loading. Same box, same
- * height, so the page does not jump when the figure arrives.
- */
-export function StatTileSkeleton() {
+/** The strip's own loading shape, for a page that has no figures yet. */
+export function StatRowSkeleton({ cells = 4 }: { cells?: number }) {
   return (
-    <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4" aria-hidden="true">
-      <span className="block h-3 w-20 rounded bg-white/[0.06]" />
-      <span className="block h-7 w-28 rounded bg-white/[0.06] mt-2" />
+    <div
+      className="grid grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl border border-white/5 bg-white/[0.02] px-6 py-4"
+      aria-hidden="true"
+    >
+      {Array.from({ length: cells }).map((_, i) => (
+        <div key={i} className="min-w-0">
+          <span className="block h-3 w-20 rounded bg-white/[0.06] animate-pulse" />
+          <span className="block h-5 w-16 rounded bg-white/[0.06] animate-pulse mt-2" />
+        </div>
+      ))}
     </div>
   );
 }

@@ -120,8 +120,8 @@ export function PanelSkeleton({ rows = 3 }: { rows?: number }) {
     <div className="space-y-2.5" aria-hidden="true">
       {Array.from({ length: rows }).map((_, i) => (
         <div key={i} className="rounded-2xl border border-white/5 bg-white/[0.02] p-4">
-          <span className="block h-3.5 w-40 rounded bg-white/[0.06]" />
-          <span className="block h-2.5 w-24 rounded bg-white/[0.04] mt-2" />
+          <span className="block h-3.5 w-40 rounded bg-white/[0.06] animate-pulse" />
+          <span className="block h-2.5 w-24 rounded bg-white/[0.04] animate-pulse mt-2" />
         </div>
       ))}
     </div>

@@ -68,6 +68,26 @@ export const CRM_MOTIONS: { id: CrmMotion; label: string; hint: string }[] = [
   },
 ];
 
+/**
+ * ON THE COLOUR IN THIS FILE.
+ *
+ * The stages used to run through a rainbow: sky, violet, amber, orange,
+ * emerald. Six tints for six steps reads as six kinds of thing rather
+ * than one thing at six points, and it put amber and emerald on states
+ * where they mean nothing.
+ *
+ * The ladder is neutral now. It gets brighter as the contact gets closer,
+ * white for the one stage that is actually in play, and the palette keeps
+ * its two reserved tints for the two things they mean:
+ *
+ *   violet   the single accent, for the stage a person is working today
+ *   amber    a state that costs money if it is ignored
+ *   emerald  a state that has been reached
+ *
+ * No red anywhere. A lost deal and a declined registration are ordinary
+ * outcomes, and colouring them like a failure makes the board lie about
+ * how the week went.
+ */
 export interface StageSpec {
   id: CrmStage;
   label: string;
@@ -98,44 +118,44 @@ export const CRM_STAGES: StageSpec[] = [
     id: "new",
     label: "New",
     description: "Scanned your code and left their details. Nobody has replied yet.",
-    dot: "bg-sky-400",
-    badge: "bg-sky-500/10 text-sky-300 border-sky-500/20",
+    dot: "bg-zinc-400",
+    badge: "bg-white/[0.04] text-zinc-300 border-white/10",
   },
   {
     id: "contacted",
     label: "Contacted",
     description: "You have reached out since the event and are waiting on them.",
-    dot: "bg-violet-400",
-    badge: "bg-violet-500/10 text-violet-300 border-violet-500/20",
+    dot: "bg-zinc-300",
+    badge: "bg-white/[0.06] text-zinc-200 border-white/12",
   },
   {
     id: "qualified",
     label: "Qualified",
     description: "They replied and there is a real reason to keep talking.",
-    dot: "bg-amber-400",
-    badge: "bg-amber-500/10 text-amber-300 border-amber-500/20",
+    dot: "bg-zinc-200",
+    badge: "bg-white/[0.08] text-zinc-100 border-white/15",
   },
   {
     id: "demo",
     label: "Demo",
     description: "A walkthrough is booked or has happened.",
-    dot: "bg-orange-400",
-    badge: "bg-orange-500/10 text-orange-300 border-orange-500/20",
+    dot: "bg-violet-400",
+    badge: "bg-violet-500/10 text-violet-200 border-violet-500/20",
     motions: ["enterprise"],
   },
   {
     id: "opportunity",
     label: "Opportunity",
     description: "A trial, a pilot or a proposal is on the table.",
-    dot: "bg-emerald-400",
-    badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+    dot: "bg-violet-300",
+    badge: "bg-violet-500/15 text-violet-100 border-violet-500/25",
   },
   {
     id: "won",
     label: "Won",
     description: "They are on the platform.",
-    dot: "bg-emerald-500",
-    badge: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+    dot: "bg-emerald-400",
+    badge: "bg-emerald-500/10 text-emerald-200 border-emerald-500/20",
     terminal: true,
   },
   {
@@ -167,11 +187,11 @@ export function stagesForMotion(motion: CrmMotion): StageSpec[] {
 export type DealStage = "opportunity" | "proposal" | "negotiation" | "won" | "lost";
 
 export const DEAL_STAGES: { id: DealStage; label: string; badge: string; terminal?: boolean }[] = [
-  { id: "opportunity", label: "Opportunity", badge: "bg-sky-500/10 text-sky-300 border-sky-500/20" },
-  { id: "proposal", label: "Proposal", badge: "bg-violet-500/10 text-violet-300 border-violet-500/20" },
-  { id: "negotiation", label: "Negotiation", badge: "bg-amber-500/10 text-amber-300 border-amber-500/20" },
-  { id: "won", label: "Won", badge: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30", terminal: true },
-  { id: "lost", label: "Lost", badge: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20", terminal: true },
+  { id: "opportunity", label: "Opportunity", badge: "bg-white/[0.04] text-zinc-300 border-white/10" },
+  { id: "proposal", label: "Proposal", badge: "bg-white/[0.06] text-zinc-200 border-white/12" },
+  { id: "negotiation", label: "Negotiation", badge: "bg-violet-500/10 text-violet-200 border-violet-500/20" },
+  { id: "won", label: "Won", badge: "bg-emerald-500/10 text-emerald-200 border-emerald-500/20", terminal: true },
+  { id: "lost", label: "Lost", badge: "bg-white/[0.02] text-zinc-500 border-white/8", terminal: true },
 ];
 
 export type BillingPeriod = "one_off" | "monthly" | "annual";
@@ -209,29 +229,29 @@ export const ATTRIBUTION_RULES: {
     id: "promo_code",
     order: 1,
     label: "Promo code",
-    description: "Their code was redeemed at checkout. The strongest signal there is — it is on the receipt.",
-    badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+    description: "Their code was redeemed at checkout. The strongest signal there is. It is on the receipt.",
+    badge: "bg-white/[0.08] text-zinc-100 border-white/15",
   },
   {
     id: "utm_link",
     order: 2,
     label: "Tracked link",
     description: "Their link was the recorded source at signup.",
-    badge: "bg-sky-500/10 text-sky-300 border-sky-500/20",
+    badge: "bg-white/[0.06] text-zinc-200 border-white/12",
   },
   {
     id: "registered_account",
     order: 3,
     label: "Registered account",
     description: "Named in writing before first contact, approved, and closed inside 120 days.",
-    badge: "bg-violet-500/10 text-violet-300 border-violet-500/20",
+    badge: "bg-white/[0.04] text-zinc-300 border-white/10",
   },
   {
     id: "unattributed",
     order: 4,
     label: "Unattributed",
     description: "Matches none of the three rules. Pays nothing.",
-    badge: "bg-zinc-500/10 text-zinc-500 border-zinc-500/20",
+    badge: "bg-white/[0.02] text-zinc-500 border-white/8",
   },
 ];
 
@@ -248,11 +268,14 @@ export const REGISTRATION_DECLINE_BUSINESS_DAYS = 5;
 export type RegistrationStatus = "pending" | "approved" | "declined" | "expired" | "converted";
 
 export const REGISTRATION_STATUSES: { id: RegistrationStatus; label: string; badge: string }[] = [
-  { id: "pending", label: "Awaiting decision", badge: "bg-amber-500/10 text-amber-300 border-amber-500/20" },
-  { id: "approved", label: "Approved", badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" },
-  { id: "declined", label: "Declined", badge: "bg-rose-500/10 text-rose-300 border-rose-500/20" },
-  { id: "expired", label: "Expired", badge: "bg-zinc-500/10 text-zinc-500 border-zinc-500/20" },
-  { id: "converted", label: "Became a deal", badge: "bg-sky-500/10 text-sky-300 border-sky-500/20" },
+  // Amber on "pending" is the one place it is earned here: an undecided
+  // registration approves itself when the window lapses, and that outcome
+  // costs money. Declined is neutral, not red. It is an ordinary answer.
+  { id: "pending", label: "Awaiting decision", badge: "bg-amber-500/10 text-amber-200 border-amber-500/20" },
+  { id: "approved", label: "Approved", badge: "bg-emerald-500/10 text-emerald-200 border-emerald-500/20" },
+  { id: "declined", label: "Declined", badge: "bg-white/[0.04] text-zinc-300 border-white/10" },
+  { id: "expired", label: "Expired", badge: "bg-white/[0.02] text-zinc-500 border-white/8" },
+  { id: "converted", label: "Became a deal", badge: "bg-white/[0.08] text-zinc-100 border-white/15" },
 ];
 
 /* ------------------------------------------------------------------ */
