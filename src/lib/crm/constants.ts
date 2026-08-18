@@ -37,13 +37,57 @@ export function cardUrl(slug: string, code?: string | null): string {
 /* ------------------------------------------------------------------ */
 
 export type CrmStage =
+  | "subscriber"
   | "new"
   | "contacted"
   | "qualified"
+  | "demo"
   | "opportunity"
   | "won"
   | "lost";
 
+/**
+ * Which journey somebody is on.
+ *
+ * Two funnels, one spine: the same people table, a stage set per motion.
+ * Forcing a newsletter signup and a production company through identical
+ * stages makes both boards lie.
+ */
+export type CrmMotion = "self_serve" | "enterprise";
+
+export const CRM_MOTIONS: { id: CrmMotion; label: string; hint: string }[] = [
+  {
+    id: "self_serve",
+    label: "Self serve",
+    hint: "Found us, signed up, may never speak to anybody.",
+  },
+  {
+    id: "enterprise",
+    label: "Enterprise",
+    hint: "A conversation that runs from first contact to a signed order.",
+  },
+];
+
+/**
+ * ON THE COLOUR IN THIS FILE.
+ *
+ * The stages used to run through a rainbow: sky, violet, amber, orange,
+ * emerald. Six tints for six steps reads as six kinds of thing rather
+ * than one thing at six points, and it put amber and emerald on states
+ * where they mean nothing.
+ *
+ * The ladder is neutral now. It gets brighter as the contact gets closer,
+ * white for the one stage that is actually in play, and the palette keeps
+ * its two reserved tints for the two things they mean:
+ *
+ *   violet   the single accent, for the stage a person is working today
+ *   amber    a state that costs money if it is ignored
+ *   emerald  a state that has been reached
+ *
+ * No red anywhere. A lost deal and a declined registration are ordinary
+ * outcomes, and colouring them like a failure makes the board lie about
+ * how the week went.
+ */
 export interface StageSpec {
   id: CrmStage;
   label: string;
@@ -54,43 +98,64 @@ export interface StageSpec {
   badge: string;
   /** Stages past this point no longer count as open pipeline. */
   terminal?: boolean;
+  /**
+   * Which motions show this column. Absent means both — most of the
+   * pipeline is shared, and only the ends of it differ.
+   */
+  motions?: CrmMotion[];
 }
 
 export const CRM_STAGES: StageSpec[] = [
   {
+    id: "subscriber",
+    label: "Subscriber",
+    description: "On the mailing list and nothing more. Nobody has spoken to them.",
+    dot: "bg-zinc-400",
+    badge: "bg-zinc-500/10 text-zinc-300 border-zinc-500/20",
+    motions: ["self_serve"],
+  },
+  {
     id: "new",
     label: "New",
     description: "Scanned your code and left their details. Nobody has replied yet.",
-    dot: "bg-sky-400",
-    badge: "bg-sky-500/10 text-sky-300 border-sky-500/20",
+    dot: "bg-zinc-400",
+    badge: "bg-white/[0.04] text-zinc-300 border-white/10",
   },
   {
     id: "contacted",
     label: "Contacted",
     description: "You have reached out since the event and are waiting on them.",
-    dot: "bg-violet-400",
-    badge: "bg-violet-500/10 text-violet-300 border-violet-500/20",
+    dot: "bg-zinc-300",
+    badge: "bg-white/[0.06] text-zinc-200 border-white/12",
   },
   {
     id: "qualified",
     label: "Qualified",
     description: "They replied and there is a real reason to keep talking.",
-    dot: "bg-amber-400",
-    badge: "bg-amber-500/10 text-amber-300 border-amber-500/20",
+    dot: "bg-zinc-200",
+    badge: "bg-white/[0.08] text-zinc-100 border-white/15",
+  },
+  {
+    id: "demo",
+    label: "Demo",
+    description: "A walkthrough is booked or has happened.",
+    dot: "bg-violet-400",
+    badge: "bg-violet-500/10 text-violet-200 border-violet-500/20",
+    motions: ["enterprise"],
   },
   {
     id: "opportunity",
     label: "Opportunity",
     description: "A trial, a pilot or a proposal is on the table.",
-    dot: "bg-emerald-400",
-    badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+    dot: "bg-violet-300",
+    badge: "bg-violet-500/15 text-violet-100 border-violet-500/25",
   },
   {
     id: "won",
     label: "Won",
     description: "They are on the platform.",
-    dot: "bg-emerald-500",
-    badge: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+    dot: "bg-emerald-400",
+    badge: "bg-emerald-500/10 text-emerald-200 border-emerald-500/20",
     terminal: true,
   },
   {
@@ -108,6 +173,141 @@ export const OPEN_STAGE_IDS = CRM_STAGES.filter((s) => !s.terminal).map((s) => s
 
 export function stageSpec(id: string): StageSpec {
   return CRM_STAGES.find((s) => s.id === id) ?? CRM_STAGES[0];
+}
+
+/** The columns a board shows for one motion. */
+export function stagesForMotion(motion: CrmMotion): StageSpec[] {
+  return CRM_STAGES.filter((s) => !s.motions || s.motions.includes(motion));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Deals                                                              */
+/* ------------------------------------------------------------------ */
+
+export type DealStage = "opportunity" | "proposal" | "negotiation" | "won" | "lost";
+
+export const DEAL_STAGES: { id: DealStage; label: string; badge: string; terminal?: boolean }[] = [
+  { id: "opportunity", label: "Opportunity", badge: "bg-white/[0.04] text-zinc-300 border-white/10" },
+  { id: "proposal", label: "Proposal", badge: "bg-white/[0.06] text-zinc-200 border-white/12" },
+  { id: "negotiation", label: "Negotiation", badge: "bg-violet-500/10 text-violet-200 border-violet-500/20" },
+  { id: "won", label: "Won", badge: "bg-emerald-500/10 text-emerald-200 border-emerald-500/20", terminal: true },
+  { id: "lost", label: "Lost", badge: "bg-white/[0.02] text-zinc-500 border-white/8", terminal: true },
+];
+
+export type BillingPeriod = "one_off" | "monthly" | "annual";
+
+export const BILLING_PERIODS: { id: BillingPeriod; label: string }[] = [
+  { id: "one_off", label: "One off" },
+  { id: "monthly", label: "Monthly" },
+  { id: "annual", label: "Annual" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Attribution                                                        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The three ways a deal can belong to somebody, and the order they are
+ * tested in.
+ *
+ * "First match governs. No discretionary override." The order below is
+ * that sentence, and it is the order `resolveAttribution` walks. Anything
+ * that matches none of them is unattributed and pays nothing — which is
+ * a real outcome rather than an error, and the interface says so plainly
+ * rather than leaving a blank.
+ */
+export type AttributionRule = "promo_code" | "utm_link" | "registered_account" | "unattributed";
+
+export const ATTRIBUTION_RULES: {
+  id: AttributionRule;
+  order: number;
+  label: string;
+  description: string;
+  badge: string;
+}[] = [
+  {
+    id: "promo_code",
+    order: 1,
+    label: "Promo code",
+    description: "Their code was redeemed at checkout. The strongest signal there is. It is on the receipt.",
+    badge: "bg-white/[0.08] text-zinc-100 border-white/15",
+  },
+  {
+    id: "utm_link",
+    order: 2,
+    label: "Tracked link",
+    description: "Their link was the recorded source at signup.",
+    badge: "bg-white/[0.06] text-zinc-200 border-white/12",
+  },
+  {
+    id: "registered_account",
+    order: 3,
+    label: "Registered account",
+    description: "Named in writing before first contact, approved, and closed inside 120 days.",
+    badge: "bg-white/[0.04] text-zinc-300 border-white/10",
+  },
+  {
+    id: "unattributed",
+    order: 4,
+    label: "Unattributed",
+    description: "Matches none of the three rules. Pays nothing.",
+    badge: "bg-white/[0.02] text-zinc-500 border-white/8",
+  },
+];
+
+export function attributionSpec(id: string) {
+  return ATTRIBUTION_RULES.find((r) => r.id === id) ?? ATTRIBUTION_RULES[3];
+}
+
+/** How long an approved registration has to close before it lapses. */
+export const REGISTRATION_VALID_DAYS = 120;
+
+/** How long the company has to decline a filed registration. Business days. */
+export const REGISTRATION_DECLINE_BUSINESS_DAYS = 5;
+
+export type RegistrationStatus = "pending" | "approved" | "declined" | "expired" | "converted";
+
+export const REGISTRATION_STATUSES: { id: RegistrationStatus; label: string; badge: string }[] = [
+  // Amber on "pending" is the one place it is earned here: an undecided
+  // registration approves itself when the window lapses, and that outcome
+  // costs money. Declined is neutral, not red. It is an ordinary answer.
+  { id: "pending", label: "Awaiting decision", badge: "bg-amber-500/10 text-amber-200 border-amber-500/20" },
+  { id: "approved", label: "Approved", badge: "bg-emerald-500/10 text-emerald-200 border-emerald-500/20" },
+  { id: "declined", label: "Declined", badge: "bg-white/[0.04] text-zinc-300 border-white/10" },
+  { id: "expired", label: "Expired", badge: "bg-white/[0.02] text-zinc-500 border-white/8" },
+  { id: "converted", label: "Became a deal", badge: "bg-white/[0.08] text-zinc-100 border-white/15" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Money                                                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Cents to a readable figure.
+ *
+ * Everything financial in this system is stored as integer cents, so this
+ * is the only place a division by a hundred happens. One place means one
+ * chance to get it wrong rather than one per screen.
+ */
+export function formatMoney(cents: number | null | undefined, currency = "USD"): string {
+  const value = (cents ?? 0) / 100;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency,
+      maximumFractionDigits: value % 1 === 0 ? 0 : 2,
+    }).format(value);
+  } catch {
+    // An unknown currency code must not take a page down over a label.
+    return `${currency} ${value.toFixed(2)}`;
+  }
+}
+
+/** A rate held as a fraction, shown as a percentage. 0.3 becomes "30%". */
+export function formatRate(rate: number | null | undefined): string {
+  if (rate === null || rate === undefined) return "—";
+  const pct = rate * 100;
+  return `${Number.isInteger(pct) ? pct : pct.toFixed(1)}%`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -154,18 +354,35 @@ export const CRM_SOURCES: { id: CrmSource; label: string }[] = [
 /*  Timeline                                                           */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Every kind the timeline can hold.
+ *
+ * This list has to match `crm_interactions_kind_check` in migration
+ * 20260817100000 exactly. A kind here that the constraint refuses is a
+ * write that fails at runtime; a kind the constraint allows but that is
+ * missing here is a row nothing can label.
+ */
 export type InteractionKind =
   | "capture"
   | "scan"
   | "note"
   | "email_sent"
   | "email_received"
+  | "email_opened"
+  | "email_clicked"
   | "call"
   | "meeting"
+  | "demo"
   | "stage_change"
   | "task_created"
   | "task_done"
-  | "rescan";
+  | "rescan"
+  | "owner_change"
+  | "deal_created"
+  | "deal_won"
+  | "deal_lost"
+  | "registration_filed"
+  | "registration_decided";
 
 export const INTERACTION_LABELS: Record<InteractionKind, string> = {
   capture: "Details captured",
@@ -173,12 +390,21 @@ export const INTERACTION_LABELS: Record<InteractionKind, string> = {
   note: "Note",
   email_sent: "Email sent",
   email_received: "Email received",
+  email_opened: "Email opened",
+  email_clicked: "Link clicked",
   call: "Call",
   meeting: "Meeting",
+  demo: "Demo",
   stage_change: "Stage changed",
   task_created: "Follow up created",
   task_done: "Follow up done",
   rescan: "Scanned again",
+  owner_change: "Owner changed",
+  deal_created: "Deal created",
+  deal_won: "Deal won",
+  deal_lost: "Deal lost",
+  registration_filed: "Registration filed",
+  registration_decided: "Registration decided",
 };
 
 /* ------------------------------------------------------------------ */

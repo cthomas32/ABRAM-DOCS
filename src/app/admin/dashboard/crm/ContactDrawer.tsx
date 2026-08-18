@@ -78,6 +78,7 @@ interface EditableFields {
   met_context: string;
   notes: string;
   event_id: string;
+  account_id: string;
   next_follow_up_at: string;
 }
 
@@ -95,6 +96,7 @@ function fieldsFrom(contact: CrmContact): EditableFields {
     met_context: contact.met_context ?? "",
     notes: contact.notes ?? "",
     event_id: contact.event_id ?? "",
+    account_id: contact.account_id ?? "",
     next_follow_up_at: toLocalInputValue(contact.next_follow_up_at),
   };
 }
@@ -121,6 +123,12 @@ export default function ContactDrawer({
   const [taskSaving, setTaskSaving] = useState(false);
   const [tagDraft, setTagDraft] = useState("");
   const [busyTaskId, setBusyTaskId] = useState<string | null>(null);
+  /**
+   * The companies this contact could roll up to. Read in the drawer rather
+   * than passed down, because the board does not otherwise need them and a
+   * failed read here costs a picker rather than the whole screen.
+   */
+  const [accounts, setAccounts] = useState<{ id: string; name: string; domain: string | null }[]>([]);
 
   // A different person in the panel means a different form, not a merged one.
   useEffect(() => {
@@ -165,6 +173,23 @@ export default function ContactDrawer({
     void loadHistory();
   }, [loadHistory]);
 
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("crm_accounts")
+        .select("id, name, domain")
+        .eq("archived", false)
+        .order("name", { ascending: true })
+        .limit(500);
+      if (!cancelled) setAccounts(data ?? []);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   /* ---------------------------------------------------------------- */
   /*  Writes                                                           */
   /* ---------------------------------------------------------------- */
@@ -206,6 +231,7 @@ export default function ContactDrawer({
         met_context: fields.met_context.trim() || null,
         notes: fields.notes.trim() || null,
         event_id: fields.event_id || null,
+        account_id: fields.account_id || null,
         next_follow_up_at: fromLocalInputValue(fields.next_follow_up_at),
       },
       "Saved."
@@ -408,7 +434,7 @@ export default function ContactDrawer({
           <div className="shrink-0 px-4 sm:px-5 pt-4 pb-3 border-b border-white/5">
             <div className="flex items-start gap-3">
               <div className="min-w-0 flex-1">
-                <h2 className="text-base font-bold tracking-tight text-white break-words">
+                <h2 className="text-base font-bold tracking-tight text-white break-words font-sans">
                   {contact.full_name}
                 </h2>
                 <p className="text-[11px] text-zinc-500 mt-0.5 break-words">
@@ -428,7 +454,7 @@ export default function ContactDrawer({
 
             <div className="flex flex-wrap items-center gap-1.5 mt-3">
               <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${spec.badge}`}
+                className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${spec.badge}`}
               >
                 {spec.label}
               </span>
@@ -441,7 +467,7 @@ export default function ContactDrawer({
                 </span>
               )}
               {contact.archived && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-500/10 border border-zinc-500/20 text-zinc-400">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.03] border border-white/10 text-zinc-400">
                   Archived
                 </span>
               )}
@@ -635,6 +661,22 @@ export default function ContactDrawer({
                 </Field>
               </div>
 
+              <Field label="Account">
+                <select
+                  value={fields.account_id}
+                  onChange={(e) => setFields((f) => ({ ...f, account_id: e.target.value }))}
+                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                >
+                  <option value="">No account</option>
+                  {accounts.map((account) => (
+                    <option key={account.id} value={account.id}>
+                      {account.name}
+                      {account.domain ? ` (${account.domain})` : ""}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+
               <Field label="Event">
                 <select
                   value={fields.event_id}
@@ -760,7 +802,7 @@ export default function ContactDrawer({
                       <li
                         key={task.id}
                         className={`flex items-start gap-2 p-2.5 rounded-lg border ${
-                          late ? "border-rose-500/25 bg-rose-500/[0.05]" : "border-white/8 bg-white/[0.02]"
+                          late ? "border-amber-500/25 bg-amber-500/[0.04]" : "border-white/8 bg-white/[0.02]"
                         }`}
                       >
                         <button
@@ -783,7 +825,7 @@ export default function ContactDrawer({
                           {task.due_at && (
                             <span
                               className={`block text-[10px] mt-0.5 ${
-                                late ? "text-rose-300 font-semibold" : "text-zinc-500"
+                                late ? "text-amber-200 font-medium" : "text-zinc-500"
                               }`}
                             >
                               {late ? "Overdue " : "Due "}
@@ -911,7 +953,7 @@ export default function ContactDrawer({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block font-sans">
+    <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
       {children}
     </span>
   );
@@ -920,7 +962,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-[10px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5">
+      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-1.5">
         {label}
       </span>
       {children}

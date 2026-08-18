@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/utils/resend";
+import { verifyResendWebhook } from "@/lib/webhooks/svix";
+
+export const dynamic = "force-dynamic";
 
 // Standard Resend webhook event structure
 interface ResendWebhookPayload {
@@ -19,6 +22,11 @@ interface ResendWebhookPayload {
     error?: {
       message: string;
       code: string;
+    };
+    // Present on email.clicked. The link that was followed.
+    click?: {
+      link?: string;
+      timestamp?: string;
     };
   };
 }
@@ -96,7 +104,25 @@ function mapEventTypeToStatus(eventType: string): "sent" | "delivered" | "failed
 
 export async function POST(request: Request) {
   try {
-    const payload = (await request.json()) as ResendWebhookPayload;
+    // The signature is checked against the raw bytes, before the body is
+    // parsed and long before a service-role client exists. Everything this
+    // handler does afterwards is unconstrained by RLS: it marks addresses
+    // bounced, writes engagement onto a contact's timeline and inserts
+    // campaign logs. A forged POST doing any of that is the finding in
+    // docs/reviews/2026-08-17-crm-branch-audit.md.
+    const rawBody = await request.text();
+    const verified = verifyResendWebhook(
+      rawBody,
+      request.headers,
+      "RESEND_WEBHOOK_SECRET",
+      "RESEND_MARKETING_WEBHOOK_SECRET"
+    );
+    if (!verified.ok) {
+      console.warn(`Rejected Resend webhook: ${verified.reason}`);
+      return NextResponse.json({ error: verified.reason }, { status: verified.status });
+    }
+
+    const payload = JSON.parse(rawBody) as ResendWebhookPayload;
     const { type, data } = payload;
 
     const emailIdLog = data?.email_id || data?.id;
@@ -176,21 +202,39 @@ export async function POST(request: Request) {
     // C. If not resolved, check by Resend email ID in existing logs
     const emailId = data?.email_id || data?.id;
     if (!campaignId && emailId) {
-      try {
-        const { data: existingLogs, error: lookupError } = await supabase
-          .from("campaign_logs")
-          .select("campaign_id")
-          .or(`payload->data->>id.eq.${emailId},payload->>resend_email_id.eq.${emailId},payload->data->>email_id.eq.${emailId}`)
-          .not("campaign_id", "is", null)
-          .limit(1);
+      // Three separate .eq() lookups rather than one .or() string.
+      // PostgREST's `or` takes a filter EXPRESSION, so interpolating a
+      // body-supplied value into it lets a comma or a parenthesis rewrite
+      // the filter. .eq() sends the value as a parameter, where it cannot
+      // be read as syntax. Three round trips that stop at the first hit
+      // is a fair price for that.
+      const jsonPaths = [
+        "payload->data->>id",
+        "payload->>resend_email_id",
+        "payload->data->>email_id",
+      ] as const;
 
-        if (lookupError) {
-          console.error(`Error looking up campaign by email_id (${emailId}) in campaign_logs:`, lookupError.message);
-        } else if (existingLogs && existingLogs.length > 0) {
-          campaignId = existingLogs[0].campaign_id;
+      for (const path of jsonPaths) {
+        try {
+          const { data: existingLogs, error: lookupError } = await supabase
+            .from("campaign_logs")
+            .select("campaign_id")
+            .eq(path, String(emailId))
+            .not("campaign_id", "is", null)
+            .limit(1);
+
+          if (lookupError) {
+            console.error(`Error looking up campaign by email_id in campaign_logs (${path}):`, lookupError.message);
+            continue;
+          }
+
+          if (existingLogs && existingLogs.length > 0) {
+            campaignId = existingLogs[0].campaign_id;
+            break;
+          }
+        } catch (err: unknown) {
+          console.error("Unexpected error looking up campaign by email_id in logs:", err);
         }
-      } catch (err: unknown) {
-        console.error("Unexpected error looking up campaign by email_id in logs:", err);
       }
     }
 
@@ -229,6 +273,40 @@ export async function POST(request: Request) {
           `Failed to reconcile recipient count for campaign ${campaignId}:`,
           reconcileError.message
         );
+      }
+    }
+
+    // 4c. Put the engagement on the person's timeline.
+    //
+    // campaign_logs answers "how did that broadcast do". This answers the
+    // question somebody actually asks while looking at a contact: has
+    // this one read anything I sent them?
+    //
+    // Deduplication is the database's job, not this handler's — an open
+    // is a pixel that loads every time the message is scrolled past, and
+    // Resend retries, so two deliveries regularly arrive together and a
+    // read-then-write here would let both through. See
+    // crm_record_email_engagement and the unique index behind it.
+    //
+    // Wrapped so that a failure here can never fail the webhook. Resend
+    // retries a non-200, and retrying a delivery because a timeline write
+    // failed would replay the campaign log too.
+    if (recipientEmail && (type === "email.opened" || type === "email.clicked")) {
+      try {
+        const { error: engagementError } = await supabase.rpc("crm_record_email_engagement", {
+          p_email: recipientEmail,
+          p_kind: type === "email.opened" ? "email_opened" : "email_clicked",
+          p_email_id: emailId ?? null,
+          p_url: data?.click?.link ?? null,
+          p_subject: data?.subject ?? null,
+          p_occurred_at: data?.click?.timestamp || payload.created_at || null,
+        });
+
+        if (engagementError) {
+          console.error("Failed to record CRM engagement:", engagementError.message);
+        }
+      } catch (err: unknown) {
+        console.error("Unexpected error recording CRM engagement:", err);
       }
     }
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import crypto from "crypto";
+import { verifyResendWebhook } from "@/lib/webhooks/svix";
 
 export const dynamic = "force-dynamic";
 
@@ -16,53 +16,22 @@ interface ResendContactWebhookPayload {
   };
 }
 
-function verifySignature(rawBody: string, headers: Headers, secret: string): boolean {
-  const svixId = headers.get("svix-id");
-  const svixTimestamp = headers.get("svix-timestamp");
-  const svixSignature = headers.get("svix-signature");
-
-  if (!svixId || !svixTimestamp || !svixSignature) {
-    return false;
-  }
-
-  // Check timestamp age to prevent replay attacks (5 minute window)
-  const now = Math.floor(Date.now() / 1000);
-  const timestamp = parseInt(svixTimestamp, 10);
-  if (isNaN(timestamp) || Math.abs(now - timestamp) > 300) {
-    return false;
-  }
-
-  // Construct the signed content
-  const signedContent = `${svixId}.${svixTimestamp}.${rawBody}`;
-
-  // Prepare secret bytes (strip 'whsec_' and decode base64)
-  const secretBytes = Buffer.from(secret.split("_")[1], "base64");
-
-  // Calculate expected signature
-  const expectedSignature = crypto
-    .createHmac("sha256", secretBytes)
-    .update(signedContent)
-    .digest("base64");
-
-  const signatures = svixSignature.split(" ");
-  return signatures.includes(expectedSignature);
-}
-
 export async function POST(request: Request) {
   try {
     const rawBody = await request.text();
-    const headers = request.headers;
 
-    // Verify webhook signature if secret is configured
-    const secret = process.env.RESEND_MARKETING_WEBHOOK_SECRET;
-    if (secret) {
-      const isVerified = verifySignature(rawBody, headers, secret);
-      if (!isVerified) {
-        console.warn("Unauthorized: Invalid Svix signature received from Resend webhook.");
-        return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-      }
-    } else {
-      console.warn("RESEND_MARKETING_WEBHOOK_SECRET is not configured on the server. Skipping verification.");
+    // The signature is read before anything else touches the body. An
+    // unset secret refuses the delivery rather than waving it through:
+    // see src/lib/webhooks/svix.ts for why.
+    const verified = verifyResendWebhook(
+      rawBody,
+      request.headers,
+      "RESEND_MARKETING_WEBHOOK_SECRET",
+      "RESEND_WEBHOOK_SECRET"
+    );
+    if (!verified.ok) {
+      console.warn(`Rejected Resend marketing webhook: ${verified.reason}`);
+      return NextResponse.json({ error: verified.reason }, { status: verified.status });
     }
 
     const payload = JSON.parse(rawBody) as ResendContactWebhookPayload;

@@ -9,11 +9,16 @@
 
 import type { QrDesignSpec } from "./qrDesign";
 import type {
+  AttributionRule,
+  BillingPeriod,
   CodePlacement,
+  CrmMotion,
   CrmPriority,
   CrmSource,
   CrmStage,
+  DealStage,
   InteractionKind,
+  RegistrationStatus,
   TaskStatus,
 } from "./constants";
 
@@ -140,6 +145,142 @@ export interface CrmContact {
   /** Device clock at the moment of capture, which can be well before it reached us. */
   captured_at: string | null;
   raw: Record<string, unknown>;
+
+  /** The company they are at. Deals hang off the account, not the person. */
+  account_id: string | null;
+
+  /**
+   * Three different people, and they stay three columns because the
+   * commission agreement pays differently for finding a lead and for
+   * closing one.
+   *
+   * owner_user_id  who works it today. Moves freely, means nothing financially.
+   * sourced_by     who originated it. Write once — the database refuses to move it.
+   * closed_by      who ran it to a completed checkout.
+   */
+  owner_user_id: string | null;
+  sourced_by: string | null;
+  closed_by: string | null;
+
+  /** Which of the two funnels this person is travelling. */
+  motion: CrmMotion;
+
+  /**
+   * How they first arrived, stamped onto the person at the moment they
+   * became one. Before these existed the funnel could count people but
+   * could not say what produced them.
+   */
+  first_touch_source: string | null;
+  first_touch_medium: string | null;
+  first_touch_campaign: string | null;
+  first_touch_content: string | null;
+  first_touch_term: string | null;
+  first_touch_landing_path: string | null;
+  first_touch_referrer: string | null;
+  first_touch_at: string | null;
+  /** The anonymous landing session this person came out of. */
+  first_session_id: string | null;
+  /** A code seen on the way in. The weaker cousin of the one redeemed at checkout. */
+  promo_code: string | null;
+
+  created_at: string;
+  updated_at: string;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Accounts, deals and attribution                                    */
+/* ------------------------------------------------------------------ */
+
+/** The company, as distinct from the people at it. */
+export interface CrmAccount {
+  id: string;
+  name: string;
+  slug: string | null;
+  /** The dedupe key that actually works — company names get typed three ways. */
+  domain: string | null;
+  website: string | null;
+  industry: string | null;
+  size_band: string | null;
+  city: string | null;
+  country: string | null;
+  notes: string | null;
+  owner_user_id: string | null;
+  sourced_by: string | null;
+  /** The three exclusions the commission ledger reads before paying anything. */
+  is_comped: boolean;
+  is_company_managed: boolean;
+  carve_out: string | null;
+  /** A registration is only valid if it was filed before this instant. */
+  first_contact_at: string | null;
+  lifecycle: "prospect" | "engaged" | "customer" | "churned" | "disqualified";
+  archived: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** What might be worth money, and what rule says whose it is. */
+export interface CrmDeal {
+  id: string;
+  account_id: string;
+  primary_contact_id: string | null;
+  name: string;
+  motion: CrmMotion;
+  stage: DealStage;
+
+  /** A forecast. The ledger pays on collected cash and never reads these. */
+  amount_cents: number;
+  mrr_cents: number;
+  currency: string;
+  billing_period: BillingPeriod;
+  plan_tier: string | null;
+  seats: number | null;
+
+  expected_close_on: string | null;
+  closed_at: string | null;
+  lost_reason: string | null;
+
+  sourced_by: string | null;
+  closed_by: string | null;
+  owner_user_id: string | null;
+
+  attribution_rule: AttributionRule;
+  attribution_ref: string | null;
+  attribution_note: string | null;
+  /** Once set, the rule is history and the ledger stops re-deriving it. */
+  attribution_locked_at: string | null;
+  registration_id: string | null;
+
+  promo_code: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+
+  /** The customer over in the product database. A reference, never a copy. */
+  external_customer_ref: string | null;
+  first_payment_at: string | null;
+
+  notes: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** A named account claimed in writing before anybody spoke to it. */
+export interface CrmDealRegistration {
+  id: string;
+  account_id: string | null;
+  account_name: string;
+  account_domain: string | null;
+  requested_by: string;
+  requested_at: string;
+  rationale: string | null;
+  status: RegistrationStatus;
+  /** Resolved when filed. "Five business days" depends on a calendar. */
+  decline_deadline_at: string;
+  expires_at: string;
+  decided_by: string | null;
+  decided_at: string | null;
+  decision_reason: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -152,7 +293,10 @@ export interface CrmInteraction {
   body: string | null;
   meta: Record<string, unknown>;
   occurred_at: string;
+  /** Free text, kept for rows written before logins were a concept. */
   author: string | null;
+  /** Who actually wrote it. Filterable, unlike the string above. */
+  author_user_id: string | null;
   created_at: string;
 }
 
@@ -166,6 +310,8 @@ export interface CrmTask {
   status: TaskStatus;
   priority: CrmPriority;
   completed_at: string | null;
+  assigned_to: string | null;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }

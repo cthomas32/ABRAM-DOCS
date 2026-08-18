@@ -97,6 +97,10 @@ Nobody who did not tick the box is ever added to a list. Preserve that.
 
 Every table carries `profile_id` even though there is one profile today, so adding a teammate later is a row rather than a migration.
 
+`crm_accounts`, `crm_deals` and `crm_deal_registrations` arrived later, alongside ownership and credit columns on `crm_contacts`. They are the commercial half of the same system and are covered in **[growth-crm.md](./growth-crm.md)** rather than here.
+
+**The policies on every table above changed on 2026-08-17.** They used to grant the whole table to any signed-in user; they are now role-aware, and a growth partner at the advisor stage sees only the contacts assigned to them. If a console query starts returning fewer rows than you expect, that is the first thing to check — and it is working rather than broken.
+
 Scans store a daily rotating salted hash of the IP and user agent, never a raw address, matching the landing page telemetry. Only the service role may write from the public side; the console reads and writes as a signed in admin.
 
 Stages are `new`, `contacted`, `qualified`, `opportunity`, `won`, `lost`. A stage move writes three rows: the contact update, a `crm_stage_changes` row, and a `stage_change` interaction, so the funnel is measured rather than guessed at.
