@@ -45,14 +45,26 @@ export interface AttributionEvidence {
   utmCampaign?: string | null;
   /** When the deal closed, or now if it has not. */
   closedAt?: string | Date | null;
-  /** An approved registration covering this account, if there is one. */
+  /**
+   * A registration covering this account, if there is one.
+   *
+   * `status` is the stored one and is deliberately not trusted on its
+   * own: a pending registration nobody declined inside the five business
+   * day window has been approved by silence, and the row still says
+   * pending because nothing wrote to it. Pass `declineDeadlineAt` and the
+   * clocks decide. Without it this falls back to the stored status, which
+   * under-pays rather than over-pays.
+   */
   registration?: {
     id: string;
     requestedBy: string;
     requestedAt: string | Date;
     status: string;
     expiresAt: string | Date;
+    declineDeadlineAt?: string | Date | null;
   } | null;
+  /** Fixes "now" for the clocks. Tests set it; nothing else needs to. */
+  now?: Date;
   /** When anybody here first spoke to this account. */
   accountFirstContactAt?: string | Date | null;
 }
@@ -159,12 +171,37 @@ export function resolveAttribution(
   /* -- Rule 3: a registered named account --------------------------- */
   const registration = evidence.registration;
 
-  if (!registration) {
+  // The stored status is not the answer. Both of a registration's clocks
+  // run on their own and neither writes to the row when it elapses, so
+  // reading `status` directly means a registration approved by silence
+  // pays nothing — which is precisely the outcome the five business day
+  // window exists to prevent.
+  const registrationEffective = registration
+    ? registrationState({
+        status: registration.status,
+        // Absent clocks fall back to the stored status rather than
+        // inventing a deadline. Under-paying is recoverable by filling the
+        // field in; auto-approving against a made-up date is not.
+        declineDeadlineAt: registration.declineDeadlineAt ?? new Date(8.64e15),
+        expiresAt: registration.expiresAt,
+        now: evidence.now,
+      })
+    : null;
+
+  if (!registration || !registrationEffective) {
     rejected.push({ rule: "registered_account", reason: "No registration was filed for this account." });
-  } else if (registration.status !== "approved") {
+  } else if (
+    // "converted" is downstream of approval — a registration only reaches
+    // it by having been approved first — so it is not a rejection.
+    registrationEffective.effective !== "approved" &&
+    registrationEffective.effective !== "converted"
+  ) {
     rejected.push({
       rule: "registered_account",
-      reason: `Registration is ${registration.status}, not approved.`,
+      reason:
+        registrationEffective.effective === "expired"
+          ? `Registration expired before the deal closed, past the ${REGISTRATION_VALID_DAYS} day window.`
+          : `Registration is ${registrationEffective.effective}, not approved.`,
     });
   } else {
     const requestedAt = asDate(registration.requestedAt);
@@ -172,7 +209,7 @@ export function resolveAttribution(
     // A deal that has not closed is tested against today, so the
     // interface can warn that a registration is about to lapse rather
     // than only discovering it afterwards.
-    const closedAt = asDate(evidence.closedAt) ?? new Date();
+    const closedAt = asDate(evidence.closedAt) ?? evidence.now ?? new Date();
 
     // Filed before first contact. The whole point of registration is that
     // it claims an account nobody has approached yet.
@@ -191,9 +228,13 @@ export function resolveAttribution(
         rule: "registered_account",
         userId: registration.requestedBy,
         ref: registration.id,
-        reason: requestedAt
-          ? `Account registered on ${requestedAt.toISOString().slice(0, 10)} and closed inside the ${REGISTRATION_VALID_DAYS} day window.`
-          : `Account was registered and approved.`,
+        reason:
+          (requestedAt
+            ? `Account registered on ${requestedAt.toISOString().slice(0, 10)} and closed inside the ${REGISTRATION_VALID_DAYS} day window.`
+            : `Account was registered and approved.`) +
+          (registrationEffective.autoApproved
+            ? " Nobody declined it inside the window, so it stands."
+            : ""),
         rejected,
       };
     }
@@ -220,14 +261,20 @@ export function resolveAttribution(
  * for somebody. Erring toward a slightly shorter window favours the
  * partner, which is the right direction for an ambiguity in a company's
  * own agreement.
+ *
+ * Counted in UTC. The local-time version of this returns a different
+ * deadline depending on which machine resolved it, and a deadline that
+ * depends on the server's timezone is not a fact — it is the sort of
+ * discrepancy that surfaces as a partner and a founder each holding a
+ * screenshot of a different date.
  */
 export function declineDeadlineFrom(filedAt: Date, businessDays = 5): Date {
   const deadline = new Date(filedAt.getTime());
   let remaining = businessDays;
 
   while (remaining > 0) {
-    deadline.setDate(deadline.getDate() + 1);
-    const day = deadline.getDay();
+    deadline.setUTCDate(deadline.getUTCDate() + 1);
+    const day = deadline.getUTCDay();
     if (day !== 0 && day !== 6) remaining -= 1;
   }
 
@@ -237,7 +284,7 @@ export function declineDeadlineFrom(filedAt: Date, businessDays = 5): Date {
 /** When an approved registration stops being able to pay anything. */
 export function registrationExpiryFrom(filedAt: Date, days = REGISTRATION_VALID_DAYS): Date {
   const expiry = new Date(filedAt.getTime());
-  expiry.setDate(expiry.getDate() + days);
+  expiry.setUTCDate(expiry.getUTCDate() + days);
   return expiry;
 }
 
@@ -261,8 +308,15 @@ export function registrationState(input: {
   const declineBy = asDate(input.declineDeadlineAt);
   const expires = asDate(input.expiresAt);
 
-  if (input.status === "declined" || input.status === "converted") {
-    return { effective: input.status, autoApproved: false, daysLeft: null };
+  // Terminal by decision. `expired` is here as well as below because a row
+  // stored expired with a future expiry is incoherent data, and the safe
+  // reading of incoherent data is the one that does not revive a claim.
+  if (input.status === "declined" || input.status === "converted" || input.status === "expired") {
+    return {
+      effective: input.status,
+      autoApproved: false,
+      daysLeft: input.status === "expired" ? 0 : null,
+    };
   }
 
   if (expires && now > expires) {
