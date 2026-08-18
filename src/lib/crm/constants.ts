@@ -354,18 +354,35 @@ export const CRM_SOURCES: { id: CrmSource; label: string }[] = [
 /*  Timeline                                                           */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Every kind the timeline can hold.
+ *
+ * This list has to match `crm_interactions_kind_check` in migration
+ * 20260817100000 exactly. A kind here that the constraint refuses is a
+ * write that fails at runtime; a kind the constraint allows but that is
+ * missing here is a row nothing can label.
+ */
 export type InteractionKind =
   | "capture"
   | "scan"
   | "note"
   | "email_sent"
   | "email_received"
+  | "email_opened"
+  | "email_clicked"
   | "call"
   | "meeting"
+  | "demo"
   | "stage_change"
   | "task_created"
   | "task_done"
-  | "rescan";
+  | "rescan"
+  | "owner_change"
+  | "deal_created"
+  | "deal_won"
+  | "deal_lost"
+  | "registration_filed"
+  | "registration_decided";
 
 export const INTERACTION_LABELS: Record<InteractionKind, string> = {
   capture: "Details captured",
@@ -373,12 +390,21 @@ export const INTERACTION_LABELS: Record<InteractionKind, string> = {
   note: "Note",
   email_sent: "Email sent",
   email_received: "Email received",
+  email_opened: "Email opened",
+  email_clicked: "Link clicked",
   call: "Call",
   meeting: "Meeting",
+  demo: "Demo",
   stage_change: "Stage changed",
   task_created: "Follow up created",
   task_done: "Follow up done",
   rescan: "Scanned again",
+  owner_change: "Owner changed",
+  deal_created: "Deal created",
+  deal_won: "Deal won",
+  deal_lost: "Deal lost",
+  registration_filed: "Registration filed",
+  registration_decided: "Registration decided",
 };
 
 /* ------------------------------------------------------------------ */

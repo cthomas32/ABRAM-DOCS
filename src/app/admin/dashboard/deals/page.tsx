@@ -14,6 +14,8 @@ import {
 } from "@/lib/crm/constants";
 import type { CrmDeal } from "@/lib/crm/types";
 import DealDrawer, { type AccountOption, type ContactOption } from "./DealDrawer";
+import { StatRow } from "@/components/admin/StatTile";
+import Money from "@/components/admin/Money";
 
 /**
  * Every deal, and what each one is worth.
@@ -276,7 +278,8 @@ export default function DealsPage() {
 
       {/* Totals. One quiet card holding a row of readings, matching the
           product app's stat strip rather than three floating cards. */}
-      <StatStrip
+      <StatRow
+        className="mb-6"
         loading={loading}
         stats={[
           { label: "Deals", value: String(totals.count) },
@@ -495,10 +498,10 @@ export default function DealsPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-xs text-zinc-300 text-right tabular-nums whitespace-nowrap">
-                        {deal.amount_cents ? formatMoney(deal.amount_cents, deal.currency) : "—"}
+                        {deal.amount_cents ? <Money cents={deal.amount_cents} currency={deal.currency} /> : "—"}
                       </td>
                       <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums whitespace-nowrap">
-                        {deal.mrr_cents ? formatMoney(deal.mrr_cents, deal.currency) : "—"}
+                        {deal.mrr_cents ? <Money cents={deal.mrr_cents} currency={deal.currency} /> : "—"}
                       </td>
                       <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
                         {formatDay(deal.expected_close_on)}
@@ -533,42 +536,6 @@ export default function DealsPage() {
 /* ------------------------------------------------------------------ */
 /*  Bits                                                               */
 /* ------------------------------------------------------------------ */
-
-/**
- * The summary figures, as one card holding a grid of readings.
- *
- * Ported from the product app's StatStrip: one surface, label over a plain
- * `text-lg tabular-nums` figure, no per-cell chrome and no heavyweight
- * numbers. Three floating cards read as three things; this reads as one
- * row of facts about the list below it.
- */
-function StatStrip({
-  stats,
-  loading,
-}: {
-  stats: { label: string; value: string; caption?: string }[];
-  loading: boolean;
-}) {
-  return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 rounded-2xl border border-white/5 bg-white/[0.02] px-6 py-4 mb-6">
-      {stats.map((stat) => (
-        <div key={stat.label}>
-          <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 mb-0.5">
-            {stat.label}
-          </span>
-          {loading ? (
-            <span className="block mt-1 h-5 w-16 rounded bg-white/[0.04] animate-pulse" />
-          ) : (
-            <span className="block text-lg leading-snug text-white tabular-nums">{stat.value}</span>
-          )}
-          {stat.caption && (
-            <span className="block mt-1 text-[11px] text-zinc-600 truncate">{stat.caption}</span>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function SortHeader({
   label,

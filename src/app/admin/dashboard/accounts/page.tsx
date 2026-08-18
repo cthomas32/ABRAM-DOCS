@@ -7,6 +7,8 @@ import { can, type ConsoleRole, type GrowthStage } from "@/lib/auth/permissions"
 import { formatMoney } from "@/lib/crm/constants";
 import type { CrmAccount, CrmContact, CrmDeal } from "@/lib/crm/types";
 import AccountDrawer from "./AccountDrawer";
+import { StatRow } from "@/components/admin/StatTile";
+import Money from "@/components/admin/Money";
 import { ACCOUNT_LIFECYCLES, type AccountLifecycle } from "./actions";
 
 /**
@@ -262,7 +264,8 @@ export default function AccountsPage() {
         </div>
       )}
 
-      <StatStrip
+      <StatRow
+        className="mb-6"
         loading={loading}
         stats={[
           { label: "Accounts", value: String(totals.count) },
@@ -415,9 +418,11 @@ export default function AccountsPage() {
                         {entry?.deals.length ?? 0}
                       </td>
                       <td className="px-4 py-3 text-xs text-zinc-300 text-right tabular-nums whitespace-nowrap">
-                        {entry?.openValue
-                          ? formatMoney(entry.openValue, entry.currency)
-                          : "—"}
+                        {entry?.openValue ? (
+                          <Money cents={entry.openValue} currency={entry.currency} />
+                        ) : (
+                          "—"
+                        )}
                       </td>
                       <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
                         {formatDay(account.first_contact_at)}
@@ -449,35 +454,6 @@ export default function AccountsPage() {
 /* ------------------------------------------------------------------ */
 /*  Bits                                                               */
 /* ------------------------------------------------------------------ */
-
-/** One card, a grid of readings. The product app's stat strip shape. */
-function StatStrip({
-  stats,
-  loading,
-}: {
-  stats: { label: string; value: string; caption?: string }[];
-  loading: boolean;
-}) {
-  return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl border border-white/5 bg-white/[0.02] px-6 py-4 mb-6">
-      {stats.map((stat) => (
-        <div key={stat.label}>
-          <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 mb-0.5">
-            {stat.label}
-          </span>
-          {loading ? (
-            <span className="block mt-1 h-5 w-16 rounded bg-white/[0.04] animate-pulse" />
-          ) : (
-            <span className="block text-lg leading-snug text-white tabular-nums">{stat.value}</span>
-          )}
-          {stat.caption && (
-            <span className="block mt-1 text-[11px] text-zinc-600 truncate">{stat.caption}</span>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function SortHeader({
   label,

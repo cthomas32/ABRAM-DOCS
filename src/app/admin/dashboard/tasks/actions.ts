@@ -55,11 +55,11 @@ function refresh() {
 /**
  * A new follow up.
  *
- * `crm_tasks.contact_id` is not nullable and there is no `deal_id`
- * column, so a task filed against a deal is filed against that deal's
- * primary contact and carries the deal name in its details. A deal with
- * no primary contact has nowhere to hang a task, and that is said
- * plainly rather than silently dropping the link.
+ * `crm_tasks.deal_id` arrived with migration 20260817160000, so a follow
+ * up about a deal now says so in a column rather than in a sentence in
+ * its details. `contact_id` stays required: every follow up in this
+ * console is something somebody has to do about a person, and the queue
+ * groups by that person.
  */
 export async function createTask(input: {
   contactId: string;
@@ -69,7 +69,9 @@ export async function createTask(input: {
   dueAt?: string | null;
   assignedTo?: string | null;
   priority?: CrmPriority;
-  /** Optional. Recorded in the details, since tasks hang off contacts. */
+  /** The deal this is about. Written to `deal_id`. */
+  dealId?: string | null;
+  /** Its name, kept in the details so the queue reads without a join. */
   dealName?: string | null;
 }): Promise<TaskResult> {
   const writer = await readWriter();
@@ -94,6 +96,7 @@ export async function createTask(input: {
 
   const { error } = await supabase.from("crm_tasks").insert({
     contact_id: input.contactId,
+    deal_id: input.dealId || null,
     title,
     details,
     due_at: dueAt,
@@ -107,6 +110,7 @@ export async function createTask(input: {
 
   await supabase.from("crm_interactions").insert({
     contact_id: input.contactId,
+    deal_id: input.dealId || null,
     kind: "task_created",
     body: title,
     occurred_at: new Date().toISOString(),

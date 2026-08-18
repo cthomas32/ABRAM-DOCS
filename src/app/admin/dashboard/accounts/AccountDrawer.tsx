@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Archive, ArchiveRestore, Building2, Loader2, Save, User, X } from "lucide-react";
 import { DEAL_STAGES, formatMoney } from "@/lib/crm/constants";
 import type { CrmAccount, CrmContact, CrmDeal } from "@/lib/crm/types";
+import Overline from "@/components/admin/Overline";
 import {
   ACCOUNT_LIFECYCLES,
   createAccount,
@@ -548,21 +549,25 @@ export default function AccountDrawer({
 /*  Bits                                                               */
 /* ------------------------------------------------------------------ */
 
-/** A section header inside the panel. One recipe, hairline underneath. */
+/**
+ * A section header inside the panel, and a label above a field.
+ *
+ * Both are the shared `Overline`, so the label recipe lives in exactly
+ * one file. All these add is the placement: a hairline under a section
+ * heading, and the wrapping `label` element around a field.
+ */
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="pb-1 border-b border-white/5 text-xs uppercase font-bold tracking-widest text-gray-400">
+    <Overline as="h3" className="pb-1 border-b border-white/5">
       {children}
-    </h4>
+    </Overline>
   );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 mb-1.5">
-        {label}
-      </span>
+      <Overline className="mb-1.5">{label}</Overline>
       {children}
     </label>
   );

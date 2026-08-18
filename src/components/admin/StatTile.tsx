@@ -61,51 +61,80 @@ export function StatCell({
   );
 }
 
+export interface StatRowItem {
+  label: string;
+  /** Pre-formatted. The strip never formats: only the caller knows units. */
+  value: React.ReactNode;
+  /** One quiet line under the figure. */
+  hint?: React.ReactNode;
+  /**
+   * Alias of `hint`, kept because the board and the queue were written
+   * against that name. Truncates rather than wrapping.
+   */
+  caption?: string;
+  /** Marks the figure as needing attention. Spend it rarely. */
+  attention?: boolean;
+}
+
+// Explicit, because Tailwind cannot see an interpolated class name.
+const COLUMNS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "lg:grid-cols-2",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+  5: "lg:grid-cols-5",
+};
+
 /**
  * The strip. Two-up on a phone, N-up from `lg`, one card around the lot.
- * Pass `StatTile` children and they are unwrapped into cells, or pass
- * `stats` and let it build them.
+ *
+ * This is the only stat strip in the console. Every screen that states
+ * figures above a list, a board or a queue uses it, so the numbers all
+ * read the same way: label in the one caps recipe, a plain figure at
+ * `text-lg` with tabular numerals, no per-cell chrome and no colour on a
+ * value unless it is the amber that means this costs something if it is
+ * ignored.
  */
 export function StatRow({
   stats,
   loading = false,
   className = "",
 }: {
-  stats: { label: string; value: React.ReactNode; hint?: React.ReactNode }[];
+  stats: StatRowItem[];
   /** Shows a shimmer where each figure will be. Never blanks the row. */
   loading?: boolean;
   className?: string;
 }) {
-  // Explicit, because Tailwind cannot see an interpolated class name.
-  const columns: Record<number, string> = {
-    1: "grid-cols-1",
-    2: "lg:grid-cols-2",
-    3: "lg:grid-cols-3",
-    4: "lg:grid-cols-4",
-    5: "lg:grid-cols-5",
-  };
-
   return (
     <div
       className={`grid grid-cols-2 gap-3 rounded-2xl border border-white/5 bg-white/[0.02] px-6 py-4 ${
-        columns[stats.length] ?? "lg:grid-cols-4"
+        COLUMNS[stats.length] ?? "lg:grid-cols-4"
       } ${className}`}
     >
-      {stats.map((stat) => (
-        <div key={stat.label} className="min-w-0">
-          <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-0.5">
-            {stat.label}
-          </span>
-          {loading ? (
-            <div className="mt-1 h-5 w-16 rounded bg-white/[0.06] animate-pulse" />
-          ) : (
-            <div className="text-lg leading-snug tabular-nums text-white">{stat.value}</div>
-          )}
-          {stat.hint && !loading && (
-            <p className="mt-1 text-[11px] text-zinc-500 leading-relaxed">{stat.hint}</p>
-          )}
-        </div>
-      ))}
+      {stats.map((stat) => {
+        const under = stat.hint ?? stat.caption;
+        return (
+          <div key={stat.label} className="min-w-0">
+            <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-0.5">
+              {stat.label}
+            </span>
+            {loading ? (
+              <div className="mt-1 h-5 w-16 rounded bg-white/[0.06] animate-pulse" />
+            ) : (
+              <div
+                className={`text-lg leading-snug tabular-nums ${
+                  stat.attention ? "text-amber-400" : "text-white"
+                }`}
+              >
+                {stat.value}
+              </div>
+            )}
+            {under && !loading && (
+              <p className="mt-1 text-[11px] text-zinc-500 leading-relaxed truncate">{under}</p>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

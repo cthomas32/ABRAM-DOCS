@@ -4,7 +4,15 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
 import { readConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
-import type { BillingPeriod, CrmMotion, DealStage } from "@/lib/crm/constants";
+import { DEAL_STAGES } from "@/lib/crm/constants";
+import type {
+  BillingPeriod,
+  CrmMotion,
+  DealStage,
+  InteractionKind,
+} from "@/lib/crm/constants";
+import { applyDealAttribution } from "@/lib/crm/attributionService";
+import type { DealAttributionResult } from "@/lib/crm/attributionService";
 
 /**
  * Writing a deal.
@@ -40,6 +48,10 @@ export interface DealResult {
   ok: boolean;
   error?: string;
   dealId?: string;
+  /** Only on markWon: the verdict that was locked with the close. */
+  attribution?: DealAttributionResult;
+  /** Something a person must settle. Not a reason the write failed. */
+  warning?: string;
 }
 
 export interface DealInput {
@@ -113,7 +125,64 @@ function readWriteError(code: string | undefined, fallback: string): string {
 
 function refresh() {
   revalidatePath("/admin/dashboard/deals");
+  revalidatePath("/admin/dashboard/deals/board");
   revalidatePath("/admin/dashboard/accounts");
+}
+
+/* ------------------------------------------------------------------ */
+/*  Timeline                                                           */
+/* ------------------------------------------------------------------ */
+
+type DealMoveKind = Extract<InteractionKind, "stage_change" | "deal_won" | "deal_lost">;
+
+/**
+ * The line a stage move leaves behind.
+ *
+ * Written against the deal whether or not there is a contact on it:
+ * `crm_interactions.contact_id` is nullable from migration 20260817160000
+ * precisely so a deal that nobody has attached a person to still has a
+ * history. A failure here is a missing line, not a failed move, so it is
+ * swallowed rather than returned.
+ */
+async function logDealMove(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  input: {
+    dealId: string;
+    contactId: string | null;
+    kind: DealMoveKind;
+    body: string;
+    meta: Record<string, unknown>;
+    authorUserId: string;
+  }
+) {
+  await supabase.from("crm_interactions").insert({
+    contact_id: input.contactId,
+    deal_id: input.dealId,
+    kind: input.kind,
+    body: input.body,
+    meta: input.meta,
+    occurred_at: new Date().toISOString(),
+    author_user_id: input.authorUserId,
+  });
+}
+
+function stageLabel(id: string): string {
+  return DEAL_STAGES.find((stage) => stage.id === id)?.label ?? id;
+}
+
+/** The deal as the stage actions need to read it, or nothing. */
+async function readDealRow(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  dealId: string
+) {
+  const { data } = await supabase
+    .from("crm_deals")
+    .select("id, name, stage, primary_contact_id")
+    .eq("id", dealId)
+    .maybeSingle();
+  return data as
+    | { id: string; name: string; stage: DealStage; primary_contact_id: string | null }
+    | null;
 }
 
 /* ------------------------------------------------------------------ */
@@ -198,6 +267,26 @@ export async function updateDeal(dealId: string, input: DealInput): Promise<Deal
  * and its own confirmation rather than being one more option in a menu.
  */
 export async function setDealStage(dealId: string, stage: DealStage): Promise<DealResult> {
+  if (stage === "won") return { ok: false, error: WON_NEEDS_CLOSE };
+  if (stage === "lost") {
+    return { ok: false, error: "Use Mark lost, so the reason is recorded with it." };
+  }
+  return moveDealStage(dealId, stage);
+}
+
+/**
+ * The board's door onto the same move.
+ *
+ * The one difference from `setDealStage`: dragging a card into Lost is
+ * allowed without a sentence. The board is a coarse instrument and the
+ * drawer is where a reason gets typed, so refusing the drag would only
+ * teach people to stop using the board.
+ */
+export async function moveDealStage(
+  dealId: string,
+  stage: DealStage,
+  options: { lostReason?: string | null } = {}
+): Promise<DealResult> {
   const supabase = await createClient();
   const user = await readConsoleUser(supabase);
 
@@ -207,21 +296,41 @@ export async function setDealStage(dealId: string, stage: DealStage): Promise<De
   }
 
   if (stage === "won") return { ok: false, error: WON_NEEDS_CLOSE };
-  if (stage === "lost") {
-    return { ok: false, error: "Use Mark lost, so the reason is recorded with it." };
-  }
-  if (stage !== "opportunity" && stage !== "proposal" && stage !== "negotiation") {
+  if (!DEAL_STAGES.some((known) => known.id === stage)) {
     return { ok: false, error: "That is not a stage a deal can be in." };
   }
 
-  const { error } = await supabase
-    .from("crm_deals")
-    .update({ stage, closed_at: null, closed_by: null, lost_reason: null })
-    .eq("id", dealId);
+  const deal = await readDealRow(supabase, dealId);
+  if (!deal) return { ok: false, error: "That deal no longer exists." };
+  if (deal.stage === stage) return { ok: true, dealId };
+
+  // Leaving Won clears the close in the same write. A deal reopened for
+  // negotiation is not closed, and a stale closer left on it means the
+  // commission ledger reads a close that no longer happened.
+  const patch: Record<string, unknown> = { stage, closed_at: null, closed_by: null };
+  patch.lost_reason =
+    stage === "lost" ? text(options.lostReason, MAX_REASON) : null;
+  if (stage === "lost") patch.closed_at = new Date().toISOString();
+
+  const { error } = await supabase.from("crm_deals").update(patch).eq("id", dealId);
 
   if (error) {
     return { ok: false, error: readWriteError(error.code, "Could not move the deal. Try again.") };
   }
+
+  await logDealMove(supabase, {
+    dealId: deal.id,
+    contactId: deal.primary_contact_id,
+    kind: stage === "lost" ? "deal_lost" : "stage_change",
+    body:
+      stage === "lost"
+        ? patch.lost_reason
+          ? `${deal.name} was lost: ${patch.lost_reason}`
+          : `${deal.name} was lost`
+        : `${deal.name}: ${stageLabel(deal.stage)} to ${stageLabel(stage)}`,
+    meta: { deal_id: deal.id, from: deal.stage, to: stage },
+    authorUserId: user.userId,
+  });
 
   refresh();
   return { ok: true, dealId };
@@ -256,6 +365,9 @@ export async function markWon(
     return { ok: false, error: "A deal cannot have closed in the future." };
   }
 
+  const deal = await readDealRow(supabase, dealId);
+  if (!deal) return { ok: false, error: "That deal no longer exists." };
+
   const { error } = await supabase
     .from("crm_deals")
     .update({
@@ -270,8 +382,30 @@ export async function markWon(
     return { ok: false, error: readWriteError(error.code, "Could not mark the deal won. Try again.") };
   }
 
+  await logDealMove(supabase, {
+    dealId: deal.id,
+    contactId: deal.primary_contact_id,
+    kind: "deal_won",
+    body: `${deal.name} was won`,
+    meta: { deal_id: deal.id, from: deal.stage, to: "won" },
+    authorUserId: user.userId,
+  });
+
+  // Attribution is settled here, in the same action, and locked.
+  //
+  // Locking is what stops a UTM edited next month from moving a
+  // commission already paid. It cannot fail the close: the deal is won
+  // either way, and a verdict that did not resolve is a thing for a
+  // person to settle rather than a reason to refuse the stage write.
+  const attribution = await applyDealAttribution(dealId, { lock: true });
+
   refresh();
-  return { ok: true, dealId };
+  return {
+    ok: true,
+    dealId,
+    attribution,
+    warning: attribution.ok ? attribution.warnings?.[0] : attribution.error,
+  };
 }
 
 /**
@@ -292,6 +426,9 @@ export async function markLost(dealId: string, reason: string): Promise<DealResu
   const lostReason = text(reason, MAX_REASON);
   if (!lostReason) return { ok: false, error: "Say why it was lost. In six months nobody remembers." };
 
+  const deal = await readDealRow(supabase, dealId);
+  if (!deal) return { ok: false, error: "That deal no longer exists." };
+
   const { error } = await supabase
     .from("crm_deals")
     .update({
@@ -306,6 +443,15 @@ export async function markLost(dealId: string, reason: string): Promise<DealResu
     return { ok: false, error: readWriteError(error.code, "Could not mark the deal lost. Try again.") };
   }
 
+  await logDealMove(supabase, {
+    dealId: deal.id,
+    contactId: deal.primary_contact_id,
+    kind: "deal_lost",
+    body: `${deal.name} was lost: ${lostReason}`,
+    meta: { deal_id: deal.id, from: deal.stage, to: "lost" },
+    authorUserId: user.userId,
+  });
+
   refresh();
   return { ok: true, dealId };
 }
@@ -314,21 +460,17 @@ export async function markLost(dealId: string, reason: string): Promise<DealResu
 /*  Attribution                                                        */
 /* ------------------------------------------------------------------ */
 
-export interface AttributionRecheckResult {
-  ok: boolean;
-  message: string;
-}
+export type AttributionRecheckResult = DealAttributionResult;
 
 /**
  * Re-deriving which rule attributes this deal.
  *
- * A placeholder. The evidence gathering and the call into
- * `resolveAttribution` land in `src/lib/crm/attributionService.ts`, and
- * this becomes its caller. The button exists now so the drawer has one
- * shape rather than two, and it says plainly that it does nothing yet
- * rather than returning a silent success.
+ * The evidence gathering, the rule run and the write all live in
+ * `attributionService`, which checks `crm.deals.manage` itself and never
+ * throws. This is its caller and nothing more: the verdict and the full
+ * rejection list come back for the drawer to draw.
  */
-export async function recheckDealAttribution(dealId: string): Promise<AttributionRecheckResult> {
-  if (!dealId) return { ok: false, message: "No deal to check." };
-  return { ok: false, message: "not wired yet" };
+export async function recheckDealAttribution(dealId: string): Promise<DealAttributionResult> {
+  if (!dealId) return { ok: false, error: "No deal to check." };
+  return applyDealAttribution(dealId);
 }

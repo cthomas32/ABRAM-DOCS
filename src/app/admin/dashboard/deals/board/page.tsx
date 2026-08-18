@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
 import type { DealStage } from "@/lib/crm/constants";
-import StatRow from "@/components/admin/StatRow";
+import { StatRow } from "@/components/admin/StatTile";
 import DealBoard, { type BoardPerson, type DealBoardRow } from "../DealBoard";
 
 /**

@@ -98,7 +98,10 @@ export async function fileRegistration(input: {
   const { data: account } = await supabase
     .from("crm_accounts")
     .select("id, first_contact_at")
-    .eq("domain", accountDomain)
+    // `ilike` rather than `eq`: the accounts surface lowercases domains
+    // on write, and older rows were stored however they were typed. A
+    // case-sensitive match would let ACME.com be registered twice.
+    .ilike("domain", accountDomain)
     .maybeSingle();
 
   if (account?.first_contact_at) {

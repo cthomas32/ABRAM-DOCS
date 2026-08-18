@@ -14,7 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import Modal from "@/components/admin/Modal";
-import StatRow from "@/components/admin/StatRow";
+import { StatRow } from "@/components/admin/StatTile";
 import type { CrmPriority, TaskStatus } from "@/lib/crm/constants";
 import {
   BLOCK_CARD,
@@ -574,6 +574,7 @@ function TaskDialog({
       dueAt,
       assignedTo,
       priority,
+      dealId: deal?.id ?? null,
       dealName: deal?.name ?? null,
     });
     setSaving(false);

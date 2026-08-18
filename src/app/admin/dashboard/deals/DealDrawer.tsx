@@ -14,6 +14,9 @@ import {
   type DealStage,
 } from "@/lib/crm/constants";
 import type { CrmDeal } from "@/lib/crm/types";
+import type { AttributionVerdict as Verdict } from "@/lib/crm/attribution";
+import AttributionVerdict from "@/components/crm/AttributionVerdict";
+import Overline from "@/components/admin/Overline";
 import {
   createDeal,
   markLost,
@@ -21,6 +24,7 @@ import {
   recheckDealAttribution,
   setDealStage,
   updateDeal,
+  type AttributionRecheckResult,
   type DealInput,
 } from "./actions";
 
@@ -138,6 +142,8 @@ export default function DealDrawer({
   const [lostReason, setLostReason] = useState("");
   const [confirming, setConfirming] = useState<"won" | "lost" | null>(null);
   const [attributionMessage, setAttributionMessage] = useState<string | null>(null);
+  /** The last recheck. Null until somebody presses the button. */
+  const [freshAttribution, setFreshAttribution] = useState<AttributionRecheckResult | null>(null);
 
   const isNew = deal === null;
 
@@ -146,6 +152,7 @@ export default function DealDrawer({
     setMessage(null);
     setConfirming(null);
     setAttributionMessage(null);
+    setFreshAttribution(null);
   }, [deal?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -223,6 +230,11 @@ export default function DealDrawer({
     }
     setConfirming(null);
     setLostReason("");
+    // Winning settles attribution in the same action. The verdict comes
+    // back with it, so the panel shows what was locked rather than the
+    // answer from before the close.
+    if (result.attribution) setFreshAttribution(result.attribution);
+    if (result.warning) setMessage(result.warning);
     onSaved();
   };
 
@@ -231,12 +243,44 @@ export default function DealDrawer({
     setBusy("attribution");
     const result = await recheckDealAttribution(deal.id);
     setBusy(null);
-    setAttributionMessage(result.message);
+    setFreshAttribution(result);
+    setAttributionMessage(
+      result.ok
+        ? result.locked
+          ? "Already settled. This is the answer that was locked with the close."
+          : result.changed
+            ? "Rechecked. The verdict changed."
+            : "Rechecked. The stored verdict already said this."
+        : (result.error ?? "Could not recheck attribution.")
+    );
+    if (result.ok && result.changed) onSaved();
   };
 
   const stage = deal?.stage ?? "opportunity";
   const stageSpec = DEAL_STAGES.find((s) => s.id === stage) ?? DEAL_STAGES[0];
   const attribution = attributionSpec(deal?.attribution_rule ?? "unattributed");
+
+  /**
+   * What the panel draws.
+   *
+   * A fresh recheck wins, because it carries the rejection list. With no
+   * recheck in hand the stored columns are shown as a verdict with an
+   * empty rejection list — the deal knows which rule fired, but not what
+   * the others said, and pretending otherwise would be inventing history.
+   */
+  const shownVerdict: Verdict | null = freshAttribution?.verdict
+    ? freshAttribution.verdict
+    : deal?.attribution_rule
+      ? {
+          rule: deal.attribution_rule,
+          userId: deal.sourced_by ?? null,
+          ref: deal.attribution_ref ?? null,
+          reason: deal.attribution_note ?? attribution.description,
+          rejected: [],
+        }
+      : null;
+
+  const attributionWarnings = freshAttribution?.warnings ?? [];
   const accountName = accounts.find((a) => a.id === fields.accountId)?.name ?? null;
 
   return (
@@ -597,63 +641,46 @@ export default function DealDrawer({
               )}
             </section>
 
-            {/* Attribution. The evidence lives on the deal; the verdict is
-                written by the attribution service, which is not wired yet. */}
+            {/* Attribution. Derived, never chosen: the panel shows the rule
+                that fired and every rule that did not, which is the
+                question people actually ask. */}
             {!isNew && (
               <section className="space-y-3">
-                <SectionLabel>Attribution</SectionLabel>
-
-                <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 space-y-2.5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className={`px-1.5 py-0.5 rounded text-[10px] font-medium border ${attribution.badge}`}
-                    >
-                      {attribution.label}
-                    </span>
-                    {deal?.attribution_ref && (
-                      <span className="text-[11px] text-zinc-400 break-words">
-                        {deal.attribution_ref}
-                      </span>
-                    )}
-                  </div>
-
-                  <p className="text-[11px] text-zinc-500 leading-relaxed">
-                    {attribution.description}
-                  </p>
-
-                  {deal?.attribution_note && (
-                    <p className="text-[11px] text-zinc-400 leading-relaxed break-words">
-                      {deal.attribution_note}
-                    </p>
-                  )}
-
-                  {deal?.attribution_locked_at && (
-                    <p className="text-[11px] text-zinc-500">
-                      Settled {formatDay(deal.attribution_locked_at)}. The ledger reads this rather
-                      than working it out again.
-                    </p>
-                  )}
-
-                  {attributionMessage && (
-                    <p className="text-[11px] text-zinc-400 leading-relaxed">{attributionMessage}</p>
-                  )}
-
-                  {canManage && (
-                    <button
-                      type="button"
-                      disabled={busy === "attribution"}
-                      onClick={() => void recheck()}
-                      className="btn-glass h-9 px-4 text-[11px] disabled:opacity-50"
-                    >
-                      {busy === "attribution" ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <RefreshCw className="w-3.5 h-3.5" />
+                <AttributionVerdict
+                  verdict={shownVerdict}
+                  locked={Boolean(deal?.attribution_locked_at)}
+                  warnings={attributionWarnings}
+                  action={
+                    <div className="space-y-2">
+                      {canManage && (
+                        <button
+                          type="button"
+                          disabled={busy === "attribution"}
+                          onClick={() => void recheck()}
+                          className="btn-glass h-9 px-4 text-[11px] font-medium disabled:opacity-50"
+                        >
+                          {busy === "attribution" ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <RefreshCw className="w-3.5 h-3.5" />
+                          )}
+                          Recheck attribution
+                        </button>
                       )}
-                      Recheck attribution
-                    </button>
-                  )}
-                </div>
+                      {deal?.attribution_locked_at && (
+                        <p className="text-[11px] text-zinc-500 leading-relaxed">
+                          Settled {formatDay(deal.attribution_locked_at)}. The ledger reads this
+                          rather than working it out again.
+                        </p>
+                      )}
+                      {attributionMessage && (
+                        <p className="text-[11px] text-zinc-400 leading-relaxed">
+                          {attributionMessage}
+                        </p>
+                      )}
+                    </div>
+                  }
+                />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Promo code">
@@ -711,21 +738,25 @@ export default function DealDrawer({
 /*  Bits                                                               */
 /* ------------------------------------------------------------------ */
 
-/** A section header inside the panel. One recipe, hairline underneath. */
+/**
+ * A section header inside the panel, and a label above a field.
+ *
+ * Both are the shared `Overline`, so the label recipe lives in exactly
+ * one file. All these add is the placement: a hairline under a section
+ * heading, and the wrapping `label` element around a field.
+ */
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="pb-1 border-b border-white/5 text-xs uppercase font-bold tracking-widest text-gray-400">
+    <Overline as="h3" className="pb-1 border-b border-white/5">
       {children}
-    </h4>
+    </Overline>
   );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 mb-1.5">
-        {label}
-      </span>
+      <Overline className="mb-1.5">{label}</Overline>
       {children}
     </label>
   );

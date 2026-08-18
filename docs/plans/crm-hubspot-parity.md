@@ -352,3 +352,74 @@ Applies to everything under `src/app/admin/dashboard/{crm,deals,accounts,tasks,r
   reached, empty). Replaces every inline amber, emerald and rose recipe
 - `src/components/admin/Money.tsx` - cents to display string, one place, so no screen divides by 100
   on its own
+
+---
+
+## P0 status, 17 August 2026
+
+All seven P0 items are built and merged into `crm/p0`. Four builders worked in parallel on
+`crm/p0-security-ui`, `crm/p0-attribution`, `crm/p0-deals-accounts` and `crm/p0-board-tasks`; the
+integration pass merged them and made them one build.
+
+**P0-1. Deals — done.** `src/app/admin/dashboard/deals/page.tsx`, `DealDrawer.tsx`, `actions.ts`.
+The list, the drawer, create, edit, stage moves, and both closing paths. `markWon` writes
+`closed_at` and `closed_by` in the same statement as the stage, because `crm_deals_won_needs_close`
+refuses the row without them.
+
+**P0-2. Accounts — done.** `src/app/admin/dashboard/accounts/page.tsx`, `AccountDrawer.tsx`,
+`actions.ts`. Lifecycle, the three exclusion flags, `first_contact_at`, and the account picker on
+`crm/ContactDrawer.tsx`. Domains are written lowercase, which is why
+`registrations/actions.ts` now matches them with `ilike` rather than `eq`.
+
+**P0-3. Attribution — done and wired.** `src/lib/crm/attributionService.ts`,
+`src/lib/crm/attribution.ts`, `src/components/crm/AttributionVerdict.tsx`,
+`supabase/migrations/20260817150000_growth_attribution_keys.sql`, `tests/attribution.test.mts`
+(21 tests, `npm test`). Wiring: `deals/actions.ts` `recheckDealAttribution` calls
+`applyDealAttribution(dealId)`, and `markWon` calls `applyDealAttribution(dealId, { lock: true })`
+after the stage write and returns the verdict with the result. `DealDrawer` renders
+`<AttributionVerdict>` with the recheck button passed in as `action`. With no recheck in hand the
+panel shows the stored columns as a verdict with an empty rejection list, because the deal knows
+which rule fired but not what the others said.
+
+**P0-4. Deal board — done.** `deals/DealBoard.tsx`, `deals/board/page.tsx`, `deals/boardActions.ts`.
+`boardActions.ts` is now a thin adapter: it translates the board's object arguments into
+`deals/actions.ts`, so there is one implementation of moving a deal and the two surfaces cannot
+drift into two ideas of what winning one means.
+
+**P0-5. Task queue — done.** `tasks/page.tsx`, `tasks/TaskQueue.tsx`, `tasks/actions.ts`,
+`src/lib/crm/taskCount.ts`, the nav badge in `AdminShell.tsx`, `layout.tsx`. Tasks now write
+`deal_id` directly rather than naming the deal in their details.
+
+**P0-6. Audit blockers — done.** Svix signature verification on both Resend webhooks
+(`src/lib/webhooks/svix.ts`), authentication on `/api/admin/posts`, `promotions.manage` on
+`/api/admin/promotions`, `to_regclass` guards on `20260817140000`, and
+`scripts/audit-open-policies.sql`.
+
+**P0-7. UI pass — done.** `src/components/admin/{Overline,StatTile,Panel,Money}.tsx`,
+`src/lib/crm/blockStyles.ts`, the retinted palette in `src/lib/crm/constants.ts`. The integration
+pass collapsed three separate stat strips into one: `StatRow` in `StatTile.tsx` is the only one,
+and the deals list, the accounts list, the board, the queue, the contacts page and the earnings
+page all use it.
+
+**Also shipped in the integration pass.** Migration
+`supabase/migrations/20260817160000_crm_tasks_deal_link.sql`: `deal_id` on `crm_tasks`,
+`crm_interactions` and `crm_stage_changes`, with `contact_id` relaxed to nullable on the latter two
+under a CHECK that one of the two is present, so a deal has a history without a contact. New
+`crm_can_see_deal` / `crm_can_edit_deal` predicates and rewritten policies on the three tables.
+`InteractionKind` in `constants.ts` now matches `crm_interactions_kind_check` from `20260817100000`
+exactly.
+
+### What P0 did not close
+
+- **The broadcasts page still carries the red palette.** It was outside builder D's file list. It is
+  the last screen in the console using red for anything.
+- **Stripe to DOCS collections sync.** Nothing writes `crm_deals.promo_code`, `utm_source` or
+  `external_customer_ref` automatically, and nothing writes `revenue_collections` except
+  `recordCollection` in `src/lib/growth/collectionsService.ts`, which is a manual owner-only entry.
+  Until the sync exists, attribution rule one fires on a column a person filled in. This is the
+  largest open item and it gates paying anybody accurately.
+- **Promo redemption evidence.** The promo admin proxy reports campaigns and codes but no
+  redemptions, so "this deal used her code" is an assertion rather than a fact read off a checkout.
+- **Deal stage history is written but not read.** `20260817160000` gives `crm_stage_changes` a
+  `deal_id`, and `deals/actions.ts` writes a `crm_interactions` line on every move, but no screen
+  renders a deal's history yet. The drawer has the space for it.
