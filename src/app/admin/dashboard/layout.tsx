@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can, permissionsFor } from "@/lib/auth/permissions";
+import { openTaskCount } from "@/lib/crm/taskCount";
 import AdminShell from "./AdminShell";
 
 /**
@@ -34,8 +35,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/admin/no-access");
   }
 
+  // The follow up badge. Read here so it is one query per navigation
+  // rather than one per page, and it returns zero rather than throwing:
+  // a count is never a reason for the console to fail to render.
+  const taskCount = can(user, "crm.contacts.read.own") ? await openTaskCount(user.userId) : 0;
+
   return (
-    <AdminShell user={user} permissions={Array.from(permissionsFor(user))}>
+    <AdminShell
+      user={user}
+      permissions={Array.from(permissionsFor(user))}
+      taskCount={taskCount}
+    >
       {children}
     </AdminShell>
   );

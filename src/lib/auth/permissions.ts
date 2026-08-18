@@ -287,7 +287,9 @@ export function seesWholePipeline(user: Pick<ConsoleUser, "role" | "growthStage"
 export const ROUTE_PERMISSIONS: { prefix: string; permission: Permission }[] = [
   { prefix: "/admin/dashboard/crm", permission: "crm.contacts.read.own" },
   { prefix: "/admin/dashboard/accounts", permission: "crm.accounts.manage" },
+  { prefix: "/admin/dashboard/deals/board", permission: "crm.deals.manage" },
   { prefix: "/admin/dashboard/deals", permission: "crm.deals.manage" },
+  { prefix: "/admin/dashboard/tasks", permission: "crm.contacts.read.own" },
   { prefix: "/admin/dashboard/registrations", permission: "crm.registrations.file" },
   { prefix: "/admin/dashboard/earnings", permission: "commission.read.own" },
   { prefix: "/admin/dashboard/docs", permission: "content.docs" },
