@@ -10,18 +10,16 @@
  * number was structurally correct and permanently zero. A ledger nobody
  * can put a payment into is a schema, not a ledger.
  *
- * The real producer is a Stripe-to-DOCS sync: checkout happens in the
- * product's Supabase project, this is the marketing project, and the two
- * only speak through the promo admin proxy, which reports campaigns and
- * codes and no redemptions at all. That sync does not exist. It is the
- * open gap, it is named in docs/plans/crm-hubspot-parity.md, and this
- * file is not it.
+ * The real producer is the Stripe-to-DOCS sync, and it exists now —
+ * src/lib/growth/collectionsSyncService.ts, fed by abram-network's outbox.
+ * Everything that arrives through it is stamped `source = 'stripe'`.
  *
- * What this is: an owner typing in a payment they can see in Stripe, so
- * the first commission statement has something in it and the arithmetic
- * gets exercised against a real deal before anybody is owed money by it.
- * `source` is stamped `manual` precisely so the sync, when it arrives,
- * can tell what it did not put there.
+ * This file is what remains: an owner typing in a payment they can see in
+ * Stripe and the sync cannot mirror — a bank transfer, an invoice settled
+ * outside the product, a correction. `source` stays `manual` precisely so
+ * a reconciliation run can tell the two apart, and the uniqueness of
+ * `external_payment_ref` means entering by hand a payment the sync
+ * already brought across is refused rather than doubled.
  *
  * WHY ONLY AN OWNER
  *

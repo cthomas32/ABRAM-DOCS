@@ -352,6 +352,29 @@ export async function applyDealAttribution(
     return { ok: false, error: "You do not have permission to work deals." };
   }
 
+  return applyDealAttributionAs(supabase, dealId, options);
+}
+
+/**
+ * The same thing, for a caller that has already decided it is allowed to.
+ *
+ * The collections sync runs as the service role with no signed-in person,
+ * so it cannot go through the check above — there is nobody to check. It
+ * has just written a promo code onto a deal from a real checkout, which
+ * is the strongest evidence rule one will ever get, and leaving the
+ * verdict stale until somebody opens the drawer would mean the ledger
+ * pays on a rule derived before the evidence arrived.
+ *
+ * Everything the rules read is either a table the service role can see or
+ * a SECURITY DEFINER function that admits it (see migration 20260818120000
+ * — the gate had to be widened, and why is written there). The one thing
+ * this does NOT do is lock: settling attribution stays a human act.
+ */
+export async function applyDealAttributionAs(
+  supabase: Supabase,
+  dealId: string,
+  options: ApplyDealAttributionOptions = {}
+): Promise<DealAttributionResult> {
   const loaded = await loadDeal(supabase, dealId);
   if ("error" in loaded) return { ok: false, error: loaded.error };
 
@@ -522,16 +545,22 @@ function payeeWarnings(deal: DealRow, verdict: AttributionVerdict): string[] {
 }
 
 /* ------------------------------------------------------------------ *
- *  OPEN GAP
+ *  WHERE THE EVIDENCE COMES FROM NOW
  *
- *  Nothing writes `crm_deals.promo_code`, `utm_source` or
- *  `external_customer_ref` automatically. Checkout is in the product's
- *  database and the two projects only speak through the promo admin
- *  proxy, which reads campaigns and codes but reports no redemptions.
- *  Until a Stripe-to-DOCS sync exists, rule one fires on a column a
- *  person filled in — which is honest, recorded and auditable, and is
- *  still not the same thing as evidence from a checkout.
+ *  `crm_deals.promo_code`, `utm_source` and `external_customer_ref` are
+ *  written by the collections sync — src/lib/growth/collectionsSyncService.ts
+ *  — from the checkout that actually happened, and this file is re-run
+ *  against them as soon as they land. Rule one finally fires on evidence
+ *  rather than on a column somebody filled in.
  *
- *  The same sync is the missing producer for `revenue_collections`; see
- *  src/lib/growth/collectionsService.ts.
+ *  Two things are still typed by a person, and deliberately:
+ *
+ *  A deal invented by the sync (`origin = 'sync'`) has no `sourced_by`,
+ *  so it pays nobody until somebody says whose it was. That is the right
+ *  default — the ledger's own rule is that an unattributed deal pays
+ *  nothing — but it does mean a real commission needs a human to confirm
+ *  it, once, per account.
+ *
+ *  The sync never locks. Settling attribution ends the argument, and
+ *  ending an argument is a human act.
  * ------------------------------------------------------------------ */

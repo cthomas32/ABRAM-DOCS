@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# The template is the opt-in: it holds names and never values, and a new
+# environment set up from memory is how a money endpoint ends up unsigned.
+!.env.example
 
 # vercel
 .vercel
