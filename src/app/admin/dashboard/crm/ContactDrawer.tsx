@@ -78,6 +78,7 @@ interface EditableFields {
   met_context: string;
   notes: string;
   event_id: string;
+  account_id: string;
   next_follow_up_at: string;
 }
 
@@ -95,6 +96,7 @@ function fieldsFrom(contact: CrmContact): EditableFields {
     met_context: contact.met_context ?? "",
     notes: contact.notes ?? "",
     event_id: contact.event_id ?? "",
+    account_id: contact.account_id ?? "",
     next_follow_up_at: toLocalInputValue(contact.next_follow_up_at),
   };
 }
@@ -121,6 +123,12 @@ export default function ContactDrawer({
   const [taskSaving, setTaskSaving] = useState(false);
   const [tagDraft, setTagDraft] = useState("");
   const [busyTaskId, setBusyTaskId] = useState<string | null>(null);
+  /**
+   * The companies this contact could roll up to. Read in the drawer rather
+   * than passed down, because the board does not otherwise need them and a
+   * failed read here costs a picker rather than the whole screen.
+   */
+  const [accounts, setAccounts] = useState<{ id: string; name: string; domain: string | null }[]>([]);
 
   // A different person in the panel means a different form, not a merged one.
   useEffect(() => {
@@ -165,6 +173,23 @@ export default function ContactDrawer({
     void loadHistory();
   }, [loadHistory]);
 
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("crm_accounts")
+        .select("id, name, domain")
+        .eq("archived", false)
+        .order("name", { ascending: true })
+        .limit(500);
+      if (!cancelled) setAccounts(data ?? []);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   /* ---------------------------------------------------------------- */
   /*  Writes                                                           */
   /* ---------------------------------------------------------------- */
@@ -206,6 +231,7 @@ export default function ContactDrawer({
         met_context: fields.met_context.trim() || null,
         notes: fields.notes.trim() || null,
         event_id: fields.event_id || null,
+        account_id: fields.account_id || null,
         next_follow_up_at: fromLocalInputValue(fields.next_follow_up_at),
       },
       "Saved."
@@ -634,6 +660,22 @@ export default function ContactDrawer({
                   />
                 </Field>
               </div>
+
+              <Field label="Account">
+                <select
+                  value={fields.account_id}
+                  onChange={(e) => setFields((f) => ({ ...f, account_id: e.target.value }))}
+                  className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                >
+                  <option value="">No account</option>
+                  {accounts.map((account) => (
+                    <option key={account.id} value={account.id}>
+                      {account.name}
+                      {account.domain ? ` (${account.domain})` : ""}
+                    </option>
+                  ))}
+                </select>
+              </Field>
 
               <Field label="Event">
                 <select

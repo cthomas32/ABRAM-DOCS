@@ -27,6 +27,8 @@ import {
   UsersRound,
   KeyRound,
   Banknote,
+  Building2,
+  Handshake,
   Stamp
 } from "lucide-react";
 
@@ -70,7 +72,9 @@ const NAV_GROUPS: { id: string; label: string | null; links: AdminNavLink[] }[] 
     id: "audience",
     label: "Audience",
     links: [
-      { id: "crm", label: "Contacts", href: "/admin/dashboard/crm", icon: Contact, hint: "Pipeline & accounts", permission: "crm.contacts.read.own" },
+      { id: "crm", label: "Contacts", href: "/admin/dashboard/crm", icon: Contact, hint: "People and the pipeline", permission: "crm.contacts.read.own" },
+      { id: "accounts", label: "Accounts", href: "/admin/dashboard/accounts", icon: Building2, hint: "Companies and exclusions", permission: "crm.accounts.manage" },
+      { id: "deals", label: "Deals", href: "/admin/dashboard/deals", icon: Handshake, hint: "What is open and what it is worth", permission: "crm.deals.manage" },
       { id: "registrations", label: "Registrations", href: "/admin/dashboard/registrations", icon: Stamp, hint: "Claim a named account", permission: "crm.registrations.file" },
       { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone, hint: "Landing page funnels" , permission: "campaigns.manage" },
       { id: "links", label: "Link Hub", href: "/admin/dashboard/links", icon: LinkIcon, hint: "Your one bio link" , permission: "links.manage" },
