@@ -1,15 +1,13 @@
 # ---------------------------------------------------------------------------------------------
-# KIPP workflow — NOT INSTALLED YET.
+# KIPP workflow — INSTALLED 2026-08-03. This file is the live job, not a template.
 #
-# This is a template. To hire KIPP, copy it into place yourself:
+# It began life as `.agents/scheduled-content-ops.workflow.yml`, deliberately outside
+# .github/workflows/ so that installing a scheduled job holding service-role database credentials
+# and a cross-repo PAT was a decision made on purpose rather than a side effect of an agent
+# session. That copy is deleted: there is one file, and it cannot drift from itself.
 #
-#     mkdir -p .github/workflows
-#     cp .agents/scheduled-content-ops.workflow.yml .github/workflows/scheduled-content-ops.yml
-#
-# It is deliberately not written straight into .github/workflows/ — installing a scheduled job
-# that runs with service-role database credentials and a cross-repo PAT should be a decision you
-# make on purpose, not a side effect of an agent session. Add the secrets FIRST
-# (.agents/scheduled-content-ops.md has the checklist); until they exist the run is inert.
+# The secrets checklist it was gated on lives in .agents/scheduled-content-ops.md. Until every
+# required secret exists the run is inert rather than broken.
 # ---------------------------------------------------------------------------------------------
 
 name: KIPP — Content Ops & Search (agent-co)

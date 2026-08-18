@@ -202,7 +202,7 @@ When creating new pages (such as features, dashboards, or static marketing pages
 ### 2. Page Metadata & Canonical URLs
 - Always export a `metadata` object in the page file.
 - It **must** include a `canonical` URL definition matching the route (e.g. `alternates: { canonical: 'https://abram.network/my-new-page' }`).
-- For product/feature pages, include the JSON-LD schema block (like the one in `production-brain/page.tsx` or `film-production/page.tsx`) to support rich Google search results.
+- For product/feature pages, include the JSON-LD schema block (like the one in `film-production/page.tsx`) to support rich Google search results. **Not `production-brain/page.tsx`** — that page moved to `/intelligence/brain`, and what is left at the old path is a four-line `permanentRedirect` with no metadata and no JSON-LD to copy.
 
 ### 3. Database Schema & Query Resilience
 - When querying tables (like `release_notes`) where columns may vary or be missing in the remote database (e.g., the missing `slug` column), **do not** filter directly on the missing columns in SQL or explicitly select them in the query, as this will crash the page rendering.
