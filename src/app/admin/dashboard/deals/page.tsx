@@ -14,6 +14,7 @@ import {
 } from "@/lib/crm/constants";
 import type { CrmDeal } from "@/lib/crm/types";
 import DealDrawer, { type AccountOption, type ContactOption } from "./DealDrawer";
+import { rows, readWarning } from "@/lib/supabase/rows";
 import { StatRow } from "@/components/admin/StatTile";
 import Money from "@/components/admin/Money";
 
@@ -108,17 +109,13 @@ export default function DealsPage() {
       supabase.auth.getUser(),
     ]);
 
-    if (dealRows.error) {
-      setWarning("Deals could not be read. Sign in again, or ask an owner to check your access.");
-    } else {
-      setWarning(null);
-    }
+    setWarning(readWarning(dealRows, "Deals"));
 
-    setDeals((dealRows.data as CrmDeal[] | null) ?? []);
-    setAccounts((accountRows.data as AccountOption[] | null) ?? []);
-    setContacts((contactRows.data as ContactOption[] | null) ?? []);
+    setDeals(rows<CrmDeal>(dealRows));
+    setAccounts(rows<AccountOption>(accountRows));
+    setContacts(rows<ContactOption>(contactRows));
 
-    const people = (memberRows.data as MemberRow[] | null) ?? [];
+    const people = rows<MemberRow>(memberRows);
     setMembers(people);
 
     const me = people.find((person) => person.user_id === session.data.user?.id);

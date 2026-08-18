@@ -7,13 +7,12 @@ import { DEAL_STAGES, formatMoney } from "@/lib/crm/constants";
 import type { CrmAccount, CrmContact, CrmDeal } from "@/lib/crm/types";
 import Overline from "@/components/admin/Overline";
 import {
-  ACCOUNT_LIFECYCLES,
   createAccount,
   setAccountArchived,
   updateAccount,
   type AccountInput,
-  type AccountLifecycle,
 } from "./actions";
+import { ACCOUNT_LIFECYCLES, type AccountLifecycle } from "./lifecycles";
 
 /**
  * One company, the people at it, and the deals hanging off it.

@@ -5,6 +5,7 @@ import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
 import type { DealStage } from "@/lib/crm/constants";
 import { StatRow } from "@/components/admin/StatTile";
+import { rows, firstRow } from "@/lib/supabase/rows";
 import DealBoard, { type BoardPerson, type DealBoardRow } from "../DealBoard";
 
 /**
@@ -20,12 +21,8 @@ export const dynamic = "force-dynamic";
 
 /** The account arrives as a to-one relation the client types as an array. */
 function accountName(value: unknown): string | null {
-  const record = Array.isArray(value) ? value[0] : value;
-  if (record && typeof record === "object" && "name" in record) {
-    const name = (record as { name?: unknown }).name;
-    return typeof name === "string" ? name : null;
-  }
-  return null;
+  const record = firstRow<{ name?: unknown }>(value);
+  return typeof record?.name === "string" ? record.name : null;
 }
 
 function money(cents: number, currency = "USD"): string {
@@ -67,7 +64,7 @@ export default async function DealBoardPage() {
     supabase.from("admin_users").select("user_id, full_name, email"),
   ]);
 
-  const deals: DealBoardRow[] = (dealsRes.data ?? []).map((row) => ({
+  const deals: DealBoardRow[] = rows<Record<string, unknown>>(dealsRes).map((row) => ({
     id: row.id as string,
     name: row.name as string,
     stage: row.stage as DealStage,
@@ -78,7 +75,7 @@ export default async function DealBoardPage() {
     account_name: accountName(row.account),
   }));
 
-  const people = ((peopleRes.data ?? []) as BoardPerson[]) ?? [];
+  const people = rows<BoardPerson>(peopleRes);
   const currency = deals[0]?.currency ?? "USD";
 
   const open = deals.filter((deal) => deal.stage !== "won" && deal.stage !== "lost");

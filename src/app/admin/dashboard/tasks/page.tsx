@@ -9,6 +9,7 @@ import TaskQueue, {
   type QueuePerson,
   type QueueTask,
 } from "./TaskQueue";
+import { rows } from "@/lib/supabase/rows";
 
 /**
  * The follow up queue.
@@ -78,11 +79,11 @@ export default async function TasksPage() {
     assigned_to: (row.assigned_to as string | null) ?? null,
   });
 
-  const tasks = [...(tasksRes.data ?? []), ...(doneRes.data ?? [])].map(toTask);
+  const tasks = [...rows<Record<string, unknown>>(tasksRes), ...rows<Record<string, unknown>>(doneRes)].map(toTask);
 
-  const contacts = ((contactsRes.data ?? []) as QueueContact[]) ?? [];
-  const deals = ((dealsRes.data ?? []) as QueueDeal[]) ?? [];
-  const people = ((peopleRes.data ?? []) as QueuePerson[]) ?? [];
+  const contacts = rows<QueueContact>(contactsRes);
+  const deals = rows<QueueDeal>(dealsRes);
+  const people = rows<QueuePerson>(peopleRes);
 
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-8 lg:py-12 flex-1 min-w-0 overflow-y-auto">

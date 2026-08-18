@@ -37,6 +37,7 @@ import type {
   CrmTask,
 } from "@/lib/crm/types";
 import { buildContactVCardBundle } from "@/lib/crm/vcard";
+import { rows, firstRow } from "@/lib/supabase/rows";
 import PipelineBoard from "./PipelineBoard";
 import ContactDrawer from "./ContactDrawer";
 import { StatRow } from "@/components/admin/StatTile";
@@ -91,11 +92,8 @@ const TABS: { id: Tab; label: string; icon: React.ComponentType<{ className?: st
  * nicety and no shape of answer here is worth an exception.
  */
 function readMember(data: unknown): TeamMemberIdentity | null {
-  const rows = Array.isArray(data) ? data : [];
-  const first = rows[0] as { member?: unknown } | undefined;
-  const member = first?.member;
-  const record = Array.isArray(member) ? member[0] : member;
-  return record && typeof record === "object" ? (record as TeamMemberIdentity) : null;
+  const first = firstRow<{ member?: unknown }>(data);
+  return firstRow<TeamMemberIdentity>(first?.member);
 }
 
 export default function CrmPage() {
@@ -193,21 +191,27 @@ export default function CrmPage() {
         supabase.auth.getUser(),
       ]);
 
+      // A raw PostgREST message ("permission denied for table crm_contacts")
+      // is accurate and tells the reader nothing they can act on.
       const firstError =
         profileRes.error || eventsRes.error || codesRes.error || contactsRes.error || tasksRes.error;
-      setWarning(firstError ? firstError.message : null);
+      setWarning(
+        firstError
+          ? "Some of the contact tables could not be read. Sign in again, or ask an owner to check your access."
+          : null
+      );
 
-      setProfile(((profileRes.data as CrmProfile[] | null) ?? [])[0] ?? null);
+      setProfile(rows<CrmProfile>(profileRes)[0] ?? null);
       // Inheriting a job title is a nicety. Failing to read it is not worth
       // an alarm, and never worth taking the console down with it.
       setMember(identityRes.error ? null : readMember(identityRes.data));
-      setEvents((eventsRes.data as CrmEvent[] | null) ?? []);
-      setCodes((codesRes.data as CrmCaptureCode[] | null) ?? []);
-      setContacts((contactsRes.data as CrmContact[] | null) ?? []);
-      setOpenTasks((tasksRes.data as CrmTask[] | null) ?? []);
+      setEvents(rows<CrmEvent>(eventsRes));
+      setCodes(rows<CrmCaptureCode>(codesRes));
+      setContacts(rows<CrmContact>(contactsRes));
+      setOpenTasks(rows<CrmTask>(tasksRes));
       // The rollup view is a convenience. If it is unreadable the rest of the
       // console still works, so its failure is not worth an alarm.
-      setEventStats(statsRes.error ? [] : ((statsRes.data as EventStatRow[] | null) ?? []));
+      setEventStats(statsRes.error ? [] : rows<EventStatRow>(statsRes));
       setScanTotals(
         scansRes.error || convertedRes.error
           ? null

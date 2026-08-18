@@ -7,9 +7,10 @@ import { can, type ConsoleRole, type GrowthStage } from "@/lib/auth/permissions"
 import { formatMoney } from "@/lib/crm/constants";
 import type { CrmAccount, CrmContact, CrmDeal } from "@/lib/crm/types";
 import AccountDrawer from "./AccountDrawer";
+import { rows, readWarning } from "@/lib/supabase/rows";
 import { StatRow } from "@/components/admin/StatTile";
 import Money from "@/components/admin/Money";
-import { ACCOUNT_LIFECYCLES, type AccountLifecycle } from "./actions";
+import { ACCOUNT_LIFECYCLES, type AccountLifecycle } from "./lifecycles";
 
 /**
  * The companies, as distinct from the people at them.
@@ -85,17 +86,13 @@ export default function AccountsPage() {
       supabase.auth.getUser(),
     ]);
 
-    if (accountRows.error) {
-      setWarning("Accounts could not be read. Sign in again, or ask an owner to check your access.");
-    } else {
-      setWarning(null);
-    }
+    setWarning(readWarning(accountRows, "Accounts"));
 
-    setAccounts((accountRows.data as CrmAccount[] | null) ?? []);
-    setContacts((contactRows.data as CrmContact[] | null) ?? []);
-    setDeals((dealRows.data as CrmDeal[] | null) ?? []);
+    setAccounts(rows<CrmAccount>(accountRows));
+    setContacts(rows<CrmContact>(contactRows));
+    setDeals(rows<CrmDeal>(dealRows));
 
-    const people = (memberRows.data as MemberRow[] | null) ?? [];
+    const people = rows<MemberRow>(memberRows);
     setMembers(people);
 
     const me = people.find((person) => person.user_id === session.data.user?.id);

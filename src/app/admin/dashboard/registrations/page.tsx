@@ -12,6 +12,7 @@ import type { CrmDealRegistration } from "@/lib/crm/types";
 import RegistrationForm from "./RegistrationForm";
 import Overline from "@/components/admin/Overline";
 import { EmptyPanel } from "@/components/admin/Panel";
+import { rows } from "@/lib/supabase/rows";
 
 /**
  * Claiming a named account.
@@ -51,13 +52,13 @@ export default async function RegistrationsPage() {
 
   // Row level security already limits a partner to their own filings and
   // shows an owner everything, so no user filter is applied here.
-  const { data } = await supabase
+  const result = await supabase
     .from("crm_deal_registrations")
     .select("*")
     .order("requested_at", { ascending: false })
     .limit(100);
 
-  const registrations = (data ?? []) as CrmDealRegistration[];
+  const registrations = rows<CrmDealRegistration>(result);
   const canDecide = can(user, "crm.registrations.decide");
 
   return (
