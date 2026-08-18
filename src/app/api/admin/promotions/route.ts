@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { readConsoleUser } from "@/lib/auth/consoleUser";
+import { can } from "@/lib/auth/permissions";
 
 /**
  * Server-side proxy to the abram-network `admin-promotions` edge function.
@@ -10,10 +12,15 @@ import { createClient } from "@/utils/supabase/server";
  * browser holds is a credential anyone who opens devtools holds. So the token stays in this route
  * handler, server-side, and the browser never sees it.
  *
- * The session check below is the real gate. `ABRAM_PROMO_ADMIN_TOKEN` proves the caller is THIS
- * APP; the Supabase session proves the caller is a signed-in admin OF this app. Without the second
- * check, any unauthenticated request to this route would be forwarded with full promo-admin
- * authority — the proxy would be the hole rather than the wall.
+ * The permission check below is the real gate. `ABRAM_PROMO_ADMIN_TOKEN` proves the caller is THIS
+ * APP; the console role proves the caller is somebody this app trusts with promo codes. Without the
+ * second check, any request to this route would be forwarded with full promo-admin authority and
+ * the proxy would be the hole rather than the wall.
+ *
+ * A session on its own is not enough and used to be all this asked for. Every growth partner, every
+ * viewer and every account created by mistake holds a session. Promo codes are the first
+ * attribution rule and they move real money in the product's Stripe, so the gate is
+ * `promotions.manage` on an `admin_users` row, which is owner and admin only.
  */
 
 const NETWORK_FUNCTIONS_URL = process.env.ABRAM_NETWORK_FUNCTIONS_URL || "";
@@ -42,12 +49,15 @@ const ALLOWED_ACTIONS = new Set([
 
 export async function POST(request: Request) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await readConsoleUser(supabase);
 
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!can(user, "promotions.manage")) {
+    // One answer for "not signed in", "no admin_users row" and "wrong role".
+    // Which of the three it was is not this caller's business.
+    return NextResponse.json(
+      { error: "You do not have permission to manage promotions." },
+      { status: 403 },
+    );
   }
 
   if (!NETWORK_FUNCTIONS_URL || !PROMO_ADMIN_TOKEN || !NETWORK_ANON_KEY) {
