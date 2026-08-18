@@ -236,7 +236,7 @@ function ContactCard({
           {busy ? (
             <Loader2 className="w-3.5 h-3.5 text-zinc-400 animate-spin shrink-0 mt-0.5" />
           ) : contact.priority === "hot" ? (
-            <Flame className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" aria-label="Hot lead" />
+            <Flame className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" aria-label="Hot lead" />
           ) : null}
         </span>
 
@@ -272,8 +272,8 @@ function ContactCard({
             <span
               className={`px-1.5 py-0.5 rounded border font-medium ${
                 followUpLate
-                  ? "bg-rose-500/10 border-rose-500/20 text-rose-300"
-                  : "bg-amber-500/10 border-amber-500/20 text-amber-300"
+                  ? "bg-amber-500/10 border-amber-500/25 text-amber-200"
+                  : "bg-white/[0.04] border-white/10 text-zinc-300"
               }`}
             >
               {followUpLate ? "Overdue" : "Due today"} {formatDate(contact.next_follow_up_at)}

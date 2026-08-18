@@ -11,6 +11,9 @@ import type {
   GrowthPartnerTerms,
 } from "@/lib/growth/types";
 import { AlertCircle, Banknote } from "lucide-react";
+import Overline from "@/components/admin/Overline";
+import { StatRow } from "@/components/admin/StatTile";
+import Panel, { EmptyPanel } from "@/components/admin/Panel";
 
 /**
  * What a partner has earned, and the arithmetic behind it.
@@ -30,36 +33,6 @@ import { AlertCircle, Banknote } from "lucide-react";
  */
 
 export const dynamic = "force-dynamic";
-
-function Overline({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
-      {children}
-    </span>
-  );
-}
-
-function StatTile({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint?: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4">
-      <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block">
-        {label}
-      </span>
-      <span className="text-2xl font-bold tracking-tight text-white block mt-1.5 break-words">
-        {value}
-      </span>
-      {hint && <span className="text-[11px] text-zinc-500 block mt-1 leading-relaxed">{hint}</span>}
-    </div>
-  );
-}
 
 function monthLabel(iso: string): string {
   const d = new Date(iso + (iso.length === 10 ? "T00:00:00Z" : ""));
@@ -124,7 +97,6 @@ export default async function EarningsPage() {
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-8 lg:py-12 max-w-6xl mx-auto">
       <header className="mb-8">
-        <Overline>Earnings</Overline>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
           What you have earned
         </h1>
@@ -137,39 +109,37 @@ export default async function EarningsPage() {
       {/* Current terms */}
       {terms ? (
         <section className="mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <StatTile
-              label="Lifetime"
-              value={formatMoney(lifetime, currency)}
-              hint="Clawbacks already deducted."
-            />
-            <StatTile
-              label="Paid"
-              value={formatMoney(paid, currency)}
-            />
-            <StatTile
-              label="Outstanding"
-              value={formatMoney(outstanding, currency)}
-              hint="Due within 30 days of each month's close."
-            />
-            <StatTile
-              label="Paying deals"
-              value={String(payingDeals)}
-              hint={`${formatRate(terms.close_rate)} closed · ${formatRate(terms.source_rate)} sourced`}
-            />
-          </div>
+          <StatRow
+            stats={[
+              {
+                label: "Lifetime",
+                value: formatMoney(lifetime, currency),
+                hint: "Clawbacks already deducted.",
+              },
+              { label: "Paid", value: formatMoney(paid, currency) },
+              {
+                label: "Outstanding",
+                value: formatMoney(outstanding, currency),
+                hint: "Due within 30 days of each month's close.",
+              },
+              {
+                label: "Paying deals",
+                value: String(payingDeals),
+                hint: `${formatRate(terms.close_rate)} closed, ${formatRate(terms.source_rate)} sourced`,
+              },
+            ]}
+          />
         </section>
       ) : (
-        <div className="mb-8 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 flex gap-3">
-          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-          <div>
-            <p className="text-xs font-semibold text-amber-200">No commission terms are set up yet</p>
-            <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
-              Nothing can be calculated until an owner records your rates and start date. Until then
-              this page will stay empty even if deals are closing.
-            </p>
-          </div>
-        </div>
+        <Panel
+          tone="attention"
+          className="mb-8"
+          title="No commission terms are set up yet"
+          icon={<AlertCircle className="w-4 h-4 text-amber-400" />}
+        >
+          Nothing can be calculated until an owner records your rates and start date. Until then
+          this page will stay empty even if deals are closing.
+        </Panel>
       )}
 
       {/* Attributed MRR and the tranches it unlocks */}
@@ -178,7 +148,7 @@ export default async function EarningsPage() {
           <Overline>Attributed MRR</Overline>
           <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-5">
             <div className="flex flex-wrap items-baseline gap-3 mb-1">
-              <span className="text-3xl font-bold tracking-tight text-white">
+              <span className="text-2xl font-bold tracking-tight text-white tabular-nums">
                 {formatMoney(mrr.attributed_mrr_cents, currency)}
               </span>
               <span className="text-xs text-zinc-500">
@@ -239,24 +209,23 @@ export default async function EarningsPage() {
       <section className="mb-10">
         <Overline>By month</Overline>
         {statement.length === 0 ? (
-          <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8 text-center">
-            <Banknote className="w-6 h-6 text-zinc-600 mx-auto mb-3" />
-            <p className="text-sm text-zinc-400">Nothing collected yet.</p>
-            <p className="text-[11px] text-zinc-500 mt-1.5 max-w-md mx-auto leading-relaxed">
-              A month appears here once a payment lands against a deal attributed to you. Closing a
-              deal does not on its own produce a figure — the cash has to arrive.
-            </p>
-          </div>
+          <EmptyPanel
+            title="Nothing collected yet."
+            icon={<Banknote className="w-6 h-6" />}
+          >
+            A month appears here once a payment lands against a deal attributed to you. Closing a
+            deal does not on its own produce a figure. The cash has to arrive first.
+          </EmptyPanel>
         ) : (
           <div className="overflow-x-auto rounded-2xl border border-white/5">
             <table className="w-full text-left border-collapse min-w-[560px]">
               <thead>
                 <tr className="bg-white/[0.03]">
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500">Month</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 text-right">Collected</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 text-right">Earned</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 text-right">Paid</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 text-right">Outstanding</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Month</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Collected</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Earned</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Paid</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Outstanding</th>
                 </tr>
               </thead>
               <tbody>
@@ -283,7 +252,7 @@ export default async function EarningsPage() {
             </table>
           </div>
         )}
-        <p className="md:hidden text-[10px] text-zinc-600 mt-2">Swipe to view →</p>
+        <p className="md:hidden text-[10px] text-zinc-600 mt-2">Swipe to see the rest.</p>
       </section>
 
       {/* Every line, with its arithmetic */}
@@ -299,12 +268,12 @@ export default async function EarningsPage() {
             <table className="w-full text-left border-collapse min-w-[620px]">
               <thead>
                 <tr className="bg-white/[0.03]">
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500">Month</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500">Credit</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 text-right">Collected</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 text-right">Rate</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 text-right">Amount</th>
-                  <th className="px-4 py-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500">Status</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Month</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Credit</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Collected</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Rate</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Amount</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -317,8 +286,8 @@ export default async function EarningsPage() {
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full border ${
                           entry.credit_type === "closed"
-                            ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
-                            : "bg-sky-500/10 text-sky-300 border-sky-500/20"
+                            ? "bg-white/[0.06] text-zinc-200 border-white/15"
+                            : "bg-white/[0.02] text-zinc-400 border-white/10"
                         }`}
                       >
                         {entry.credit_type === "closed" ? "Closed" : "Sourced"}
@@ -332,7 +301,7 @@ export default async function EarningsPage() {
                     </td>
                     <td
                       className={`px-4 py-3 text-xs font-semibold text-right tabular-nums ${
-                        entry.amount_cents < 0 ? "text-rose-400" : "text-white"
+                        entry.amount_cents < 0 ? "text-zinc-500" : "text-white"
                       }`}
                     >
                       {formatMoney(entry.amount_cents, entry.currency)}
@@ -345,7 +314,7 @@ export default async function EarningsPage() {
               </tbody>
             </table>
           </div>
-          <p className="md:hidden text-[10px] text-zinc-600 mt-2">Swipe to view →</p>
+          <p className="md:hidden text-[10px] text-zinc-600 mt-2">Swipe to see the rest.</p>
         </section>
       )}
 

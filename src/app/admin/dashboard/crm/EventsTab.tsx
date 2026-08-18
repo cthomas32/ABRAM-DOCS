@@ -254,7 +254,7 @@ export default function EventsTab({ events, stats, onChanged, notify }: EventsTa
                         </p>
                       </div>
                       {event.is_active && (
-                        <span className="shrink-0 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-500/10 border border-emerald-500/25 text-emerald-300">
+                        <span className="shrink-0 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-200">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                           Active
                         </span>
@@ -431,10 +431,10 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="rounded-lg border border-white/5 bg-white/[0.02] px-2.5 py-2">
-      <span className="block text-[9px] font-semibold uppercase tracking-wider text-zinc-500">
+      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
         {label}
       </span>
-      <span className="block text-sm font-bold text-white font-mono mt-0.5 truncate">{value}</span>
+      <span className="block text-lg leading-snug text-white tabular-nums mt-0.5 truncate">{value}</span>
     </div>
   );
 }

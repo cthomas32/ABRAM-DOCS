@@ -39,6 +39,8 @@ import type {
 import { buildContactVCardBundle } from "@/lib/crm/vcard";
 import PipelineBoard from "./PipelineBoard";
 import ContactDrawer from "./ContactDrawer";
+import { StatRow } from "@/components/admin/StatTile";
+import Panel from "@/components/admin/Panel";
 import EventsTab from "./EventsTab";
 import CodesTab from "./CodesTab";
 import ProfileTab from "./ProfileTab";
@@ -467,13 +469,13 @@ export default function CrmPage() {
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
       <div className="space-y-6 max-w-[100rem] mx-auto pb-16">
         {warning && (
-          <div className="p-4 rounded-xl bg-yellow-500/5 border border-yellow-500/15 text-yellow-400 text-xs flex items-start gap-2.5 max-w-4xl backdrop-blur-md">
-            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-            <div className="min-w-0">
-              <span className="font-semibold block mb-0.5">Some of this did not load</span>
-              <p className="text-zinc-400 leading-relaxed break-words">{warning}</p>
-            </div>
-          </div>
+          <Panel
+            className="max-w-4xl"
+            title="Some of this did not load"
+            icon={<AlertTriangle className="w-4 h-4 text-zinc-400" />}
+          >
+            <span className="break-words">{warning}</span>
+          </Panel>
         )}
 
         {/* Header */}
@@ -492,7 +494,7 @@ export default function CrmPage() {
           <div className="flex flex-wrap gap-2 shrink-0">
             <Link
               href={captureHref}
-              className="btn-primary px-4 min-h-[44px] sm:min-h-[36px] text-xs rounded-full"
+              className="btn-primary px-4 h-11 sm:h-9 text-xs rounded-full"
             >
               <UserPlus className="w-3.5 h-3.5" />
               Capture mode
@@ -501,7 +503,7 @@ export default function CrmPage() {
               type="button"
               onClick={() => void load()}
               disabled={refreshing}
-              className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-semibold rounded-full disabled:opacity-50"
+              className="btn-glass px-4 h-11 sm:h-9 text-xs font-medium rounded-full disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
               {refreshing ? "Updating" : "Refresh"}
@@ -509,25 +511,12 @@ export default function CrmPage() {
           </div>
         </div>
 
-        {/* Header stats */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
-          {kpis.map((kpi) => (
-            <div
-              key={kpi.label}
-              className="glass-panel p-4 sm:p-5 rounded-2xl border-white/8 flex flex-col justify-between h-28 sm:h-32 select-none"
-            >
-              <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider break-words leading-tight min-h-[2.2em]">
-                {kpi.label}
-              </span>
-              <span className="mt-3 block">
-                <span className="text-lg sm:text-2xl font-bold text-white tracking-tight font-mono block break-words">
-                  {kpi.value}
-                </span>
-                <span className="text-[9px] text-zinc-500 font-medium break-words">{kpi.hint}</span>
-              </span>
-            </div>
-          ))}
-        </div>
+        {/* Header stats. One card, four readings, the same object the
+            earnings and revenue screens use. */}
+        <StatRow
+          loading={loading && contacts.length === 0}
+          stats={kpis.map((kpi) => ({ label: kpi.label, value: kpi.value, hint: kpi.hint }))}
+        />
 
         {/* Tabs */}
         <div className="flex gap-2 border-b border-white/5 pb-3 overflow-x-auto">
@@ -536,7 +525,7 @@ export default function CrmPage() {
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] shrink-0 ${
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-11 sm:h-9 shrink-0 ${
                 tab === id
                   ? "bg-white text-black border-white"
                   : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
@@ -548,7 +537,7 @@ export default function CrmPage() {
           ))}
           <Link
             href="/admin/dashboard/crm/emails"
-            className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-semibold border transition-colors min-h-[44px] sm:min-h-[36px] shrink-0 bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-11 sm:h-9 shrink-0 bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
           >
             <Mail className="w-3.5 h-3.5" />
             Emails
@@ -574,7 +563,7 @@ export default function CrmPage() {
                   <button
                     type="button"
                     onClick={exportCsv}
-                    className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full flex-1 sm:flex-none"
+                    className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full flex-1 sm:flex-none"
                   >
                     <FileDown className="w-3.5 h-3.5" />
                     CSV
@@ -582,7 +571,7 @@ export default function CrmPage() {
                   <button
                     type="button"
                     onClick={exportVcf}
-                    className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full flex-1 sm:flex-none"
+                    className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full flex-1 sm:flex-none"
                   >
                     <Download className="w-3.5 h-3.5" />
                     vCards
@@ -759,7 +748,7 @@ export default function CrmPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
               className={`glass-panel rounded-xl px-4 py-3 flex items-start gap-3 border ${
-                toast.tone === "error" ? "border-red-500/30" : "border-white/10"
+                toast.tone === "error" ? "border-white/25" : "border-white/10"
               }`}
             >
               <p className="text-xs text-zinc-200 leading-relaxed flex-1">{toast.message}</p>
@@ -802,7 +791,7 @@ function FirstRunEmpty({
       title: "Fill in your card",
       body: "Job title, email, phone, a link that books a slot. This is what a stranger sees three seconds after scanning.",
       action: (
-        <button type="button" onClick={onGoToCard} className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full">
+        <button type="button" onClick={onGoToCard} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
           Open your card
         </button>
       ),
@@ -812,7 +801,7 @@ function FirstRunEmpty({
       title: "Make a code and print it",
       body: "One per place it will live: the back of your badge, your lock screen, the banner. Each one gets its own scan count.",
       action: (
-        <button type="button" onClick={onGoToCodes} className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full">
+        <button type="button" onClick={onGoToCodes} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
           Open codes
         </button>
       ),
@@ -822,7 +811,7 @@ function FirstRunEmpty({
       title: "Meet people",
       body: "They scan and leave their details, or you open capture mode and type for them. It works with the signal fully off.",
       action: (
-        <Link href={captureHref} className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full">
+        <Link href={captureHref} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
           Open capture mode
         </Link>
       ),
@@ -849,7 +838,7 @@ function FirstRunEmpty({
           >
             <span className="flex items-center gap-2">
               <span
-                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium shrink-0 ${
                   step.done ? "bg-emerald-500/20 text-emerald-300" : "bg-white/8 text-zinc-400"
                 }`}
               >

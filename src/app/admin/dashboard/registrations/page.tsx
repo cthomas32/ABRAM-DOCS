@@ -10,6 +10,8 @@ import {
 } from "@/lib/crm/constants";
 import type { CrmDealRegistration } from "@/lib/crm/types";
 import RegistrationForm from "./RegistrationForm";
+import Overline from "@/components/admin/Overline";
+import { EmptyPanel } from "@/components/admin/Panel";
 
 /**
  * Claiming a named account.
@@ -61,9 +63,6 @@ export default async function RegistrationsPage() {
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-8 lg:py-12 max-w-5xl mx-auto">
       <header className="mb-8">
-        <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-3 inline-block font-sans">
-          Registrations
-        </span>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
           Claim a named account
         </h1>
@@ -75,7 +74,7 @@ export default async function RegistrationsPage() {
       </header>
 
       <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 sm:p-5 mb-8">
-        <h2 className="text-xs font-bold text-white mb-2">How this is decided</h2>
+        <Overline as="h2" className="mb-2 text-white">How this is decided</Overline>
         <ul className="text-[11px] text-zinc-400 space-y-1.5 leading-relaxed list-disc pl-4">
           <li>
             A registration only counts if it was filed <strong className="text-zinc-300">before</strong>{" "}
@@ -90,7 +89,7 @@ export default async function RegistrationsPage() {
             filing.
           </li>
           <li>
-            A promo code redeemed at checkout or a tracked link at signup both outrank this — first
+            A promo code redeemed at checkout or a tracked link at signup both outrank this. First
             match governs.
           </li>
         </ul>
@@ -99,14 +98,13 @@ export default async function RegistrationsPage() {
       <RegistrationForm />
 
       <section className="mt-10">
-        <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-4 inline-block font-sans">
-          Filed
-        </span>
+        <Overline className="mb-4">Filed</Overline>
 
         {registrations.length === 0 ? (
-          <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8 text-center">
-            <p className="text-sm text-zinc-400">Nothing registered yet.</p>
-          </div>
+          <EmptyPanel title="Nothing registered yet.">
+            A registration you file appears here with both of its clocks running: the five business
+            days to decline it, and the {REGISTRATION_VALID_DAYS} days to close it.
+          </EmptyPanel>
         ) : (
           <div className="space-y-2.5">
             {registrations.map((registration) => {

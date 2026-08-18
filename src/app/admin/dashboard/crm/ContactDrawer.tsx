@@ -408,7 +408,7 @@ export default function ContactDrawer({
           <div className="shrink-0 px-4 sm:px-5 pt-4 pb-3 border-b border-white/5">
             <div className="flex items-start gap-3">
               <div className="min-w-0 flex-1">
-                <h2 className="text-base font-bold tracking-tight text-white break-words">
+                <h2 className="text-base font-bold tracking-tight text-white break-words font-sans">
                   {contact.full_name}
                 </h2>
                 <p className="text-[11px] text-zinc-500 mt-0.5 break-words">
@@ -428,7 +428,7 @@ export default function ContactDrawer({
 
             <div className="flex flex-wrap items-center gap-1.5 mt-3">
               <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${spec.badge}`}
+                className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${spec.badge}`}
               >
                 {spec.label}
               </span>
@@ -441,7 +441,7 @@ export default function ContactDrawer({
                 </span>
               )}
               {contact.archived && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-500/10 border border-zinc-500/20 text-zinc-400">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.03] border border-white/10 text-zinc-400">
                   Archived
                 </span>
               )}
@@ -760,7 +760,7 @@ export default function ContactDrawer({
                       <li
                         key={task.id}
                         className={`flex items-start gap-2 p-2.5 rounded-lg border ${
-                          late ? "border-rose-500/25 bg-rose-500/[0.05]" : "border-white/8 bg-white/[0.02]"
+                          late ? "border-amber-500/25 bg-amber-500/[0.04]" : "border-white/8 bg-white/[0.02]"
                         }`}
                       >
                         <button
@@ -783,7 +783,7 @@ export default function ContactDrawer({
                           {task.due_at && (
                             <span
                               className={`block text-[10px] mt-0.5 ${
-                                late ? "text-rose-300 font-semibold" : "text-zinc-500"
+                                late ? "text-amber-200 font-medium" : "text-zinc-500"
                               }`}
                             >
                               {late ? "Overdue " : "Due "}
@@ -911,7 +911,7 @@ export default function ContactDrawer({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block font-sans">
+    <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
       {children}
     </span>
   );
@@ -920,7 +920,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-[10px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5">
+      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-1.5">
         {label}
       </span>
       {children}

@@ -3,6 +3,8 @@
 import { useState, useTransition } from "react";
 import { AlertCircle, CheckCircle, Loader2, Plus } from "lucide-react";
 import { fileRegistration } from "./actions";
+import { FieldLabel } from "@/components/admin/Overline";
+import Panel from "@/components/admin/Panel";
 
 /**
  * Filing a claim.
@@ -42,18 +44,15 @@ export default function RegistrationForm() {
   if (!open) {
     return (
       <div className="space-y-3">
-        <button onClick={() => setOpen(true)} className="btn-primary rounded-full text-xs px-4 py-2.5 inline-flex items-center gap-1.5 min-h-11">
+        <button onClick={() => setOpen(true)} className="btn-primary rounded-full text-xs font-medium px-4 inline-flex items-center gap-1.5 h-11 sm:h-9">
           <Plus className="w-3.5 h-3.5" />
           Register an account
         </button>
 
         {done && (
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 flex gap-2.5">
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <p className="text-[11px] text-emerald-200 leading-relaxed">
-              Filed. It stands unless it is declined within five business days.
-            </p>
-          </div>
+          <Panel tone="reached" icon={<CheckCircle className="w-4 h-4 text-emerald-400" />}>
+            Filed. It stands unless it is declined within five business days.
+          </Panel>
         )}
       </div>
     );
@@ -62,9 +61,7 @@ export default function RegistrationForm() {
   return (
     <form onSubmit={submit} className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 sm:p-5 space-y-4">
       <div>
-        <label htmlFor="reg-name" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
-          Company name
-        </label>
+        <FieldLabel htmlFor="reg-name">Company name</FieldLabel>
         <input
           id="reg-name"
           value={accountName}
@@ -77,9 +74,7 @@ export default function RegistrationForm() {
       </div>
 
       <div>
-        <label htmlFor="reg-domain" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
-          Web address
-        </label>
+        <FieldLabel htmlFor="reg-domain">Web address</FieldLabel>
         <input
           id="reg-domain"
           value={accountDomain}
@@ -96,9 +91,7 @@ export default function RegistrationForm() {
       </div>
 
       <div>
-        <label htmlFor="reg-why" className="text-[10px] font-semibold tracking-[0.15em] uppercase text-zinc-500 block mb-1.5">
-          Why this one <span className="text-zinc-600 normal-case tracking-normal">(optional)</span>
-        </label>
+        <FieldLabel htmlFor="reg-why" hint="(optional)">Why this one</FieldLabel>
         <textarea
           id="reg-why"
           value={rationale}
@@ -110,15 +103,15 @@ export default function RegistrationForm() {
         />
       </div>
 
+      {/* Neutral, not red. A refused filing is an ordinary answer, usually
+          "somebody registered this account already", and dressing it as an
+          alarm makes every one of them look like something broke. */}
       {error && (
-        <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-3 flex gap-2.5">
-          <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-          <p className="text-[11px] text-rose-200 leading-relaxed">{error}</p>
-        </div>
+        <Panel icon={<AlertCircle className="w-4 h-4 text-zinc-400" />}>{error}</Panel>
       )}
 
       <div className="flex flex-wrap gap-2 pt-1">
-        <button type="submit" disabled={pending} className="btn-primary rounded-full text-xs px-4 py-2.5 inline-flex items-center gap-1.5 min-h-11 disabled:opacity-60">
+        <button type="submit" disabled={pending} className="btn-primary rounded-full text-xs font-medium px-4 inline-flex items-center gap-1.5 h-11 sm:h-9 disabled:opacity-60">
           {pending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
           File registration
         </button>
@@ -128,7 +121,7 @@ export default function RegistrationForm() {
             setOpen(false);
             setError("");
           }}
-          className="btn-ghost rounded-full text-xs px-4 py-2.5 min-h-11"
+          className="btn-ghost rounded-full text-xs font-medium px-4 h-11 sm:h-9"
         >
           Cancel
         </button>

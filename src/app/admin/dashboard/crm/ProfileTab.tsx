@@ -264,7 +264,7 @@ export default function ProfileTab({
         <div className="order-first lg:order-last space-y-4 lg:sticky lg:top-24 lg:self-start">
           <div className="glass-panel rounded-2xl border-white/8 p-4 sm:p-5 space-y-4">
             <div>
-              <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block font-sans">
+              <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
                 What a scan shows
               </span>
               <p className="text-[11px] text-zinc-600 leading-relaxed mt-1.5">
@@ -366,7 +366,7 @@ export default function ProfileTab({
         {/* -------------------------------------------------------- */}
         <div className="lg:col-span-2 space-y-4">
           <div className="glass-panel rounded-2xl border-white/8 p-4 sm:p-5 space-y-3">
-            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block font-sans">
+            <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
               Who you are
             </span>
 
@@ -447,7 +447,7 @@ export default function ProfileTab({
           </div>
 
           <div className="glass-panel rounded-2xl border-white/8 p-4 sm:p-5 space-y-3">
-            <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 block font-sans">
+            <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
               How to reach you
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

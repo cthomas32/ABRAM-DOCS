@@ -378,10 +378,10 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="rounded-lg border border-white/5 bg-white/[0.02] px-2.5 py-2">
-      <span className="block text-[9px] font-semibold uppercase tracking-wider text-zinc-500">
+      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
         {label}
       </span>
-      <span className="block text-sm font-bold text-white font-mono mt-0.5 truncate">{value}</span>
+      <span className="block text-lg leading-snug text-white tabular-nums mt-0.5 truncate">{value}</span>
     </div>
   );
 }
