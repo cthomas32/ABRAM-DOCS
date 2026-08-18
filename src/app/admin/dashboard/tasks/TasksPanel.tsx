@@ -25,12 +25,11 @@ import { rows } from "@/lib/supabase/rows";
  * are visible to the reader.
  */
 
-export const dynamic = "force-dynamic";
 
 /** Done tasks older than this stop being interesting. */
 const DONE_WINDOW_DAYS = 30;
 
-export default async function TasksPage() {
+export default async function TasksPanel() {
   const user = await getConsoleUser();
   if (!user) redirect("/admin");
   if (!can(user, "crm.contacts.read.own")) redirect("/admin/dashboard");

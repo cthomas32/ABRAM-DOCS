@@ -1,13 +1,11 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
 import type { DealStage } from "@/lib/crm/constants";
 import { StatRow } from "@/components/admin/StatTile";
-import ViewSwitch, { DEAL_VIEWS } from "@/components/admin/ViewSwitch";
 import { rows, firstRow } from "@/lib/supabase/rows";
-import DealBoard, { type BoardPerson, type DealBoardRow } from "../DealBoard";
+import DealBoard, { type BoardPerson, type DealBoardRow } from "./DealBoard";
 
 /**
  * The deal board.
@@ -18,7 +16,6 @@ import DealBoard, { type BoardPerson, type DealBoardRow } from "../DealBoard";
  * read below.
  */
 
-export const dynamic = "force-dynamic";
 
 /** The account arrives as a to-one relation the client types as an array. */
 function accountName(value: unknown): string | null {
@@ -47,7 +44,7 @@ function endOfThisMonth(): string {
   return `${last.getFullYear()}-${pad(last.getMonth() + 1)}-${pad(last.getDate())}`;
 }
 
-export default async function DealBoardPage() {
+export default async function BoardPanel() {
   const user = await getConsoleUser();
   if (!user) redirect("/admin");
   if (!can(user, "crm.deals.manage")) redirect("/admin/dashboard");
@@ -95,16 +92,6 @@ export default async function DealBoardPage() {
 
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-8 lg:py-12 flex-1 min-w-0 overflow-y-auto">
-      <header className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Deals</h1>
-        <div className="flex items-center gap-2">
-          <ViewSwitch options={DEAL_VIEWS} />
-          <Link href="/admin/dashboard/tasks" className="btn-glass h-9 px-4 text-xs font-medium">
-            Follow ups
-          </Link>
-        </div>
-      </header>
-
       <StatRow
         className="mb-5"
         stats={[

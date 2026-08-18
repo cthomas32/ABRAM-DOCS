@@ -309,28 +309,26 @@ export function seesWholePipeline(user: Pick<ConsoleUser, "role" | "growthStage"
  * immediately, instead of shipping open and nobody noticing at all.
  */
 export const ROUTE_PERMISSIONS: { prefix: string; permission: Permission }[] = [
+  /* CRM: five objects, each one address with tabs inside it. */
+  { prefix: "/admin/dashboard/crm/people", permission: "crm.contacts.read.own" },
   { prefix: "/admin/dashboard/crm", permission: "crm.contacts.read.own" },
   { prefix: "/admin/dashboard/accounts", permission: "crm.accounts.manage" },
-  { prefix: "/admin/dashboard/deals/board", permission: "crm.deals.manage" },
   { prefix: "/admin/dashboard/deals", permission: "crm.deals.manage" },
-  { prefix: "/admin/dashboard/tasks", permission: "crm.contacts.read.own" },
-  { prefix: "/admin/dashboard/sequences", permission: "crm.sequences.manage" },
-  { prefix: "/admin/dashboard/lists", permission: "crm.contacts.read.own" },
-  { prefix: "/admin/dashboard/reports", permission: "reports.read" },
-  { prefix: "/admin/dashboard/registrations", permission: "crm.registrations.file" },
-  { prefix: "/admin/dashboard/earnings", permission: "commission.read.own" },
-  { prefix: "/admin/dashboard/docs", permission: "content.docs" },
-  { prefix: "/admin/dashboard/blog", permission: "content.blog" },
-  { prefix: "/admin/dashboard/changelog", permission: "content.changelog" },
-  { prefix: "/admin/dashboard/team", permission: "content.team" },
-  { prefix: "/admin/dashboard/social", permission: "social.manage" },
-  { prefix: "/admin/dashboard/campaigns", permission: "campaigns.manage" },
-  { prefix: "/admin/dashboard/links", permission: "links.manage" },
-  { prefix: "/admin/dashboard/promotions", permission: "promotions.manage" },
-  { prefix: "/admin/dashboard/subscribers", permission: "subscribers.read" },
-  { prefix: "/admin/dashboard/broadcasts", permission: "broadcasts.draft" },
-  { prefix: "/admin/dashboard/people", permission: "roles.manage" },
+  { prefix: "/admin/dashboard/activities", permission: "crm.contacts.read.own" },
+
+  /* The four tool sets. Each hub is entered with console.admin and then
+     draws only the tabs the reader actually holds, because the tabs
+     inside one hub need four different permissions and a single prefix
+     rule cannot express that. The tab bodies check their own. */
+  { prefix: "/admin/dashboard/growth", permission: "console.admin" },
+  { prefix: "/admin/dashboard/content", permission: "console.admin" },
+  { prefix: "/admin/dashboard/money", permission: "commission.read.own" },
+  { prefix: "/admin/dashboard/team", permission: "console.admin" },
+
+  /* Addresses that are still real, either because something else links
+     to them or because work is landing on them. */
   { prefix: "/admin/dashboard/revenue", permission: "commission.manage" },
+
   { prefix: "/admin/dashboard", permission: "console.admin" },
 ];
 

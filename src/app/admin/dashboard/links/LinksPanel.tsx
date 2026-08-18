@@ -131,7 +131,7 @@ function missingColumn(message: string): string | null {
   return match ? match[1] : null;
 }
 
-export default function LinkHubAdminPage() {
+export default function LinksPanel() {
   const [tab, setTab] = useState<Tab>("content");
   const [links, setLinks] = useState<LinkHubLink[]>([]);
   const [settings, setSettings] = useState<LinkHubSettings>(DEFAULT_SETTINGS);

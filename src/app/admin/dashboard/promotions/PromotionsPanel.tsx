@@ -101,7 +101,7 @@ const STATUS_STYLES: Record<Campaign["status"], string> = {
   archived: "bg-white/5 text-zinc-400",
 };
 
-export default function PromotionsPage() {
+export default function PromotionsPanel() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

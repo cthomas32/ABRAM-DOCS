@@ -41,7 +41,7 @@ interface Toast {
   tone: "success" | "error";
 }
 
-export default function SocialPage() {
+export default function SocialPanel() {
   const [tab, setTab] = useState<Tab>("calendar");
   const [libraryView, setLibraryView] = useState<LibraryView>("cards");
   const [seed, setSeed] = useState<StudioSeed>(blankSeed);

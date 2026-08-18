@@ -30,7 +30,7 @@ import {
 import type { CrmContact, CrmEvent, CrmInteraction, CrmTask } from "@/lib/crm/types";
 import { buildContactVCard, vcardFilename } from "@/lib/crm/vcard";
 import { LIFECYCLE_STAGES, lifecycleSpec, type LifecycleStage } from "@/lib/crm/people";
-import { enrollContact } from "@/app/admin/dashboard/sequences/actions";
+import { enrollContact } from "./people/sequenceActions";
 import { LifecycleChip, SourceChips } from "@/components/admin/PersonChips";
 import {
   downloadFile,

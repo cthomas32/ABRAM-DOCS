@@ -22,7 +22,7 @@ interface Toast {
   type: "success" | "error" | "info";
 }
 
-export default function DocsManagerPage() {
+export default function DocsPanel() {
   const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

@@ -26,7 +26,7 @@ import {
   deleteStep,
   enrollContact,
   updateSequence,
-} from "./actions";
+} from "./sequenceActions";
 
 /**
  * Writing a sequence, and putting somebody on one.
@@ -56,7 +56,7 @@ interface Props {
   warning: string | null;
 }
 
-export default function SequencesManager({
+export default function SequencesPanel({
   sequences,
   steps,
   enrollments,

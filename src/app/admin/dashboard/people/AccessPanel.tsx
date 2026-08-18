@@ -17,7 +17,6 @@ import PeopleManager from "./PeopleManager";
  * calculated at last year's rate.
  */
 
-export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "People & Access | ABRAM Admin",
@@ -30,7 +29,7 @@ export interface PersonRow extends ConsoleUser {
   terms: GrowthPartnerTerms | null;
 }
 
-export default async function PeoplePage() {
+export default async function AccessPanel() {
   const viewer = await getConsoleUser();
   if (!viewer) redirect("/admin");
   if (!can(viewer, "roles.manage")) redirect("/admin/dashboard");

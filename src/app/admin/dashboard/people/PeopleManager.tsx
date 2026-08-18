@@ -19,7 +19,7 @@ import {
 } from "@/lib/auth/permissions";
 import { formatRate } from "@/lib/crm/constants";
 import { inviteTeammate, setActive, setPartnerTerms, setRole } from "./actions";
-import type { PersonRow } from "./page";
+import type { PersonRow } from "./AccessPanel";
 
 /**
  * The one screen where access is granted and what it pays is recorded.
