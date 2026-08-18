@@ -3,28 +3,43 @@
 import React, { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Clock, Loader2, User } from "lucide-react";
 import Modal from "@/components/admin/Modal";
 import { DEAL_STAGES, type DealStage } from "@/lib/crm/constants";
+import {
+  BLOCK_CARD,
+  BLOCK_CARD_HOVER,
+  BLOCK_CHIP,
+  BLOCK_COUNT_PILL,
+  BLOCK_EMPTY,
+  BLOCK_KEY_LABEL,
+  BLOCK_LANE,
+  BLOCK_LANE_WIDTH,
+  BLOCK_TITLE,
+  LABEL_CAPS,
+  OVERDUE_TEXT,
+} from "@/lib/crm/blockStyles";
 import { markDealWon, setDealStage } from "./boardActions";
 
 /**
  * The deal board.
  *
- * Modelled on the contact board, over a different object, and the two
- * stay separate: a contact moves through interest and a deal moves
- * through money, and collapsing them loses the distinction the commission
- * agreement is written in.
+ * The same lane and card anatomy as the project board in the product app,
+ * over a different object: a rail of fixed-width lanes, a count pill in
+ * each header, and a four-row card carrying key, title, context and two
+ * chips. The contact board on the CRM screen stays where it is. Two
+ * boards, two objects, one navigation section, because a contact moving
+ * through interest and a deal moving through money are different journeys.
  *
- * One rule shapes the whole component. Dragging into Won does not write
- * Won. `crm_deals_won_needs_close` requires a close date and a closer on
- * the same row, so the drop opens a dialog that collects the date and
- * takes the closer from the session. Every other column is written on
- * drop.
+ * One rule shapes the component. Dragging into Won does not write Won.
+ * `crm_deals_won_needs_close` requires a close date and a closer on the
+ * same row, so the drop opens a dialog that collects the date and takes
+ * the closer from the session. Every other column is written on drop.
  *
- * Two renderings, as on the contact board: five columns from `lg` up, one
- * stage at a time below that, and a stage dropdown on every card in both
- * so a phone is never worse than a mouse.
+ * Drag is HTML5 rather than a drag library, matching the contact board.
+ * The stage dropdown on every card is the affordance that actually gets
+ * used on a phone, and it is never the thing dropped when the layout
+ * narrows.
  */
 
 export interface DealBoardRow {
@@ -68,11 +83,13 @@ function money(cents: number, currency: string): string {
   }
 }
 
-function closeDay(value: string | null): string {
-  if (!value) return "No close date";
-  const d = new Date(`${value}T12:00:00`);
-  if (Number.isNaN(d.getTime())) return "No close date";
-  return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+/** A `DATE` column, read as a calendar day rather than an instant. */
+function parseDay(value: string | null): Date | null {
+  if (!value) return null;
+  const [y, m, d] = value.split("T")[0].split("-").map(Number);
+  if (!y || !m || !d) return null;
+  const parsed = new Date(y, m - 1, d);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
 function initialOf(person: BoardPerson | undefined): string {
@@ -87,8 +104,6 @@ function todayValue(): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-const OVERLINE = "text-xs uppercase font-bold tracking-widest text-gray-400";
-
 /* ------------------------------------------------------------------ */
 /*  Board                                                              */
 /* ------------------------------------------------------------------ */
@@ -97,7 +112,6 @@ export default function DealBoard({ deals, people, loadError = null }: DealBoard
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const [mobileStage, setMobileStage] = useState<DealStage>("opportunity");
   const [dragOver, setDragOver] = useState<DealStage | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -169,7 +183,7 @@ export default function DealBoard({ deals, people, loadError = null }: DealBoard
 
   if (deals.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.01] p-10 text-center">
+      <div className="rounded-2xl border border-dashed border-white/[0.12] bg-white/[0.01] p-10 text-center">
         <p className="text-sm text-zinc-400 leading-relaxed">
           Deals appear here once there is one to move.
         </p>
@@ -191,134 +205,64 @@ export default function DealBoard({ deals, people, loadError = null }: DealBoard
         </div>
       )}
 
-      {/* ---------------------------------------------------------- */}
-      {/* Board, from lg up                                           */}
-      {/* ---------------------------------------------------------- */}
-      <div className="hidden lg:block">
-        <div className="flex gap-3 overflow-x-auto pb-3">
-          {DEAL_STAGES.map((stage) => {
-            const column = byStage[stage.id] ?? [];
-            const total = column.reduce((sum, deal) => sum + (deal.amount_cents || 0), 0);
-            const currency = column[0]?.currency || "USD";
+      <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-3 md:snap-none">
+        {DEAL_STAGES.map((stage) => {
+          const column = byStage[stage.id] ?? [];
+          const total = column.reduce((sum, deal) => sum + (deal.amount_cents || 0), 0);
+          const currency = column[0]?.currency || "USD";
 
-            return (
-              <div
-                key={stage.id}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setDragOver(stage.id);
-                }}
-                onDragLeave={() =>
-                  setDragOver((current) => (current === stage.id ? null : current))
-                }
-                onDrop={(e) => {
-                  e.preventDefault();
-                  setDragOver(null);
-                  const id = e.dataTransfer.getData("text/plain");
-                  const deal = deals.find((d) => d.id === id);
-                  if (deal) move(deal, stage.id);
-                }}
-                className={`w-[260px] xl:w-[280px] shrink-0 rounded-2xl border transition-colors ${
-                  dragOver === stage.id
-                    ? "border-white/25 bg-white/[0.05]"
-                    : "border-white/5 bg-white/[0.02]"
-                }`}
-              >
-                <div className="px-3 pt-3 pb-2 border-b border-white/5">
-                  <div className="flex items-center gap-2">
-                    <span className={OVERLINE}>{stage.label}</span>
-                    <span className="ml-auto text-[10px] font-mono text-zinc-500 shrink-0">
-                      {column.length}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-zinc-500 mt-1 font-mono">
-                    {money(total, currency)}
-                  </p>
-                </div>
-
-                <div className="p-2 flex flex-col gap-2 min-h-[120px] max-h-[calc(100vh-22rem)] overflow-y-auto">
-                  {column.length === 0 ? (
-                    <p className="text-[10px] text-zinc-600 px-2 py-6 text-center leading-relaxed">
-                      Nothing here yet
-                    </p>
-                  ) : (
-                    column.map((deal) => (
-                      <DealCard
-                        key={deal.id}
-                        deal={deal}
-                        owner={deal.owner_user_id ? personById[deal.owner_user_id] : undefined}
-                        onMove={move}
-                        busy={busyId === deal.id && pending}
-                        draggable
-                      />
-                    ))
-                  )}
-                </div>
+          return (
+            <div
+              key={stage.id}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragOver(stage.id);
+              }}
+              onDragLeave={() => setDragOver((current) => (current === stage.id ? null : current))}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragOver(null);
+                const id = e.dataTransfer.getData("text/plain");
+                const deal = deals.find((d) => d.id === id);
+                if (deal) move(deal, stage.id);
+              }}
+              className={`${BLOCK_LANE_WIDTH} flex flex-col ${BLOCK_LANE} transition-colors ${
+                dragOver === stage.id ? "ring-1 ring-white/20" : ""
+              }`}
+            >
+              <div className="mb-1 flex items-center gap-2 px-0.5">
+                <p className="min-w-0 flex-1 truncate text-sm font-medium text-white">
+                  {stage.label}
+                </p>
+                <span className={BLOCK_COUNT_PILL}>{column.length}</span>
               </div>
-            );
-          })}
-        </div>
-        <p className="text-[10px] text-zinc-600 mt-1">
-          Drag a card to move it, or use the stage dropdown on the card. Won asks for a close date.
-        </p>
-      </div>
-
-      {/* ---------------------------------------------------------- */}
-      {/* One stage at a time, below lg                               */}
-      {/* ---------------------------------------------------------- */}
-      <div className="lg:hidden space-y-3">
-        <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
-          {DEAL_STAGES.map((stage) => {
-            const column = byStage[stage.id] ?? [];
-            const active = mobileStage === stage.id;
-            return (
-              <button
-                key={stage.id}
-                type="button"
-                onClick={() => setMobileStage(stage.id)}
-                className={`shrink-0 flex items-center gap-2 px-3.5 min-h-[44px] rounded-full text-xs font-medium border transition-colors ${
-                  active
-                    ? "bg-white text-black border-white"
-                    : "bg-white/[0.03] text-zinc-400 border-white/8"
-                }`}
-              >
-                {stage.label}
-                <span className={`font-mono ${active ? "text-black/60" : "text-zinc-600"}`}>
-                  {column.length}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        <p className="text-[11px] text-zinc-500 font-mono">
-          {money(
-            (byStage[mobileStage] ?? []).reduce((sum, deal) => sum + (deal.amount_cents || 0), 0),
-            (byStage[mobileStage] ?? [])[0]?.currency || "USD"
-          )}{" "}
-          in {DEAL_STAGES.find((s) => s.id === mobileStage)?.label.toLowerCase()}
-        </p>
-
-        <div className="flex flex-col gap-2">
-          {(byStage[mobileStage] ?? []).length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.01] p-8 text-center">
-              <p className="text-xs text-zinc-500 leading-relaxed">
-                No deals in this stage right now.
+              <p className="mb-2.5 px-0.5 text-[11px] tabular-nums text-zinc-500">
+                {money(total, currency)}
               </p>
+
+              <div className="flex-1 space-y-2.5 overflow-y-auto pr-0.5 md:max-h-[62vh]">
+                {column.length === 0 ? (
+                  <p className={BLOCK_EMPTY}>Nothing in this stage</p>
+                ) : (
+                  column.map((deal) => (
+                    <DealCard
+                      key={deal.id}
+                      deal={deal}
+                      owner={deal.owner_user_id ? personById[deal.owner_user_id] : undefined}
+                      onMove={move}
+                      busy={busyId === deal.id && pending}
+                    />
+                  ))
+                )}
+              </div>
             </div>
-          ) : (
-            (byStage[mobileStage] ?? []).map((deal) => (
-              <DealCard
-                key={deal.id}
-                deal={deal}
-                owner={deal.owner_user_id ? personById[deal.owner_user_id] : undefined}
-                onMove={move}
-                busy={busyId === deal.id && pending}
-              />
-            ))
-          )}
-        </div>
+          );
+        })}
       </div>
+
+      <p className="text-[11px] text-zinc-600">
+        Drag a card to move it, or use the stage dropdown on the card. Won asks for a close date.
+      </p>
 
       <CloseDialog
         deal={closing}
@@ -339,56 +283,80 @@ function DealCard({
   owner,
   onMove,
   busy,
-  draggable = false,
 }: {
   deal: DealBoardRow;
   owner: BoardPerson | undefined;
   onMove: (deal: DealBoardRow, next: DealStage) => void;
   busy: boolean;
-  draggable?: boolean;
 }) {
+  const due = parseDay(deal.expected_close_on);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const terminal = deal.stage === "won" || deal.stage === "lost";
+  const late = Boolean(due && due.getTime() < today.getTime() && !terminal);
+
   return (
     <div
-      draggable={draggable}
+      draggable={!busy}
       onDragStart={(e) => {
         e.dataTransfer.setData("text/plain", deal.id);
         e.dataTransfer.effectAllowed = "move";
       }}
-      className={`rounded-xl border bg-white/[0.02] transition-colors ${
-        busy ? "border-white/20 opacity-60" : "border-white/8 hover:border-white/15"
+      className={`${BLOCK_CARD} ${BLOCK_CARD_HOVER} flex flex-col gap-2.5 cursor-grab active:cursor-grabbing ${
+        busy ? "opacity-60" : ""
       }`}
     >
-      <div className="p-3 pb-2">
-        <div className="flex items-start gap-2">
-          <div className="min-w-0 flex-1">
-            <span className="block text-[13px] font-semibold text-white truncate">{deal.name}</span>
-            <span className="block text-[11px] text-zinc-500 truncate">
-              {deal.account_name || "No account"}
-            </span>
-          </div>
-          {busy ? (
-            <Loader2 className="w-3.5 h-3.5 text-zinc-400 animate-spin shrink-0 mt-0.5" />
-          ) : (
-            <span
-              title={owner?.full_name || owner?.email || "Nobody owns this yet"}
-              className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-[10px] font-medium bg-white/[0.04] border border-white/8 text-zinc-300"
-            >
-              {initialOf(owner)}
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-baseline justify-between gap-2 mt-2">
-          <span className="text-sm font-mono text-white">
-            {money(deal.amount_cents, deal.currency)}
+      {/* Row 1 — account + owner */}
+      <div className="flex items-center justify-between gap-2">
+        <span className={`${BLOCK_KEY_LABEL} min-w-0 truncate`}>
+          {deal.account_name || "No account"}
+        </span>
+        {busy ? (
+          <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-400" />
+        ) : owner ? (
+          <span
+            title={owner.full_name || owner.email}
+            className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-white/[0.05] text-[9px] text-zinc-300"
+          >
+            {initialOf(owner)}
           </span>
-          <span className="text-[10px] text-zinc-500 truncate">
-            {closeDay(deal.expected_close_on)}
+        ) : (
+          <span
+            title="Nobody owns this yet"
+            className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border border-dashed border-white/[0.14]"
+          >
+            <User className="h-3 w-3 text-zinc-600" />
           </span>
-        </div>
+        )}
       </div>
 
-      <div className="px-2 pb-2">
+      {/* Row 2 — the deal */}
+      <p className={`${BLOCK_TITLE} line-clamp-2`}>{deal.name}</p>
+
+      {/* Row 3 — amount and expected close */}
+      <div className="flex items-center justify-between gap-1.5">
+        <span className={`${BLOCK_CHIP} tabular-nums`}>
+          {money(deal.amount_cents, deal.currency)}
+        </span>
+        <span
+          title={late ? "Past the expected close date" : undefined}
+          className={`${BLOCK_CHIP} ${late ? OVERDUE_TEXT : due ? "" : "text-zinc-500"}`}
+        >
+          {late ? (
+            <AlertCircle className="h-3 w-3 shrink-0" />
+          ) : (
+            <Clock className="h-3 w-3 shrink-0" />
+          )}
+          <span className="tabular-nums">
+            {due
+              ? due.toLocaleDateString(undefined, { month: "short", day: "numeric" })
+              : "No close date"}
+          </span>
+        </span>
+      </div>
+
+      {/* Row 4 — the move that works on a phone */}
+      <div>
         <label className="sr-only" htmlFor={`deal-stage-${deal.id}`}>
           Stage for {deal.name}
         </label>
@@ -397,7 +365,7 @@ function DealCard({
           value={deal.stage}
           disabled={busy}
           onChange={(e) => onMove(deal, e.target.value as DealStage)}
-          className="admin-input h-11 lg:h-9 py-0 text-[11px] font-medium cursor-pointer disabled:opacity-50"
+          className="admin-input h-9 py-0 text-[11px] font-medium cursor-pointer disabled:opacity-50"
         >
           {DEAL_STAGES.map((stage) => (
             <option key={stage.id} value={stage.id}>
@@ -445,7 +413,7 @@ function CloseDialog({
       </div>
 
       <div>
-        <label htmlFor="deal-closed-on" className={`${OVERLINE} block mb-1.5`}>
+        <label htmlFor="deal-closed-on" className={`${LABEL_CAPS} block mb-1.5`}>
           Closed on
         </label>
         <input

@@ -27,7 +27,9 @@ import {
   UsersRound,
   KeyRound,
   Banknote,
-  Stamp
+  Stamp,
+  Columns3,
+  CheckSquare
 } from "lucide-react";
 
 /**
@@ -45,6 +47,8 @@ interface AdminNavLink {
   icon: React.ComponentType<{ className?: string }>;
   hint: string;
   permission: Permission;
+  /** Draws the open follow up count beside the label. One link uses this. */
+  countsTasks?: boolean;
 }
 
 const NAV_GROUPS: { id: string; label: string | null; links: AdminNavLink[] }[] = [
@@ -72,6 +76,9 @@ const NAV_GROUPS: { id: string; label: string | null; links: AdminNavLink[] }[] 
     links: [
       { id: "crm", label: "Contacts", href: "/admin/dashboard/crm", icon: Contact, hint: "Pipeline & accounts", permission: "crm.contacts.read.own" },
       { id: "registrations", label: "Registrations", href: "/admin/dashboard/registrations", icon: Stamp, hint: "Claim a named account", permission: "crm.registrations.file" },
+      /* Board and queue. Added with P0-4 and P0-5. */
+      { id: "deal-board", label: "Deal board", href: "/admin/dashboard/deals/board", icon: Columns3, hint: "Deals by stage", permission: "crm.deals.manage" },
+      { id: "tasks", label: "Tasks", href: "/admin/dashboard/tasks", icon: CheckSquare, hint: "Follow ups due", permission: "crm.contacts.read.own", countsTasks: true },
       { id: "campaigns", label: "Campaign Pages", href: "/admin/dashboard/campaigns", icon: Megaphone, hint: "Landing page funnels" , permission: "campaigns.manage" },
       { id: "links", label: "Link Hub", href: "/admin/dashboard/links", icon: LinkIcon, hint: "Your one bio link" , permission: "links.manage" },
       { id: "promotions", label: "Promotions", href: "/admin/dashboard/promotions", icon: BadgePercent, hint: "Discount codes" , permission: "promotions.manage" },
@@ -108,15 +115,18 @@ function isLinkActive(href: string, pathname: string | null) {
 export default function AdminShell({
   user,
   permissions,
+  taskCount = 0,
   children,
 }: {
   user: ConsoleUser;
   permissions: Permission[];
+  /** Open follow ups due by the end of today. Drawn beside the Tasks link. */
+  taskCount?: number;
   children: React.ReactNode;
 }) {
   return (
     <SessionGuard>
-      <DashboardChrome user={user} permissions={permissions}>
+      <DashboardChrome user={user} permissions={permissions} taskCount={taskCount}>
         {children}
       </DashboardChrome>
     </SessionGuard>
@@ -126,10 +136,12 @@ export default function AdminShell({
 function DashboardChrome({
   user,
   permissions,
+  taskCount,
   children,
 }: {
   user: ConsoleUser;
   permissions: Permission[];
+  taskCount: number;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -261,6 +273,15 @@ function DashboardChrome({
                     >
                       <Icon className="w-3.5 h-3.5 shrink-0" />
                       <span className="truncate">{link.label}</span>
+                      {link.countsTasks && taskCount > 0 && (
+                        <span
+                          className={`ml-auto shrink-0 rounded-full px-1.5 text-[10px] tabular-nums ${
+                            isActive ? "bg-black/10 text-black/70" : "bg-white/[0.06] text-zinc-300"
+                          }`}
+                        >
+                          {taskCount}
+                        </span>
+                      )}
                     </Link>
                   );
                 })}
@@ -348,6 +369,11 @@ function DashboardChrome({
                           </span>
                           <span className="block text-[11px] text-zinc-500 truncate">{link.hint}</span>
                         </span>
+                        {link.countsTasks && taskCount > 0 && (
+                          <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] tabular-nums text-zinc-300">
+                            {taskCount}
+                          </span>
+                        )}
                         <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
                       </Link>
                     );
