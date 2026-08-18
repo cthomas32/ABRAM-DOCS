@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { Flame, Loader2, MapPin, WifiOff } from "lucide-react";
 import { CRM_STAGES, stageSpec, type CrmStage } from "@/lib/crm/constants";
-import { LifecycleChip, SourceChips } from "@/components/admin/PersonChips";
+import { LifecycleChip, ScoreChip, SourceChips } from "@/components/admin/PersonChips";
 import type { CrmContact } from "@/lib/crm/types";
 import { formatDate, isOverdue, isDueOrOverdue } from "./lib";
 
@@ -23,6 +23,8 @@ import { formatDate, isOverdue, isDueOrOverdue } from "./lib";
 
 interface PipelineBoardProps {
   contacts: CrmContact[];
+  /** Lead score per contact, where it could be read. Absent is not zero. */
+  scoreById?: Record<string, number>;
   eventNameById: Record<string, string>;
   onOpen: (contact: CrmContact) => void;
   onMoveStage: (contact: CrmContact, next: CrmStage) => void;
@@ -34,6 +36,7 @@ interface PipelineBoardProps {
 
 export default function PipelineBoard({
   contacts,
+  scoreById,
   eventNameById,
   onOpen,
   onMoveStage,
@@ -112,6 +115,7 @@ export default function PipelineBoard({
                     column.map((contact) => (
                       <ContactCard
                         key={contact.id}
+                        score={scoreById?.[contact.id]}
                         contact={contact}
                         eventName={contact.event_id ? eventNameById[contact.event_id] : undefined}
                         onOpen={onOpen}
@@ -173,6 +177,7 @@ export default function PipelineBoard({
             (byStage[mobileStage] ?? []).map((contact) => (
               <ContactCard
                 key={contact.id}
+                score={scoreById?.[contact.id]}
                 contact={contact}
                 eventName={contact.event_id ? eventNameById[contact.event_id] : undefined}
                 onOpen={onOpen}
@@ -198,8 +203,10 @@ function ContactCard({
   onMoveStage,
   busy,
   draggable = false,
+  score,
 }: {
   contact: CrmContact;
+  score?: number;
   eventName?: string;
   onOpen: (contact: CrmContact) => void;
   onMoveStage: (contact: CrmContact, next: CrmStage) => void;
@@ -246,6 +253,7 @@ function ContactCard({
             say who they are, which the column cannot. */}
         <span className="flex flex-wrap items-center gap-1 mt-2">
           <LifecycleChip stage={contact.lifecycle_stage} />
+          <ScoreChip score={score} />
           <SourceChips sources={contact.sources} limit={2} />
         </span>
 

@@ -67,6 +67,12 @@ export type Permission =
   | "crm.deals.manage"
   | "crm.events.manage"
 
+  /* Sequences: an ordered set of follow ups, and enrolling somebody in
+   * one. Held apart from contact writing because enrolling a person
+   * creates work in somebody's queue, which is a different act from
+   * editing their record. */
+  | "crm.sequences.manage"
+
   /* Deal registration: filing a claim and deciding one are different jobs */
   | "crm.registrations.file"
   | "crm.registrations.decide"
@@ -102,6 +108,13 @@ export type Permission =
   | "commission.read.own"
   | "commission.manage"
 
+  /* The rollups. Separate from analytics.read because a partner scoped to
+   * their own accounts holds that one, and a rollup counts everybody
+   * else's. It is granted at the stage that already sees the whole
+   * pipeline, which is the same line public.can_read_reports() draws in
+   * the database. */
+  | "reports.read"
+
   /* Administration */
   | "roles.manage";
 
@@ -125,6 +138,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "crm.accounts.manage",
     "crm.deals.manage",
     "crm.events.manage",
+    "crm.sequences.manage",
     "crm.registrations.file",
     "crm.registrations.decide",
     "crm.email.send",
@@ -144,6 +158,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "analytics.write",
     "commission.read.own",
     "commission.manage",
+    "reports.read",
     "roles.manage",
   ],
 
@@ -157,6 +172,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "crm.accounts.manage",
     "crm.deals.manage",
     "crm.events.manage",
+    "crm.sequences.manage",
     "crm.registrations.file",
     "crm.registrations.decide",
     "crm.email.send",
@@ -176,6 +192,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "analytics.write",
     "commission.read.own",
     "commission.manage",
+    "reports.read",
   ],
 
   // Acquisition, end to end. Note what is missing rather than what is
@@ -188,6 +205,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "crm.accounts.manage",
     "crm.deals.manage",
     "crm.events.manage",
+    "crm.sequences.manage",
     "crm.registrations.file",
     "content.docs",
     "content.blog",
@@ -224,8 +242,14 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
  */
 const GROWTH_STAGE_PERMISSIONS: Record<GrowthStage, Permission[]> = {
   advisor: [],
-  head_of_growth: ["crm.contacts.read.all", "crm.email.send", "analytics.write"],
-  employee: ["crm.contacts.read.all", "crm.email.send", "analytics.write", "subscribers.read"],
+  head_of_growth: ["crm.contacts.read.all", "crm.email.send", "analytics.write", "reports.read"],
+  employee: [
+    "crm.contacts.read.all",
+    "crm.email.send",
+    "analytics.write",
+    "reports.read",
+    "subscribers.read",
+  ],
 };
 
 /** Everything this person may do, role plus whatever their stage adds. */
@@ -285,25 +309,26 @@ export function seesWholePipeline(user: Pick<ConsoleUser, "role" | "growthStage"
  * immediately, instead of shipping open and nobody noticing at all.
  */
 export const ROUTE_PERMISSIONS: { prefix: string; permission: Permission }[] = [
+  /* CRM: five objects, each one address with tabs inside it. */
+  { prefix: "/admin/dashboard/crm/people", permission: "crm.contacts.read.own" },
   { prefix: "/admin/dashboard/crm", permission: "crm.contacts.read.own" },
   { prefix: "/admin/dashboard/accounts", permission: "crm.accounts.manage" },
-  { prefix: "/admin/dashboard/deals/board", permission: "crm.deals.manage" },
   { prefix: "/admin/dashboard/deals", permission: "crm.deals.manage" },
-  { prefix: "/admin/dashboard/tasks", permission: "crm.contacts.read.own" },
-  { prefix: "/admin/dashboard/registrations", permission: "crm.registrations.file" },
-  { prefix: "/admin/dashboard/earnings", permission: "commission.read.own" },
-  { prefix: "/admin/dashboard/docs", permission: "content.docs" },
-  { prefix: "/admin/dashboard/blog", permission: "content.blog" },
-  { prefix: "/admin/dashboard/changelog", permission: "content.changelog" },
-  { prefix: "/admin/dashboard/team", permission: "content.team" },
-  { prefix: "/admin/dashboard/social", permission: "social.manage" },
-  { prefix: "/admin/dashboard/campaigns", permission: "campaigns.manage" },
-  { prefix: "/admin/dashboard/links", permission: "links.manage" },
-  { prefix: "/admin/dashboard/promotions", permission: "promotions.manage" },
-  { prefix: "/admin/dashboard/subscribers", permission: "subscribers.read" },
-  { prefix: "/admin/dashboard/broadcasts", permission: "broadcasts.draft" },
-  { prefix: "/admin/dashboard/people", permission: "roles.manage" },
+  { prefix: "/admin/dashboard/activities", permission: "crm.contacts.read.own" },
+
+  /* The four tool sets. Each hub is entered with console.admin and then
+     draws only the tabs the reader actually holds, because the tabs
+     inside one hub need four different permissions and a single prefix
+     rule cannot express that. The tab bodies check their own. */
+  { prefix: "/admin/dashboard/growth", permission: "console.admin" },
+  { prefix: "/admin/dashboard/content", permission: "console.admin" },
+  { prefix: "/admin/dashboard/money", permission: "commission.read.own" },
+  { prefix: "/admin/dashboard/team", permission: "console.admin" },
+
+  /* Addresses that are still real, either because something else links
+     to them or because work is landing on them. */
   { prefix: "/admin/dashboard/revenue", permission: "commission.manage" },
+
   { prefix: "/admin/dashboard", permission: "console.admin" },
 ];
 

@@ -194,6 +194,26 @@ export const DEAL_STAGES: { id: DealStage; label: string; badge: string; termina
   { id: "lost", label: "Lost", badge: "bg-white/[0.02] text-zinc-500 border-white/8", terminal: true },
 ];
 
+/**
+ * What a stage is worth, as a fraction, for a weighted forecast.
+ *
+ * A flat, published ladder rather than a per-deal probability field. A
+ * typed probability on every deal is a number two people argue about and
+ * nobody maintains; a stage weight is one somebody can check by looking at
+ * the board. Won is 1 and lost is 0 because both are facts rather than
+ * forecasts, and the forecast reports exclude them anyway.
+ *
+ * The database returns raw counts and sums. This is the only place the
+ * multiplication happens.
+ */
+export const DEAL_STAGE_PROBABILITY: Record<DealStage, number> = {
+  opportunity: 0.2,
+  proposal: 0.4,
+  negotiation: 0.7,
+  won: 1,
+  lost: 0,
+};
+
 export type BillingPeriod = "one_off" | "monthly" | "annual";
 
 export const BILLING_PERIODS: { id: BillingPeriod; label: string }[] = [

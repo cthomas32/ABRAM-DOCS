@@ -425,3 +425,78 @@ exactly.
 - **Deal stage history is written but not read.** `20260817160000` gives `crm_stage_changes` a
   `deal_id`, and `deals/actions.ts` writes a `crm_interactions` line on every move, but no screen
   renders a deal's history yet. The drawer has the space for it.
+
+---
+
+## P1 status, 18 August 2026
+
+Built on `crm/p1-reports-sequences`, together with the object-first
+rebuild of the console that landed with it.
+
+**P1-1. Owner reporting — done.** Six SECURITY DEFINER functions in
+`supabase/migrations/20260818100000_crm_reports_sequences_views.sql`, all
+behind `public.can_read_reports()`: owner, admin, or a growth partner
+already at the stage that sees the whole pipeline. `crm_report_commission`
+is stricter again and refuses anybody who is not an owner, because what
+every partner earns is not a Head of Growth's to read.
+
+The surfaces split in two on purpose. Pipeline by stage and the weighted
+forecast live on **Deals → Forecast** (`deals/ForecastPanel.tsx`), beside
+the deals they are about; sourced and closed by rep, activity per rep per
+week and the lifecycle funnel live on **Money → Reports**
+(`reports/ReportsPanel.tsx`); commission across everybody is **Money →
+Commission** (`reports/CommissionPanel.tsx`). Weighting is
+`DEAL_STAGE_PROBABILITY` in `constants.ts` and the arithmetic is
+`src/lib/crm/reports.ts` — the database returns raw counts and sums.
+
+No charting library was added. `src/components/admin/Bars.tsx` draws a
+labelled quantity against the largest of them, which is a row and a rule.
+
+**P1-4. Saved views and segments — done.** `crm_saved_views` (jsonb
+filter, own plus optionally shared), `src/lib/crm/savedViews.ts` as the
+one filter function both the people list and the lists tab call, and four
+built-in smart lists in code rather than as seeded rows: Hot, Stale, New
+this week, Subscribers. **People → Lists** manages them; the people list
+saves one and loads one.
+
+**P1-5. Lead scoring — done.** `public.crm_lead_score(...)` is pure,
+additive and clamped 0 to 100; `crm_contact_lead_scores` is a
+`security_invoker` view that gathers its inputs, counting engagement over
+thirty days. Shown as a chip on the card and the row, sortable as a
+column, and available as a filter.
+
+**P1-6. Import and export — done.** `src/lib/crm/csv.ts` parses quoting,
+BOM and three line endings, guesses the column mapping, and folds rows
+into people. `importActions.ts` has a dry run that writes nothing and a
+run that goes through `syncFeedPerson`, so the import cannot invent a
+second merge rule. Export is on the same tab, and any saved list exports
+its own matched set.
+
+**Sequences — done, and P2 was wrong about what blocked them.** Stop-on-
+reply needs inbound capture and is still not possible. Ordered steps with
+day offsets that become dated follow ups do not need it at all, and that
+is what shipped: `crm_sequences`, `crm_sequence_steps`,
+`crm_sequence_enrollments`, plus `sequence_id` and `email_template_key`
+on `crm_tasks`. An email step becomes "Send: …" and opens
+`/admin/dashboard/crm/compose` with the template rendered against the
+real person; a person presses send, and the send ticks the follow up off.
+No scheduler, no background job, no auto-advance.
+
+**The console became object-first at the same time.** Nine sidebar rows
+were four objects and four tool sets. `nav.ts` is now nine rows in two
+groups, every object is one address with `?tab=`, and every old address
+redirects. The people and deals lists are both dense sortable tables with
+a column chooser, inline editing, bulk actions and a chip filter bar;
+the board is a second drawing of the same filtered set rather than a
+second page. The subscribers screen was deleted outright.
+
+### What P1 did not close
+
+- **The Stripe collections mirror.** Unchanged and still the largest open
+  item. Every commission figure on the reports and commission tabs will
+  read zero until something writes `revenue_collections`.
+- **Duplicate detection for contacts (P1-7).** Import matches on email and
+  refuses nothing else; there is still no warning at create time for a
+  matching name at the same company.
+- **Deals lists are not saved views yet.** `crm_saved_views.scope` already
+  accepts `deals` and `tasks`; only `contacts` has a writer.

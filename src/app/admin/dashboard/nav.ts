@@ -1,28 +1,41 @@
+import {
+  Banknote,
+  Building2,
+  Contact,
+  Handshake,
+  LayoutDashboard,
+  Megaphone,
+  Newspaper,
+  Phone,
+  UsersRound,
+} from "lucide-react";
+import type React from "react";
+import type { Permission } from "@/lib/auth/permissions";
+
 /**
- * Where you can go, in six groups.
+ * Where you can go: nine rows, two groups.
  *
- * There were twenty destinations in five groups named Content, Audience,
- * Numbers and Company, and the founder's complaint about it was exact:
- * "there are a TON of pages now, it's getting confusing". The count was
- * not really the problem. The grouping was — "Audience" held the deal
- * board, the promo codes and the newsletter, which are three different
- * jobs done by three different people on three different days.
+ * There were twenty destinations in six groups, and the founder counted
+ * them twice. The count was the symptom; the cause was that the console
+ * had a page per *verb* — a list, a board, a queue, a report, a set of
+ * saved filters — when a person thinks in *objects*. Nine of those pages
+ * were four things.
  *
- * So the groups are now named after the job rather than after an
- * abstraction:
+ * So the shape is the product's own project screen. An object is one
+ * address, and every way of looking at it is a tab on that address, in
+ * the URL, so it can be linked and bookmarked and redirected to.
  *
- *   (no label)  Overview. One row, always first.
- *   CRM         Anything that is a person, a company, money in progress,
- *               or a promise to follow one of them up.
- *   Marketing   Anything that goes out: a page, an email, a code, a post.
- *   Content     Anything that stays up: docs, blog, release notes.
- *   Money       What has been earned and what has been collected.
- *   Team        Who works here and what their login can do.
+ *   CRM          The four objects, plus the door they share.
+ *                People carries its lists, sequences and imports.
+ *                Deals carries its board, forecast and registrations.
+ *                Activities carries tasks, calls, email and notes.
+ *   Console      The four tool sets that are not the CRM. Each one is a
+ *                page of tabs for what used to be a row apiece.
  *
- * Two things did not become new rows and deliberately so. The deal board
- * is a second view of the deal list, not a second list, so it lives
- * behind a view toggle on the deals screen and keeps its URL. Events,
- * capture codes and the card are already tabs inside the people screen.
+ * What went and did not come back: the subscribers screen. A subscriber
+ * was never a second kind of person, and treating it as one is what let
+ * the same human be counted twice. It is a lifecycle value on a contact
+ * and a built-in list on the people screen.
  *
  * Every entry declares the permission it needs, and the list is filtered
  * before it is drawn. That is not only politeness: a menu showing doors
@@ -30,32 +43,8 @@
  * can do, which is not information a console should volunteer.
  *
  * The command palette reads this same list, so a destination added here
- * is searchable the moment it is navigable, and the two can never
- * disagree about what exists.
+ * is searchable the moment it is navigable.
  */
-
-import {
-  Banknote,
-  BadgePercent,
-  BookOpen,
-  Building2,
-  CheckSquare,
-  Contact,
-  Handshake,
-  Image as ImageIcon,
-  KeyRound,
-  LayoutDashboard,
-  Link as LinkIcon,
-  Mail,
-  Megaphone,
-  Newspaper,
-  Stamp,
-  Tag,
-  Users,
-  UsersRound,
-} from "lucide-react";
-import type React from "react";
-import type { Permission } from "@/lib/auth/permissions";
 
 export interface AdminNavLink {
   id: string;
@@ -79,32 +68,38 @@ export interface AdminNavGroup {
 
 export const NAV_GROUPS: AdminNavGroup[] = [
   {
-    id: "overview",
-    label: null,
-    links: [
-      {
-        id: "overview",
-        label: "Overview",
-        href: "/admin/dashboard",
-        icon: LayoutDashboard,
-        hint: "Traffic, signups and what moved this week",
-        permission: "console.admin",
-        keywords: ["home", "dashboard", "analytics", "telemetry"],
-      },
-    ],
-  },
-  {
     id: "crm",
     label: "CRM",
     links: [
       {
+        id: "home",
+        label: "CRM Home",
+        href: "/admin/dashboard",
+        icon: LayoutDashboard,
+        hint: "The four objects, and what each one holds",
+        permission: "console.admin",
+        keywords: ["overview", "dashboard", "home", "funnel"],
+      },
+      {
         id: "contacts",
         label: "People",
-        href: "/admin/dashboard/crm",
+        href: "/admin/dashboard/crm/people",
         icon: Contact,
         hint: "Every person, wherever they came from",
         permission: "crm.contacts.read.own",
-        keywords: ["contacts", "pipeline", "leads", "events", "codes", "card"],
+        keywords: [
+          "contacts",
+          "leads",
+          "subscribers",
+          "lists",
+          "segments",
+          "sequences",
+          "import",
+          "export",
+          "events",
+          "codes",
+          "card",
+        ],
       },
       {
         id: "accounts",
@@ -120,169 +115,71 @@ export const NAV_GROUPS: AdminNavGroup[] = [
         label: "Deals",
         href: "/admin/dashboard/deals",
         icon: Handshake,
-        hint: "What is open, and the board it moves on",
+        hint: "What is open, the board, and the forecast",
         permission: "crm.deals.manage",
-        keywords: ["board", "kanban", "pipeline", "stages", "forecast"],
+        keywords: ["board", "kanban", "pipeline", "forecast", "registrations"],
       },
       {
-        id: "tasks",
-        label: "Tasks",
-        href: "/admin/dashboard/tasks",
-        icon: CheckSquare,
-        hint: "Follow ups due",
+        id: "activities",
+        label: "Activities",
+        href: "/admin/dashboard/activities",
+        icon: Phone,
+        hint: "Follow ups, calls, email and notes",
         permission: "crm.contacts.read.own",
-        keywords: ["follow up", "queue", "overdue", "reminders"],
+        keywords: ["tasks", "queue", "overdue", "calls", "meetings", "notes", "timeline"],
         countsTasks: true,
       },
-      {
-        id: "registrations",
-        label: "Registrations",
-        href: "/admin/dashboard/registrations",
-        icon: Stamp,
-        hint: "Claim a named account",
-        permission: "crm.registrations.file",
-        keywords: ["deal registration", "claim", "attribution"],
-      },
     ],
   },
   {
-    id: "marketing",
-    label: "Marketing",
+    id: "console",
+    label: "Console",
     links: [
       {
-        id: "campaigns",
-        label: "Campaign Pages",
-        href: "/admin/dashboard/campaigns",
+        id: "growth",
+        label: "Growth tools",
+        href: "/admin/dashboard/growth",
         icon: Megaphone,
-        hint: "Landing page funnels",
-        permission: "campaigns.manage",
-        keywords: ["landing", "funnel", "utm"],
+        hint: "Traffic, email, codes, pages, social and links",
+        permission: "console.admin",
+        keywords: [
+          "broadcast",
+          "newsletter",
+          "campaigns",
+          "promotions",
+          "discount",
+          "social",
+          "link hub",
+          "analytics",
+          "traffic",
+        ],
       },
       {
-        id: "broadcasts",
-        label: "Email",
-        href: "/admin/dashboard/broadcasts",
-        icon: Mail,
-        hint: "Compose and send a broadcast",
-        permission: "broadcasts.draft",
-        keywords: ["broadcast", "newsletter", "send", "resend"],
-      },
-      {
-        id: "subscribers",
-        label: "Subscribers",
-        href: "/admin/dashboard/subscribers",
-        icon: Users,
-        hint: "The mailing list, and who is on it",
-        permission: "subscribers.read",
-        keywords: ["newsletter", "mailing list", "audience"],
-      },
-      {
-        id: "promotions",
-        label: "Promo Codes",
-        href: "/admin/dashboard/promotions",
-        icon: BadgePercent,
-        hint: "Discounts, and what they attributed",
-        permission: "promotions.manage",
-        keywords: ["discount", "coupon", "stripe"],
-      },
-      {
-        id: "links",
-        label: "Link Hub",
-        href: "/admin/dashboard/links",
-        icon: LinkIcon,
-        hint: "Your one bio link",
-        permission: "links.manage",
-        keywords: ["bio", "linktree", "shortlink"],
-      },
-      {
-        id: "social",
-        label: "Social Studio",
-        href: "/admin/dashboard/social",
-        icon: ImageIcon,
-        hint: "Post images and carousels",
-        permission: "social.manage",
-        keywords: ["instagram", "linkedin", "carousel", "calendar"],
-      },
-    ],
-  },
-  {
-    id: "content",
-    label: "Content",
-    links: [
-      {
-        id: "blog",
-        label: "Blog",
-        href: "/admin/dashboard/blog",
+        id: "content",
+        label: "Content",
+        href: "/admin/dashboard/content",
         icon: Newspaper,
-        hint: "Articles and announcements",
-        permission: "content.blog",
-        keywords: ["posts", "articles", "writing"],
+        hint: "Blog, docs and release notes",
+        permission: "console.admin",
+        keywords: ["blog", "docs", "help", "changelog", "release notes"],
       },
       {
-        id: "docs",
-        label: "Docs",
-        href: "/admin/dashboard/docs",
-        icon: BookOpen,
-        hint: "Help centre guides",
-        permission: "content.docs",
-        keywords: ["help", "guides", "user guide"],
-      },
-      {
-        id: "changelog",
-        label: "Release Notes",
-        href: "/admin/dashboard/changelog",
-        icon: Tag,
-        hint: "Version changelogs",
-        permission: "content.changelog",
-        keywords: ["changelog", "versions", "shipped"],
-      },
-    ],
-  },
-  {
-    id: "money",
-    label: "Money",
-    links: [
-      {
-        id: "earnings",
-        label: "Your Earnings",
-        href: "/admin/dashboard/earnings",
+        id: "money",
+        label: "Money",
+        href: "/admin/dashboard/money",
         icon: Banknote,
-        hint: "Your commission statement",
+        hint: "Earnings, revenue, reports and commission",
         permission: "commission.read.own",
-        keywords: ["commission", "payout", "statement"],
+        keywords: ["earnings", "commission", "payout", "revenue", "collections", "reports"],
       },
-      {
-        id: "revenue",
-        label: "Revenue",
-        href: "/admin/dashboard/revenue",
-        icon: Banknote,
-        hint: "Collections and payout runs",
-        permission: "commission.manage",
-        keywords: ["collections", "payouts", "ledger"],
-      },
-    ],
-  },
-  {
-    id: "team",
-    label: "Team",
-    links: [
       {
         id: "team",
-        label: "Team & Bylines",
+        label: "Team",
         href: "/admin/dashboard/team",
         icon: UsersRound,
-        hint: "Who is on the site, and how they are credited",
-        permission: "content.team",
-        keywords: ["authors", "bio", "staff"],
-      },
-      {
-        id: "people",
-        label: "People & Access",
-        href: "/admin/dashboard/people",
-        icon: KeyRound,
-        hint: "Logins, roles and commission terms",
-        permission: "roles.manage",
-        keywords: ["roles", "permissions", "invite", "admin users"],
+        hint: "Who works here, and what their login can do",
+        permission: "console.admin",
+        keywords: ["roles", "permissions", "invite", "bylines", "authors", "access"],
       },
     ],
   },

@@ -48,7 +48,8 @@ interface ProfileTabProps {
   member: TeamMemberIdentity | null;
   codes: CrmCaptureCode[];
   onChanged: () => void;
-  onGoToCodes: () => void;
+  /** Where the codes tab is. A link, because the tab is in the URL. */
+  onGoToCodes: string;
   notify: Notify;
 }
 
@@ -324,14 +325,13 @@ export default function ProfileTab({
                       Design the code
                     </Link>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={onGoToCodes}
+                    <Link
+                      href={onGoToCodes}
                       className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
                     >
                       <QrIcon className="w-3.5 h-3.5" />
                       Make a code first
-                    </button>
+                    </Link>
                   )}
                 </div>
 

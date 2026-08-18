@@ -129,6 +129,36 @@ kept verbatim, so no existing row had to be rewritten.
 | The chips                              | `src/components/admin/PersonChips.tsx` |
 | Columns, constraints, backfill         | `supabase/migrations/20260818090000_contact_lifecycle_and_sources.sql` |
 
+## Objects, and the page each one is
+
+The console is object-first. An object is **one address**, and every way
+of looking at it is a **tab on that address**, in the URL, so it can be
+linked and bookmarked and redirected to. There is no page per verb.
+
+| Object | Address | Tabs |
+| --- | --- | --- |
+| — | `/admin/dashboard` | CRM Home. Four object cards, counts, one action each, the lifecycle funnel |
+| `crm_contacts` | `/admin/dashboard/crm/people` | List · Lists · Sequences · Import and export · Events · Codes · Your card |
+| `crm_accounts` | `/admin/dashboard/accounts` | One view. The company's people and deals live in its drawer |
+| `crm_deals` | `/admin/dashboard/deals` | List · Board · Forecast · Registrations |
+| `crm_interactions` + `crm_tasks` | `/admin/dashboard/activities` | Tasks · Calls and meetings · Email · Notes |
+
+The four surfaces that are not the CRM follow the same rule:
+`/admin/dashboard/growth` (traffic, email, promo codes, campaign pages,
+social, link hub), `/admin/dashboard/content` (blog, docs, release
+notes), `/admin/dashboard/money` (earnings, revenue and sync, reports,
+commission) and `/admin/dashboard/team` (people and access, bylines).
+
+**The subscribers screen is gone and is not coming back.** A subscriber
+was never a second kind of person, and having a page for one is exactly
+how the same human ended up counted twice. It is `lifecycle_stage =
+'subscriber'` on a contact, a built-in list on the people screen, and a
+consent column on that list. The one thing that screen did which nothing
+else did — turning an address that asked for the newsletter into a person
+— is the "Bring the mailing list in" action on the import tab.
+
+Every old address redirects. See `next.config.ts`.
+
 ## In the interface
 
 - A **lifecycle chip** and **source chips** on every contact card and at

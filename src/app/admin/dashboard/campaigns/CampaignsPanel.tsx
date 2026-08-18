@@ -223,7 +223,7 @@ function pageLabel(slug: string): string {
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
 
-export default function CampaignAnalyticsPage() {
+export default function CampaignsPanel() {
   const [data, setData] = useState<LandingAnalytics>(EMPTY);
   const [days, setDays] = useState(30);
   const [pageFilter, setPageFilter] = useState<string | null>(null);

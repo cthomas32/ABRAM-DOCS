@@ -32,6 +32,38 @@ export function LifecycleChip({
   );
 }
 
+/**
+ * The lead score, as a number somebody can argue with.
+ *
+ * Deliberately plain. It is additive arithmetic over the lifecycle, the
+ * ways in, the seniority on the title and what the person did in the last
+ * thirty days, and it earns no colour until it is high enough to change
+ * what somebody does today.
+ */
+export function ScoreChip({
+  score,
+  className = "",
+}: {
+  score: number | null | undefined;
+  className?: string;
+}) {
+  if (score === null || score === undefined) return null;
+  const strong = score >= 60;
+
+  return (
+    <span
+      className={`${CHIP} tabular-nums ${
+        strong
+          ? "bg-violet-500/10 border-violet-400/20 text-violet-200"
+          : "bg-white/[0.03] border-white/8 text-zinc-400"
+      } ${className}`}
+      title="Lead score, out of 100. Lifecycle, ways in, seniority and the last thirty days of engagement."
+    >
+      {score}
+    </span>
+  );
+}
+
 export function SourceChips({
   sources,
   /** Beyond this, the rest are counted rather than listed. */

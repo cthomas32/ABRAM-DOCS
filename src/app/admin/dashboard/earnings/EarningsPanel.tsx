@@ -33,7 +33,6 @@ import Panel, { EmptyPanel } from "@/components/admin/Panel";
  * enforced by row level security rather than by this file.
  */
 
-export const dynamic = "force-dynamic";
 
 function monthLabel(iso: string): string {
   const d = new Date(iso + (iso.length === 10 ? "T00:00:00Z" : ""));
@@ -41,7 +40,7 @@ function monthLabel(iso: string): string {
   return d.toLocaleDateString(undefined, { month: "long", year: "numeric", timeZone: "UTC" });
 }
 
-export default async function EarningsPage() {
+export default async function EarningsPanel() {
   const user = await getConsoleUser();
   if (!user) redirect("/admin");
   if (!can(user, "commission.read.own")) redirect("/admin/dashboard");

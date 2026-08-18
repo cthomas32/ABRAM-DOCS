@@ -329,7 +329,7 @@ interface Subscriber {
   is_application_list?: boolean;
 }
 
-export default function BroadcastsPage() {
+export default function EmailPanel() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   // Campaign whose mobile action sheet is open

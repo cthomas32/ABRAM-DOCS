@@ -30,7 +30,6 @@ import { rows } from "@/lib/supabase/rows";
  * The 120 day window is the partner's deadline to close it.
  */
 
-export const dynamic = "force-dynamic";
 
 function statusSpec(id: string) {
   return REGISTRATION_STATUSES.find((s) => s.id === id) ?? REGISTRATION_STATUSES[0];
@@ -43,7 +42,7 @@ function formatDay(iso: string): string {
     : d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 }
 
-export default async function RegistrationsPage() {
+export default async function RegistrationsPanel() {
   const user = await getConsoleUser();
   if (!user) redirect("/admin");
   if (!can(user, "crm.registrations.file")) redirect("/admin/dashboard");
