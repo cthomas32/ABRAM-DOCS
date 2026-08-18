@@ -30,6 +30,7 @@ import {
 import type { CrmContact, CrmEvent, CrmInteraction, CrmTask } from "@/lib/crm/types";
 import { buildContactVCard, vcardFilename } from "@/lib/crm/vcard";
 import { LIFECYCLE_STAGES, lifecycleSpec, type LifecycleStage } from "@/lib/crm/people";
+import { enrollContact } from "@/app/admin/dashboard/sequences/actions";
 import { LifecycleChip, SourceChips } from "@/components/admin/PersonChips";
 import {
   downloadFile,
@@ -130,6 +131,16 @@ export default function ContactDrawer({
    * failed read here costs a picker rather than the whole screen.
    */
   const [accounts, setAccounts] = useState<{ id: string; name: string; domain: string | null }[]>([]);
+  /**
+   * The sequences this person could go on. Read here rather than passed
+   * down for the same reason as the accounts: the board does not need
+   * them, and a partner with no sequences of their own gets an empty
+   * picker instead of a broken screen. Row level security decides which
+   * rows come back.
+   */
+  const [sequences, setSequences] = useState<{ id: string; name: string }[]>([]);
+  const [sequenceId, setSequenceId] = useState("");
+  const [enrolling, setEnrolling] = useState(false);
 
   // A different person in the panel means a different form, not a merged one.
   useEffect(() => {
@@ -185,6 +196,14 @@ export default function ContactDrawer({
         .order("name", { ascending: true })
         .limit(500);
       if (!cancelled) setAccounts(data ?? []);
+
+      const { data: sequenceRows } = await supabase
+        .from("crm_sequences")
+        .select("id, name")
+        .eq("is_active", true)
+        .order("name", { ascending: true })
+        .limit(100);
+      if (!cancelled) setSequences(sequenceRows ?? []);
     })();
     return () => {
       cancelled = true;
@@ -781,6 +800,59 @@ export default function ContactDrawer({
                 here is ever deleted.
               </p>
             </section>
+
+            {/* Sequences.
+                Enrolling writes the whole set of follow ups at once, dated
+                from today, which is why it sits directly above the queue it
+                fills rather than behind a menu. */}
+            {sequences.length > 0 && (
+              <section className="space-y-3">
+                <SectionLabel>Sequences</SectionLabel>
+
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <select
+                    value={sequenceId}
+                    onChange={(e) => setSequenceId(e.target.value)}
+                    aria-label="Pick a sequence"
+                    className="admin-input h-9 py-0 cursor-pointer"
+                  >
+                    <option value="">Pick a sequence</option>
+                    {sequences.map((sequence) => (
+                      <option key={sequence.id} value={sequence.id}>
+                        {sequence.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    disabled={!sequenceId || enrolling}
+                    onClick={() => {
+                      setEnrolling(true);
+                      void enrollContact({ sequenceId, contactId: contact.id })
+                        .then((result) => {
+                          notify(
+                            result.error ?? result.message ?? "Enrolled.",
+                            result.ok ? "success" : "error"
+                          );
+                          if (result.ok) {
+                            setSequenceId("");
+                            void loadHistory();
+                          }
+                        })
+                        .finally(() => setEnrolling(false));
+                    }}
+                    className="btn-glass px-4 h-9 text-xs font-medium rounded-full shrink-0 disabled:opacity-50"
+                  >
+                    {enrolling ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                    Enrol
+                  </button>
+                </div>
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
+                  Every step lands in the follow up queue at once, dated from today. Nothing is sent
+                  until somebody opens the draft and presses send.
+                </p>
+              </section>
+            )}
 
             {/* Follow ups */}
             <section className="space-y-3">

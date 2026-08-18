@@ -114,6 +114,28 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_crm_sequence_enrollments_live
 CREATE INDEX IF NOT EXISTS idx_crm_sequence_enrollments_contact
     ON public.crm_sequence_enrollments (contact_id, created_at DESC);
 
+-- A follow up remembers the step it came from, and an email step also
+-- carries the template key the composer opens with. Two columns rather
+-- than a join through the step, because the queue reads a thousand tasks
+-- and a task whose sequence was deleted should keep working.
+DO $$
+BEGIN
+    IF to_regclass('public.crm_tasks') IS NOT NULL THEN
+        ALTER TABLE public.crm_tasks
+            ADD COLUMN IF NOT EXISTS sequence_id UUID
+                REFERENCES public.crm_sequences (id) ON DELETE SET NULL,
+            ADD COLUMN IF NOT EXISTS email_template_key TEXT;
+
+        COMMENT ON COLUMN public.crm_tasks.email_template_key IS
+            'Set on a follow up produced by an email step. The one-to-one composer opens with this template already rendered. Nothing sends on its own.';
+    END IF;
+END;
+$$;
+
+CREATE INDEX IF NOT EXISTS idx_crm_tasks_sequence
+    ON public.crm_tasks (sequence_id)
+    WHERE sequence_id IS NOT NULL;
+
 DROP TRIGGER IF EXISTS trg_crm_sequences_touch ON public.crm_sequences;
 CREATE TRIGGER trg_crm_sequences_touch BEFORE UPDATE ON public.crm_sequences
     FOR EACH ROW EXECUTE FUNCTION public.crm_touch_updated_at();

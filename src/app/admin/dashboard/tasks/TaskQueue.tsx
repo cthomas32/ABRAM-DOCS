@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useMemo, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
   Check,
   Clock,
   Loader2,
+  Mail,
   Phone,
   Plus,
   RotateCcw,
@@ -62,6 +64,12 @@ export interface QueueTask {
   priority: CrmPriority;
   completed_at: string | null;
   assigned_to: string | null;
+  /**
+   * Set on a follow up produced by a sequence's email step. Its presence
+   * is what draws the compose link: the queue does not otherwise know
+   * that "Send: …" means anything.
+   */
+  email_template_key: string | null;
 }
 
 export interface QueueContact {
@@ -499,6 +507,20 @@ function TaskRow({
                 Next week
               </button>
             </>
+          )}
+
+          {!done && task.email_template_key && (
+            <Link
+              href={`/admin/dashboard/crm/compose?contact=${encodeURIComponent(
+                task.contact_id
+              )}&template=${encodeURIComponent(task.email_template_key)}&task=${encodeURIComponent(
+                task.id
+              )}`}
+              className={`${BLOCK_CHIP} hover:text-white transition-colors`}
+            >
+              <Mail className="h-3 w-3 shrink-0" />
+              Open the draft
+            </Link>
           )}
 
           {canWrite && done && (

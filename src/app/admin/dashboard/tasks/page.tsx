@@ -77,6 +77,7 @@ export default async function TasksPage() {
     priority: (row.priority as CrmPriority) ?? "normal",
     completed_at: (row.completed_at as string | null) ?? null,
     assigned_to: (row.assigned_to as string | null) ?? null,
+    email_template_key: (row.email_template_key as string | null) ?? null,
   });
 
   const tasks = [...rows<Record<string, unknown>>(tasksRes), ...rows<Record<string, unknown>>(doneRes)].map(toTask);
