@@ -1,5 +1,6 @@
 "use client";
 
+import { rows } from "@/lib/supabase/rows";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
@@ -179,7 +180,7 @@ export default function LinkHubAdminPage() {
       fail(linksResult.error);
     } else {
       setError(null);
-      setLinks(((linksResult.data as LinkHubLink[]) || []).map(normalizeLink));
+      setLinks(rows<LinkHubLink>(linksResult).map(normalizeLink));
     }
     if (settingsResult.data) {
       setSettings(normalizeSettings(settingsResult.data as Partial<LinkHubSettings>));

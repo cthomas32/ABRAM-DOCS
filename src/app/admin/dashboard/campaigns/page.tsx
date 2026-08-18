@@ -1,5 +1,6 @@
 "use client";
 
+import { rows } from "@/lib/supabase/rows";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -771,8 +772,8 @@ function LinkBuilder() {
 
       if (cancelled) return;
 
-      const loadedPages = (pageResult.data as LinkPage[] | null) || [];
-      const loadedChannels = (channelResult.data as LinkChannel[] | null) || [];
+      const loadedPages = rows<LinkPage>(pageResult);
+      const loadedChannels = rows<LinkChannel>(channelResult);
 
       if (loadedPages.length) setPages(loadedPages);
       if (loadedChannels.length) setChannels(loadedChannels);

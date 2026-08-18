@@ -33,6 +33,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import ActionSheet, { type SheetAction } from "@/components/admin/ActionSheet";
 import Modal from "@/components/admin/Modal";
+import { useConsolePermissions } from "@/lib/auth/useConsolePermissions";
 
 interface Campaign {
   id: string;
@@ -374,6 +375,13 @@ export default function BroadcastsPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmInput, setConfirmInput] = useState("");
   const [approving, setApproving] = useState(false);
+
+  /* Drafting a broadcast and sending one are separate permissions, and a
+     growth partner holds the first without the second. The server action
+     has always refused the send; the button did not know, so the refusal
+     arrived after the safety phrase had been typed. */
+  const { ready: permissionsReady, can: consoleCan } = useConsolePermissions();
+  const canSend = !permissionsReady || consoleCan("broadcasts.send");
   const [previewTab, setPreviewTab] = useState<"html" | "text">("html");
 
   // Test Email Modal State
@@ -838,7 +846,7 @@ export default function BroadcastsPage() {
               <Mail className="w-5 h-5 text-zinc-400" />
               Email Broadcaster
             </h1>
-            <p className="text-xs text-zinc-500 mt-1 font-sans">
+            <p className="text-xs text-zinc-400 mt-1 font-sans">
               Compose manual newsletters, select layout styles, monitor delivery logs, and trigger campaigns.
             </p>
           </div>
@@ -857,7 +865,7 @@ export default function BroadcastsPage() {
               // Pre-load editorial template
               handleApplyTemplate("editorial");
             }}
-            className="btn-primary h-11 sm:h-9 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans shrink-0"
+            className="btn-primary h-9 w-full sm:w-auto px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Compose Broadcast</span>
@@ -870,7 +878,7 @@ export default function BroadcastsPage() {
             <AlertTriangle className="w-4 h-4 text-amber-300 shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-amber-300 font-sans">Resend not connected</p>
-              <p className="text-[10px] text-zinc-500 font-sans truncate">
+              <p className="text-[10px] text-zinc-400 font-sans truncate">
                 {resendStatus.message || "API key missing or invalid. Check your environment variables."}
               </p>
             </div>
@@ -897,7 +905,7 @@ export default function BroadcastsPage() {
                       <Mail className="w-4 h-4 text-zinc-400 shrink-0" />
                       <span>{editingCampaignId ? "Edit Campaign Draft" : "Compose Manual Newsletter Campaign"}</span>
                     </h3>
-                    <p className="text-xs text-zinc-500 mt-1 font-sans">
+                    <p className="text-xs text-zinc-400 mt-1 font-sans">
                       Create or modify your newsletter campaign, select recipients, and review rendering side-by-side.
                     </p>
                   </div>
@@ -907,7 +915,7 @@ export default function BroadcastsPage() {
 
                 {/* 1. Layout Selection */}
                 <div className="space-y-2">
-                  <span className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
+                  <span className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider">
                     1. Select Email Layout Style
                   </span>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -919,7 +927,7 @@ export default function BroadcastsPage() {
                         className="text-left p-3 rounded-xl border border-white/5 hover:border-white/15 bg-white/[0.01] hover:bg-white/[0.03] transition-all duration-200 cursor-pointer"
                       >
                         <p className="text-xs font-semibold text-white">{tmpl.name}</p>
-                        <p className="text-[10px] text-zinc-500 mt-1 leading-normal">{tmpl.description}</p>
+                        <p className="text-[10px] text-zinc-400 mt-1 leading-normal">{tmpl.description}</p>
                       </button>
                     ))}
                   </div>
@@ -929,7 +937,7 @@ export default function BroadcastsPage() {
                 <form id="campaignFormInline" onSubmit={handleSaveDraft} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">
+                      <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">
                         Campaign Identifier Name (CMS log name)
                       </label>
                       <input
@@ -942,7 +950,7 @@ export default function BroadcastsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">
+                      <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">
                         Email Subject Line
                       </label>
                       <input
@@ -958,7 +966,7 @@ export default function BroadcastsPage() {
 
                   {/* 2. Target Audience Selection */}
                   <div className="space-y-3">
-                    <span className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
+                    <span className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider">
                       2. Target Audience
                     </span>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -972,7 +980,7 @@ export default function BroadcastsPage() {
                         }`}
                       >
                         <p className="text-xs font-semibold">Broadcast Segment</p>
-                        <p className="text-[10px] text-zinc-500 mt-1 font-sans leading-relaxed">Send to a pre-defined mailing list (general segment).</p>
+                        <p className="text-[10px] text-zinc-400 mt-1 font-sans leading-relaxed">Send to a pre-defined mailing list (general segment).</p>
                       </button>
                       <button
                         type="button"
@@ -984,7 +992,7 @@ export default function BroadcastsPage() {
                         }`}
                       >
                         <p className="text-xs font-semibold">Select Specific Subscribers</p>
-                        <p className="text-[10px] text-zinc-500 mt-1 font-sans leading-relaxed">Select individual subscribers from the system.</p>
+                        <p className="text-[10px] text-zinc-400 mt-1 font-sans leading-relaxed">Select individual subscribers from the system.</p>
                       </button>
                       <button
                         type="button"
@@ -996,7 +1004,7 @@ export default function BroadcastsPage() {
                         }`}
                       >
                         <p className="text-xs font-semibold">Manual Entry</p>
-                        <p className="text-[10px] text-zinc-500 mt-1 font-sans leading-relaxed">Enter a list of comma- or newline-separated emails.</p>
+                        <p className="text-[10px] text-zinc-400 mt-1 font-sans leading-relaxed">Enter a list of comma- or newline-separated emails.</p>
                       </button>
                     </div>
                   </div>
@@ -1005,7 +1013,7 @@ export default function BroadcastsPage() {
                   <div className="bg-white/[0.01] border border-white/5 p-4 rounded-2xl">
                     {audienceType === "segment" && (
                       <div className="space-y-1.5 animate-fadeIn">
-                        <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
+                        <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider">
                           Broadcast List / Segment
                         </label>
                         <select
@@ -1020,7 +1028,7 @@ export default function BroadcastsPage() {
                         
                         {segmentIdInput === "custom" && (
                           <div className="mt-2.5 animate-fadeIn">
-                            <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">
+                            <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">
                               Enter Custom Segment ID
                             </label>
                             <input
@@ -1039,10 +1047,10 @@ export default function BroadcastsPage() {
                       <div className="space-y-3 animate-fadeIn">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div>
-                            <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider font-sans">
+                            <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider font-sans">
                               Subscribers Checklist
                             </label>
-                            <p className="text-[10px] text-zinc-500 mt-0.5 font-sans">
+                            <p className="text-[10px] text-zinc-400 mt-0.5 font-sans">
                               Selected: <span className="text-white font-semibold font-mono">{selectedSubscribers.length}</span> of {subscribers.length} subscribers
                             </p>
                           </div>
@@ -1080,7 +1088,7 @@ export default function BroadcastsPage() {
                         </div>
 
                         <div className="relative">
-                          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                          <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                           <input
                             type="text"
                             placeholder="Filter subscribers by name or email..."
@@ -1092,7 +1100,7 @@ export default function BroadcastsPage() {
 
                         <div className="border border-white/5 bg-zinc-950/40 rounded-xl overflow-hidden max-h-[160px] overflow-y-auto divide-y divide-white/5 custom-scrollbar">
                           {subscribers.length === 0 ? (
-                            <div className="p-4 text-center text-xs text-zinc-500 font-sans">
+                            <div className="p-4 text-center text-xs text-zinc-400 font-sans">
                               No subscribers found in database.
                             </div>
                           ) : (
@@ -1127,7 +1135,7 @@ export default function BroadcastsPage() {
                                           ? `${sub.first_name || ""} ${sub.last_name || ""}`.trim() 
                                           : "Anonymous"}
                                       </span>
-                                      <span className="text-[10px] text-zinc-500 font-mono truncate">{sub.email}</span>
+                                      <span className="text-[10px] text-zinc-400 font-mono truncate">{sub.email}</span>
                                     </div>
                                   </label>
                                 );
@@ -1140,10 +1148,10 @@ export default function BroadcastsPage() {
                     {audienceType === "manual" && (
                       <div className="space-y-1.5 animate-fadeIn">
                         <div className="flex items-center justify-between">
-                          <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
+                          <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider">
                             Manual Email Addresses
                           </label>
-                          <span className="text-[9px] text-zinc-500 font-mono">
+                          <span className="text-[9px] text-zinc-400 font-mono">
                             Parsed: {
                               manualEmailsInput
                                 .split(/[\s,;]+/)
@@ -1165,7 +1173,7 @@ export default function BroadcastsPage() {
 
                   {/* 3. Split Editor */}
                   <div className="space-y-1.5">
-                    <span className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
+                    <span className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider">
                       3. Campaign Content
                     </span>
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 border border-white/5 rounded-2xl overflow-hidden bg-zinc-950/20">
@@ -1193,7 +1201,7 @@ export default function BroadcastsPage() {
                               Plain Text
                             </button>
                           </div>
-                          <span className="hidden sm:inline text-[10px] text-zinc-500 font-mono">
+                          <span className="hidden sm:inline text-[10px] text-zinc-400 font-mono">
                             {editorTab === "html" ? "live layout mode" : "fallback text mode"}
                           </span>
                         </div>
@@ -1201,7 +1209,7 @@ export default function BroadcastsPage() {
                         {/* Editor Toolbar */}
                         {editorTab === "html" ? (
                           <div className="flex flex-wrap gap-1.5 p-2 bg-zinc-950/40 border-b border-white/5 select-none">
-                            <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider flex items-center mr-1">Insert:</span>
+                            <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider flex items-center mr-1">Insert:</span>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("h1")}
@@ -1254,7 +1262,7 @@ export default function BroadcastsPage() {
                             
                             <div className="w-px h-4 bg-white/10 mx-1 align-middle my-auto" />
                             
-                            <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider flex items-center mr-1">Vars:</span>
+                            <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider flex items-center mr-1">Vars:</span>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_first_name")}
@@ -1279,7 +1287,7 @@ export default function BroadcastsPage() {
                           </div>
                         ) : (
                           <div className="flex flex-wrap gap-1.5 p-2 bg-zinc-950/40 border-b border-white/5 select-none">
-                            <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider flex items-center mr-1">Vars:</span>
+                            <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider flex items-center mr-1">Vars:</span>
                             <button
                               type="button"
                               onClick={() => handleInsertHtml("var_first_name")}
@@ -1331,10 +1339,10 @@ export default function BroadcastsPage() {
                       {/* Right Preview Pane (6 Columns) */}
                       <div className="lg:col-span-6 flex flex-col h-[400px] sm:h-[500px] lg:h-[600px]">
                         <div className="bg-zinc-950/40 px-3 py-2 border-b border-white/5 flex items-center justify-between">
-                          <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">
+                          <span className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">
                             Live Preview
                           </span>
-                          <span className="hidden sm:inline text-[10px] text-zinc-500 font-mono">
+                          <span className="hidden sm:inline text-[10px] text-zinc-400 font-mono">
                             {editorTab === "html" ? "HTML Output" : "Plain Text Output"}
                           </span>
                         </div>
@@ -1365,7 +1373,7 @@ export default function BroadcastsPage() {
                         setShowComposeModal(false);
                         setEditingCampaignId(null);
                       }}
-                      className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full font-sans"
+                      className="btn-glass h-9 px-4 text-xs font-medium rounded-full font-sans"
                     >
                       Cancel
                     </button>
@@ -1373,7 +1381,7 @@ export default function BroadcastsPage() {
                       <button
                         type="button"
                         onClick={() => setShowTestEmailModal(true)}
-                        className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans"
+                        className="btn-glass h-9 px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 font-sans"
                       >
                         <Send className="w-3.5 h-3.5 text-zinc-400" />
                         <span>Send Test Email</span>
@@ -1382,7 +1390,7 @@ export default function BroadcastsPage() {
                     <button
                       type="submit"
                       disabled={submittingBroadcast}
-                      className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50"
+                      className="btn-primary h-9 px-5 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50"
                     >
                       {submittingBroadcast ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1401,7 +1409,7 @@ export default function BroadcastsPage() {
               <div className={`lg:col-span-5 space-y-4 lg:sticky lg:top-4 ${selectedCampaign ? "hidden lg:block" : ""}`}>
             <div className="flex items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
               <div className="relative w-full">
-                <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={searchTerm}
@@ -1419,12 +1427,12 @@ export default function BroadcastsPage() {
                 </span>
               </div>
               {loadingCampaigns ? (
-                <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-500">
+                <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-400">
                   <Loader2 className="w-5 h-5 animate-spin" />
                   <span className="text-xs font-sans">Fetching campaign list...</span>
                 </div>
               ) : filteredCampaigns.length === 0 ? (
-                <div className="text-center py-16 text-zinc-500 text-xs font-sans">
+                <div className="text-center py-16 text-zinc-400 text-xs font-sans">
                   No newsletters found in registry.
                 </div>
               ) : (
@@ -1451,19 +1459,19 @@ export default function BroadcastsPage() {
                                 : camp.status === "failed"
                                 ? "bg-amber-500/10 text-amber-300 font-bold"
                                 : camp.status === "sending"
-                                ? "bg-yellow-500/10 text-yellow-400 font-bold"
+                                ? "bg-amber-500/10 text-amber-300 font-bold"
                                 : camp.status === "draft"
                                 ? "bg-zinc-800 text-zinc-400 border border-zinc-700 font-bold"
                                 : "bg-zinc-800 text-zinc-400"
                             }`}>
                               {camp.status.toUpperCase()}
                             </span>
-                            <span className="text-[9px] text-zinc-500 font-mono">
+                            <span className="text-[9px] text-zinc-400 font-mono">
                               {camp.sent_at ? new Date(camp.sent_at).toLocaleDateString() : new Date(camp.created_at).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-zinc-600" />
+                        <ChevronRight className="w-4 h-4 text-zinc-400" />
                       </button>
                     );
                   })}
@@ -1479,7 +1487,7 @@ export default function BroadcastsPage() {
                 {/* Small screens drill in to one campaign at a time */}
                 <button
                   onClick={() => setSelectedCampaign(null)}
-                  className="lg:hidden btn-glass h-10 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                  className="lg:hidden btn-glass h-10 px-4 text-xs font-medium rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>All campaigns</span>
@@ -1494,7 +1502,7 @@ export default function BroadcastsPage() {
                             <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700 font-mono uppercase">
                               Draft Campaign
                             </span>
-                            <span className="text-[10px] text-zinc-500 font-mono">
+                            <span className="text-[10px] text-zinc-400 font-mono">
                               Created: {new Date(selectedCampaign.created_at).toLocaleDateString()}
                             </span>
                           </div>
@@ -1533,32 +1541,38 @@ export default function BroadcastsPage() {
                               setEditingCampaignId(selectedCampaign.id);
                               setShowComposeModal(true);
                             }}
-                            className="btn-glass h-11 sm:h-9 flex-1 sm:flex-none px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans"
+                            className="btn-glass h-9 flex-1 sm:flex-none px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans"
                           >
                             <Edit className="w-4 h-4 text-zinc-400" />
                             <span>Edit Draft</span>
                           </button>
                           
-                          <button
-                            onClick={() => {
-                              setConfirmInput("");
-                              setShowConfirmModal(true);
-                            }}
-                            className="btn-primary h-11 sm:h-9 flex-1 sm:flex-none px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans bg-red-600 hover:bg-red-500 text-white border-red-600/30 shrink-0"
-                          >
-                            <Send className="w-4 h-4" />
-                            <span>Approve &amp; Dispatch</span>
-                          </button>
+                          {canSend ? (
+                            <button
+                              onClick={() => {
+                                setConfirmInput("");
+                                setShowConfirmModal(true);
+                              }}
+                              className="btn-primary h-9 flex-1 sm:flex-none px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 cursor-pointer font-sans shrink-0"
+                            >
+                              <Send className="w-4 h-4" />
+                              <span>Approve &amp; Dispatch</span>
+                            </button>
+                          ) : (
+                            <span className="text-[11px] text-zinc-400 self-center leading-relaxed">
+                              Ready to send. An owner or admin presses the button.
+                            </span>
+                          )}
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/5 text-center">
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
-                          <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Estimated Recipients</p>
+                          <p className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Estimated Recipients</p>
                           <p className="text-lg font-bold text-white mt-1 font-mono">{getDynamicRecipientsCount(selectedCampaign)}</p>
                         </div>
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
-                          <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Target Audience</p>
+                          <p className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Target Audience</p>
                           <p className="text-xs font-semibold text-zinc-300 mt-2.5 truncate max-w-[150px] mx-auto font-mono">
                             {selectedCampaign.metadata?.audience_type === "subscribers"
                               ? "Specific Subscribers"
@@ -1630,7 +1644,7 @@ export default function BroadcastsPage() {
                               Sent
                             </span>
                             {selectedCampaign.sent_at && (
-                              <span className="text-[10px] text-zinc-500 font-mono">
+                              <span className="text-[10px] text-zinc-400 font-mono">
                                 {new Date(selectedCampaign.sent_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
                               </span>
                             )}
@@ -1648,21 +1662,21 @@ export default function BroadcastsPage() {
                           <button
                             onClick={() => setSheetCampaign(selectedCampaign)}
                             aria-label="Campaign actions"
-                            className="sm:hidden btn-glass h-10 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                            className="sm:hidden btn-glass h-10 px-4 text-xs font-medium rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <MoreHorizontal className="w-4 h-4" />
                             <span>Actions</span>
                           </button>
                           <button
                             onClick={() => setShowSentPreview(v => !v)}
-                            className="btn-glass h-10 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
+                            className="btn-glass h-10 sm:h-9 px-4 text-xs font-medium rounded-full flex items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <BarChart2 className="w-3.5 h-3.5 text-zinc-400" />
                             <span>{showSentPreview ? "Hide Content" : "View Content"}</span>
                           </button>
                           <button
                             onClick={() => openCampaignAsCopy(selectedCampaign)}
-                            className="hidden sm:flex btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full items-center gap-1.5 cursor-pointer font-sans"
+                            className="hidden sm:flex btn-glass h-9 px-4 text-xs font-medium rounded-full items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <Edit className="w-3.5 h-3.5 text-zinc-400" />
                             <span>Edit &amp; Resend</span>
@@ -1672,7 +1686,7 @@ export default function BroadcastsPage() {
                               setResendConfirmInput("");
                               setShowResendModal(true);
                             }}
-                            className="hidden sm:flex btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full items-center gap-1.5 cursor-pointer font-sans"
+                            className="hidden sm:flex btn-primary h-9 px-4 text-xs font-medium rounded-full items-center gap-1.5 cursor-pointer font-sans"
                           >
                             <RefreshCw className="w-3.5 h-3.5" />
                             <span>Resend Same Audience</span>
@@ -1682,30 +1696,30 @@ export default function BroadcastsPage() {
 
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 border-t border-white/5 text-center">
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
-                          <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Dispatched</p>
+                          <p className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Dispatched</p>
                           <p className="text-lg font-bold text-white mt-1 font-mono">{stats.sent}</p>
                         </div>
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
-                          <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Delivered</p>
+                          <p className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Delivered</p>
                           <p className="text-lg font-bold text-green-400 mt-1 font-mono">
-                            {stats.delivered} <span className="text-[10px] text-zinc-500 font-normal">({stats.sent > 0 ? Math.round((stats.delivered/stats.sent)*100) : 0}%)</span>
+                            {stats.delivered} <span className="text-[10px] text-zinc-400 font-normal">({stats.sent > 0 ? Math.round((stats.delivered/stats.sent)*100) : 0}%)</span>
                           </p>
                         </div>
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
-                          <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Opened</p>
+                          <p className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Opened</p>
                           <p className="text-lg font-bold text-blue-400 mt-1 font-mono">
-                            {stats.opened} <span className="text-[10px] text-zinc-500 font-normal">({stats.sent > 0 ? Math.round((stats.opened/stats.sent)*100) : 0}%)</span>
+                            {stats.opened} <span className="text-[10px] text-zinc-400 font-normal">({stats.sent > 0 ? Math.round((stats.opened/stats.sent)*100) : 0}%)</span>
                           </p>
                         </div>
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
-                          <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Bounced</p>
+                          <p className="text-[9px] uppercase font-bold text-zinc-400 tracking-wider">Bounced</p>
                           <p className="text-lg font-bold text-amber-300 mt-1 font-mono">{stats.bounced}</p>
                         </div>
                       </div>
 
                       {selectedCampaign.resend_broadcast_id && (
-                        <div className="flex items-center gap-1.5 text-[9px] font-mono text-zinc-500">
-                          <span className="text-zinc-600">Resend ID:</span>
+                        <div className="flex items-center gap-1.5 text-[9px] font-mono text-zinc-400">
+                          <span className="text-zinc-400">Resend ID:</span>
                           <span className="text-zinc-400 font-bold">{selectedCampaign.resend_broadcast_id}</span>
                         </div>
                       )}
@@ -1763,13 +1777,13 @@ export default function BroadcastsPage() {
                     <div className="glass-panel border border-white/5 rounded-2xl overflow-hidden">
                       <div className="p-4 border-b border-white/5 bg-zinc-950/40 flex items-center justify-between">
                         <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider flex items-center gap-1.5">
-                          <BarChart2 className="w-3.5 h-3.5 text-zinc-500" />
+                          <BarChart2 className="w-3.5 h-3.5 text-zinc-400" />
                           Delivery Logs &amp; Events Tracker
                         </span>
                         <button
                           onClick={() => fetchLogsForCampaign(selectedCampaign.id)}
                           disabled={loadingLogs}
-                          className="text-[10px] text-zinc-500 hover:text-zinc-300 flex items-center gap-1 cursor-pointer font-sans"
+                          className="text-[10px] text-zinc-400 hover:text-zinc-300 flex items-center gap-1 cursor-pointer font-sans"
                         >
                           <RefreshCw className={`w-2.5 h-2.5 ${loadingLogs ? "animate-spin" : ""}`} />
                           <span>Refresh</span>
@@ -1777,7 +1791,7 @@ export default function BroadcastsPage() {
                       </div>
 
                       {loadingLogs ? (
-                        <div className="flex flex-col items-center justify-center py-12 gap-2 text-zinc-500">
+                        <div className="flex flex-col items-center justify-center py-12 gap-2 text-zinc-400">
                           <Loader2 className="w-4 h-4 animate-spin" />
                           <span className="text-xs font-sans">Updating event feed...</span>
                         </div>
@@ -1788,7 +1802,7 @@ export default function BroadcastsPage() {
                           </div>
                           <div>
                             <p className="text-zinc-300 text-sm font-medium font-sans mb-1">No delivery events yet</p>
-                            <p className="text-zinc-500 text-xs font-sans max-w-sm">
+                            <p className="text-zinc-400 text-xs font-sans max-w-sm">
                               Events are received via webhook. Register your endpoint in the Resend dashboard so delivery data starts flowing in.
                             </p>
                           </div>
@@ -1796,7 +1810,7 @@ export default function BroadcastsPage() {
                           {/* Setup steps */}
                           <div className="w-full max-w-sm text-left border border-white/8 rounded-xl overflow-hidden bg-zinc-950/40">
                             <div className="px-4 py-2.5 border-b border-white/5 bg-zinc-900/30">
-                              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500">Webhook Setup</span>
+                              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">Webhook Setup</span>
                             </div>
                             <ol className="divide-y divide-white/5">
                               {[
@@ -1812,7 +1826,7 @@ export default function BroadcastsPage() {
                                     {href ? (
                                       <a href={href} target="_blank" rel="noopener noreferrer" className="text-[10px] text-blue-400 hover:text-blue-300 font-mono break-all">{action}</a>
                                     ) : (
-                                      <p className="text-[10px] text-zinc-500 font-mono break-all">{action}</p>
+                                      <p className="text-[10px] text-zinc-400 font-mono break-all">{action}</p>
                                     )}
                                   </div>
                                 </li>
@@ -1820,16 +1834,16 @@ export default function BroadcastsPage() {
                             </ol>
                           </div>
 
-                          <p className="text-[10px] text-zinc-600 font-sans">
+                          <p className="text-[10px] text-zinc-400 font-sans">
                             Already configured? Click <span className="text-zinc-400">Refresh</span> above to check for new events.
                           </p>
                         </div>
                       ) : (
                         <div className="overflow-x-auto">
-                          <p className="text-[9px] text-zinc-600 px-4 pt-3 md:hidden">Swipe to view &rarr;</p>
+                          <p className="text-[9px] text-zinc-400 px-4 pt-3 md:hidden">Swipe to view &rarr;</p>
                           <table className="w-full text-left border-collapse min-w-[420px]">
                             <thead>
-                              <tr className="border-b border-white/5 text-[9px] uppercase tracking-widest text-zinc-500 bg-zinc-950/20">
+                              <tr className="border-b border-white/5 text-[9px] uppercase tracking-widest text-zinc-400 bg-zinc-950/20">
                                 <th className="py-2.5 px-4 font-bold">Recipient</th>
                                 <th className="py-2.5 px-4 font-bold">Event Type</th>
                                 <th className="py-2.5 px-4 font-bold">Time (UTC)</th>
@@ -1854,7 +1868,7 @@ export default function BroadcastsPage() {
                                       {log.status.toUpperCase()}
                                     </span>
                                   </td>
-                                  <td className="py-2.5 px-4 font-mono text-[9px] text-zinc-500">
+                                  <td className="py-2.5 px-4 font-mono text-[9px] text-zinc-400">
                                     {new Date(log.sent_at).toLocaleTimeString()}
                                   </td>
                                 </tr>
@@ -1868,8 +1882,8 @@ export default function BroadcastsPage() {
                 )}
               </div>
             ) : (
-              <div className="hidden lg:flex flex-col items-center justify-center py-24 border border-dashed border-white/5 rounded-2xl text-zinc-500 font-sans gap-2">
-                <Mail className="w-8 h-8 text-zinc-600" />
+              <div className="hidden lg:flex flex-col items-center justify-center py-24 border border-dashed border-white/5 rounded-2xl text-zinc-400 font-sans gap-2">
+                <Mail className="w-8 h-8 text-zinc-400" />
                 <span className="text-xs">Select a campaign from the ledger to load delivery metrics and webhooks log tracking.</span>
               </div>
             )}
@@ -1915,13 +1929,13 @@ export default function BroadcastsPage() {
                         : "General Segment"}
                     </strong>.
                   </p>
-                  <p className="text-[10px] text-zinc-500 font-sans">
+                  <p className="text-[10px] text-zinc-400 font-sans">
                     * This action is irreversible and sends live emails immediately.
                   </p>
                 </div>
 
                 <div className="space-y-1.5 pt-2 border-t border-white/5">
-                  <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider font-sans">
+                  <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider font-sans">
                     To proceed, type the safety phrase <span className="text-amber-300 font-mono">CONFIRM SEND</span>:
                   </label>
                   <input
@@ -1942,7 +1956,7 @@ export default function BroadcastsPage() {
                       setShowConfirmModal(false);
                       setConfirmInput("");
                     }}
-                    className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
+                    className="btn-glass h-9 px-4 text-xs font-medium rounded-full cursor-pointer font-sans disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -1950,7 +1964,7 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleApproveAndSend}
                     disabled={approving || confirmInput !== "CONFIRM SEND"}
-                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans bg-red-600 hover:bg-red-500 text-white border-red-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-9 px-5 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {approving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                     <span>Approve &amp; Send Immediately</span>
@@ -1974,7 +1988,7 @@ export default function BroadcastsPage() {
                   </div>
                   <div>
                     <h3 id="test-email-title" className="text-sm font-bold text-white font-sans">Send Test Email</h3>
-                    <p className="text-[10px] text-zinc-500 font-sans mt-0.5">Verify layout before sending to everyone</p>
+                    <p className="text-[10px] text-zinc-400 font-sans mt-0.5">Verify layout before sending to everyone</p>
                   </div>
                 </div>
 
@@ -1985,7 +1999,7 @@ export default function BroadcastsPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider font-sans">
+                  <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider font-sans">
                     Recipient Email Address
                   </label>
                   <input
@@ -2005,7 +2019,7 @@ export default function BroadcastsPage() {
                     type="button"
                     disabled={sendingTestEmail}
                     onClick={() => setShowTestEmailModal(false)}
-                    className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
+                    className="btn-glass h-9 px-4 text-xs font-medium rounded-full cursor-pointer font-sans disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -2013,7 +2027,7 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleSendTestEmail}
                     disabled={sendingTestEmail || !testEmailAddress.includes("@")}
-                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-9 px-5 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {sendingTestEmail ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -2031,11 +2045,11 @@ export default function BroadcastsPage() {
           onClose={() => { setShowResendModal(false); setResendConfirmInput(""); }}
           dismissable={!resending}
           labelledBy="confirm-resend-title"
-          panelClassName="border-yellow-500/20"
+          panelClassName="border-amber-500/20"
         >
           {selectedCampaign && (
             <>
-                <div className="flex items-center gap-2 text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider w-fit font-sans">
+                <div className="flex items-center gap-2 text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider w-fit font-sans">
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Resend Authorization</span>
                 </div>
@@ -2047,14 +2061,14 @@ export default function BroadcastsPage() {
                   <p className="text-xs text-zinc-400 leading-relaxed font-sans">
                     This will create a new campaign from <strong className="text-white">&ldquo;{selectedCampaign.title}&rdquo;</strong> and immediately dispatch it to the same audience (<strong className="text-white font-mono">{selectedCampaign.recipients_count || 0}</strong> recipients). The original campaign record will remain unchanged.
                   </p>
-                  <p className="text-[10px] text-zinc-500 font-sans">
+                  <p className="text-[10px] text-zinc-400 font-sans">
                     * A new campaign entry will appear in the ledger as <span className="font-mono text-zinc-300">[Resend] {selectedCampaign.title}</span>.
                   </p>
                 </div>
 
                 <div className="space-y-1.5 pt-2 border-t border-white/5">
-                  <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider font-sans">
-                    Type <span className="text-yellow-400 font-mono">CONFIRM SEND</span> to proceed:
+                  <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider font-sans">
+                    Type <span className="text-amber-300 font-mono">CONFIRM SEND</span> to proceed:
                   </label>
                   <input
                     type="text"
@@ -2062,7 +2076,7 @@ export default function BroadcastsPage() {
                     onChange={(e) => setResendConfirmInput(e.target.value)}
                     placeholder="CONFIRM SEND"
                     disabled={resending}
-                    className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-yellow-500/30 h-10 font-mono"
+                    className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500/30 h-10 font-mono"
                   />
                 </div>
 
@@ -2071,7 +2085,7 @@ export default function BroadcastsPage() {
                     type="button"
                     disabled={resending}
                     onClick={() => { setShowResendModal(false); setResendConfirmInput(""); }}
-                    className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans disabled:opacity-50"
+                    className="btn-glass h-9 px-4 text-xs font-medium rounded-full cursor-pointer font-sans disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -2079,7 +2093,7 @@ export default function BroadcastsPage() {
                     type="button"
                     onClick={handleResendSameAudience}
                     disabled={resending || resendConfirmInput !== "CONFIRM SEND"}
-                    className="btn-primary h-11 sm:h-9 px-5 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans bg-yellow-600 hover:bg-yellow-500 text-white border-yellow-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary h-9 px-5 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {resending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                     <span>{resending ? "Resending..." : "Confirm Resend"}</span>

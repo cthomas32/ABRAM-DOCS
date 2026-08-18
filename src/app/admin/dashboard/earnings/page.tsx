@@ -1,3 +1,4 @@
+import { rows } from "@/lib/supabase/rows";
 import { createClient } from "@/utils/supabase/server";
 import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
@@ -80,11 +81,11 @@ export default async function EarningsPage() {
       .order("trigger_mrr_cents", { ascending: true, nullsFirst: true }),
   ]);
 
-  const statement = (statementRes.data ?? []) as CommissionStatementRow[];
-  const entries = (entriesRes.data ?? []) as CommissionEntry[];
+  const statement = rows<CommissionStatementRow>(statementRes);
+  const entries = rows<CommissionEntry>(entriesRes);
   const terms = (termsRes.data ?? null) as GrowthPartnerTerms | null;
   const mrr = (mrrRes.data ?? null) as AttributedMrrRow | null;
-  const tranches = (tranchesRes.data ?? []) as GrowthEquityTranche[];
+  const tranches = rows<GrowthEquityTranche>(tranchesRes);
 
   const currency = statement[0]?.currency ?? "USD";
   const lifetime = statement.reduce((sum, row) => sum + (row.total_cents ?? 0), 0);

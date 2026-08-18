@@ -14,6 +14,8 @@ import {
   RefreshCw
 } from "lucide-react";
 import Link from "next/link";
+import { asArray } from "@/lib/supabase/rows";
+import Panel from "@/components/admin/Panel";
 
 // --- Interfaces for DB & State ---
 
@@ -160,41 +162,34 @@ export default function DashboardOverviewPage() {
         (campaignRes.error && (campaignRes.error.code === "42P01" || campaignRes.error.code === "PGRST205")) ||
         (sparklineRes.error && (sparklineRes.error.code === "42P01" || sparklineRes.error.code === "PGRST205" || sparklineRes.error.code === "PGRST202" || sparklineRes.error.code === "3f000"));
 
+      // This screen used to fill itself with invented figures when the
+      // telemetry views were missing — 45,210 blog views, five made-up
+      // articles, three made-up campaigns — under a badge reading "Live
+      // Feed". A number nobody can tell apart from a real one is worse
+      // than no number, so the fabrication is gone: the counts that are
+      // real stay real, everything that depends on a missing view reads
+      // empty, and the panel says which migration is not applied.
       if (isSchemaMissing) {
-        console.warn("Views or RPC missing, running in self-healing simulation mode.");
         setDatabaseWarning(
-          "Telemetry views or functions are missing. Dashboard is running in simulated fallback mode. Run supabase/migrations/20260624153000_dashboard_telemetry.sql in your Supabase SQL Editor."
+          "The telemetry views are not installed, so views, reads and trends read empty. Apply supabase/migrations/20260624153000_dashboard_telemetry.sql."
         );
-
-        setMetrics({
-          subscribersCount: subCount || 0,
-          marketingListCount: marketingCount || 0,
-          applicationListCount: appCount || 0,
-          blogCount: blogCount || 0,
-          releaseCount: releaseCount || 0,
-          campaignsCount: campCount || 0,
-          totalViews: totalViews || 45210,
-          totalReads: totalReads || 38240,
-          topContent: mockTopContent,
-          recentCampaigns: mockRecentCampaigns,
-          sparklineData: generateMockSparklines()
-        });
-      } else {
-        // Successful database fetch
-        setMetrics({
-          subscribersCount: subCount || 0,
-          marketingListCount: marketingCount || 0,
-          applicationListCount: appCount || 0,
-          blogCount: blogCount || 0,
-          releaseCount: releaseCount || 0,
-          campaignsCount: campCount || 0,
-          totalViews,
-          totalReads,
-          topContent: contentRes.data || [],
-          recentCampaigns: campaignRes.data || [],
-          sparklineData: sparklineRes.data || []
-        });
       }
+
+      setMetrics({
+        subscribersCount: subCount || 0,
+        marketingListCount: marketingCount || 0,
+        applicationListCount: appCount || 0,
+        blogCount: blogCount || 0,
+        releaseCount: releaseCount || 0,
+        campaignsCount: campCount || 0,
+        totalViews,
+        totalReads,
+        topContent: asArray<ContentPerformance>(contentRes.data),
+        recentCampaigns: asArray<CampaignPerformance>(campaignRes.data),
+        // An RPC can answer with a scalar or an object as easily as a
+        // list, and the chart maps over whatever it is handed.
+        sparklineData: asArray<SparklinePoint>(sparklineRes.data),
+      });
     } catch (err) {
       console.error("Unexpected error fetching overview metrics:", err);
     } finally {
@@ -213,11 +208,11 @@ export default function DashboardOverviewPage() {
   }
 
   // Calculated rate
-  const isFallback = !!databaseWarning;
-  const trafficVal = isFallback ? 45210 : (metrics.totalViews > 0 ? metrics.totalViews * 2.2 : 0);
-  const calculatedConversion = (trafficVal > 0 && metrics.subscribersCount > 0)
-    ? ((metrics.subscribersCount / trafficVal) * 100).toFixed(1)
-    : (isFallback ? "3.8" : "0.0");
+  const trafficVal = metrics.totalViews > 0 ? metrics.totalViews * 2.2 : 0;
+  const calculatedConversion =
+    trafficVal > 0 && metrics.subscribersCount > 0
+      ? ((metrics.subscribersCount / trafficVal) * 100).toFixed(1)
+      : null;
 
   // Each card states what it actually counts. There is no period-over-period
   // baseline stored yet, so no card claims a trend it cannot back up.
@@ -231,8 +226,8 @@ export default function DashboardOverviewPage() {
     },
     {
       label: "Blog Views",
-      value: (isFallback ? 45210 : metrics.totalViews).toLocaleString(),
-      hint: `${(isFallback ? 38240 : metrics.totalReads).toLocaleString()} reads`,
+      value: metrics.totalViews.toLocaleString(),
+      hint: `${metrics.totalReads.toLocaleString()} reads`,
       icon: Eye,
       route: "/admin/dashboard/blog",
     },
@@ -245,8 +240,9 @@ export default function DashboardOverviewPage() {
     },
     {
       label: "Conversion Rate",
-      value: `${calculatedConversion}%`,
-      hint: "Subscribers per estimated visit",
+      // Nothing to divide by is not zero percent, it is no answer.
+      value: calculatedConversion === null ? "—" : `${calculatedConversion}%`,
+      hint: calculatedConversion === null ? "No traffic recorded yet" : "Subscribers per estimated visit",
       icon: Percent,
       route: "/admin/dashboard/subscribers",
     },
@@ -258,15 +254,15 @@ export default function DashboardOverviewPage() {
         
         {/* DB Setup Warning Alert */}
         {databaseWarning && (
-          <div className="p-4 rounded-xl bg-yellow-500/5 border border-yellow-500/15 text-yellow-400 text-xs flex items-start gap-2.5 max-w-4xl shadow-lg backdrop-blur-md">
-            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-semibold block mb-0.5">Database Telemetry Fallback Active</span>
-              <p className="text-zinc-400 leading-relaxed">
-                {databaseWarning} Performance logs are operating in simulated mode.
-              </p>
-            </div>
-          </div>
+          <Panel
+            tone="attention"
+            title="Some telemetry is not installed"
+            icon={<AlertTriangle className="w-4 h-4 text-amber-400" />}
+            className="max-w-4xl"
+          >
+            {databaseWarning} Every other figure on this page is read straight from the tables and
+            is correct.
+          </Panel>
         )}
 
         {/* Title Header */}
@@ -274,10 +270,7 @@ export default function DashboardOverviewPage() {
           <div>
             <h1 className="text-xl font-bold tracking-tight text-white font-sans flex items-center gap-2 flex-wrap">
               Overview & Marketing Telemetry
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-medium tracking-wide bg-green-500/10 border border-green-500/20 text-green-400 select-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Live Feed
-              </span>
+
             </h1>
             <p className="text-xs text-zinc-400 mt-1 font-sans">
               Real-time analytics for newsletter registrations, reader behaviors, and email broadcasts.
@@ -720,36 +713,3 @@ function ListSegmentationCard({ marketingCount, appCount }: { marketingCount: nu
   );
 }
 
-// --- Fallback Data Generators ---
-
-function generateMockSparklines(): SparklinePoint[] {
-  const points: SparklinePoint[] = [];
-  const now = new Date();
-  for (let i = 29; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(now.getDate() - i);
-    const dateStr = d.toLocaleDateString("default", { month: "short", day: "numeric" });
-    const viewVal = Math.round(350 + Math.sin(i / 3) * 110 + Math.random() * 50);
-    const signupVal = Math.round(9 + Math.cos(i / 4) * 6 + Math.random() * 2);
-    points.push({
-      event_date: dateStr,
-      page_views: viewVal,
-      newsletter_signups: signupVal
-    });
-  }
-  return points;
-}
-
-const mockTopContent: ContentPerformance[] = [
-  { analytics_id: "1", content_title: "1.0-abram-core-concepts", content_type: "Blog", views: 1240, reads: 980, read_ratio: 79.0 },
-  { analytics_id: "2", content_title: "2.1-setting-up-workspace", content_type: "Blog", views: 980, reads: 720, read_ratio: 73.5 },
-  { analytics_id: "3", content_title: "3.5-crew-roster-management", content_type: "Blog", views: 820, reads: 590, read_ratio: 72.0 },
-  { analytics_id: "4", content_title: "v1.4.0-performance-patch", content_type: "Release", views: 450, reads: 380, read_ratio: 84.4 },
-  { analytics_id: "5", content_title: "1.2-installation-guide", content_type: "Blog", views: 410, reads: 290, read_ratio: 70.7 }
-];
-
-const mockRecentCampaigns: CampaignPerformance[] = [
-  { campaign_id: "1", title: "June Newsletter & Product Update", subject: "Introducing ABRAM Production Brain v2.0", campaign_status: "sent", sent_at: new Date().toISOString(), total_sent: 1450, open_rate: 42.4, click_rate: 18.2 },
-  { campaign_id: "2", title: "Security Patch Notice", subject: "Critical Updates to Access Keys", campaign_status: "sent", sent_at: new Date(Date.now() - 604800000).toISOString(), total_sent: 1420, open_rate: 68.1, click_rate: 22.4 },
-  { campaign_id: "3", title: "Weekly Digests - Creative Workflows", subject: "Tips to optimize scheduling", campaign_status: "sent", sent_at: new Date(Date.now() - 1209600000).toISOString(), total_sent: 1390, open_rate: 38.5, click_rate: 12.1 }
-];
