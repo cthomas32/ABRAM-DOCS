@@ -29,6 +29,23 @@
 -- role check to a table, check that the backfill still covers whoever
 -- needs it. The recovery path if it ever goes wrong is a service-role
 -- write to admin_users, which bypasses all of this.
+--
+-- BEFORE RUNNING THIS ON PRODUCTION — check auth.users first.
+--
+--     SELECT id, email, created_at, last_sign_in_at
+--       FROM auth.users
+--      ORDER BY created_at;
+--
+-- Every row that query returns is handed `owner` by the backfill in
+-- section 10, and owner is the role that can read the commission ledger,
+-- change anybody's role and send a broadcast. One row is expected. If a
+-- second appears, a test account or a stale invite from development, it
+-- is not a reason to change the backfill: delete or demote that account
+-- in the same session and then run this. Narrowing the backfill instead
+-- is how the founder ends up locked out of his own console.
+--
+-- Then run scripts/audit-open-policies.sql before and after the whole
+-- 2026-08-17 set. See supabase/README.md.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
