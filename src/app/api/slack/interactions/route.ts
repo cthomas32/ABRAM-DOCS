@@ -197,6 +197,18 @@ async function handleSkip(supabase: SupabaseClient, postId: string, who: string)
 export async function POST(request: Request) {
   const raw = await request.text();
 
+  // A missing signing secret and a forged request both come out of the check
+  // below as 401, and from Slack both look like a button that does nothing.
+  // They are not the same problem, and the first one is silent for as long as
+  // nobody presses a button and says so — which is how a whole feature can be
+  // live, drawn on every message, and wired to nothing.
+  if (!process.env.SLACK_SIGNING_SECRET) {
+    console.error(
+      "Slack interactions: SLACK_SIGNING_SECRET is not set on this deployment. " +
+        "Every press will be rejected. See .agents/social-calendar.md, 'Setting it up'."
+    );
+  }
+
   if (
     !verifySlackRequest(
       raw,
