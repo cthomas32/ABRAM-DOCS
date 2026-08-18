@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import {
   REVIEW_POST_SELECT,
-  previewUrl,
+  cardImageUrl,
   postToSlack,
   reviewBlocks,
   reviewSummary,
@@ -105,7 +105,9 @@ export async function POST(request: Request) {
 
   const sent: string[] = [];
   for (const post of posts) {
-    const image = post.asset ? post.asset.public_url || previewUrl(post.asset.id, siteUrl()) : null;
+    // A draft draws live from its spec, so a card rewritten after a revision
+    // request is the card that arrives here — not the PNG published before it.
+    const image = cardImageUrl(post, siteUrl());
     const payload = {
       text: reviewSummary(post, today),
       blocks: reviewBlocks(post, image, today),

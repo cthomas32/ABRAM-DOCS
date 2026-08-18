@@ -123,6 +123,29 @@ export function previewUrl(assetId: string, siteUrl: string): string | null {
   return `${siteUrl.replace(/\/$/, "")}/api/social/preview/${assetId}?e=${expiresAt}&t=${signature}`;
 }
 
+/**
+ * The picture to put on a post's message.
+ *
+ * A published card keeps its PNG at `cards/<asset-id>.png` and its address in
+ * `public_url` forever, and re-approving overwrites that path in place. That is
+ * right for an approved post and wrong for one still under review: after a
+ * revision KIPP edits the card's `spec`, the PNG at that address is still last
+ * week's picture, and a message built from `public_url` shows the old graphic
+ * beside the new caption. Which reads, correctly, as the revision being ignored.
+ *
+ * So a draft always renders live from the spec, and only a post that has been
+ * approved (`ready`/`posted`) uses the published file — which by then is the
+ * file that was rendered from the spec being shown.
+ */
+export function cardImageUrl(post: ReviewPost, siteUrlValue: string): string | null {
+  if (!post.asset) return null;
+  const live = previewUrl(post.asset.id, siteUrlValue);
+  if (post.status === "ready" || post.status === "posted") {
+    return post.asset.public_url || live;
+  }
+  return live || post.asset.public_url;
+}
+
 export function verifyPreviewToken(assetId: string, expiresAt: string | null, token: string | null): boolean {
   const secret = previewSecret();
   if (!secret || !expiresAt || !token) return false;

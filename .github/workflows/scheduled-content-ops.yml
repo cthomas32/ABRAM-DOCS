@@ -1,15 +1,13 @@
 # ---------------------------------------------------------------------------------------------
-# KIPP workflow — NOT INSTALLED YET.
+# KIPP workflow — INSTALLED 2026-08-03. This file is the live job, not a template.
 #
-# This is a template. To hire KIPP, copy it into place yourself:
+# It began life as `.agents/scheduled-content-ops.workflow.yml`, deliberately outside
+# .github/workflows/ so that installing a scheduled job holding service-role database credentials
+# and a cross-repo PAT was a decision made on purpose rather than a side effect of an agent
+# session. That copy is deleted: there is one file, and it cannot drift from itself.
 #
-#     mkdir -p .github/workflows
-#     cp .agents/scheduled-content-ops.workflow.yml .github/workflows/scheduled-content-ops.yml
-#
-# It is deliberately not written straight into .github/workflows/ — installing a scheduled job
-# that runs with service-role database credentials and a cross-repo PAT should be a decision you
-# make on purpose, not a side effect of an agent session. Add the secrets FIRST
-# (.agents/scheduled-content-ops.md has the checklist); until they exist the run is inert.
+# The secrets checklist it was gated on lives in .agents/scheduled-content-ops.md. Until every
+# required secret exists the run is inert rather than broken.
 # ---------------------------------------------------------------------------------------------
 
 name: KIPP — Content Ops & Search (agent-co)
@@ -38,17 +36,31 @@ on:
   #   EDT (summer): 09:47 ET
   #   EST (winter): 08:47 ET
   # Minute :47 (not :00) dodges the top-of-the-hour congestion that GitHub drops runs at.
+  #
+  # The second entry is the REVISION GATE, and it is deliberately not a second
+  # thinking pass. When Connor sends a post back from #kipp, the rewrite used to
+  # wait for Friday — up to six days for a post going out tomorrow, which is the
+  # same as never. This slot runs a curl against one table and, on the ordinary
+  # day where nothing was sent back, exits before Claude is ever installed:
+  # a minute of Actions time and zero tokens. When something IS waiting it runs
+  # revision mode only, on Sonnet, because rewriting a caption against a note is
+  # mechanical work and Opus is for the pass that writes PRs.
+  #
+  # 16:47 UTC — 12:47 ET summer / 11:47 ET winter. After the morning approval
+  # message (10:52 UTC) and the post pack (11:12 UTC), so a post sent back over
+  # coffee is rewritten and back in the queue the same day.
   schedule:
     - cron: '47 13 * * 5'
+    - cron: '47 16 * * *'
 
   workflow_dispatch:
     inputs:
       run_mode:
-        description: "weekly = full pass · seo = technical lane only · ammo = Slack pack only, no PRs · brief = build one approved brief"
+        description: "weekly = full pass · seo = technical lane only · ammo = Slack pack only, no PRs · brief = build one approved brief · revision = clear the sent-back queue"
         required: false
         default: 'weekly'
         type: choice
-        options: [weekly, seo, ammo, brief]
+        options: [weekly, seo, ammo, brief, revision]
       brief_id:
         description: "agent_briefs id to build now (from the Slack 'Build this' button). Required when run_mode is brief."
         required: false
@@ -63,7 +75,89 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ---------------------------------------------------------------------------
+  # The gate. One HTTP request, no checkout, no Node, no model.
+  #
+  # It exists so the daily slot costs nothing on the days it has nothing to do.
+  # Anything that decides whether to spend a model run has to be cheaper than the
+  # run it is deciding about, or it is just a slower way of always running.
+  # ---------------------------------------------------------------------------
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+      run_mode: ${{ steps.decide.outputs.run_mode }}
+      model: ${{ steps.decide.outputs.model }}
+    steps:
+      - name: Decide whether this run has work
+        id: decide
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # Empty on a scheduled run; the literal cron string tells the two slots
+          # apart. A manual dispatch has no schedule and falls through to the
+          # mode the person picked.
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_MODE: ${{ github.event.inputs.run_mode }}
+        run: |
+          set -euo pipefail
+
+          if [ "$SCHEDULE" = "47 16 * * *" ]; then
+            MODE=revision
+          else
+            MODE="${INPUT_MODE:-weekly}"
+          fi
+
+          # Only the revision lane is gated. The Friday pass has standing work by
+          # definition — an audit, a changelog, a week to book — and a manual
+          # dispatch is a person asking for a run on purpose.
+          if [ "$MODE" != "revision" ] || [ -n "${INPUT_MODE:-}" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "run_mode=$MODE" >> "$GITHUB_OUTPUT"
+            [ "$MODE" = "revision" ] && echo "model=claude-sonnet-5" >> "$GITHUB_OUTPUT" \
+                                    || echo "model=claude-opus-5" >> "$GITHUB_OUTPUT"
+            echo "Running: $MODE"
+            exit 0
+          fi
+
+          URL="$(printf '%s' "$SUPABASE_URL" | tr -d '[:space:]')"
+          KEY="$(printf '%s' "$SUPABASE_SERVICE_ROLE_KEY" | tr -d '[:space:]')"
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "::notice::Database secrets are not set; nothing to gate on. Skipping."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # HEAD + count=exact returns the number in Content-Range and no rows.
+          # `|| true` on purpose: pipefail would otherwise turn a network blip
+          # into a failed job, and a failed gate is a rewrite that never happens.
+          # An unreadable answer falls through to the run-anyway branch below.
+          RANGE="$(curl -sS -I \
+            "$URL/rest/v1/social_posts?select=id&revision_requested_at=not.is.null&status=eq.draft" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Prefer: count=exact" \
+            | tr -d '\r' | awk -F'/' '/[Cc]ontent-[Rr]ange/ {print $2}' || true)"
+          COUNT="${RANGE:-x}"
+
+          # A failed read is not an empty queue. Run rather than silently skip:
+          # the expensive failure here is a rewrite that never happens.
+          case "$COUNT" in
+            ''|*[!0-9]*) echo "::warning::Could not read the revision queue; running anyway."; COUNT=1 ;;
+          esac
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "Nothing was sent back. Skipping before the model is installed."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "$COUNT waiting to be rewritten."
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "run_mode=revision" >> "$GITHUB_OUTPUT"
+            echo "model=claude-sonnet-5" >> "$GITHUB_OUTPUT"
+          fi
+
   content-ops:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
     runs-on: ubuntu-latest
     # 55 rather than 45 since Phase 0g (the trend read) and a seven day calendar were added.
     # A timeout is the worst outcome available here: the work is done, the PRs may be open, and
@@ -141,8 +235,12 @@ jobs:
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          RUN_MODE: ${{ github.event.inputs.run_mode || 'weekly' }}
+          RUN_MODE: ${{ needs.gate.outputs.run_mode }}
           BRIEF_ID: ${{ github.event.inputs.brief_id }}
+          # Opus writes the PRs and the ammo pack. A revision pass rewrites a
+          # caption against a note somebody already wrote — mechanical work, and
+          # Sonnet does it for roughly half the token cost.
+          CLAUDE_MODEL: ${{ needs.gate.outputs.model }}
           # Behaviour-analysis window. The Slack report's "last 28d" wording follows this value
           # automatically — the prompt reads it rather than hardcoding a number.
           LOOKBACK_DAYS: '28'
@@ -178,7 +276,7 @@ jobs:
           # restricted here, that phase degrades to nothing and the run should say so rather
           # than inventing a trend. Do not add --allowedTools without WebSearch in the list.
           claude -p "$(cat .agents/scheduled-content-ops.prompt.md)" \
-            --model claude-opus-5 \
+            --model "${CLAUDE_MODEL:-claude-opus-5}" \
             --dangerously-skip-permissions \
             --strict-mcp-config
 
