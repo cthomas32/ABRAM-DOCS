@@ -148,6 +148,21 @@ export default function CrmPage() {
     if (wanted && TABS.some((option) => option.id === wanted)) setTab(wanted as Tab);
   }, []);
 
+  /* Arriving from the command palette with a person already chosen. Read
+     once, after the first load, and only when the id is one row level
+     security actually returned — a guessed id in the address bar must not
+     open an empty drawer that looks like a record. */
+  const [deepLinkDone, setDeepLinkDone] = useState(false);
+  useEffect(() => {
+    if (deepLinkDone || loading) return;
+    setDeepLinkDone(true);
+    const wanted = new URLSearchParams(window.location.search).get("contact");
+    if (wanted && contacts.some((contact) => contact.id === wanted)) {
+      setTab("pipeline");
+      setSelectedId(wanted);
+    }
+  }, [deepLinkDone, loading, contacts]);
+
   /* ---------------------------------------------------------------- */
   /*  Load                                                             */
   /* ---------------------------------------------------------------- */

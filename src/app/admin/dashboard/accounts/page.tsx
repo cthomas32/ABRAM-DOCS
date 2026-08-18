@@ -114,6 +114,25 @@ export default function AccountsPage() {
     void load();
   }, [load]);
 
+  /**
+   * Arriving from the command palette with a row already chosen.
+   *
+   * Read once, after the first load, and only when the id is one the
+   * reader may actually see — row level security decided that, and a
+   * guessed id in the address bar must not open an empty drawer that
+   * looks like a record.
+   */
+  const [deepLinkDone, setDeepLinkDone] = useState(false);
+  useEffect(() => {
+    if (deepLinkDone || loading) return;
+    setDeepLinkDone(true);
+    const wanted = new URLSearchParams(window.location.search).get("account");
+    if (wanted && accounts.some((row) => row.id === wanted)) {
+      setSelectedId(wanted);
+      setDrawerOpen(true);
+    }
+  }, [deepLinkDone, loading, accounts]);
+
   const memberNameById = useMemo(() => {
     const map: Record<string, string> = {};
     for (const person of members) map[person.user_id] = person.full_name || person.email;

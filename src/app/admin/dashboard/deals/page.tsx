@@ -17,6 +17,7 @@ import DealDrawer, { type AccountOption, type ContactOption } from "./DealDrawer
 import { rows, readWarning } from "@/lib/supabase/rows";
 import { StatRow } from "@/components/admin/StatTile";
 import Money from "@/components/admin/Money";
+import ViewSwitch, { DEAL_VIEWS } from "@/components/admin/ViewSwitch";
 
 /**
  * Every deal, and what each one is worth.
@@ -217,6 +218,25 @@ export default function DealsPage() {
     };
   }, [visible]);
 
+  /**
+   * Arriving from the command palette with a row already chosen.
+   *
+   * Read once, after the first load, and only when the id is one the
+   * reader may actually see — row level security decided that, and a
+   * guessed id in the address bar must not open an empty drawer that
+   * looks like a record.
+   */
+  const [deepLinkDone, setDeepLinkDone] = useState(false);
+  useEffect(() => {
+    if (deepLinkDone || loading) return;
+    setDeepLinkDone(true);
+    const wanted = new URLSearchParams(window.location.search).get("deal");
+    if (wanted && deals.some((row) => row.id === wanted)) {
+      setSelectedId(wanted);
+      setDrawerOpen(true);
+    }
+  }, [deepLinkDone, loading, deals]);
+
   const selected = selectedId ? deals.find((deal) => deal.id === selectedId) ?? null : null;
   const filtered = stage !== ALL || owner !== ALL || motion !== ALL || closeMonth !== ALL;
 
@@ -245,6 +265,7 @@ export default function DealsPage() {
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Deals</h1>
         </div>
         <div className="flex items-center gap-2">
+          <ViewSwitch options={DEAL_VIEWS} />
           <button
             type="button"
             onClick={() => void load(true)}
