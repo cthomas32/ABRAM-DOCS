@@ -171,14 +171,35 @@ REVOKE EXECUTE ON FUNCTION public.crm_can_edit_deal(UUID) FROM anon, public;
 -- a row with no subject cannot exist, and a row with one is reachable
 -- only through that subject.
 -- ---------------------------------------------------------------------
-DO $$
+-- `__apply_policy` is dropped again at the end of 20260817120000, so this
+-- migration carries its own copy (same body) and drops it when done.
+CREATE OR REPLACE FUNCTION public.__apply_policy(
+    p_table TEXT, p_name TEXT, p_cmd TEXT, p_using TEXT, p_check TEXT DEFAULT NULL
+)
+RETURNS VOID AS $$
+DECLARE
+    sql TEXT;
 BEGIN
-    IF to_regproc('public.__apply_policy(text,text,text,text,text)') IS NULL THEN
-        RAISE EXCEPTION
-            '__apply_policy is missing. Apply 20260817120000_role_aware_rls.sql first.';
+    IF to_regclass('public.' || quote_ident(p_table)) IS NULL THEN
+        RETURN;
     END IF;
+
+    EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I', p_name, p_table);
+
+    sql := format('CREATE POLICY %I ON public.%I FOR %s TO authenticated',
+                  p_name, p_table, p_cmd);
+
+    IF p_using IS NOT NULL THEN
+        sql := sql || format(' USING (%s)', p_using);
+    END IF;
+    IF p_check IS NOT NULL THEN
+        sql := sql || format(' WITH CHECK (%s)', p_check);
+    END IF;
+
+    EXECUTE sql;
 END;
-$$;
+$$ LANGUAGE plpgsql VOLATILE SET search_path = public, pg_catalog;
+
 
 -- Timeline
 SELECT public.__apply_policy('crm_interactions', 'Timeline follows the contact', 'SELECT',
@@ -224,3 +245,5 @@ BEGIN
     END IF;
 END;
 $$;
+
+DROP FUNCTION IF EXISTS public.__apply_policy(TEXT, TEXT, TEXT, TEXT, TEXT);
