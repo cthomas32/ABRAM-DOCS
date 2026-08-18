@@ -133,6 +133,86 @@ She cannot do her job without these. Target: the week before her first login.
 - Surface the verdict and the full rejection list on the deal drawer. The rejections are the whole
   point: "why did this not pay" is the question that gets asked
 
+#### P0-3 built — what builder A wires up
+
+Everything above is on `crm/p0-attribution`. Three things for the deals surface:
+
+**1. The stub.** In `src/app/admin/dashboard/deals/actions.ts`, replace the body of
+`recheckDealAttribution` with a single line:
+
+```ts
+import { applyDealAttribution } from "@/lib/crm/attributionService";
+
+export async function recheckDealAttribution(dealId: string) {
+  return applyDealAttribution(dealId);
+}
+```
+
+**2. `markWon` locks it.** Attribution has to be settled at the moment the deal is won, in the same
+action, after the stage write:
+
+```ts
+await applyDealAttribution(dealId, { lock: true });
+```
+
+Locking is what stops a UTM edited next month from moving a commission already paid. A deal that is
+already locked comes back `{ ok: true, locked: true, changed: false }` carrying the stored verdict —
+the write is refused rather than silently skipped, so "recheck did nothing" and "recheck agreed" are
+distinguishable. Unlocking is deliberately not offered: it is one UPDATE by an owner.
+
+**The signature.** Never throws; everything a person should read comes back as `error`.
+
+```ts
+applyDealAttribution(dealId: string, options?: { lock?: boolean }): Promise<DealAttributionResult>
+resolveDealAttribution(dealId: string): Promise<DealAttributionResult>  // reads, writes nothing
+
+interface DealAttributionResult {
+  ok: boolean;
+  error?: string;        // a sentence, present only when ok is false
+  verdict?: AttributionVerdict;
+  locked?: boolean;
+  changed?: boolean;
+  warnings?: string[];   // things a person must settle, not things the rules decided
+}
+```
+
+Both check `crm.deals.manage` themselves. A server action is a public endpoint and does not inherit
+the page's guard, so do not rely on the drawer having checked.
+
+**3. The panel.** `src/components/crm/AttributionVerdict.tsx` — presentational, no server imports,
+safe in a client component. Pass the recheck button in as `action`:
+
+```tsx
+<AttributionVerdict verdict={result.verdict ?? null} locked={result.locked} warnings={result.warnings} action={<RecheckButton />} />
+```
+
+**What P0-3 also changed, worth knowing about:**
+
+- `applyDealAttribution` fills `sourced_by` when a rule resolves to somebody and the column is empty.
+  This matters more than it looks: the commission ledger pays `crm_deals.sourced_by` and reads
+  `attribution_rule` only to decide *whether* a deal pays at all. When the two disagree and
+  `sourced_by` is already set, it is left alone (write-once trigger) and a warning is returned for a
+  person to settle.
+- `declineDeadlineFrom` and `registrationExpiryFrom` now count in UTC. They counted in local time,
+  which returned a different deadline depending on the machine that resolved it.
+- `registrationState` treats a stored `expired` as terminal, and `resolveAttribution` treats
+  `converted` as approved — converting is downstream of approval, so it was never a rejection.
+- Migration `20260817150000_growth_attribution_keys.sql` adds the ownership table plus three
+  SECURITY DEFINER functions: `growth_attribution_owners` (resolves keys already in evidence, so a
+  partner who cannot read a rival's key does not get told it "belongs to nobody"),
+  `crm_live_registration_for_account` (same problem, registrations), and
+  `commission_recompute_as_owner`.
+- `npm test` runs `tests/attribution.test.mts` on Node's own runner. No framework was added.
+
+**Still open — the Stripe sync.** Nothing writes `crm_deals.promo_code`, `utm_source` or
+`external_customer_ref` automatically, and nothing writes `revenue_collections` at all. Checkout is
+in the product's Supabase project; the two projects speak only through the promo admin proxy, which
+reports campaigns and codes and no redemptions. So rule one currently fires on a column a person
+filled in. `src/lib/growth/collectionsService.ts` gives the ledger one manual producer —
+`recordCollection`, owner-only, inserts a `source: 'manual'` collection against a won deal and calls
+the recompute — which is enough to exercise the arithmetic against a real deal before anybody is
+owed money by it. It is not the sync, and it is not a substitute for one.
+
 **P0-4. Deal pipeline board** _(builder C)_
 
 - `src/app/admin/dashboard/deals/DealBoard.tsx`, modelled on `PipelineBoard.tsx` but over
