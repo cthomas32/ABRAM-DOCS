@@ -67,7 +67,10 @@ body {
   background-color: white;
   color: black;
   font-size: 0.75rem; /* text-xs */
-  font-weight: 600;
+  /* A button is never bold and never semibold on this console. Weight on
+     a control reads as urgency, and every control cannot be urgent. 500,
+     the same as .btn-glass, so the two sit level beside each other. */
+  font-weight: 500;
   padding: 0.5rem 1.25rem;
   transition: all 0.2s ease;
   outline: none;
@@ -96,8 +99,10 @@ body {
   outline: none;
   transition: border-color 0.15s ease;
 }
+/* The placeholder was a shade the eye had to hunt for on #0A0A0A. It is
+   a hint, so it stays below the value, but it has to be readable. */
 .admin-input::placeholder {
-  color: #71717a;
+  color: #8b8b95;
 }
 .admin-input:focus {
   border-color: rgba(255, 255, 255, 0.2);

@@ -462,7 +462,7 @@ export default function CrmPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-500 bg-[#0A0A0A]">
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-400 bg-[#0A0A0A]">
         <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
         <span className="text-xs font-medium">Reading your contacts...</span>
       </div>
@@ -518,7 +518,7 @@ export default function CrmPage() {
               <ContactIcon className="w-5 h-5 text-zinc-400 shrink-0" />
               Conference Contacts
             </h1>
-            <p className="hidden sm:block text-xs text-zinc-500 mt-1 font-sans max-w-2xl leading-relaxed">
+            <p className="hidden sm:block text-xs text-zinc-400 mt-1 font-sans max-w-2xl leading-relaxed">
               Everyone who scanned your code or handed you their details, from the hallway to the
               follow up. Capture mode works with the signal off, so a bad hall is not a lost lead.
             </p>
@@ -527,7 +527,7 @@ export default function CrmPage() {
           <div className="flex flex-wrap gap-2 shrink-0">
             <Link
               href={captureHref}
-              className="btn-primary px-4 h-11 sm:h-9 text-xs rounded-full"
+              className="btn-primary px-4 h-9 text-xs rounded-full"
             >
               <UserPlus className="w-3.5 h-3.5" />
               Capture mode
@@ -536,7 +536,7 @@ export default function CrmPage() {
               type="button"
               onClick={() => void load()}
               disabled={refreshing}
-              className="btn-glass px-4 h-11 sm:h-9 text-xs font-medium rounded-full disabled:opacity-50"
+              className="btn-glass px-4 h-9 text-xs font-medium rounded-full disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
               {refreshing ? "Updating" : "Refresh"}
@@ -558,7 +558,7 @@ export default function CrmPage() {
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-11 sm:h-9 shrink-0 ${
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-9 shrink-0 ${
                 tab === id
                   ? "bg-white text-black border-white"
                   : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
@@ -570,7 +570,7 @@ export default function CrmPage() {
           ))}
           <Link
             href="/admin/dashboard/crm/emails"
-            className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-11 sm:h-9 shrink-0 bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-[11px] font-medium border transition-colors h-9 shrink-0 bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"
           >
             <Mail className="w-3.5 h-3.5" />
             Emails
@@ -583,7 +583,7 @@ export default function CrmPage() {
             <div className="space-y-3">
               <div className="flex flex-col sm:flex-row gap-2">
                 <div className="relative flex-1 min-w-0">
-                  <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -596,7 +596,7 @@ export default function CrmPage() {
                   <button
                     type="button"
                     onClick={exportCsv}
-                    className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full flex-1 sm:flex-none"
+                    className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full flex-1 sm:flex-none"
                   >
                     <FileDown className="w-3.5 h-3.5" />
                     CSV
@@ -604,7 +604,7 @@ export default function CrmPage() {
                   <button
                     type="button"
                     onClick={exportVcf}
-                    className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full flex-1 sm:flex-none"
+                    className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full flex-1 sm:flex-none"
                   >
                     <Download className="w-3.5 h-3.5" />
                     vCards
@@ -729,7 +729,7 @@ export default function CrmPage() {
                     Clear
                   </button>
                 )}
-                <span className="text-[11px] text-zinc-600 ml-auto">
+                <span className="text-[11px] text-zinc-400 ml-auto">
                   {filtered.length} of {contacts.length} shown
                 </span>
               </div>
@@ -815,7 +815,7 @@ export default function CrmPage() {
                 type="button"
                 onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
                 aria-label="Dismiss"
-                className="text-zinc-500 hover:text-zinc-200 transition-colors shrink-0"
+                className="text-zinc-400 hover:text-zinc-200 transition-colors shrink-0"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -850,7 +850,7 @@ function FirstRunEmpty({
       title: "Fill in your card",
       body: "Job title, email, phone, a link that books a slot. This is what a stranger sees three seconds after scanning.",
       action: (
-        <button type="button" onClick={onGoToCard} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
+        <button type="button" onClick={onGoToCard} className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full">
           Open your card
         </button>
       ),
@@ -860,7 +860,7 @@ function FirstRunEmpty({
       title: "Make a code and print it",
       body: "One per place it will live: the back of your badge, your lock screen, the banner. Each one gets its own scan count.",
       action: (
-        <button type="button" onClick={onGoToCodes} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
+        <button type="button" onClick={onGoToCodes} className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full">
           Open codes
         </button>
       ),
@@ -870,7 +870,7 @@ function FirstRunEmpty({
       title: "Meet people",
       body: "They scan and leave their details, or you open capture mode and type for them. It works with the signal fully off.",
       action: (
-        <Link href={captureHref} className="btn-glass px-4 h-11 sm:h-9 text-[11px] font-semibold rounded-full">
+        <Link href={captureHref} className="btn-glass px-4 h-9 text-[11px] font-medium rounded-full">
           Open capture mode
         </Link>
       ),
@@ -880,9 +880,9 @@ function FirstRunEmpty({
   return (
     <div className="rounded-2xl border border-white/8 bg-zinc-950/40 p-6 sm:p-8">
       <div className="text-center max-w-md mx-auto">
-        <ContactIcon className="w-6 h-6 text-zinc-600 mx-auto" />
+        <ContactIcon className="w-6 h-6 text-zinc-400 mx-auto" />
         <h3 className="text-sm font-semibold text-white mt-3">Nobody in the pipeline yet</h3>
-        <p className="text-xs text-zinc-500 leading-relaxed mt-2">
+        <p className="text-xs text-zinc-400 leading-relaxed mt-2">
           Three things stand between here and a board full of people. None of them take long.
         </p>
       </div>
@@ -905,7 +905,7 @@ function FirstRunEmpty({
               </span>
               <span className="text-xs font-semibold text-white">{step.title}</span>
             </span>
-            <span className="text-[11px] text-zinc-500 leading-relaxed flex-1">{step.body}</span>
+            <span className="text-[11px] text-zinc-400 leading-relaxed flex-1">{step.body}</span>
             <span className="pt-1">{step.action}</span>
           </li>
         ))}
@@ -917,9 +917,9 @@ function FirstRunEmpty({
 function FilteredEmpty({ onClear }: { onClear: () => void }) {
   return (
     <div className="rounded-2xl border border-white/8 bg-zinc-950/40 p-8 sm:p-10 text-center">
-      <Search className="w-6 h-6 text-zinc-600 mx-auto" />
+      <Search className="w-6 h-6 text-zinc-400 mx-auto" />
       <h3 className="text-sm font-semibold text-white mt-3">Nobody matches that</h3>
-      <p className="text-xs text-zinc-500 leading-relaxed mt-2 max-w-md mx-auto">
+      <p className="text-xs text-zinc-400 leading-relaxed mt-2 max-w-md mx-auto">
         There are contacts on the board, just none inside the current filters.
       </p>
       <button type="button" onClick={onClear} className="btn-glass px-5 min-h-[44px] text-xs rounded-full mt-5">

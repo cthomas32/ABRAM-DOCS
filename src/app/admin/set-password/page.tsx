@@ -65,7 +65,7 @@ export default function SetPasswordPage() {
         <h1 className="text-2xl font-bold tracking-tight text-white mb-2 font-sans">
           Setup Password
         </h1>
-        <p className="text-xs text-zinc-500 mb-8 uppercase tracking-widest font-sans">
+        <p className="text-xs text-zinc-400 mb-8 uppercase tracking-widest font-sans">
           Define a password for your account
         </p>
 
@@ -78,7 +78,7 @@ export default function SetPasswordPage() {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium flex items-start gap-2">
+                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-medium flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>{error}</span>
                 </div>
@@ -139,7 +139,7 @@ export default function SetPasswordPage() {
             <button
               type="submit"
               disabled={loading || success}
-              className="btn-primary w-full text-center py-3 text-xs font-semibold select-none flex items-center justify-center h-11"
+              className="btn-primary w-full text-center py-3 text-xs font-medium select-none flex items-center justify-center h-11"
             >
               {loading ? (
                 <>

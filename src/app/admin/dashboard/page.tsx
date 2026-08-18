@@ -205,7 +205,7 @@ export default function DashboardOverviewPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-500 bg-[#0A0A0A]">
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-400 bg-[#0A0A0A]">
         <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
         <span className="text-xs font-medium">Compiling marketing telemetry...</span>
       </div>
@@ -279,7 +279,7 @@ export default function DashboardOverviewPage() {
                 Live Feed
               </span>
             </h1>
-            <p className="text-xs text-zinc-500 mt-1 font-sans">
+            <p className="text-xs text-zinc-400 mt-1 font-sans">
               Real-time analytics for newsletter registrations, reader behaviors, and email broadcasts.
             </p>
           </div>
@@ -287,7 +287,7 @@ export default function DashboardOverviewPage() {
           <button 
             onClick={fetchRealMetrics}
             disabled={refreshing}
-            className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
+            className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-medium rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${refreshing ? "animate-spin" : ""}`} />
             <span>{refreshing ? "Updating..." : "Refresh Telemetry"}</span>
@@ -310,7 +310,7 @@ export default function DashboardOverviewPage() {
                   className="glass-panel glass-panel-hover p-4 sm:p-5 rounded-2xl flex flex-col justify-between h-28 sm:h-32 border-white/8 hover:border-white/25 select-none"
                 >
                   <div className="flex justify-between items-start gap-2">
-                    <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">
+                    <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
                       {kpi.label}
                     </span>
                     <Icon className="w-4 h-4 text-zinc-400 shrink-0" />
@@ -319,7 +319,7 @@ export default function DashboardOverviewPage() {
                     <span className="block text-xl sm:text-2xl font-bold text-white tracking-tight font-mono">
                       {kpi.value}
                     </span>
-                    <span className="block text-[9px] text-zinc-500 font-medium truncate">
+                    <span className="block text-[9px] text-zinc-400 font-medium truncate">
                       {kpi.hint}
                     </span>
                   </div>
@@ -360,10 +360,10 @@ export default function DashboardOverviewPage() {
         {/* Connected Services & Telemetry */}
         <div className="space-y-3 pt-4 border-t border-white/5">
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 font-sans">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400 font-sans">
               Connected Services & Telemetry
             </h2>
-            <p className="text-[10px] text-zinc-500 mt-1 font-sans">
+            <p className="text-[10px] text-zinc-400 mt-1 font-sans">
               Integrations status, telemetry API flows, and external dispatch console mappings.
             </p>
           </div>
@@ -385,19 +385,19 @@ export default function DashboardOverviewPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 text-[11px] border-t border-white/5 pt-4">
                   <div>
-                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream Name</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream Name</span>
                     <span className="text-zinc-300 font-medium">ABRAM Landing Page</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Measurement ID</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Measurement ID</span>
                     <span className="text-white font-mono font-semibold">G-KCDWS029PK</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream ID</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream ID</span>
                     <span className="text-zinc-300 font-mono font-medium">15139917057</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream URL</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Stream URL</span>
                     <a 
                       href="https://abram.network" 
                       target="_blank" 
@@ -415,7 +415,7 @@ export default function DashboardOverviewPage() {
                   href="https://analytics.google.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                  className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-medium rounded-full flex items-center gap-1.5"
                 >
                   <span>Launch GA Console</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -438,19 +438,19 @@ export default function DashboardOverviewPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 text-[11px] border-t border-white/5 pt-4">
                   <div>
-                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Service Provider</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Service Provider</span>
                     <span className="text-zinc-300 font-medium">Resend Inc.</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Contact Audience</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Contact Audience</span>
                     <span className="text-zinc-300 font-medium">ABRAM Subscribers</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">API Dispatcher</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase font-bold tracking-wider mb-0.5">API Dispatcher</span>
                     <span className="text-zinc-300 font-mono font-medium">Active (SDK)</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Webhook Sync</span>
+                    <span className="text-zinc-400 block text-[9px] uppercase font-bold tracking-wider mb-0.5">Webhook Sync</span>
                     <span className="text-zinc-300 font-medium">Automatic</span>
                   </div>
                 </div>
@@ -461,7 +461,7 @@ export default function DashboardOverviewPage() {
                   href="https://resend.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5"
+                  className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-medium rounded-full flex items-center gap-1.5"
                 >
                   <span>Launch Resend Console</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -482,7 +482,7 @@ export default function DashboardOverviewPage() {
 function TrailingTrendsChart({ data }: { data: SparklinePoint[] }) {
   if (!data || data.length === 0) {
     return (
-      <div className="glass-panel p-6 rounded-2xl border-white/8 h-64 flex items-center justify-center text-zinc-500 text-xs">
+      <div className="glass-panel p-6 rounded-2xl border-white/8 h-64 flex items-center justify-center text-zinc-400 text-xs">
         No trend telemetry available
       </div>
     );
@@ -518,10 +518,10 @@ function TrailingTrendsChart({ data }: { data: SparklinePoint[] }) {
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <div className="space-y-1 min-w-0">
-          <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
+          <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
             Traffic &amp; Audience Growth
           </span>
-          <p className="text-[11px] text-zinc-500">Comparing page views and newsletter sign-ups over 30 days</p>
+          <p className="text-[11px] text-zinc-400">Comparing page views and newsletter sign-ups over 30 days</p>
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[10px] font-semibold shrink-0">
           <div className="flex items-center gap-1.5">
@@ -536,7 +536,7 @@ function TrailingTrendsChart({ data }: { data: SparklinePoint[] }) {
       </div>
 
       <div className="relative h-44 w-full pt-2">
-        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full text-zinc-600">
+        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full text-zinc-400">
           <defs>
             <linearGradient id="viewsGlow" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="rgba(255, 255, 255, 0.05)" />
@@ -567,7 +567,7 @@ function TrailingTrendsChart({ data }: { data: SparklinePoint[] }) {
         </svg>
       </div>
 
-      <div className="flex justify-between text-[9px] text-zinc-500 font-mono px-4 select-none">
+      <div className="flex justify-between text-[9px] text-zinc-400 font-mono px-4 select-none">
         <span>{data[0].event_date}</span>
         <span>{data[Math.floor(data.length / 2)].event_date}</span>
         <span>{data[data.length - 1].event_date}</span>
@@ -580,22 +580,22 @@ function TopContentGrid({ items }: { items: ContentPerformance[] }) {
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl h-full flex flex-col justify-between">
       <div>
-        <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
+        <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
           Top Content Engagement
         </span>
-        <p className="text-[11px] text-zinc-500 mt-0.5">Performance index by page views and read ratios</p>
+        <p className="text-[11px] text-zinc-400 mt-0.5">Performance index by page views and read ratios</p>
       </div>
 
       <div className="space-y-3 flex-1 pt-3">
         {items.length === 0 ? (
-          <div className="text-xs text-zinc-500 py-6 text-center">No content telemetry logged yet.</div>
+          <div className="text-xs text-zinc-400 py-6 text-center">No content telemetry logged yet.</div>
         ) : (
           items.map((item) => (
             <div key={item.analytics_id} className="p-3 rounded-xl bg-zinc-950/40 border border-white/5 flex flex-col gap-2">
               <div className="flex justify-between items-start gap-4">
                 <div className="truncate">
                   <span className="text-xs font-semibold text-white block truncate">{item.content_title}</span>
-                  <span className="text-[9px] text-zinc-500 uppercase font-mono">{item.content_type}</span>
+                  <span className="text-[9px] text-zinc-400 uppercase font-mono">{item.content_type}</span>
                 </div>
                 <span className="text-[10px] font-mono text-zinc-400 font-semibold shrink-0">
                   {item.views.toLocaleString()} Views
@@ -603,7 +603,7 @@ function TopContentGrid({ items }: { items: ContentPerformance[] }) {
               </div>
               
               <div className="space-y-1">
-                <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
+                <div className="flex justify-between text-[9px] text-zinc-400 font-mono">
                   <span>Read Completion Rate</span>
                   <span className="text-zinc-300">{item.read_ratio}% ({item.reads} reads)</span>
                 </div>
@@ -627,22 +627,22 @@ function CampaignsStatusList({ items }: { items: CampaignPerformance[] }) {
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl h-full flex flex-col justify-between">
       <div>
-        <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
+        <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
           Active Campaign Telemetry
         </span>
-        <p className="text-[11px] text-zinc-500 mt-0.5">Response tracking for marketing newsletters</p>
+        <p className="text-[11px] text-zinc-400 mt-0.5">Response tracking for marketing newsletters</p>
       </div>
 
       <div className="space-y-4 flex-1 pt-3">
         {items.length === 0 ? (
-          <div className="text-xs text-zinc-500 py-6 text-center">No dispatch campaigns logged.</div>
+          <div className="text-xs text-zinc-400 py-6 text-center">No dispatch campaigns logged.</div>
         ) : (
           items.map((campaign) => (
             <div key={campaign.campaign_id} className="space-y-2 border-b border-white/5 pb-3 last:border-b-0 last:pb-0">
               <div className="flex justify-between items-start gap-3">
                 <div className="truncate">
                   <span className="text-xs font-semibold text-white block truncate">{campaign.title}</span>
-                  <span className="text-[9px] text-zinc-500 block truncate">{campaign.subject}</span>
+                  <span className="text-[9px] text-zinc-400 block truncate">{campaign.subject}</span>
                 </div>
                 <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
                   campaign.campaign_status === 'sent' 
@@ -657,15 +657,15 @@ function CampaignsStatusList({ items }: { items: CampaignPerformance[] }) {
 
               <div className="grid grid-cols-3 gap-2 pt-1 font-mono">
                 <div className="bg-zinc-950/30 border border-white/5 rounded-lg p-2 text-center">
-                  <span className="text-[8px] text-zinc-500 uppercase block font-bold font-sans">Sent</span>
+                  <span className="text-[8px] text-zinc-400 uppercase block font-bold font-sans">Sent</span>
                   <span className="text-xs font-semibold text-zinc-300">{campaign.total_sent}</span>
                 </div>
                 <div className="bg-zinc-950/30 border border-white/5 rounded-lg p-2 text-center">
-                  <span className="text-[8px] text-zinc-500 uppercase block font-bold font-sans">Opens</span>
+                  <span className="text-[8px] text-zinc-400 uppercase block font-bold font-sans">Opens</span>
                   <span className="text-xs font-semibold text-zinc-300">{campaign.open_rate}%</span>
                 </div>
                 <div className="bg-zinc-950/30 border border-white/5 rounded-lg p-2 text-center">
-                  <span className="text-[8px] text-zinc-500 uppercase block font-bold font-sans">Clicks</span>
+                  <span className="text-[8px] text-zinc-400 uppercase block font-bold font-sans">Clicks</span>
                   <span className="text-xs font-semibold text-zinc-300">{campaign.click_rate}%</span>
                 </div>
               </div>
@@ -685,10 +685,10 @@ function ListSegmentationCard({ marketingCount, appCount }: { marketingCount: nu
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-5 shadow-xl h-full flex flex-col justify-between">
       <div>
-        <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
+        <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
           List Segmentation
         </span>
-        <p className="text-[11px] text-zinc-500 mt-0.5">Audience split across subscription categories</p>
+        <p className="text-[11px] text-zinc-400 mt-0.5">Audience split across subscription categories</p>
       </div>
 
       <div className="space-y-5 flex-1 pt-4 justify-center flex flex-col">

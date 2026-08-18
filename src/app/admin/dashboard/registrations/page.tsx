@@ -127,7 +127,7 @@ export default async function RegistrationsPage() {
                         {registration.account_name}
                       </h3>
                       {registration.account_domain && (
-                        <p className="text-[11px] text-zinc-500 mt-0.5 break-words">
+                        <p className="text-[11px] text-zinc-400 mt-0.5 break-words">
                           {registration.account_domain}
                         </p>
                       )}
@@ -148,7 +148,7 @@ export default async function RegistrationsPage() {
                   )}
 
                   <div className="flex flex-wrap gap-x-5 gap-y-1 mt-3 pt-3 border-t border-white/5">
-                    <span className="text-[10px] text-zinc-500">
+                    <span className="text-[10px] text-zinc-400">
                       Filed {formatDay(registration.requested_at)}
                     </span>
                     {state.effective === "pending" && (
@@ -159,21 +159,21 @@ export default async function RegistrationsPage() {
                     {state.daysLeft !== null && state.effective === "approved" && (
                       <span
                         className={`text-[10px] ${
-                          state.daysLeft <= 14 ? "text-amber-400" : "text-zinc-500"
+                          state.daysLeft <= 14 ? "text-amber-400" : "text-zinc-400"
                         }`}
                       >
                         {state.daysLeft} {state.daysLeft === 1 ? "day" : "days"} left to close
                       </span>
                     )}
                     {registration.decision_reason && (
-                      <span className="text-[10px] text-zinc-500 break-words">
+                      <span className="text-[10px] text-zinc-400 break-words">
                         {registration.decision_reason}
                       </span>
                     )}
                   </div>
 
                   {canDecide && registration.status === "pending" && (
-                    <p className="text-[10px] text-zinc-600 mt-3">
+                    <p className="text-[10px] text-zinc-400 mt-3">
                       Awaiting your decision. Declining after{" "}
                       {formatDay(registration.decline_deadline_at)} has no effect.
                     </p>

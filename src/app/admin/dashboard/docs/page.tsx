@@ -128,13 +128,13 @@ export default function DocsManagerPage() {
               <BookOpen className="w-5 h-5 text-zinc-400" />
               Help Center Docs
             </h1>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-xs text-zinc-400 mt-1">
               Manage your localized help guides and index pages stored as markdown files on disk.
             </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="btn-primary h-11 sm:h-9 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 shrink-0"
+            className="btn-primary h-9 w-full sm:w-auto px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>New Article</span>
@@ -144,7 +144,7 @@ export default function DocsManagerPage() {
         {/* Filter / Search Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
           <div className="relative w-full sm:max-w-xs">
-            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchTerm}
@@ -165,7 +165,7 @@ export default function DocsManagerPage() {
                 className={`px-2 sm:px-3.5 min-h-[44px] sm:min-h-0 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   statusFilter === opt.id
                     ? "bg-white/10 text-white border border-white/10"
-                    : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+                    : "text-zinc-400 hover:text-zinc-300 border border-transparent"
                 }`}
               >
                 {opt.label}
@@ -176,12 +176,12 @@ export default function DocsManagerPage() {
 
         {/* Files Grid List */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-500">
+          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-400">
             <Loader2 className="w-5 h-5 animate-spin" />
             <span className="text-xs">Scanning documentation folder...</span>
           </div>
         ) : filteredArticles.length === 0 ? (
-          <div className="text-center py-16 text-zinc-500 text-xs border border-dashed border-white/5 rounded-2xl">
+          <div className="text-center py-16 text-zinc-400 text-xs border border-dashed border-white/5 rounded-2xl">
             No documentation guides match the current filters.
           </div>
         ) : (
@@ -205,7 +205,7 @@ export default function DocsManagerPage() {
                     }`}>
                       {art.status}
                     </span>
-                    <span className="text-[10px] text-zinc-600 font-mono tracking-tighter break-all min-w-0">
+                    <span className="text-[10px] text-zinc-400 font-mono tracking-tighter break-all min-w-0">
                       {art.path.replace("user-guide/", "")}
                     </span>
                   </div>
@@ -228,7 +228,7 @@ export default function DocsManagerPage() {
                 <div className="flex mx-5 mb-5 pt-4 border-t border-white/5 gap-2">
                   <Link
                     href={`/admin/dashboard/docs/edit?file=${art.path}`}
-                    className="btn-glass flex-1 h-10 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
+                    className="btn-glass flex-1 h-10 sm:h-8 px-3 text-[10px] font-medium rounded-full flex items-center justify-center gap-1.5 hover:text-white"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     <span>Edit Markdown</span>
@@ -271,7 +271,7 @@ export default function DocsManagerPage() {
           </h3>
           <form onSubmit={handleCreateArticle} className="space-y-4">
             <div>
-              <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">File Name</label>
+              <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">File Name</label>
               <input
                 type="text"
                 required
@@ -280,10 +280,10 @@ export default function DocsManagerPage() {
                 placeholder="e.g. 1.6-talent-schedules.md"
                 className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 h-10"
               />
-              <span className="text-[9px] text-zinc-500 mt-1 block">Format: [SectionNum]-[slug-name].md</span>
+              <span className="text-[9px] text-zinc-400 mt-1 block">Format: [SectionNum]-[slug-name].md</span>
             </div>
             <div>
-              <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Article Title</label>
+              <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">Article Title</label>
               <input
                 type="text"
                 required
@@ -297,14 +297,14 @@ export default function DocsManagerPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full"
+                className="btn-glass h-9 px-4 text-xs font-medium rounded-full"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={creating}
-                className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="btn-primary h-9 px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 {creating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                 <span>Create File</span>
@@ -325,7 +325,7 @@ export default function DocsManagerPage() {
                 className="pointer-events-auto w-full p-4 rounded-xl border glass-panel flex items-start gap-3 shadow-2xl"
               >
                 <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                  t.type === "success" ? "bg-green-500/10 text-green-400 border border-green-500/10" : "bg-red-500/10 text-red-400 border border-red-500/10"
+                  t.type === "success" ? "bg-green-500/10 text-green-400 border border-green-500/10" : "bg-amber-500/10 text-amber-300 border border-amber-500/10"
                 }`}>
                   <FileText className="w-3 h-3" />
                 </div>

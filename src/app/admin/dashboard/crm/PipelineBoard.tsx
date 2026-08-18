@@ -94,11 +94,11 @@ export default function PipelineBoard({
                     <span className="text-[11px] font-semibold text-zinc-200 truncate">
                       {stage.label}
                     </span>
-                    <span className="ml-auto text-[10px] font-mono text-zinc-500 shrink-0">
+                    <span className="ml-auto text-[10px] font-mono text-zinc-400 shrink-0">
                       {column.length}
                     </span>
                   </div>
-                  <p className="text-[10px] text-zinc-600 leading-relaxed mt-1">
+                  <p className="text-[10px] text-zinc-400 leading-relaxed mt-1">
                     {stage.description}
                   </p>
                 </div>
@@ -126,7 +126,7 @@ export default function PipelineBoard({
             );
           })}
         </div>
-        <p className="text-[10px] text-zinc-600 mt-1">
+        <p className="text-[10px] text-zinc-400 mt-1">
           Drag a card to move it, or use the stage dropdown on the card.
         </p>
       </div>
@@ -152,7 +152,7 @@ export default function PipelineBoard({
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-black/40" : stage.dot}`} />
                 {stage.label}
-                <span className={`font-mono ${active ? "text-black/60" : "text-zinc-600"}`}>
+                <span className={`font-mono ${active ? "text-black/60" : "text-zinc-400"}`}>
                   {count}
                 </span>
               </button>
@@ -160,13 +160,13 @@ export default function PipelineBoard({
           })}
         </div>
 
-        <p className="text-[11px] text-zinc-600 leading-relaxed">
+        <p className="text-[11px] text-zinc-400 leading-relaxed">
           {stageSpec(mobileStage).description}
         </p>
 
         <div className="flex flex-col gap-2">
           {(byStage[mobileStage] ?? []).length === 0 ? (
-            <p className="text-xs text-zinc-600 py-10 text-center leading-relaxed">
+            <p className="text-xs text-zinc-400 py-10 text-center leading-relaxed">
               No one is in {stageSpec(mobileStage).label} right now.
             </p>
           ) : (
@@ -230,7 +230,7 @@ function ContactCard({
             <span className="block text-[13px] font-semibold text-white truncate">
               {contact.full_name}
             </span>
-            <span className="block text-[11px] text-zinc-500 truncate">
+            <span className="block text-[11px] text-zinc-400 truncate">
               {[contact.job_title, contact.company].filter(Boolean).join(" at ") || "No company noted"}
             </span>
           </span>
@@ -250,7 +250,7 @@ function ContactCard({
         </span>
 
         {(eventName || contact.met_context) && (
-          <span className="flex items-start gap-1.5 mt-2 text-[10px] text-zinc-600 leading-relaxed">
+          <span className="flex items-start gap-1.5 mt-2 text-[10px] text-zinc-400 leading-relaxed">
             <MapPin className="w-3 h-3 shrink-0 mt-px" />
             <span className="min-w-0 break-words">
               {[eventName, contact.met_context].filter(Boolean).join(" / ")}
@@ -269,7 +269,7 @@ function ContactCard({
               </span>
             ))}
             {contact.tags.length > 4 && (
-              <span className="text-[9px] text-zinc-600 self-center">
+              <span className="text-[9px] text-zinc-400 self-center">
                 +{contact.tags.length - 4}
               </span>
             )}
@@ -289,7 +289,7 @@ function ContactCard({
             </span>
           )}
           {contact.captured_offline && (
-            <span className="inline-flex items-center gap-1 text-zinc-600">
+            <span className="inline-flex items-center gap-1 text-zinc-400">
               <WifiOff className="w-3 h-3" />
               Typed offline
             </span>

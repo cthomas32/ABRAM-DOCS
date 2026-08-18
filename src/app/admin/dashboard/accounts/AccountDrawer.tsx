@@ -194,7 +194,7 @@ export default function AccountDrawer({
                 <h2 className="text-base font-bold tracking-tight text-white break-words">
                   {isNew ? "New account" : account?.name}
                 </h2>
-                <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[11px] text-zinc-500">
+                <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[11px] text-zinc-400">
                   <span className="break-words">
                     {fields.domain || "No web address on file"}
                   </span>
@@ -257,7 +257,7 @@ export default function AccountDrawer({
                   value={fields.name}
                   onChange={(e) => setFields((f) => ({ ...f, name: e.target.value }))}
                   placeholder="Helix Post"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
 
@@ -267,10 +267,10 @@ export default function AccountDrawer({
                   value={fields.domain}
                   onChange={(e) => setFields((f) => ({ ...f, domain: e.target.value }))}
                   placeholder="helix.com"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
-              <p className="text-[11px] text-zinc-500 leading-relaxed">
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 Stored lowercased, and it is what stops the same company being added twice. Company
                 names get typed three different ways, a domain is one string.
               </p>
@@ -281,7 +281,7 @@ export default function AccountDrawer({
                     value={fields.industry}
                     onChange={(e) => setFields((f) => ({ ...f, industry: e.target.value }))}
                     placeholder="Post production"
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
 
@@ -290,7 +290,7 @@ export default function AccountDrawer({
                     value={fields.sizeBand}
                     onChange={(e) => setFields((f) => ({ ...f, sizeBand: e.target.value }))}
                     placeholder="11 to 50"
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
 
@@ -298,7 +298,7 @@ export default function AccountDrawer({
                   <input
                     value={fields.city}
                     onChange={(e) => setFields((f) => ({ ...f, city: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
 
@@ -306,7 +306,7 @@ export default function AccountDrawer({
                   <input
                     value={fields.country}
                     onChange={(e) => setFields((f) => ({ ...f, country: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
 
@@ -315,7 +315,7 @@ export default function AccountDrawer({
                     inputMode="url"
                     value={fields.website}
                     onChange={(e) => setFields((f) => ({ ...f, website: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
 
@@ -325,7 +325,7 @@ export default function AccountDrawer({
                     onChange={(e) =>
                       setFields((f) => ({ ...f, lifecycle: e.target.value as AccountLifecycle }))
                     }
-                    className="admin-input h-11 sm:h-9 py-0 cursor-pointer"
+                    className="admin-input h-9 py-0 cursor-pointer"
                   >
                     {ACCOUNT_LIFECYCLES.map((option) => (
                       <option key={option.id} value={option.id}>
@@ -354,10 +354,10 @@ export default function AccountDrawer({
                   type="date"
                   value={fields.firstContactOn}
                   onChange={(e) => setFields((f) => ({ ...f, firstContactOn: e.target.value }))}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
-              <p className="text-[11px] text-zinc-500 leading-relaxed">
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 The day anybody here first spoke to anybody there. A deal registration filed after
                 this date is refused, so it settles a dispute rather than starting one. Leave it
                 empty while the account is untouched.
@@ -387,10 +387,10 @@ export default function AccountDrawer({
                   value={fields.carveOut}
                   onChange={(e) => setFields((f) => ({ ...f, carveOut: e.target.value }))}
                   placeholder="abry_portfolio"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
-              <p className="text-[11px] text-zinc-500 leading-relaxed">
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 Names an agreement that removes this account from commission entirely. Any value
                 here means the ledger skips it, whoever sourced or closed it.
               </p>
@@ -410,7 +410,7 @@ export default function AccountDrawer({
                   type="button"
                   onClick={() => void save()}
                   disabled={saving}
-                  className="btn-primary h-11 sm:h-9 px-4 text-xs disabled:opacity-50"
+                  className="btn-primary h-9 px-4 text-xs disabled:opacity-50"
                 >
                   {saving ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -425,7 +425,7 @@ export default function AccountDrawer({
                     type="button"
                     onClick={() => void toggleArchive()}
                     disabled={busy}
-                    className="btn-glass h-11 sm:h-9 px-4 text-xs disabled:opacity-50"
+                    className="btn-glass h-9 px-4 text-xs disabled:opacity-50"
                   >
                     {account?.archived ? (
                       <ArchiveRestore className="w-3.5 h-3.5" />
@@ -446,7 +446,7 @@ export default function AccountDrawer({
                   <div className="py-8 text-center rounded-lg border border-dashed border-white/[0.06]">
                     <User className="w-8 h-8 text-white/10 mx-auto mb-3" />
                     <h5 className="text-xs font-medium text-zinc-400 mb-1">Nobody here yet</h5>
-                    <p className="text-[11px] text-zinc-600 max-w-xs mx-auto leading-relaxed">
+                    <p className="text-[11px] text-zinc-400 max-w-xs mx-auto leading-relaxed">
                       Set this account on a contact and they roll up into this list.
                     </p>
                   </div>
@@ -460,7 +460,7 @@ export default function AccountDrawer({
                         <span className="block text-sm font-medium text-white truncate">
                           {contact.full_name}
                         </span>
-                        <span className="block mt-1 text-[11px] text-zinc-500 truncate">
+                        <span className="block mt-1 text-[11px] text-zinc-400 truncate">
                           {[contact.job_title, contact.email].filter(Boolean).join(" · ") ||
                             "No job title or email"}
                         </span>
@@ -478,7 +478,7 @@ export default function AccountDrawer({
                   <div className="py-8 text-center rounded-lg border border-dashed border-white/[0.06]">
                     <Building2 className="w-8 h-8 text-white/10 mx-auto mb-3" />
                     <h5 className="text-xs font-medium text-zinc-400 mb-1">No deal here yet</h5>
-                    <p className="text-[11px] text-zinc-600 max-w-xs mx-auto leading-relaxed">
+                    <p className="text-[11px] text-zinc-400 max-w-xs mx-auto leading-relaxed">
                       Deals created against this account appear here.
                     </p>
                   </div>
@@ -495,7 +495,7 @@ export default function AccountDrawer({
                             <span className="block text-sm font-medium text-white truncate">
                               {deal.name}
                             </span>
-                            <span className="block mt-1 text-[11px] text-zinc-500">
+                            <span className="block mt-1 text-[11px] text-zinc-400">
                               {(deal.owner_user_id && memberNameById[deal.owner_user_id]) ||
                                 "Unassigned"}
                             </span>
@@ -522,14 +522,14 @@ export default function AccountDrawer({
               <section className="space-y-2">
                 <SectionLabel>Credit</SectionLabel>
                 <div className="flex flex-wrap items-baseline justify-between gap-2 py-1.5 border-b border-white/5">
-                  <span className="text-[11px] text-zinc-500">Sourced by</span>
+                  <span className="text-[11px] text-zinc-400">Sourced by</span>
                   <span className="text-[11px] text-zinc-300">
                     {(account?.sourced_by && memberNameById[account.sourced_by]) ||
                       "Nobody. It walked in."}
                   </span>
                 </div>
                 <div className="flex flex-wrap items-baseline justify-between gap-2 py-1.5">
-                  <span className="text-[11px] text-zinc-500">Owner</span>
+                  <span className="text-[11px] text-zinc-400">Owner</span>
                   <span className="text-[11px] text-zinc-300">
                     {(account?.owner_user_id && memberNameById[account.owner_user_id]) ||
                       "Unassigned"}
@@ -593,7 +593,7 @@ function Switch({
       />
       <span className="min-w-0">
         <span className="block text-xs text-white">{label}</span>
-        <span className="block text-[11px] text-zinc-500 leading-relaxed">{hint}</span>
+        <span className="block text-[11px] text-zinc-400 leading-relaxed">{hint}</span>
       </span>
     </label>
   );

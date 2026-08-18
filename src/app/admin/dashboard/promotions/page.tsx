@@ -98,7 +98,7 @@ const STATUS_STYLES: Record<Campaign["status"], string> = {
   active: "bg-white/10 text-white",
   draft: "bg-white/5 text-zinc-400",
   paused: "bg-white/5 text-zinc-400",
-  archived: "bg-white/5 text-zinc-600",
+  archived: "bg-white/5 text-zinc-400",
 };
 
 export default function PromotionsPage() {
@@ -156,21 +156,21 @@ export default function PromotionsPage() {
               <BadgePercent className="w-5 h-5 text-zinc-400" />
               Promotions
             </h1>
-            <p className="text-xs text-zinc-500 mt-1 font-sans">
+            <p className="text-xs text-zinc-400 mt-1 font-sans">
               Discount campaigns and the codes that unlock them. Synced to Stripe on save.
             </p>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => void load()}
-              className="h-11 sm:h-9 px-3 text-xs font-medium rounded-lg border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors flex items-center gap-2"
+              className="h-9 px-3 text-xs font-medium rounded-lg border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors flex items-center gap-2"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Refresh
             </button>
             <Link
               href="/admin/dashboard/promotions/new"
-              className="btn-primary h-9 px-4 text-xs font-semibold rounded-lg flex items-center gap-2"
+              className="btn-primary h-9 px-4 text-xs font-medium rounded-lg flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               New campaign
@@ -192,9 +192,9 @@ export default function PromotionsPage() {
           </div>
         ) : campaigns.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-white/10 p-12 text-center">
-            <Ticket className="w-8 h-8 text-zinc-600 mx-auto" />
+            <Ticket className="w-8 h-8 text-zinc-400 mx-auto" />
             <p className="text-sm text-zinc-400 mt-3 font-sans">No campaigns yet.</p>
-            <p className="text-xs text-zinc-600 mt-1 font-sans max-w-md mx-auto">
+            <p className="text-xs text-zinc-400 mt-1 font-sans max-w-md mx-auto">
               A campaign is the offer. Create one, then mint the codes that unlock it — a single
               public code for an audience, or a batch of one-time codes for a named list.
             </p>
@@ -265,13 +265,13 @@ function CampaignRow({
               {campaign.status}
             </span>
             {campaign.new_customers_only && (
-              <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">
+              <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
                 New customers
               </span>
             )}
           </div>
           <p className="text-xs text-zinc-400 mt-1 font-sans">{campaign.description}</p>
-          <p className="text-[11px] text-zinc-600 mt-1 font-mono">{campaign.slug}</p>
+          <p className="text-[11px] text-zinc-400 mt-1 font-mono">{campaign.slug}</p>
         </div>
 
         <div className="flex items-center gap-6 shrink-0">
@@ -304,7 +304,7 @@ function CampaignRow({
           ) : null}
           <button
             onClick={onOpen}
-            className="h-11 sm:h-8 px-3 text-xs font-medium rounded-lg border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors flex items-center gap-1"
+            className="h-9 px-3 text-xs font-medium rounded-lg border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors flex items-center gap-1"
           >
             Codes
             <ChevronRight className="w-3.5 h-3.5" />
@@ -318,7 +318,7 @@ function CampaignRow({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans block">
+      <span className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans block">
         {label}
       </span>
       <span className="text-lg font-bold tracking-tight text-white font-sans">{value}</span>
@@ -423,15 +423,15 @@ function CampaignDetail({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h2 className="text-base font-bold text-white font-sans truncate">{campaign.name}</h2>
-            <p className="text-xs text-zinc-500 mt-1 font-sans">{campaign.description}</p>
+            <p className="text-xs text-zinc-400 mt-1 font-sans">{campaign.description}</p>
           </div>
-          <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors shrink-0">
+          <button onClick={onClose} className="text-zinc-400 hover:text-white transition-colors shrink-0">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {campaign.status === "archived" ? (
-          <p className="text-xs text-zinc-500">This campaign is archived. No new codes can be minted.</p>
+          <p className="text-xs text-zinc-400">This campaign is archived. No new codes can be minted.</p>
         ) : (
           <div className="rounded-xl border border-white/10 p-4 space-y-4">
             <div className="flex gap-2">
@@ -439,7 +439,7 @@ function CampaignDetail({
                 <button
                   key={k}
                   onClick={() => setKind(k)}
-                  className={`h-11 sm:h-8 px-3 text-xs font-medium rounded-lg border transition-colors ${
+                  className={`h-9 px-3 text-xs font-medium rounded-lg border transition-colors ${
                     kind === k ? "border-white/25 bg-white/[0.08] text-white" : "border-white/10 text-zinc-400"
                   }`}
                 >
@@ -498,7 +498,7 @@ function CampaignDetail({
                 placeholder="podcast-nofilmschool"
                 className="admin-input"
               />
-              <p className="text-[11px] text-zinc-600 mt-1">
+              <p className="text-[11px] text-zinc-400 mt-1">
                 Tagged onto every redemption, so you can tell which channel actually converted.
               </p>
             </Field>
@@ -508,7 +508,7 @@ function CampaignDetail({
             <button
               onClick={() => void mint()}
               disabled={minting || (kind === "public" && !publicCode.trim())}
-              className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center gap-2"
+              className="btn-primary h-9 px-4 text-xs font-medium rounded-lg disabled:opacity-40 flex items-center gap-2"
             >
               {minting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Mint {kind === "public" ? "code" : `${count} codes`}
@@ -518,13 +518,13 @@ function CampaignDetail({
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans">
+            <span className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
               Codes ({codes.length})
             </span>
             {codes.length > 0 && (
               <button
                 onClick={copyAll}
-                className="text-[11px] text-zinc-500 hover:text-white transition-colors flex items-center gap-1"
+                className="text-[11px] text-zinc-400 hover:text-white transition-colors flex items-center gap-1"
               >
                 <Copy className="w-3 h-3" />
                 Copy active
@@ -535,26 +535,26 @@ function CampaignDetail({
           {loading ? (
             <div className="h-16 rounded-xl border border-white/5 animate-pulse" />
           ) : codes.length === 0 ? (
-            <p className="text-xs text-zinc-600 py-4">No codes minted yet.</p>
+            <p className="text-xs text-zinc-400 py-4">No codes minted yet.</p>
           ) : (
             <div className="divide-y divide-white/5 rounded-xl border border-white/10 overflow-hidden">
               {codes.map((c) => (
                 <div key={c.id} className="flex items-center gap-3 px-3 py-2.5">
                   <span
                     className={`font-mono text-xs tracking-wide flex-1 truncate ${
-                      c.status === "active" ? "text-white" : "text-zinc-600 line-through"
+                      c.status === "active" ? "text-white" : "text-zinc-400 line-through"
                     }`}
                   >
                     {c.code}
                   </span>
-                  {c.source && <span className="text-[10px] text-zinc-600 shrink-0">{c.source}</span>}
-                  <span className="text-[11px] text-zinc-500 shrink-0">
+                  {c.source && <span className="text-[10px] text-zinc-400 shrink-0">{c.source}</span>}
+                  <span className="text-[11px] text-zinc-400 shrink-0">
                     {c.redemption_count}
                     {c.max_redemptions ? `/${c.max_redemptions}` : ""}
                   </span>
                   <button
                     onClick={() => void toggleCode(c)}
-                    className="text-[11px] text-zinc-500 hover:text-white transition-colors shrink-0 w-14 text-right"
+                    className="text-[11px] text-zinc-400 hover:text-white transition-colors shrink-0 w-14 text-right"
                   >
                     {c.status === "active" ? "Disable" : "Enable"}
                   </button>
@@ -573,7 +573,7 @@ function CampaignDetail({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider font-sans block mb-1.5">
+      <label className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans block mb-1.5">
         {label}
       </label>
       {children}

@@ -158,14 +158,14 @@ export default function EventsTab({ events, stats, onChanged, notify }: EventsTa
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <p className="text-xs text-zinc-500 leading-relaxed max-w-2xl">
+        <p className="text-xs text-zinc-400 leading-relaxed max-w-2xl">
           Set one event active on the morning of the show. Any scan on a code that does not name an
           event is filed under it, which is what makes the numbers below mean something a year later.
         </p>
         <button
           type="button"
           onClick={() => setCreating((v) => !v)}
-          className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-semibold rounded-full shrink-0 self-start"
+          className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-xs font-medium rounded-full shrink-0 self-start"
         >
           {creating ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
           {creating ? "Cancel" : "New event"}
@@ -234,7 +234,7 @@ export default function EventsTab({ events, stats, onChanged, notify }: EventsTa
                     <div className="flex items-start gap-3">
                       <div className="min-w-0 flex-1">
                         <h3 className="text-sm font-semibold text-white break-words">{event.name}</h3>
-                        <p className="text-[11px] text-zinc-500 mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <p className="text-[11px] text-zinc-400 mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
                           {(event.starts_on || event.ends_on) && (
                             <span className="inline-flex items-center gap-1">
                               <CalendarDays className="w-3 h-3 shrink-0" />
@@ -262,7 +262,7 @@ export default function EventsTab({ events, stats, onChanged, notify }: EventsTa
                     </div>
 
                     {event.notes && (
-                      <p className="text-[11px] text-zinc-500 leading-relaxed break-words">
+                      <p className="text-[11px] text-zinc-400 leading-relaxed break-words">
                         {event.notes}
                       </p>
                     )}
@@ -279,7 +279,7 @@ export default function EventsTab({ events, stats, onChanged, notify }: EventsTa
                         />
                       </div>
                     ) : (
-                      <p className="text-[11px] text-zinc-600">
+                      <p className="text-[11px] text-zinc-400">
                         No results recorded against this event yet.
                       </p>
                     )}
@@ -291,7 +291,7 @@ export default function EventsTab({ events, stats, onChanged, notify }: EventsTa
                           setEditingId(event.id);
                           setEditDraft(draftFrom(event));
                         }}
-                        className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+                        className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
                       >
                         Edit
                       </button>
@@ -309,7 +309,7 @@ export default function EventsTab({ events, stats, onChanged, notify }: EventsTa
                           type="button"
                           onClick={() => void makeActive(event.id)}
                           disabled={busy}
-                          className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full disabled:opacity-50"
+                          className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full disabled:opacity-50"
                         >
                           <Check className="w-3.5 h-3.5" />
                           Set active
@@ -353,7 +353,7 @@ function EventForm({
               })
             }
             placeholder="Northern Screen Summit"
-            className="admin-input h-11 sm:h-9 py-0"
+            className="admin-input h-9 py-0"
           />
         </Field>
         <Field label="Short name">
@@ -361,28 +361,28 @@ function EventForm({
             value={value.slug}
             onChange={(e) => set({ slug: slugify(e.target.value) })}
             placeholder="northern-screen-summit"
-            className="admin-input h-11 sm:h-9 py-0 font-mono"
+            className="admin-input h-9 py-0 font-mono"
           />
         </Field>
         <Field label="Venue">
           <input
             value={value.venue}
             onChange={(e) => set({ venue: e.target.value })}
-            className="admin-input h-11 sm:h-9 py-0"
+            className="admin-input h-9 py-0"
           />
         </Field>
         <Field label="City">
           <input
             value={value.city}
             onChange={(e) => set({ city: e.target.value })}
-            className="admin-input h-11 sm:h-9 py-0"
+            className="admin-input h-9 py-0"
           />
         </Field>
         <Field label="Country">
           <input
             value={value.country}
             onChange={(e) => set({ country: e.target.value })}
-            className="admin-input h-11 sm:h-9 py-0"
+            className="admin-input h-9 py-0"
           />
         </Field>
         <div className="grid grid-cols-2 gap-3">
@@ -391,7 +391,7 @@ function EventForm({
               type="date"
               value={value.starts_on}
               onChange={(e) => set({ starts_on: e.target.value })}
-              className="admin-input h-11 sm:h-9 py-0"
+              className="admin-input h-9 py-0"
             />
           </Field>
           <Field label="Ends">
@@ -399,7 +399,7 @@ function EventForm({
               type="date"
               value={value.ends_on}
               onChange={(e) => set({ ends_on: e.target.value })}
-              className="admin-input h-11 sm:h-9 py-0"
+              className="admin-input h-9 py-0"
             />
           </Field>
         </div>
@@ -420,7 +420,7 @@ function EventForm({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-[10px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5">
+      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 mb-1.5">
         {label}
       </span>
       {children}
@@ -442,9 +442,9 @@ function Stat({ label, value }: { label: string; value: number | string }) {
 function EmptyEvents({ onStart }: { onStart: () => void }) {
   return (
     <div className="rounded-2xl border border-white/8 bg-zinc-950/40 p-8 sm:p-10 text-center">
-      <CalendarDays className="w-6 h-6 text-zinc-600 mx-auto" />
+      <CalendarDays className="w-6 h-6 text-zinc-400 mx-auto" />
       <h3 className="text-sm font-semibold text-white mt-3">No events yet</h3>
-      <p className="text-xs text-zinc-500 leading-relaxed mt-2 max-w-md mx-auto">
+      <p className="text-xs text-zinc-400 leading-relaxed mt-2 max-w-md mx-auto">
         Add the next conference before you go. Set it active on the morning and every scan that day
         gets filed under it without you doing anything else.
       </p>

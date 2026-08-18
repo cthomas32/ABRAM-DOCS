@@ -183,7 +183,7 @@ function DashboardChrome({
             >
               <Search className="w-3.5 h-3.5 shrink-0" />
               <span>Search</span>
-              <kbd className="ml-auto text-[10px] text-zinc-500 tracking-wider">⌘K</kbd>
+              <kbd className="ml-auto text-[10px] text-zinc-400 tracking-wider">⌘K</kbd>
             </button>
           </div>
 
@@ -231,7 +231,7 @@ function DashboardChrome({
 
         <div className="flex flex-col gap-2.5 pt-4 border-t border-white/5 shrink-0">
           <div className="flex items-center gap-2 px-2 text-zinc-400 text-[11px] min-w-0">
-            <User className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+            <User className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
             <span className="truncate" title={currentUserEmail}>
               {currentUserEmail}
             </span>
@@ -313,7 +313,7 @@ function DashboardChrome({
                             {taskCount}
                           </span>
                         )}
-                        <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-zinc-400 shrink-0" />
                       </Link>
                     );
                   })}
@@ -323,12 +323,12 @@ function DashboardChrome({
 
             <div className="shrink-0 border-t border-white/5 px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 text-zinc-400 text-xs min-w-0">
-                <User className="w-4 h-4 text-zinc-500 shrink-0" />
+                <User className="w-4 h-4 text-zinc-400 shrink-0" />
                 <span className="truncate">{currentUserEmail}</span>
               </div>
               <button
                 onClick={handleSignOut}
-                className="btn-glass flex items-center justify-center gap-2 px-4 h-11 sm:h-9 text-xs font-medium rounded-full shrink-0"
+                className="btn-glass flex items-center justify-center gap-2 px-4 h-9 text-xs font-medium rounded-full shrink-0"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Sign Out</span>

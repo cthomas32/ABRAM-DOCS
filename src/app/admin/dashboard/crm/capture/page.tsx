@@ -249,7 +249,7 @@ export default function CapturePage() {
                 No signal
               </span>
             )}
-            <span className="text-[10px] text-zinc-600 font-mono">{savedCount} this session</span>
+            <span className="text-[10px] text-zinc-400 font-mono">{savedCount} this session</span>
           </span>
         </div>
 
@@ -265,7 +265,7 @@ export default function CapturePage() {
                 ? "Everything is synced"
                 : `${queued} ${queued === 1 ? "capture" : "captures"} waiting to sync`}
             </span>
-            <span className="block text-[10px] text-zinc-500 leading-relaxed mt-0.5">
+            <span className="block text-[10px] text-zinc-400 leading-relaxed mt-0.5">
               {queued === 0
                 ? "Saves go out as you make them. Nothing is waiting."
                 : "They are stored on this phone and go out on their own once there is signal."}
@@ -275,7 +275,7 @@ export default function CapturePage() {
             type="button"
             onClick={() => void syncNow()}
             disabled={syncing || queued === 0}
-            className="btn-glass px-3.5 min-h-[44px] text-[11px] font-semibold rounded-full shrink-0 disabled:opacity-40"
+            className="btn-glass px-3.5 min-h-[44px] text-[11px] font-medium rounded-full shrink-0 disabled:opacity-40"
           >
             {syncing ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -398,7 +398,7 @@ export default function CapturePage() {
                 : "border-white/8 bg-white/[0.02] text-zinc-400"
             }`}
           >
-            <Flame className={`w-5 h-5 shrink-0 ${hot ? "text-amber-400" : "text-zinc-600"}`} />
+            <Flame className={`w-5 h-5 shrink-0 ${hot ? "text-amber-400" : "text-zinc-400"}`} />
             <span className="text-left min-w-0">
               <span className="block text-sm font-semibold">Hot lead</span>
               <span className="block text-[11px] leading-relaxed opacity-80">
@@ -450,10 +450,10 @@ function BigField({
         <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
           {label}
         </span>
-        {required && <span className="text-[10px] text-zinc-600">required</span>}
+        {required && <span className="text-[10px] text-zinc-400">required</span>}
       </span>
       {children}
-      {hint && <span className="block text-[10px] text-zinc-600 mt-1 leading-relaxed">{hint}</span>}
+      {hint && <span className="block text-[10px] text-zinc-400 mt-1 leading-relaxed">{hint}</span>}
     </label>
   );
 }

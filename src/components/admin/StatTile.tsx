@@ -55,7 +55,7 @@ export function StatCell({
       </span>
       <div className="text-lg leading-snug tabular-nums text-white">{value}</div>
       {hint && (
-        <p className="mt-1 text-[11px] text-zinc-500 leading-relaxed">{hint}</p>
+        <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">{hint}</p>
       )}
     </div>
   );
@@ -130,7 +130,7 @@ export function StatRow({
               </div>
             )}
             {under && !loading && (
-              <p className="mt-1 text-[11px] text-zinc-500 leading-relaxed truncate">{under}</p>
+              <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed truncate">{under}</p>
             )}
           </div>
         );

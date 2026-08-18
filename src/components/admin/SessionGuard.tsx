@@ -88,7 +88,7 @@ export default function SessionGuard({ children }: { children: React.ReactNode }
             <h2 id="session-expired-title" className="text-sm font-bold tracking-tight text-white">
               Your session expired
             </h2>
-            <p className="text-xs text-zinc-500 mt-2 leading-relaxed">
+            <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
               Sign in again to carry on. Anything already saved is safe; unsaved edits on this
               screen are still here if you sign in from another tab and reload.
             </p>

@@ -443,7 +443,7 @@ export default function ContactDrawer({
                 <h2 className="text-base font-bold tracking-tight text-white break-words font-sans">
                   {contact.full_name}
                 </h2>
-                <p className="text-[11px] text-zinc-500 mt-0.5 break-words">
+                <p className="text-[11px] text-zinc-400 mt-0.5 break-words">
                   {[contact.job_title, contact.company].filter(Boolean).join(" at ") ||
                     "No company noted"}
                 </p>
@@ -500,7 +500,7 @@ export default function ContactDrawer({
               <button
                 type="button"
                 onClick={downloadVCard}
-                className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+                className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
               >
                 <Download className="w-3.5 h-3.5" />
                 vCard
@@ -560,12 +560,12 @@ export default function ContactDrawer({
               {/* Not a <Field>, because a label wrapping several buttons and an
                   input hands every stray tap to the input. */}
               <div>
-                <span className="block text-[10px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5">
+                <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 mb-1.5">
                   Tags
                 </span>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {contact.tags.length === 0 && (
-                    <span className="text-[11px] text-zinc-600">
+                    <span className="text-[11px] text-zinc-400">
                       No tags. Use them for the reason you would search later.
                     </span>
                   )}
@@ -579,7 +579,7 @@ export default function ContactDrawer({
                         type="button"
                         onClick={() => void removeTag(tag)}
                         aria-label={`Remove tag ${tag}`}
-                        className="w-6 h-6 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
+                        className="w-6 h-6 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -598,13 +598,13 @@ export default function ContactDrawer({
                     }}
                     aria-label="New tag"
                     placeholder="investor, hiring, needs-demo"
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                   <button
                     type="button"
                     onClick={() => void addTag()}
                     disabled={!tagDraft.trim()}
-                    className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-lg shrink-0 disabled:opacity-40"
+                    className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-lg shrink-0 disabled:opacity-40"
                   >
                     Add
                   </button>
@@ -619,7 +619,7 @@ export default function ContactDrawer({
                 <input
                   value={fields.full_name}
                   onChange={(e) => setFields((f) => ({ ...f, full_name: e.target.value }))}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -629,7 +629,7 @@ export default function ContactDrawer({
                     inputMode="email"
                     value={fields.email}
                     onChange={(e) => setFields((f) => ({ ...f, email: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
                 <Field label="Phone">
@@ -638,21 +638,21 @@ export default function ContactDrawer({
                     inputMode="tel"
                     value={fields.phone}
                     onChange={(e) => setFields((f) => ({ ...f, phone: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
                 <Field label="Company">
                   <input
                     value={fields.company}
                     onChange={(e) => setFields((f) => ({ ...f, company: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
                 <Field label="Job title">
                   <input
                     value={fields.job_title}
                     onChange={(e) => setFields((f) => ({ ...f, job_title: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
                 <Field label="Website">
@@ -660,7 +660,7 @@ export default function ContactDrawer({
                     inputMode="url"
                     value={fields.website}
                     onChange={(e) => setFields((f) => ({ ...f, website: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
                 <Field label="LinkedIn">
@@ -668,21 +668,21 @@ export default function ContactDrawer({
                     inputMode="url"
                     value={fields.linkedin_url}
                     onChange={(e) => setFields((f) => ({ ...f, linkedin_url: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
                 <Field label="City">
                   <input
                     value={fields.city}
                     onChange={(e) => setFields((f) => ({ ...f, city: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
                 <Field label="Country">
                   <input
                     value={fields.country}
                     onChange={(e) => setFields((f) => ({ ...f, country: e.target.value }))}
-                    className="admin-input h-11 sm:h-9 py-0"
+                    className="admin-input h-9 py-0"
                   />
                 </Field>
               </div>
@@ -723,7 +723,7 @@ export default function ContactDrawer({
                   value={fields.met_context}
                   onChange={(e) => setFields((f) => ({ ...f, met_context: e.target.value }))}
                   placeholder="Queue for the keynote, second morning"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
 
@@ -732,7 +732,7 @@ export default function ContactDrawer({
                   type="datetime-local"
                   value={fields.next_follow_up_at}
                   onChange={(e) => setFields((f) => ({ ...f, next_follow_up_at: e.target.value }))}
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
               </Field>
 
@@ -776,7 +776,7 @@ export default function ContactDrawer({
                   {contact.archived ? "Restore" : "Archive"}
                 </button>
               </div>
-              <p className="text-[10px] text-zinc-600 leading-relaxed">
+              <p className="text-[10px] text-zinc-400 leading-relaxed">
                 Archiving takes someone off the board and keeps every note and follow up. Nothing in
                 here is ever deleted.
               </p>
@@ -791,20 +791,20 @@ export default function ContactDrawer({
                   value={taskTitle}
                   onChange={(e) => setTaskTitle(e.target.value)}
                   placeholder="Send the deck"
-                  className="admin-input h-11 sm:h-9 py-0"
+                  className="admin-input h-9 py-0"
                 />
                 <input
                   type="date"
                   value={taskDue}
                   onChange={(e) => setTaskDue(e.target.value)}
                   aria-label="Due date"
-                  className="admin-input h-11 sm:h-9 py-0 sm:w-40 shrink-0"
+                  className="admin-input h-9 py-0 sm:w-40 shrink-0"
                 />
                 <button
                   type="button"
                   onClick={() => void addTask()}
                   disabled={taskSaving || !taskTitle.trim()}
-                  className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-lg shrink-0 disabled:opacity-40"
+                  className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-lg shrink-0 disabled:opacity-40"
                 >
                   {taskSaving ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -816,7 +816,7 @@ export default function ContactDrawer({
               </div>
 
               {openTasks.length === 0 && closedTasks.length === 0 ? (
-                <p className="text-[11px] text-zinc-600 leading-relaxed">
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
                   Nothing scheduled. The one you write on the night of the event is the one that
                   gets done.
                 </p>
@@ -836,7 +836,7 @@ export default function ContactDrawer({
                           onClick={() => void completeTask(task)}
                           disabled={busyTaskId === task.id}
                           aria-label={`Mark ${task.title} done`}
-                          className="shrink-0 w-11 h-11 sm:w-7 sm:h-7 -m-1.5 sm:m-0 flex items-center justify-center rounded-full border border-white/15 text-zinc-500 hover:text-white hover:border-white/30 transition-colors disabled:opacity-40"
+                          className="shrink-0 w-11 h-11 sm:w-7 sm:h-7 -m-1.5 sm:m-0 flex items-center justify-center rounded-full border border-white/15 text-zinc-400 hover:text-white hover:border-white/30 transition-colors disabled:opacity-40"
                         >
                           {busyTaskId === task.id ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -851,7 +851,7 @@ export default function ContactDrawer({
                           {task.due_at && (
                             <span
                               className={`block text-[10px] mt-0.5 ${
-                                late ? "text-amber-200 font-medium" : "text-zinc-500"
+                                late ? "text-amber-200 font-medium" : "text-zinc-400"
                               }`}
                             >
                               {late ? "Overdue " : "Due "}
@@ -873,7 +873,7 @@ export default function ContactDrawer({
                           {task.title}
                         </span>
                         {task.completed_at && (
-                          <span className="block text-[10px] text-zinc-600 mt-0.5">
+                          <span className="block text-[10px] text-zinc-400 mt-0.5">
                             Done {formatDate(task.completed_at)}
                           </span>
                         )}
@@ -900,7 +900,7 @@ export default function ContactDrawer({
                   type="button"
                   onClick={() => void addNote()}
                   disabled={noteSaving || !note.trim()}
-                  className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full disabled:opacity-40"
+                  className="btn-glass px-4 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full disabled:opacity-40"
                 >
                   {noteSaving ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -912,12 +912,12 @@ export default function ContactDrawer({
               </div>
 
               {loadingHistory ? (
-                <div className="flex items-center gap-2 text-[11px] text-zinc-500 py-4">
+                <div className="flex items-center gap-2 text-[11px] text-zinc-400 py-4">
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   Reading the timeline
                 </div>
               ) : interactions.length === 0 ? (
-                <p className="text-[11px] text-zinc-600 leading-relaxed">
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
                   Nothing recorded yet. Notes, stage moves and finished follow ups all land here.
                 </p>
               ) : (
@@ -936,7 +936,7 @@ export default function ContactDrawer({
                             {INTERACTION_LABELS[entry.kind] ?? entry.kind}
                           </span>
                           <span
-                            className="text-[10px] text-zinc-600"
+                            className="text-[10px] text-zinc-400"
                             title={formatDateTime(entry.occurred_at)}
                           >
                             {relativeTime(entry.occurred_at)}
@@ -948,7 +948,7 @@ export default function ContactDrawer({
                           </span>
                         )}
                         {entry.author && (
-                          <span className="block text-[10px] text-zinc-600 mt-1 truncate">
+                          <span className="block text-[10px] text-zinc-400 mt-1 truncate">
                             {entry.author}
                           </span>
                         )}
@@ -959,7 +959,7 @@ export default function ContactDrawer({
               )}
             </section>
 
-            <div className="flex items-center gap-2 text-[10px] text-zinc-600 pb-6">
+            <div className="flex items-center gap-2 text-[10px] text-zinc-400 pb-6">
               <Clock className="w-3 h-3 shrink-0" />
               <span className="break-words">
                 Met {formatDateTime(contact.met_at)}
@@ -1024,7 +1024,7 @@ function QuickAction({
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-semibold rounded-full"
+      className="btn-glass px-3.5 min-h-[44px] sm:min-h-[36px] text-[11px] font-medium rounded-full"
     >
       <Icon className="w-3.5 h-3.5" />
       {label}

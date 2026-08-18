@@ -866,10 +866,10 @@ export default function BroadcastsPage() {
 
         {/* Resend API Integration Check — only shown when disconnected */}
         {resendStatus.status !== "Connected" && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-red-500/20 bg-red-500/5">
-            <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-amber-500/20 bg-amber-500/5">
+            <AlertTriangle className="w-4 h-4 text-amber-300 shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-red-400 font-sans">Resend not connected</p>
+              <p className="text-xs font-semibold text-amber-300 font-sans">Resend not connected</p>
               <p className="text-[10px] text-zinc-500 font-sans truncate">
                 {resendStatus.message || "API key missing or invalid. Check your environment variables."}
               </p>
@@ -1072,7 +1072,7 @@ export default function BroadcastsPage() {
                             <button
                               type="button"
                               onClick={() => setSelectedSubscribers([])}
-                              className="btn-glass px-2.5 py-1 text-[9px] rounded-full text-red-400 border-red-500/10 hover:bg-red-500/10 cursor-pointer h-7"
+                              className="btn-glass px-2.5 py-1 text-[9px] rounded-full text-amber-300 border-amber-500/10 hover:bg-amber-500/10 cursor-pointer h-7"
                             >
                               Clear All
                             </button>
@@ -1449,7 +1449,7 @@ export default function BroadcastsPage() {
                               camp.status === "sent" 
                                 ? "bg-green-500/10 text-green-400 font-bold"
                                 : camp.status === "failed"
-                                ? "bg-red-500/10 text-red-400 font-bold"
+                                ? "bg-amber-500/10 text-amber-300 font-bold"
                                 : camp.status === "sending"
                                 ? "bg-yellow-500/10 text-yellow-400 font-bold"
                                 : camp.status === "draft"
@@ -1699,7 +1699,7 @@ export default function BroadcastsPage() {
                         </div>
                         <div className="p-3 bg-white/[0.01] rounded-xl border border-white/5">
                           <p className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Bounced</p>
-                          <p className="text-lg font-bold text-red-400 mt-1 font-mono">{stats.bounced}</p>
+                          <p className="text-lg font-bold text-amber-300 mt-1 font-mono">{stats.bounced}</p>
                         </div>
                       </div>
 
@@ -1848,7 +1848,7 @@ export default function BroadcastsPage() {
                                         : log.status === "delivered"
                                         ? "bg-green-500/10 border-green-500/20 text-green-400"
                                         : log.status === "failed"
-                                        ? "bg-red-500/10 border-red-500/20 text-red-400"
+                                        ? "bg-amber-500/10 border-amber-500/20 text-amber-300"
                                         : "bg-zinc-800 border-zinc-700 text-zinc-400"
                                     }`}>
                                       {log.status.toUpperCase()}
@@ -1893,11 +1893,11 @@ export default function BroadcastsPage() {
           onClose={() => setShowConfirmModal(false)}
           dismissable={!approving}
           labelledBy="confirm-send-title"
-          panelClassName="border-red-500/20"
+          panelClassName="border-amber-500/20"
         >
           {selectedCampaign && (
             <>
-                <div className="flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider w-fit font-sans">
+                <div className="flex items-center gap-2 text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider w-fit font-sans">
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span>Critical: Manual Dispatch Authorization</span>
                 </div>
@@ -1922,7 +1922,7 @@ export default function BroadcastsPage() {
 
                 <div className="space-y-1.5 pt-2 border-t border-white/5">
                   <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider font-sans">
-                    To proceed, type the safety phrase <span className="text-red-400 font-mono">CONFIRM SEND</span>:
+                    To proceed, type the safety phrase <span className="text-amber-300 font-mono">CONFIRM SEND</span>:
                   </label>
                   <input
                     type="text"
@@ -1930,7 +1930,7 @@ export default function BroadcastsPage() {
                     onChange={(e) => setConfirmInput(e.target.value)}
                     placeholder="CONFIRM SEND"
                     disabled={approving}
-                    className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-red-500/30 h-10 font-mono"
+                    className="w-full bg-white/[0.03] border border-white/8 rounded-full px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500/30 h-10 font-mono"
                   />
                 </div>
 
@@ -2105,7 +2105,7 @@ export default function BroadcastsPage() {
                     <CheckCircle className="w-3.5 h-3.5" />
                   </div>
                 ) : toast.type === "error" ? (
-                  <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-300 shrink-0">
                     <AlertTriangle className="w-3.5 h-3.5" />
                   </div>
                 ) : (

@@ -305,7 +305,7 @@ export default function AccountsPage() {
       {/* One toolbar row, one control height. */}
       <div className="flex flex-wrap gap-2 mb-5">
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -366,7 +366,7 @@ export default function AccountsPage() {
           <h3 className="text-xs font-medium text-zinc-400 mb-1">
             {filtered ? "Nothing matches these filters" : "No accounts yet"}
           </h3>
-          <p className="text-[11px] text-zinc-600 max-w-xs mx-auto leading-relaxed">
+          <p className="text-[11px] text-zinc-400 max-w-xs mx-auto leading-relaxed">
             {filtered
               ? "Widen the filters to see the rest of the list."
               : "Companies appear here, with the people and deals that roll up to each."}
@@ -417,7 +417,7 @@ export default function AccountsPage() {
                         <span className="block text-xs font-medium text-white break-words">
                           {account.name}
                         </span>
-                        <span className="block text-[11px] text-zinc-600 mt-0.5 break-words">
+                        <span className="block text-[11px] text-zinc-400 mt-0.5 break-words">
                           {account.domain ?? "No web address"}
                           {excluded && " · Pays no commission"}
                         </span>
@@ -427,20 +427,20 @@ export default function AccountsPage() {
                           {account.lifecycle}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums">
+                      <td className="px-4 py-3 text-xs text-zinc-400 text-right tabular-nums">
                         {entry?.contacts.length ?? 0}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 text-right tabular-nums">
+                      <td className="px-4 py-3 text-xs text-zinc-400 text-right tabular-nums">
                         {entry?.deals.length ?? 0}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-300 text-right tabular-nums whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-white text-right tabular-nums whitespace-nowrap">
                         {entry?.openValue ? (
                           <Money cents={entry.openValue} currency={entry.currency} />
                         ) : (
                           "—"
                         )}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-zinc-400 whitespace-nowrap">
                         {formatDay(account.first_contact_at)}
                       </td>
                     </tr>

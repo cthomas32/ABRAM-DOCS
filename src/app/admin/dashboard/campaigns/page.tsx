@@ -277,7 +277,7 @@ export default function CampaignAnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-500 bg-[#0A0A0A]">
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-400 bg-[#0A0A0A]">
         <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
         <span className="text-xs font-medium">Loading campaign telemetry...</span>
       </div>
@@ -307,7 +307,7 @@ export default function CampaignAnalyticsPage() {
                 Live Feed
               </span>
             </h1>
-            <p className="text-xs text-zinc-500 mt-1 font-sans">
+            <p className="text-xs text-zinc-400 mt-1 font-sans">
               Visitor, engagement and sign-up telemetry for the conversion pages under /start.
             </p>
           </div>
@@ -315,7 +315,7 @@ export default function CampaignAnalyticsPage() {
           <button
             onClick={fetchAnalytics}
             disabled={refreshing}
-            className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-semibold rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
+            className="btn-glass px-4 min-h-[44px] sm:min-h-0 py-1.5 text-xs font-medium rounded-full flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${refreshing ? "animate-spin" : ""}`} />
             <span>{refreshing ? "Updating..." : "Refresh"}</span>
@@ -400,7 +400,7 @@ export default function CampaignAnalyticsPage() {
                   <span className="text-xl sm:text-2xl font-bold text-white tracking-tight font-mono block">
                     {kpi.value}
                   </span>
-                  <span className="text-[9px] text-zinc-500 font-medium">{kpi.hint}</span>
+                  <span className="text-[9px] text-zinc-400 font-medium">{kpi.hint}</span>
                 </div>
               </motion.div>
             );
@@ -477,7 +477,7 @@ function FunnelCard({ funnel }: { funnel: Funnel }) {
       <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
         Conversion Funnel
       </h2>
-      <p className="text-[10px] text-zinc-500 mt-1 mb-5">Share of visitors reaching each stage.</p>
+      <p className="text-[10px] text-zinc-400 mt-1 mb-5">Share of visitors reaching each stage.</p>
 
       <div className="space-y-3">
         {stages.map((stage) => {
@@ -488,7 +488,7 @@ function FunnelCard({ funnel }: { funnel: Funnel }) {
                 <span className="text-zinc-400 font-medium">{stage.label}</span>
                 <span className="text-zinc-300 font-mono font-semibold">
                   {stage.value.toLocaleString()}
-                  <span className="text-zinc-600 ml-1.5">{pct(stage.value, funnel.landed)}</span>
+                  <span className="text-zinc-400 ml-1.5">{pct(stage.value, funnel.landed)}</span>
                 </span>
               </div>
               <div className="h-1.5 w-full rounded-full bg-white/[0.04] overflow-hidden">
@@ -516,7 +516,7 @@ function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
         <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
           Daily Traffic
         </h2>
-        <div className="flex-1 flex items-center justify-center text-xs text-zinc-600 min-h-[160px]">
+        <div className="flex-1 flex items-center justify-center text-xs text-zinc-400 min-h-[160px]">
           No visits recorded in this window yet.
         </div>
       </div>
@@ -531,7 +531,7 @@ function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
         <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
           Daily Traffic
         </h2>
-        <div className="flex items-center gap-4 text-[9px] text-zinc-500 uppercase tracking-wider font-bold">
+        <div className="flex items-center gap-4 text-[9px] text-zinc-400 uppercase tracking-wider font-bold">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#8ECAFF]" /> Visitors
           </span>
@@ -559,7 +559,7 @@ function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
                 title={`${row.day}: ${row.visits} visitors`}
               />
             </div>
-            <span className="text-[8px] text-zinc-600 font-mono whitespace-nowrap">
+            <span className="text-[8px] text-zinc-400 font-mono whitespace-nowrap">
               {row.day.slice(5)}
             </span>
           </div>
@@ -581,10 +581,10 @@ function SourceTable({ rows }: { rows: SourceRow[] }) {
       badge={rows.length ? `${rows.length}` : undefined}
     >
       {rows.length === 0 ? (
-        <p className="text-xs text-zinc-600 py-6 text-center">No traffic recorded yet.</p>
+        <p className="text-xs text-zinc-400 py-6 text-center">No traffic recorded yet.</p>
       ) : (
         <div className="overflow-x-auto">
-          <p className="text-[9px] text-zinc-600 mb-2 md:hidden">Swipe to view &rarr;</p>
+          <p className="text-[9px] text-zinc-400 mb-2 md:hidden">Swipe to view &rarr;</p>
           <table className="w-full text-[11px] min-w-[420px]">
             <thead>
               <tr className="text-left text-gray-400 uppercase tracking-widest text-[10px] font-bold">
@@ -623,10 +623,10 @@ function PageTable({ rows }: { rows: PageRow[] }) {
       badge={rows.length ? `${rows.length}` : undefined}
     >
       {rows.length === 0 ? (
-        <p className="text-xs text-zinc-600 py-6 text-center">No page visits recorded yet.</p>
+        <p className="text-xs text-zinc-400 py-6 text-center">No page visits recorded yet.</p>
       ) : (
         <div className="overflow-x-auto">
-          <p className="text-[9px] text-zinc-600 mb-2 md:hidden">Swipe to view &rarr;</p>
+          <p className="text-[9px] text-zinc-400 mb-2 md:hidden">Swipe to view &rarr;</p>
           <table className="w-full text-[11px] min-w-[420px]">
             <thead>
               <tr className="text-left text-gray-400 uppercase tracking-widest text-[10px] font-bold">
@@ -667,7 +667,7 @@ function CampaignTable({ rows }: { rows: CampaignRow[] }) {
       badge={`${rows.length}`}
     >
       <div className="overflow-x-auto">
-        <p className="text-[9px] text-zinc-600 mb-2 md:hidden">Swipe to view &rarr;</p>
+        <p className="text-[9px] text-zinc-400 mb-2 md:hidden">Swipe to view &rarr;</p>
         <table className="w-full text-[11px] min-w-[520px]">
           <thead>
             <tr className="text-left text-gray-400 uppercase tracking-widest text-[10px] font-bold">
@@ -716,19 +716,19 @@ function BreakdownCard({
         <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
           {title}
         </h2>
-        <Icon className="w-4 h-4 text-zinc-500" />
+        <Icon className="w-4 h-4 text-zinc-400" />
       </div>
 
       {rows.length === 0 ? (
-        <p className="text-xs text-zinc-600 py-4 text-center">Nothing yet.</p>
+        <p className="text-xs text-zinc-400 py-4 text-center">Nothing yet.</p>
       ) : (
         <div className="space-y-2.5">
           {rows.map((row) => (
             <div key={row.label} className="flex items-center justify-between gap-3 text-[11px]">
               <span className="text-zinc-300 truncate">{row.label}</span>
-              <span className="text-zinc-500 font-mono shrink-0">
+              <span className="text-zinc-400 font-mono shrink-0">
                 {row.visits}
-                <span className="text-zinc-600 ml-1.5">{pct(row.visits, total)}</span>
+                <span className="text-zinc-400 ml-1.5">{pct(row.visits, total)}</span>
               </span>
             </div>
           ))}
@@ -814,7 +814,7 @@ function LinkBuilder() {
       <div className="mb-5">
         <label
           htmlFor="campaign-tag"
-          className="text-[9px] uppercase font-bold tracking-wider text-zinc-500 block mb-1.5"
+          className="text-[9px] uppercase font-bold tracking-wider text-zinc-400 block mb-1.5"
         >
           Campaign tag (optional)
         </label>
@@ -823,7 +823,7 @@ function LinkBuilder() {
           value={campaign}
           onChange={(event) => setCampaign(event.target.value)}
           placeholder="july-callsheet-clip"
-          className="w-full sm:max-w-sm rounded-full bg-white/[0.04] border border-white/10 px-4 h-11 sm:h-auto sm:py-2 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white/20 transition-all"
+          className="w-full sm:max-w-sm rounded-full bg-white/[0.04] border border-white/10 px-4 h-11 sm:h-auto sm:py-2 text-xs text-white placeholder:text-zinc-400 outline-none focus:border-white/20 transition-all"
         />
       </div>
 
@@ -836,7 +836,7 @@ function LinkBuilder() {
                 href={`https://abram.network${page.path}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-zinc-500 hover:text-white transition-colors"
+                className="text-zinc-400 hover:text-white transition-colors"
                 title="Open the page"
               >
                 <ExternalLink className="w-3 h-3" />
@@ -853,7 +853,7 @@ function LinkBuilder() {
                     className="flex items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2.5 text-left hover:border-white/15 hover:bg-white/[0.05] transition-all duration-200 cursor-pointer group min-h-[44px]"
                   >
                     <span className="min-w-0">
-                      <span className="block text-[9px] uppercase font-bold tracking-wider text-zinc-500">
+                      <span className="block text-[9px] uppercase font-bold tracking-wider text-zinc-400">
                         {channel.label}
                       </span>
                       <span className="block text-[10px] font-mono text-zinc-400 truncate group-hover:text-zinc-200">
@@ -863,7 +863,7 @@ function LinkBuilder() {
                     {copied === url ? (
                       <Check className="w-3.5 h-3.5 text-green-400 shrink-0" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5 text-zinc-500 shrink-0 group-hover:text-white" />
+                      <Copy className="w-3.5 h-3.5 text-zinc-400 shrink-0 group-hover:text-white" />
                     )}
                   </button>
                 );
@@ -888,10 +888,10 @@ function RecentVisitors({ rows }: { rows: RecentRow[] }) {
       badge={rows.length ? `${rows.length}` : undefined}
     >
       {rows.length === 0 ? (
-        <p className="text-xs text-zinc-600 py-6 text-center">No visits recorded yet.</p>
+        <p className="text-xs text-zinc-400 py-6 text-center">No visits recorded yet.</p>
       ) : (
         <div className="overflow-x-auto">
-          <p className="text-[9px] text-zinc-600 mb-2 md:hidden">Swipe to view &rarr;</p>
+          <p className="text-[9px] text-zinc-400 mb-2 md:hidden">Swipe to view &rarr;</p>
           <table className="w-full text-[11px] min-w-[760px]">
             <thead>
               <tr className="text-left text-gray-400 uppercase tracking-widest text-[10px] font-bold">
@@ -920,15 +920,15 @@ function RecentVisitors({ rows }: { rows: RecentRow[] }) {
                   <td className="py-2.5 text-zinc-400 capitalize">
                     {row.source}
                     {row.campaign ? (
-                      <span className="text-zinc-600 font-mono ml-1.5">{row.campaign}</span>
+                      <span className="text-zinc-400 font-mono ml-1.5">{row.campaign}</span>
                     ) : null}
                   </td>
-                  <td className="py-2.5 text-zinc-500 capitalize">
+                  <td className="py-2.5 text-zinc-400 capitalize">
                     {row.device_type} {row.os ? `/ ${row.os}` : ""}
                   </td>
-                  <td className="py-2.5 text-zinc-500 font-mono">{row.country || "n/a"}</td>
+                  <td className="py-2.5 text-zinc-400 font-mono">{row.country || "n/a"}</td>
                   <td className="py-2.5 text-right text-zinc-400 font-mono">{row.max_scroll_pct}%</td>
-                  <td className="py-2.5 text-right text-zinc-500 font-mono">
+                  <td className="py-2.5 text-right text-zinc-400 font-mono">
                     {formatDuration(row.duration_seconds)}
                   </td>
                   <td className="py-2.5 text-right">
@@ -941,7 +941,7 @@ function RecentVisitors({ rows }: { rows: RecentRow[] }) {
                         Clicked
                       </span>
                     ) : (
-                      <span className="text-[9px] text-zinc-600">Read</span>
+                      <span className="text-[9px] text-zinc-400">Read</span>
                     )}
                   </td>
                 </tr>

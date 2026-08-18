@@ -371,7 +371,7 @@ export default function SubscribersPage() {
       >
         <div className="flex items-center gap-1.5">
           <span>{label}</span>
-          <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors shrink-0">
+          <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors shrink-0">
             {isSorted ? (
               sortDirection === "asc" ? (
                 <ArrowUp className="w-3 h-3 text-white" />
@@ -397,7 +397,7 @@ export default function SubscribersPage() {
               <Users className="w-5 h-5 text-zinc-400" />
               Audience Subscribers
             </h1>
-            <p className="text-xs text-zinc-500 mt-1 font-sans">
+            <p className="text-xs text-zinc-400 mt-1 font-sans">
               Manage your newsletter audience and monitor connection status with Resend.
             </p>
           </div>
@@ -449,7 +449,7 @@ export default function SubscribersPage() {
               <span className={`text-[10px] px-2 py-0.5 rounded border font-semibold shrink-0 ${
                 resendStatus.status === "Connected"
                   ? "bg-green-500/10 border-green-500/20 text-green-400"
-                  : "bg-red-500/10 border-red-500/20 text-red-400"
+                  : "bg-amber-500/10 border-amber-500/20 text-amber-300"
               }`}>
                 {resendStatus.status}
               </span>
@@ -461,7 +461,7 @@ export default function SubscribersPage() {
             <button
               onClick={resendStatus.status === "Connected" ? handleSyncContacts : checkResend}
               disabled={syncingContacts || checkingResend}
-              className="btn-glass h-11 sm:h-8 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-50"
+              className="btn-glass h-9 w-full sm:w-auto px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-50"
             >
               {syncingContacts || checkingResend ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -497,7 +497,7 @@ export default function SubscribersPage() {
           {/* Search field */}
           <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
             <div className="relative w-full sm:max-w-xs">
-              <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchTerm}
@@ -506,7 +506,7 @@ export default function SubscribersPage() {
                 className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-9 pr-4 py-2.5 md:py-1.5 text-xs text-white focus:outline-none focus:border-white/10 transition-all duration-200 font-sans"
               />
             </div>
-            <div className="text-[10px] text-zinc-500 font-sans font-medium shrink-0">
+            <div className="text-[10px] text-zinc-400 font-sans font-medium shrink-0">
               Total: <span className="text-white font-bold">{totalFilteredCount}</span>
             </div>
           </div>
@@ -514,12 +514,12 @@ export default function SubscribersPage() {
 
         {/* Subscribers Table Grid */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-500">
+          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-400">
             <Loader2 className="w-5 h-5 animate-spin" />
             <span className="text-xs font-sans">Querying newsletter audience...</span>
           </div>
         ) : paginatedSubscribers.length === 0 ? (
-          <div className="text-center py-16 text-zinc-500 text-xs border border-dashed border-white/5 rounded-2xl font-sans">
+          <div className="text-center py-16 text-zinc-400 text-xs border border-dashed border-white/5 rounded-2xl font-sans">
             No subscribers found matching your criteria.
           </div>
         ) : (
@@ -528,7 +528,7 @@ export default function SubscribersPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse min-w-[1200px]">
                   <thead>
-                    <tr className="border-b border-white/5 text-[9px] uppercase tracking-widest text-zinc-500 bg-zinc-950/40">
+                    <tr className="border-b border-white/5 text-[9px] uppercase tracking-widest text-zinc-400 bg-zinc-950/40">
                       {renderHeader("Email Address", "email")}
                       {renderHeader("First Name", "first_name")}
                       {renderHeader("Last Name", "last_name")}
@@ -561,7 +561,7 @@ export default function SubscribersPage() {
                               Unsubscribed
                             </span>
                           ) : (
-                            <span className="text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-red-950/20 border border-red-500/20 text-red-400 font-sans">
+                            <span className="text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-red-950/20 border border-amber-500/20 text-amber-300 font-sans">
                               Bounced
                             </span>
                           )}
@@ -574,25 +574,25 @@ export default function SubscribersPage() {
                               </span>
                             )}
                             {sub.is_application_list && (
-                              <span className="text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded bg-red-950/20 text-red-400 border border-red-500/20 font-sans">
+                              <span className="text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded bg-red-950/20 text-amber-300 border border-amber-500/20 font-sans">
                                 Application
                               </span>
                             )}
                           </div>
                         </td>
-                        <td className="py-3.5 px-5 font-mono text-[10px] text-zinc-500">
+                        <td className="py-3.5 px-5 font-mono text-[10px] text-zinc-400">
                           {formatDate(sub.created_at)}
                         </td>
-                        <td className="py-3.5 px-5 font-mono text-[10px] text-zinc-500">
+                        <td className="py-3.5 px-5 font-mono text-[10px] text-zinc-400">
                           {formatDateTime(sub.updated_at)}
                         </td>
                         <td className="py-3.5 px-5">
-                          <div className="flex items-center gap-1.5 font-mono text-[9px] text-zinc-500">
+                          <div className="flex items-center gap-1.5 font-mono text-[9px] text-zinc-400">
                             <span className="truncate max-w-[120px]">{sub.resend_contact_id || "Simulated Feed"}</span>
                             {sub.resend_contact_id && (
                               <button
                                 onClick={() => handleCopy(sub.resend_contact_id!)}
-                                className="p-3 sm:p-1 hover:bg-white/5 rounded text-zinc-600 hover:text-zinc-300 transition-colors flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 cursor-pointer"
+                                className="p-3 sm:p-1 hover:bg-white/5 rounded text-zinc-400 hover:text-zinc-300 transition-colors flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 cursor-pointer"
                                 title="Copy Resend Contact ID"
                               >
                                 {copiedId === sub.resend_contact_id ? (
@@ -609,7 +609,7 @@ export default function SubscribersPage() {
                   </tbody>
                 </table>
               </div>
-              <div className="p-3 border-t border-white/5 text-center text-[10px] text-zinc-500 block md:hidden">
+              <div className="p-3 border-t border-white/5 text-center text-[10px] text-zinc-400 block md:hidden">
                 Swipe left/right to scroll the audience ledger.
               </div>
             </div>
@@ -617,7 +617,7 @@ export default function SubscribersPage() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-zinc-950/20 border border-white/5 p-4 rounded-2xl font-sans">
-                <div className="text-xs text-zinc-500">
+                <div className="text-xs text-zinc-400">
                   Showing <span className="text-white font-medium">{startIndex + 1}</span> to{" "}
                   <span className="text-white font-medium">{endIndex}</span> of{" "}
                   <span className="text-white font-medium">{totalFilteredCount}</span> subscribers
@@ -650,7 +650,7 @@ export default function SubscribersPage() {
                       return (
                         <span
                           key={`ellipsis-${idx}`}
-                          className="w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-600 text-xs select-none min-w-[44px] min-h-[44px] sm:min-w-[32px] sm:min-h-[32px]"
+                          className="w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-400 text-xs select-none min-w-[44px] min-h-[44px] sm:min-w-[32px] sm:min-h-[32px]"
                         >
                           ...
                         </span>
@@ -714,7 +714,7 @@ export default function SubscribersPage() {
           </h3>
           <form onSubmit={handleAddSubscriber} className="space-y-4">
                   <div>
-                    <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Email Address</label>
+                    <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">Email Address</label>
                     <input
                       type="email"
                       required
@@ -726,7 +726,7 @@ export default function SubscribersPage() {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">First Name</label>
+                      <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">First Name</label>
                       <input
                         type="text"
                         value={firstNameInput}
@@ -736,7 +736,7 @@ export default function SubscribersPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Last Name</label>
+                      <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">Last Name</label>
                       <input
                         type="text"
                         value={lastNameInput}
@@ -749,7 +749,7 @@ export default function SubscribersPage() {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Job Title</label>
+                      <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">Job Title</label>
                       <input
                         type="text"
                         value={jobTitleInput}
@@ -759,13 +759,13 @@ export default function SubscribersPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-1">Company Size</label>
+                      <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-1">Company Size</label>
                       <select
                         value={companySizeInput}
                         onChange={(e) => setCompanySizeInput(e.target.value)}
                         className="w-full bg-zinc-950 border border-white/8 rounded-full px-4 text-xs text-white focus:outline-none focus:border-white/20 h-10 font-sans cursor-pointer"
                       >
-                        <option value="" className="text-zinc-500">Select...</option>
+                        <option value="" className="text-zinc-400">Select...</option>
                         <option value="1">1 (Solo)</option>
                         <option value="2-10">2-10</option>
                         <option value="11-50">11-50</option>
@@ -778,7 +778,7 @@ export default function SubscribersPage() {
                   
                   {/* List Membership Selection */}
                   <div>
-                    <label className="block text-[9px] uppercase font-bold text-zinc-500 tracking-wider mb-2">
+                    <label className="block text-[9px] uppercase font-bold text-zinc-400 tracking-wider mb-2">
                       List Membership
                     </label>
                     <div className="space-y-2.5 bg-white/[0.02] border border-white/5 rounded-xl p-3">
@@ -794,7 +794,7 @@ export default function SubscribersPage() {
                         />
                         <div className="flex flex-col">
                           <span className="font-semibold text-white">Marketing List</span>
-                          <span className="text-[10px] text-zinc-500">Subscribes to updates, announcements, and newsletters.</span>
+                          <span className="text-[10px] text-zinc-400">Subscribes to updates, announcements, and newsletters.</span>
                         </div>
                       </label>
                       <label className="flex items-center gap-2.5 text-xs text-zinc-300 cursor-pointer border-t border-white/5 pt-2.5">
@@ -811,7 +811,7 @@ export default function SubscribersPage() {
                         />
                         <div className="flex flex-col">
                           <span className="font-semibold text-white">Application List</span>
-                          <span className="text-[10px] text-zinc-500">Identifies users signed up to use the core application.</span>
+                          <span className="text-[10px] text-zinc-400">Identifies users signed up to use the core application.</span>
                         </div>
                       </label>
                     </div>
@@ -821,14 +821,14 @@ export default function SubscribersPage() {
                     <button
                       type="button"
                       onClick={() => setShowAddModal(false)}
-                      className="btn-glass h-11 sm:h-9 px-4 text-xs font-semibold rounded-full cursor-pointer font-sans"
+                      className="btn-glass h-9 px-4 text-xs font-medium rounded-full cursor-pointer font-sans"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="btn-primary h-11 sm:h-9 px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50"
+                      className="btn-primary h-9 px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 font-sans disabled:opacity-50"
                     >
                       {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                       <span>Register Contact</span>
@@ -853,7 +853,7 @@ export default function SubscribersPage() {
                     <CheckCircle className="w-3.5 h-3.5" />
                   </div>
                 ) : (
-                  <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-300 shrink-0">
                     <AlertTriangle className="w-3.5 h-3.5" />
                   </div>
                 )}

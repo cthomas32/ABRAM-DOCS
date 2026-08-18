@@ -261,7 +261,7 @@ export default function CommandPalette({ permissions }: { permissions: Permissio
         className="relative mt-[8vh] w-full max-w-xl rounded-2xl border border-white/10 bg-[#0C0C0C] shadow-2xl overflow-hidden"
       >
         <div className="flex items-center gap-3 px-4 h-12 border-b border-white/5">
-          <Search className="w-4 h-4 text-zinc-500 shrink-0" />
+          <Search className="w-4 h-4 text-zinc-400 shrink-0" />
           <input
             ref={inputRef}
             value={query}
@@ -269,16 +269,16 @@ export default function CommandPalette({ permissions }: { permissions: Permissio
             onKeyDown={onKeyDown}
             placeholder="Search pages, people, companies and deals"
             aria-label="Search the console"
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-600 outline-none"
+            className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-400 outline-none"
           />
-          <kbd className="shrink-0 text-[10px] text-zinc-500 border border-white/10 rounded px-1.5 py-0.5">
+          <kbd className="shrink-0 text-[10px] text-zinc-400 border border-white/10 rounded px-1.5 py-0.5">
             ESC
           </kbd>
         </div>
 
         <div ref={listRef} className="max-h-[52vh] overflow-y-auto py-1.5">
           {results.length === 0 ? (
-            <p className="px-4 py-8 text-center text-xs text-zinc-500">
+            <p className="px-4 py-8 text-center text-xs text-zinc-400">
               {loadedRecords
                 ? "Nothing matches. Try a company name, a person, or a page."
                 : "Reading people and companies…"}
@@ -306,12 +306,12 @@ export default function CommandPalette({ permissions }: { permissions: Permissio
                       active ? "bg-white/[0.06]" : "hover:bg-white/[0.03]"
                     }`}
                   >
-                    <Icon className="w-4 h-4 shrink-0 text-zinc-500" />
+                    <Icon className="w-4 h-4 shrink-0 text-zinc-400" />
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm text-white truncate">{entry.label}</span>
                       <span className="block text-[11px] text-zinc-400 truncate">{entry.hint}</span>
                     </span>
-                    {active && <CornerDownLeft className="w-3.5 h-3.5 text-zinc-500 shrink-0" />}
+                    {active && <CornerDownLeft className="w-3.5 h-3.5 text-zinc-400 shrink-0" />}
                   </button>
                 </React.Fragment>
               );

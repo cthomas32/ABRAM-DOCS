@@ -81,7 +81,7 @@ const PHOTO_FOLDER = "authors";
 
 const FIELD_CLASS =
   "w-full bg-[#121212] border border-white/8 rounded-lg px-3 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white/20 font-sans";
-const LABEL_CLASS = "text-[9px] uppercase font-bold text-zinc-500 tracking-wider block mb-1";
+const LABEL_CLASS = "text-[9px] uppercase font-bold text-zinc-400 tracking-wider block mb-1";
 
 export default function TeamPage() {
   const supabase = createClient();
@@ -286,14 +286,14 @@ export default function TeamPage() {
               <UsersRound className="w-5 h-5 text-zinc-400" />
               Team
             </h1>
-            <p className="text-xs text-zinc-500 mt-1 leading-relaxed max-w-2xl">
+            <p className="text-xs text-zinc-400 mt-1 leading-relaxed max-w-2xl">
               The people who write here. A name, a job title and a photograph, written down once.
               Blog bylines and contact cards both read from this list, so a new headshot is one edit.
             </p>
           </div>
           <button
             onClick={openCreate}
-            className="btn-primary h-11 sm:h-9 w-full sm:w-auto px-4 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+            className="btn-primary h-9 w-full sm:w-auto px-4 text-xs font-medium rounded-full flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Add Person</span>
@@ -303,7 +303,7 @@ export default function TeamPage() {
         {/* Search and filter */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-950/20 border border-white/5 p-3 rounded-2xl">
           <div className="relative w-full sm:max-w-xs">
-            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchTerm}
@@ -317,7 +317,7 @@ export default function TeamPage() {
             className={`px-3.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-full text-[10px] font-semibold transition-all cursor-pointer border shrink-0 ${
               showInactive
                 ? "bg-white/10 text-white border-white/10"
-                : "text-zinc-500 hover:text-zinc-300 border-transparent"
+                : "text-zinc-400 hover:text-zinc-300 border-transparent"
             }`}
           >
             {showInactive ? "Showing everyone" : "Active only"}
@@ -326,12 +326,12 @@ export default function TeamPage() {
 
         {/* The list */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-500">
+          <div className="flex flex-col items-center justify-center py-16 gap-2 text-zinc-400">
             <Loader2 className="w-5 h-5 animate-spin" />
             <span className="text-xs">Loading the team...</span>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-16 text-zinc-500 text-xs border border-dashed border-white/5 rounded-2xl">
+          <div className="text-center py-16 text-zinc-400 text-xs border border-dashed border-white/5 rounded-2xl">
             Nobody here yet. Add the first person to give a post a byline.
           </div>
         ) : (
@@ -351,7 +351,7 @@ export default function TeamPage() {
                       className="w-12 h-12 rounded-full object-cover border border-white/10 shrink-0"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-zinc-500 shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-zinc-400 shrink-0">
                       <UsersRound className="w-5 h-5" />
                     </div>
                   )}
@@ -368,30 +368,30 @@ export default function TeamPage() {
                     {member.job_title && (
                       <p className="text-[11px] text-zinc-400 truncate">{member.job_title}</p>
                     )}
-                    <p className="text-[10px] text-zinc-600 font-mono truncate">/{member.slug}</p>
+                    <p className="text-[10px] text-zinc-400 font-mono truncate">/{member.slug}</p>
                   </div>
                 </div>
 
                 {member.short_bio && (
-                  <p className="text-[11px] text-zinc-500 leading-relaxed mt-3 line-clamp-2 break-words">
+                  <p className="text-[11px] text-zinc-400 leading-relaxed mt-3 line-clamp-2 break-words">
                     {member.short_bio}
                   </p>
                 )}
 
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] text-zinc-500 mt-3">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] text-zinc-400 mt-3">
                   <span className="flex items-center gap-1">
-                    <Newspaper className="w-3 h-3 text-zinc-600" />
+                    <Newspaper className="w-3 h-3 text-zinc-400" />
                     {postCounts[member.id] || 0} posts
                   </span>
                   {member.email && (
                     <span className="flex items-center gap-1 truncate max-w-[160px]">
-                      <Mail className="w-3 h-3 text-zinc-600 shrink-0" />
+                      <Mail className="w-3 h-3 text-zinc-400 shrink-0" />
                       <span className="truncate">{member.email}</span>
                     </span>
                   )}
                   {member.website && (
                     <span className="flex items-center gap-1 truncate max-w-[140px]">
-                      <LinkIcon className="w-3 h-3 text-zinc-600 shrink-0" />
+                      <LinkIcon className="w-3 h-3 text-zinc-400 shrink-0" />
                       <span className="truncate">{member.website}</span>
                     </span>
                   )}
@@ -400,7 +400,7 @@ export default function TeamPage() {
                 <div className="flex gap-2 pt-4 mt-4 border-t border-white/5">
                   <button
                     onClick={() => openEdit(member)}
-                    className="btn-glass flex-1 h-11 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5 hover:text-white"
+                    className="btn-glass flex-1 h-9 px-3 text-[10px] font-medium rounded-full flex items-center justify-center gap-1.5 hover:text-white"
                   >
                     <Pencil className="w-3.5 h-3.5" />
                     <span>Edit</span>
@@ -408,7 +408,7 @@ export default function TeamPage() {
                   {member.is_active ? (
                     <button
                       onClick={() => setConfirmDeactivate(member)}
-                      className="btn-glass flex-1 h-11 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5"
+                      className="btn-glass flex-1 h-9 px-3 text-[10px] font-medium rounded-full flex items-center justify-center gap-1.5"
                     >
                       <EyeOff className="w-3.5 h-3.5" />
                       <span>Deactivate</span>
@@ -416,7 +416,7 @@ export default function TeamPage() {
                   ) : (
                     <button
                       onClick={() => setActive(member, true)}
-                      className="btn-glass flex-1 h-11 sm:h-8 px-3 text-[10px] font-bold rounded-full flex items-center justify-center gap-1.5"
+                      className="btn-glass flex-1 h-9 px-3 text-[10px] font-medium rounded-full flex items-center justify-center gap-1.5"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Reactivate</span>
@@ -428,7 +428,7 @@ export default function TeamPage() {
           </div>
         )}
 
-        <p className="text-[10px] text-zinc-600 leading-relaxed">
+        <p className="text-[10px] text-zinc-400 leading-relaxed">
           Removing somebody is deliberately not possible here. Deactivating takes them out of the
           author picker and leaves every published post standing.{" "}
           <Link href="/admin/dashboard/blog" className="underline hover:text-zinc-400">
@@ -449,7 +449,7 @@ export default function TeamPage() {
           <h3 id="team-form-title" className="text-sm font-bold text-white tracking-tight">
             {form?.id ? "Edit person" : "Add person"}
           </h3>
-          <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-zinc-600">Team</span>
+          <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-zinc-400">Team</span>
         </div>
 
         {form && (
@@ -463,7 +463,7 @@ export default function TeamPage() {
                   className="w-14 h-14 rounded-full object-cover border border-white/10 shrink-0"
                 />
               ) : (
-                <div className="w-14 h-14 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-zinc-500 shrink-0">
+                <div className="w-14 h-14 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-zinc-400 shrink-0">
                   <UsersRound className="w-5 h-5" />
                 </div>
               )}
@@ -473,7 +473,7 @@ export default function TeamPage() {
                     type="button"
                     onClick={() => document.getElementById("team-photo-input")?.click()}
                     disabled={uploading}
-                    className="btn-glass h-9 px-3 text-[10px] font-bold rounded-full flex items-center gap-1.5"
+                    className="btn-glass h-9 px-3 text-[10px] font-medium rounded-full flex items-center gap-1.5"
                   >
                     {uploading ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -499,7 +499,7 @@ export default function TeamPage() {
                   onChange={handlePhotoUpload}
                   className="hidden"
                 />
-                <p className="text-[9px] text-zinc-600 leading-relaxed">
+                <p className="text-[9px] text-zinc-400 leading-relaxed">
                   Used on every byline and contact card at once.
                 </p>
               </div>
@@ -631,7 +631,7 @@ export default function TeamPage() {
               />
               <span className="text-xs text-zinc-300">
                 Active
-                <span className="block text-[10px] text-zinc-600">
+                <span className="block text-[10px] text-zinc-400">
                   Inactive people stay off the author picker. Their published posts are untouched.
                 </span>
               </span>
@@ -641,14 +641,14 @@ export default function TeamPage() {
               <button
                 onClick={() => setForm(null)}
                 disabled={saving}
-                className="btn-glass flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full"
+                className="btn-glass flex-1 h-11 sm:h-10 text-xs font-medium rounded-full"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="btn-primary flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full flex items-center justify-center gap-1.5"
+                className="btn-primary flex-1 h-11 sm:h-10 text-xs font-medium rounded-full flex items-center justify-center gap-1.5"
               >
                 {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                 <span>{form.id ? "Save changes" : "Add to team"}</span>
@@ -680,13 +680,13 @@ export default function TeamPage() {
           <div className="flex gap-3 w-full">
             <button
               onClick={() => setConfirmDeactivate(null)}
-              className="btn-glass flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full"
+              className="btn-glass flex-1 h-11 sm:h-10 text-xs font-medium rounded-full"
             >
               Cancel
             </button>
             <button
               onClick={() => confirmDeactivate && setActive(confirmDeactivate, false)}
-              className="btn-primary flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full"
+              className="btn-primary flex-1 h-11 sm:h-10 text-xs font-medium rounded-full"
             >
               Deactivate
             </button>
@@ -709,7 +709,7 @@ export default function TeamPage() {
                 className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border ${
                   t.type === "success"
                     ? "bg-green-500/10 text-green-400 border-green-500/10"
-                    : "bg-red-500/10 text-red-400 border-red-500/10"
+                    : "bg-amber-500/10 text-amber-300 border-amber-500/10"
                 }`}
               >
                 {t.type === "success" ? (

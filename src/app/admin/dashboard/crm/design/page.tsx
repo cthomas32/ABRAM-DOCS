@@ -177,7 +177,7 @@ export default function QrDesignPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
               className={`glass-panel rounded-xl px-4 py-3 flex items-start gap-3 border ${
-                toast.tone === "error" ? "border-red-500/30" : "border-white/10"
+                toast.tone === "error" ? "border-amber-500/30" : "border-white/10"
               }`}
             >
               <p className="text-xs text-zinc-200 leading-relaxed flex-1">{toast.message}</p>

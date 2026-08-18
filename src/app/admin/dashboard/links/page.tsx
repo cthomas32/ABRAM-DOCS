@@ -403,7 +403,7 @@ export default function LinkHubAdminPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-500 bg-[#0A0A0A]">
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] gap-2 text-zinc-400 bg-[#0A0A0A]">
         <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
         <span className="text-xs font-medium">Loading link hub...</span>
       </div>
@@ -414,7 +414,7 @@ export default function LinkHubAdminPage() {
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 relative radial-space-glow tech-grid-overlay">
       <div className="space-y-5 relative z-10 max-w-7xl mx-auto">
         {error ? (
-          <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 text-red-400 text-xs flex items-start gap-2.5 backdrop-blur-md">
+          <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 text-amber-300 text-xs flex items-start gap-2.5 backdrop-blur-md">
             <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
             <p className="leading-relaxed break-words">{error}</p>
           </div>
@@ -431,7 +431,7 @@ export default function LinkHubAdminPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-xl font-bold tracking-tight text-white font-sans">Link Hub</h1>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-xs text-zinc-400 mt-1">
               The one link for your social bios. {liveCount} live,{" "}
               {totalClicks.toLocaleString()} clicks all time.
             </p>
@@ -441,7 +441,7 @@ export default function LinkHubAdminPage() {
           <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
             <button
               onClick={copyUrl}
-              className="btn-glass h-10 sm:h-8 px-4 text-xs font-semibold rounded-full flex items-center gap-2"
+              className="btn-glass h-10 sm:h-8 px-4 text-xs font-medium rounded-full flex items-center gap-2"
             >
               {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
               {copied ? "Copied" : "Copy link"}
@@ -450,7 +450,7 @@ export default function LinkHubAdminPage() {
               href={PUBLIC_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-glass h-10 sm:h-8 px-4 text-xs font-semibold rounded-full flex items-center gap-2"
+              className="btn-glass h-10 sm:h-8 px-4 text-xs font-medium rounded-full flex items-center gap-2"
             >
               <ExternalLink className="w-3 h-3" />
               View page
@@ -473,7 +473,7 @@ export default function LinkHubAdminPage() {
               className={`flex items-center gap-1.5 px-4 min-h-[44px] sm:min-h-[38px] text-xs font-semibold border-b-2 -mb-px transition-all cursor-pointer ${
                 tab === key
                   ? "border-white text-white"
-                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+                  : "border-transparent text-zinc-400 hover:text-zinc-300"
               }`}
             >
               {icon}
@@ -564,10 +564,10 @@ export default function LinkHubAdminPage() {
           dismissable={!busy}
           size="sm"
           labelledBy="delete-block-title"
-          panelClassName="border-red-500/20"
+          panelClassName="border-amber-500/20"
         >
           <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4">
+            <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-300 mb-4">
               <Trash2 className="w-6 h-6" />
             </div>
             <h3 id="delete-block-title" className="text-sm font-bold text-white tracking-tight mb-2">
@@ -581,7 +581,7 @@ export default function LinkHubAdminPage() {
             <div className="flex gap-3 w-full">
               <button
                 onClick={() => setConfirmDeleteId(null)}
-                className="btn-glass flex-1 h-11 sm:h-10 text-xs font-semibold rounded-full"
+                className="btn-glass flex-1 h-11 sm:h-10 text-xs font-medium rounded-full"
               >
                 Cancel
               </button>
@@ -677,7 +677,7 @@ function ContentTab({
     >
       {draftType ? (
         <div className="mb-5 p-4 rounded-xl border border-white/10 bg-white/[0.02] space-y-3">
-          <span className="text-[9px] uppercase font-bold tracking-wider text-zinc-500 flex items-center gap-1.5">
+          <span className="text-[9px] uppercase font-bold tracking-wider text-zinc-400 flex items-center gap-1.5">
             {BLOCK_LABELS[draftType].icon}
             New {BLOCK_LABELS[draftType].name.toLowerCase()}
           </span>
@@ -709,7 +709,7 @@ function ContentTab({
       ) : null}
 
       {links.length === 0 ? (
-        <p className="text-xs text-zinc-600 py-8 text-center">
+        <p className="text-xs text-zinc-400 py-8 text-center">
           Nothing here yet. Add the first block above.
         </p>
       ) : (
@@ -842,7 +842,7 @@ function BlockRow({
               title="Drag to reorder"
               // touch-none stops the browser scrolling the page instead of
               // dragging when the handle is held on a phone.
-              className={`touch-none select-none shrink-0 w-8 h-11 sm:w-7 sm:h-10 -ml-1 flex items-center justify-center rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-white/5 active:bg-white/10 ${
+              className={`touch-none select-none shrink-0 w-8 h-11 sm:w-7 sm:h-10 -ml-1 flex items-center justify-center rounded-lg text-zinc-400 hover:text-zinc-300 hover:bg-white/5 active:bg-white/10 ${
                 dragging ? "cursor-grabbing text-white bg-white/10" : "cursor-grab"
               }`}
             >
@@ -875,11 +875,11 @@ function BlockRow({
               </div>
 
               {block.block_type === "header" ? null : (
-                <p className="text-[10px] text-zinc-600 font-mono truncate mt-0.5">{block.url}</p>
+                <p className="text-[10px] text-zinc-400 font-mono truncate mt-0.5">{block.url}</p>
               )}
 
               {block.starts_at || block.ends_at ? (
-                <p className="text-[9px] text-zinc-600 mt-1 flex items-center gap-1">
+                <p className="text-[9px] text-zinc-400 mt-1 flex items-center gap-1">
                   <Clock className="w-2.5 h-2.5 shrink-0" />
                   <span className="truncate">
                     {block.starts_at ? new Date(block.starts_at).toLocaleString() : "now"}
@@ -897,7 +897,7 @@ function BlockRow({
                   onClick={() => onMove(index, -1)}
                   disabled={index === 0}
                   aria-label="Move up"
-                  className="w-11 h-11 sm:w-6 sm:h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
+                  className="w-11 h-11 sm:w-6 sm:h-5 flex items-center justify-center rounded text-zinc-400 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
                 >
                   <ArrowUp className="w-3 h-3" />
                 </button>
@@ -905,7 +905,7 @@ function BlockRow({
                   onClick={() => onMove(index, 1)}
                   disabled={index === total - 1}
                   aria-label="Move down"
-                  className="w-11 h-11 sm:w-6 sm:h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
+                  className="w-11 h-11 sm:w-6 sm:h-5 flex items-center justify-center rounded text-zinc-400 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent cursor-pointer"
                 >
                   <ArrowDown className="w-3 h-3" />
                 </button>
@@ -913,7 +913,7 @@ function BlockRow({
 
               {block.block_type !== "header" ? (
                 <span
-                  className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-mono"
+                  className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-mono"
                   title="Clicks all time"
                 >
                   <MousePointerClick className="w-3 h-3" />
@@ -936,7 +936,7 @@ function BlockRow({
               onClick={() => onMove(index, -1)}
               disabled={index === 0}
               aria-label="Move up"
-              className="w-11 h-11 sm:w-9 sm:h-9 flex items-center justify-center rounded-full text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
+              className="w-11 h-11 sm:w-9 sm:h-9 flex items-center justify-center rounded-full text-zinc-400 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
             >
               <ArrowUp className="w-3.5 h-3.5" />
             </button>
@@ -944,14 +944,14 @@ function BlockRow({
               onClick={() => onMove(index, 1)}
               disabled={index === total - 1}
               aria-label="Move down"
-              className="w-11 h-11 sm:w-9 sm:h-9 flex items-center justify-center rounded-full text-zinc-500 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
+              className="w-11 h-11 sm:w-9 sm:h-9 flex items-center justify-center rounded-full text-zinc-400 hover:text-white hover:bg-white/5 disabled:opacity-25 cursor-pointer"
             >
               <ArrowDown className="w-3.5 h-3.5" />
             </button>
 
             {block.block_type !== "header" ? (
               <span
-                className="flex items-center gap-1 text-[10px] text-zinc-500 font-mono ml-1"
+                className="flex items-center gap-1 text-[10px] text-zinc-400 font-mono ml-1"
                 title="Clicks all time"
               >
                 <MousePointerClick className="w-3 h-3" />
@@ -1117,7 +1117,7 @@ function Badge({
     default: "bg-white/10 border-white/15 text-white",
     blue: "bg-blue-500/10 border-blue-500/25 text-blue-300",
     amber: "bg-amber-500/10 border-amber-500/25 text-amber-300",
-    muted: "bg-white/[0.03] border-white/8 text-zinc-500",
+    muted: "bg-white/[0.03] border-white/8 text-zinc-400",
   };
   return (
     <span
