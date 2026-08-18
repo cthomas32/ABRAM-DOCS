@@ -413,13 +413,15 @@ exactly.
 
 - **The broadcasts page still carries the red palette.** It was outside builder D's file list. It is
   the last screen in the console using red for anything.
-- **Stripe to DOCS collections sync.** Nothing writes `crm_deals.promo_code`, `utm_source` or
-  `external_customer_ref` automatically, and nothing writes `revenue_collections` except
-  `recordCollection` in `src/lib/growth/collectionsService.ts`, which is a manual owner-only entry.
-  Until the sync exists, attribution rule one fires on a column a person filled in. This is the
-  largest open item and it gates paying anybody accurately.
-- **Promo redemption evidence.** The promo admin proxy reports campaigns and codes but no
-  redemptions, so "this deal used her code" is an assertion rather than a fact read off a checkout.
+- ~~**Stripe to DOCS collections sync.**~~ **Closed 2026-08-18.** abram-network queues every cash
+  event in a `docs_sync_outbox` and posts it here signed; `/api/sync/collections` maps it to an
+  account and a deal, writes `revenue_collections`, stamps `promo_code` / `utm_source` /
+  `external_customer_ref` onto the deal and re-runs attribution. See
+  `docs/plans/collections-sync.md`. What remains manual is named there: application-fee revenue is
+  not mirrored, and a deal the sync invented has no `sourced_by` until a person sets one.
+- ~~**Promo redemption evidence.**~~ **Closed 2026-08-18.** The code is read from
+  `promo_redemptions` in abram-network — written from the completed checkout session — and travels
+  with the payment. Rule one now fires on a fact rather than an assertion.
 - **Deal stage history is written but not read.** `20260817160000` gives `crm_stage_changes` a
   `deal_id`, and `deals/actions.ts` writes a `crm_interactions` line on every move, but no screen
   renders a deal's history yet. The drawer has the space for it.
