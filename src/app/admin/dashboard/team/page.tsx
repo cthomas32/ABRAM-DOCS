@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
-import { KeyRound, UsersRound } from "lucide-react";
+import { KeyRound, Plug, UsersRound } from "lucide-react";
 import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can, type Permission } from "@/lib/auth/permissions";
 import ObjectTabs, { resolveTab, type ObjectTab } from "@/components/admin/ObjectTabs";
 import Panel from "@/components/admin/Panel";
-import AccessPanel from "../people/AccessPanel";
+import AccessPanel from "./AccessPanel";
 import BylinesPanel from "./BylinesPanel";
+import McpPanel from "./McpPanel";
 
 /**
  * Who works here, and what their login can do.
@@ -21,6 +22,11 @@ export const dynamic = "force-dynamic";
 const TABS: (ObjectTab & { permission: Permission })[] = [
   { id: "access", label: "People and access", icon: KeyRound, permission: "roles.manage" },
   { id: "bylines", label: "Bylines", icon: UsersRound, permission: "content.team" },
+  /* Gated on console.admin rather than on roles.manage: connecting Claude
+     to your own CRM access is not an administrative act, it is the same
+     access through a different window. A partner should be able to do it
+     without an owner in the room. */
+  { id: "claude", label: "Claude access", icon: Plug, permission: "console.admin" },
 ];
 
 export default async function TeamPage({
@@ -52,6 +58,7 @@ export default async function TeamPage({
         <>
           {tab === "access" && <AccessPanel />}
           {tab === "bylines" && <BylinesPanel />}
+          {tab === "claude" && <McpPanel />}
         </>
       )}
     </div>

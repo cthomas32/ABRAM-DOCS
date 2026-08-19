@@ -14,9 +14,9 @@ A person standing in a conference hall is the least patient reader you will ever
 | `/c/<slug>/vcf` | The vCard download, version 3.0 for maximum phone compatibility. |
 | `/api/crm/capture` | Ingest. The most important route in the system. |
 | `/api/crm/scan` | Scan telemetry, fired on card load. |
-| `/admin/dashboard/crm` | The console. Pipeline, Events, Codes, Your card. |
-| `/admin/dashboard/crm/capture` | Offline capture mode, for when their phone has no signal. |
-| `/admin/dashboard/crm/print?k=<code>` | Printable code sheet, one, four or nine per page. |
+| `/admin/dashboard/people` | The console. Pipeline, Events, Codes, Your card. |
+| `/admin/dashboard/capture` | Offline capture mode, for when their phone has no signal. |
+| `/admin/dashboard/people/print?k=<code>` | Printable code sheet, one, four or nine per page. |
 
 ## Codes
 
@@ -60,7 +60,7 @@ Three layers, because the network is the thing most likely to fail:
 
 1. **Write before send.** A capture goes into IndexedDB first (`src/lib/crm/offlineQueue.ts`), then gets sent. Retries fire on reconnect, on tab focus, every thirty seconds, and on next page load.
 2. **Idempotency.** Every payload carries a `client_token` generated on the device. A retry that actually landed the first time updates the same row rather than creating a second one.
-3. **Capture mode.** When their phone has no bars at all, you hold yours. `/admin/dashboard/crm/capture` works with the network fully off after first load and queues to the same outbox.
+3. **Capture mode.** When their phone has no bars at all, you hold yours. `/admin/dashboard/capture` works with the network fully off after first load and queues to the same outbox.
 
 The ingest route returns 4xx only for genuinely unfixable payloads: empty name, unknown slug, unparseable JSON. Everything else that could recover returns 503 or 429, because a 4xx is the one response that makes the queue discard the person permanently.
 

@@ -126,7 +126,7 @@ function readWriteError(code: string | undefined, fallback: string): string {
 function refresh() {
   revalidatePath("/admin/dashboard/deals");
   revalidatePath("/admin/dashboard/deals/board");
-  revalidatePath("/admin/dashboard/accounts");
+  revalidatePath("/admin/dashboard/companies");
 }
 
 /* ------------------------------------------------------------------ */

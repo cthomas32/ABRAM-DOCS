@@ -45,7 +45,7 @@ async function readWriter() {
 
 function refresh() {
   revalidatePath("/admin/dashboard/tasks");
-  revalidatePath("/admin/dashboard/crm");
+  revalidatePath("/admin/dashboard/people");
 }
 
 /* ------------------------------------------------------------------ */

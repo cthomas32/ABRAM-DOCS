@@ -49,7 +49,7 @@ export default function ObjectTabs({
             key={tab.id}
             href={`${basePath}?tab=${encodeURIComponent(tab.id)}`}
             aria-current={active ? "page" : undefined}
-            className={`flex items-center justify-center gap-2 px-4 h-9 rounded-full text-[11px] font-medium border transition-colors shrink-0 ${
+            className={`flex items-center justify-center gap-2 px-4 h-11 sm:h-9 rounded-full text-[11px] font-medium border transition-colors shrink-0 ${
               active
                 ? "bg-white text-black border-white"
                 : "bg-white/[0.03] text-zinc-400 border-white/8 hover:text-zinc-200"

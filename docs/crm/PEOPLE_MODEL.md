@@ -64,6 +64,29 @@ a nurture sequence.
 Every feed arrow is the same function:
 `syncFeedPerson()` in `src/lib/crm/contactSync.ts`.
 
+### The `account_id` arrow is not automatic
+
+`crm_contacts.company` is free text somebody types at a conference, and
+`crm_contacts.account_id` is the foreign key drawn above. They are
+different facts and nothing sets the second from the first, so a person
+can name Helix all day and roll up to no company at all.
+
+`src/lib/crm/accountMatch.ts` proposes the join and never makes it. It
+matches on the email domain first, compared against `lower(domain)`, and
+on the normalised company name second, and it refuses rather than guesses
+when neither is certain: a consumer mail domain names no employer, an
+ambiguous name has no answer, and there is no fuzzy third pass. The cost
+of a wrong link is a person filed under another company's deals and
+another partner's commission, which is why the write is always somebody's
+click.
+
+Two surfaces offer it. The person page suggests beneath the company
+record select as soon as the field is typed, and the Companies screen
+carries every unlinked person grouped by the company they name, so the
+gap is visible on the one screen whose subject is companies. Both call
+`linkContactsToAccount` or `createAccountForContacts` in
+`people/actions.ts`. Neither runs on a schedule.
+
 ## The three ladders, which are not one ladder
 
 This is the part that was actually broken. Three different questions were
@@ -125,7 +148,8 @@ kept verbatim, so no existing row had to be rewritten.
 | -------------------------------------- | ---- |
 | Vocabularies, labels, merge rules      | `src/lib/crm/people.ts` |
 | The one merge function                 | `src/lib/crm/contactSync.ts` |
-| Subscriber → contact actions           | `src/app/admin/dashboard/subscribers/actions.ts` |
+| Subscriber → contact actions           | `src/app/admin/dashboard/people/subscriberActions.ts` |
+| Company text → account record          | `src/lib/crm/accountMatch.ts` |
 | The chips                              | `src/components/admin/PersonChips.tsx` |
 | Columns, constraints, backfill         | `supabase/migrations/20260818090000_contact_lifecycle_and_sources.sql` |
 
@@ -138,8 +162,8 @@ linked and bookmarked and redirected to. There is no page per verb.
 | Object | Address | Tabs |
 | --- | --- | --- |
 | — | `/admin/dashboard` | CRM Home. Four object cards, counts, one action each, the lifecycle funnel |
-| `crm_contacts` | `/admin/dashboard/crm/people` | List · Lists · Sequences · Import and export · Events · Codes · Your card |
-| `crm_accounts` | `/admin/dashboard/accounts` | One view. The company's people and deals live in its drawer |
+| `crm_contacts` | `/admin/dashboard/people` | List · Lists · Sequences · Import and export · Events · Codes · Your card |
+| `crm_accounts` | `/admin/dashboard/companies` | One view, plus the unlinked people queue. The company's own people and deals are tabs on `companies/[id]` |
 | `crm_deals` | `/admin/dashboard/deals` | List · Board · Forecast · Registrations |
 | `crm_interactions` + `crm_tasks` | `/admin/dashboard/activities` | Tasks · Calls and meetings · Email · Notes |
 

@@ -5,11 +5,13 @@ import { Resend } from "resend";
 import { FIELD_LIMITS } from "@/lib/crm/constants";
 import type { CrmPriority, CrmSource } from "@/lib/crm/constants";
 import { subscribeConsentingContact } from "@/lib/crm/subscriberLink";
+import { withSource } from "@/lib/crm/people";
 import { IDENTITY_SELECT, resolveIdentity, type CardIdentity } from "@/lib/crm/identity";
 import { CAPTURE_FOLLOW_UP_KEY, defaultCrmEmailContent, renderCrmEmail } from "@/lib/crm/emailTemplates";
 import { loadCrmEmailContent } from "@/lib/crm/emailTemplateStore";
 import { captureEmailValues } from "@/lib/crm/emailValues";
 import type { CaptureResponse, CrmProfile } from "@/lib/crm/types";
+import { announceBlocked, blockedReason } from "@/lib/email/outbound";
 
 /**
  * Where a stranger's details land.
@@ -29,7 +31,7 @@ import type { CaptureResponse, CrmProfile } from "@/lib/crm/types";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const ADMIN_LINK = "https://abram.network/admin/dashboard/crm";
+const ADMIN_LINK = "https://abram.network/admin/dashboard/people";
 const DEFAULT_FROM = "ABRAM <updates@abram.network>";
 
 /* ------------------------------------------------------------------ */
@@ -266,6 +268,11 @@ async function sendVCardEmail(
   if (broken && edited) {
     console.error("Card capture: the saved wording did not render, sending the original instead.");
     email = renderCrmEmail(builtIn, values);
+  }
+
+  if (blockedReason()) {
+    announceBlocked("capture follow up");
+    return false;
   }
 
   const resend = new Resend(apiKey);
@@ -573,7 +580,19 @@ export async function POST(request: Request) {
       code_id: codeId,
       scan_id: scanId,
       source,
+      // The array, not only the scalar. `sources` is what the lists, the
+      // lead score and the lifecycle funnel all read, and its stated
+      // invariant is that it always contains `source`. Every row captured
+      // between 20260818090000 and this change was written with an empty
+      // array, so a person met at a conference did not appear in the
+      // conference list. A database trigger now asserts this rather than
+      // trusting each writer to remember it.
+      sources: withSource([], source),
       stage: "new",
+      // A captured person is a lead. Not a subscriber: handing over a card
+      // is not a request to be mailed, which is the rule the whole of
+      // subscriberLink.ts exists to hold.
+      lifecycle_stage: "lead",
       priority,
       consent_marketing: consent,
       consent_at: consent ? now : null,

@@ -113,11 +113,11 @@ export default async function ReportsPanel() {
             <table className="w-full text-left border-collapse min-w-[640px]">
               <thead>
                 <tr className="bg-white/[0.03]">
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Person</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Sourced</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Sourced won</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Closed won</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Attributed MRR</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400">Person</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Sourced</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Sourced won</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Closed won</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Attributed MRR</th>
                 </tr>
               </thead>
               <tbody>

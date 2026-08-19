@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { getResendClient } from "@/utils/resend";
 import { readConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
+import { announceBlocked, blockedReason } from "@/lib/email/outbound";
 
 /**
  * Sending one email to one person, from their own record.
@@ -125,6 +126,12 @@ export async function sendContactEmail(input: {
         error: `This person is marked ${subscriber.status} and must not be emailed.`,
       };
     }
+  }
+
+  const blocked = blockedReason();
+  if (blocked) {
+    announceBlocked("contact email");
+    return { ok: false, error: blocked };
   }
 
   const resend = getResendClient();

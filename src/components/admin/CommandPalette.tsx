@@ -156,7 +156,7 @@ export default function CommandPalette({ permissions }: { permissions: Permissio
         kind: "contact",
         label: row.full_name,
         hint: row.company || row.email || "No company recorded",
-        href: `/admin/dashboard/crm?contact=${row.id}`,
+        href: `/admin/dashboard/people/${row.id}`,
         haystack: `${row.full_name} ${row.company ?? ""} ${row.email ?? ""}`.toLowerCase(),
         icon: Contact,
       });
@@ -168,7 +168,7 @@ export default function CommandPalette({ permissions }: { permissions: Permissio
         kind: "account",
         label: row.name,
         hint: row.domain || "No web address",
-        href: `/admin/dashboard/accounts?account=${row.id}`,
+        href: `/admin/dashboard/companies/${row.id}`,
         haystack: `${row.name} ${row.domain ?? ""}`.toLowerCase(),
         icon: Building2,
       });
@@ -180,7 +180,7 @@ export default function CommandPalette({ permissions }: { permissions: Permissio
         kind: "deal",
         label: row.name,
         hint: row.stage,
-        href: `/admin/dashboard/deals?deal=${row.id}`,
+        href: `/admin/dashboard/deals/${row.id}`,
         haystack: `${row.name} ${row.stage}`.toLowerCase(),
         icon: Handshake,
       });
@@ -293,7 +293,7 @@ export default function CommandPalette({ permissions }: { permissions: Permissio
               return (
                 <React.Fragment key={entry.id}>
                   {heading && (
-                    <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 px-4 pt-3 pb-1.5">
+                    <span className="block text-xs uppercase font-bold tracking-widest text-zinc-400 px-4 pt-3 pb-1.5">
                       {heading}
                     </span>
                   )}

@@ -89,6 +89,16 @@ The consequence is that the irreversible act is refused by Postgres rather than 
 
 A sent campaign becomes read-only history for them at the same moment, which also means they cannot rewrite the subject line of something already in people's inboxes.
 
+### A partner may only create a row they could then edit
+
+`crm_contacts`, `crm_accounts` and `crm_deals` each carry an `INSERT` policy whose `WITH CHECK` is a copy of the same table's `UPDATE` policy: owner and admin, or a growth member who is the row's `owner_user_id` or `sourced_by`. They are the same text on purpose. Two clauses that have to agree should be one string a reader can compare by eye, so changing one is visibly changing both.
+
+They did not always agree. Until `20260818170000_growth_insert_ownership.sql` the `INSERT` check was `is_owner_or_admin() OR is_growth_member()`, which never looks at the row and is therefore the same as no check. The damage was not a partner writing somebody else's data. It was a partner writing a row that belonged to nobody they are: on contacts and deals, where `SELECT` is keyed on ownership, an advisor could create a record and then not find it, so the next thing they did was type it in again. On accounts, where read is open to every partner, the row was visible and uneditable by the person who had just made it.
+
+**`growth_sees_all_contacts()` is deliberately absent from all three checks**, for the reason it is absent from `UPDATE`: seeing the whole board is context, and creating a record assigned to another partner is a write. A Head of Growth making work for somebody else does it as themselves and hands it over, which leaves a trail.
+
+This only holds while every session-scoped insert stamps ownership from the session, which `createDeal`, `createAccount` and `syncFeedPerson`'s two console feeds all do. The paths that pass no owner (`/api/crm/capture`, `/api/newsletter/subscribe`, the collections sync) hold the service role and are not subject to these policies. If you add a fourth feed, stamp the owner or give it the service role, and be able to say which.
+
 ## Attribution
 
 Three rules, and one instruction about how to apply them:

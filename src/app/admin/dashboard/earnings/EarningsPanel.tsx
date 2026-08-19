@@ -221,11 +221,11 @@ export default async function EarningsPanel() {
             <table className="w-full text-left border-collapse min-w-[560px]">
               <thead>
                 <tr className="bg-white/[0.03]">
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Month</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Collected</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Earned</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Paid</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Outstanding</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400">Month</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Collected</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Earned</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Paid</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Outstanding</th>
                 </tr>
               </thead>
               <tbody>
@@ -268,12 +268,12 @@ export default async function EarningsPanel() {
             <table className="w-full text-left border-collapse min-w-[620px]">
               <thead>
                 <tr className="bg-white/[0.03]">
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Month</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Credit</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Collected</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Rate</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400 text-right">Amount</th>
-                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-gray-400">Status</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400">Month</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400">Credit</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Collected</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Rate</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400 text-right">Amount</th>
+                  <th className="px-4 py-3 text-xs uppercase font-bold tracking-widest text-zinc-400">Status</th>
                 </tr>
               </thead>
               <tbody>

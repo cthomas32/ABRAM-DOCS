@@ -5,6 +5,7 @@ import { addSubscriber, addContactToAudience, createDraftCampaign, approveAndSen
 import { headers } from "next/headers";
 import { readConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
+import { announceBlocked, blockedReason } from "@/lib/email/outbound";
 
 /**
  * Server Action: Validates Resend client integration status.
@@ -883,6 +884,12 @@ export async function sendTestEmailAction(
   textContent: string
 ): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
+    const blocked = blockedReason();
+    if (blocked) {
+      announceBlocked("admin test preview");
+      return { success: false, error: blocked };
+    }
+
     const resend = getResendClient();
     if (!resend) {
       return { success: false, error: "Resend integration is not configured on the server." };

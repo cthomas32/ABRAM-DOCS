@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FileDown, Handshake, Loader2, Plus, RefreshCw } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { can, type ConsoleRole, type GrowthStage } from "@/lib/auth/permissions";
@@ -13,13 +15,13 @@ import {
   type DealStage,
 } from "@/lib/crm/constants";
 import type { CrmDeal } from "@/lib/crm/types";
-import DealDrawer, { type AccountOption, type ContactOption } from "./DealDrawer";
+import type { AccountOption } from "./DealFields";
 import { rows, readWarning } from "@/lib/supabase/rows";
 import { StatRow } from "@/components/admin/StatTile";
 import Money from "@/components/admin/Money";
 import FilterBar, { type FilterSpec } from "@/components/admin/FilterBar";
 import DataTable, { BulkBar, type Column } from "@/components/admin/DataTable";
-import { downloadFile, stampedFilename } from "../crm/lib";
+import { downloadFile, stampedFilename } from "@/lib/crm/console";
 import { AMOUNT_BANDS, dealsToCsv } from "./csv";
 
 /**
@@ -67,13 +69,13 @@ function formatDay(iso: string | null): string {
 }
 
 export default function DealsListPanel() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [warning, setWarning] = useState<string | null>(null);
 
   const [deals, setDeals] = useState<CrmDeal[]>([]);
   const [accounts, setAccounts] = useState<AccountOption[]>([]);
-  const [contacts, setContacts] = useState<ContactOption[]>([]);
   const [members, setMembers] = useState<MemberRow[]>([]);
   const [canManage, setCanManage] = useState(false);
 
@@ -85,14 +87,12 @@ export default function DealsListPanel() {
   const [amountBand, setAmountBand] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const load = useCallback(async (silent = false) => {
     if (silent) setRefreshing(true);
     const supabase = createClient();
 
-    const [dealRows, accountRows, contactRows, memberRows, session] = await Promise.all([
+    const [dealRows, accountRows, memberRows, session] = await Promise.all([
       supabase.from("crm_deals").select("*").order("updated_at", { ascending: false }).limit(500),
       supabase
         .from("crm_accounts")
@@ -100,12 +100,6 @@ export default function DealsListPanel() {
         .eq("archived", false)
         .order("name", { ascending: true })
         .limit(500),
-      supabase
-        .from("crm_contacts")
-        .select("id, full_name, account_id")
-        .eq("archived", false)
-        .order("full_name", { ascending: true })
-        .limit(1000),
       supabase
         .from("admin_users")
         .select("user_id, full_name, email, role, growth_stage, is_active"),
@@ -116,7 +110,6 @@ export default function DealsListPanel() {
 
     setDeals(rows<CrmDeal>(dealRows));
     setAccounts(rows<AccountOption>(accountRows));
-    setContacts(rows<ContactOption>(contactRows));
 
     const people = rows<MemberRow>(memberRows);
     setMembers(people);
@@ -225,12 +218,12 @@ export default function DealsListPanel() {
     setDeepLinkDone(true);
     const wanted = new URLSearchParams(window.location.search).get("deal");
     if (wanted && deals.some((row) => row.id === wanted)) {
-      setSelectedId(wanted);
-      setDrawerOpen(true);
+      // A deal has its own address now. The query form forwards to it and
+      // replaces, so it does not sit in the back stack.
+      router.replace(`/admin/dashboard/deals/${wanted}`);
     }
-  }, [deepLinkDone, loading, deals]);
+  }, [deepLinkDone, loading, deals, router]);
 
-  const selected = selectedId ? deals.find((deal) => deal.id === selectedId) ?? null : null;
   const anyFilter =
     stage !== ALL ||
     owner !== ALL ||
@@ -478,15 +471,7 @@ export default function DealsListPanel() {
     [accountNameById, memberNameById, members, canManage, patchDeal]
   );
 
-  const openNew = () => {
-    setSelectedId(null);
-    setDrawerOpen(true);
-  };
-
-  const openDeal = (id: string) => {
-    setSelectedId(id);
-    setDrawerOpen(true);
-  };
+  const openDeal = (id: string) => router.push(`/admin/dashboard/deals/${id}`);
 
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-8 lg:py-12 max-w-6xl mx-auto">
@@ -509,10 +494,10 @@ export default function DealsListPanel() {
             Refresh
           </button>
           {canManage && (
-            <button type="button" onClick={openNew} className="btn-primary h-9 px-4 text-xs">
+            <Link href="/admin/dashboard/deals/new" className="btn-primary h-9 px-4 text-xs">
               <Plus className="w-3.5 h-3.5" />
               New deal
-            </button>
+            </Link>
           )}
         </div>
       </header>
@@ -632,10 +617,13 @@ export default function DealsListPanel() {
                   </button>
                 ) : (
                   canManage && (
-                    <button type="button" onClick={openNew} className="btn-primary h-9 px-4 text-xs">
+                    <Link
+                      href="/admin/dashboard/deals/new"
+                      className="btn-primary h-9 px-4 text-xs"
+                    >
                       <Plus className="w-3.5 h-3.5" />
                       Create the first deal
-                    </button>
+                    </Link>
                   )
                 )}
               </div>
@@ -644,17 +632,6 @@ export default function DealsListPanel() {
         />
       )}
 
-      {drawerOpen && (
-        <DealDrawer
-          deal={selected}
-          accounts={accounts}
-          contacts={contacts}
-          memberNameById={memberNameById}
-          canManage={canManage}
-          onClose={() => setDrawerOpen(false)}
-          onSaved={() => void load(true)}
-        />
-      )}
     </div>
   );
 }

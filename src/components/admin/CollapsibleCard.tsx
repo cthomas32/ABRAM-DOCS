@@ -40,7 +40,7 @@ export default function CollapsibleCard({
         <span className="min-w-0">
           <span className="flex items-center gap-2">
             {Icon && <Icon className="w-3.5 h-3.5 text-zinc-400 shrink-0" />}
-            <span className="text-xs uppercase font-bold tracking-widest text-gray-400 truncate">
+            <span className="text-xs uppercase font-bold tracking-widest text-zinc-400 truncate">
               {title}
             </span>
             {badge && (

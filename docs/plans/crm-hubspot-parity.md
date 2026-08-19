@@ -112,7 +112,7 @@ She cannot do her job without these. Target: the week before her first login.
 
 **P0-2. Accounts** _(builder A, same domain, sequential with P0-1)_
 
-- `src/app/admin/dashboard/accounts/page.tsx` and `AccountDrawer.tsx`
+- `src/app/admin/dashboard/companies/page.tsx` and `AccountDrawer.tsx`
 - Fields that matter: name, domain, industry, size band, `first_contact_at`, and the three exclusion
   flags `is_comped`, `is_company_managed`, `carve_out`
 - `first_contact_at` must be settable, because the registration guard reads it
@@ -366,7 +366,7 @@ The list, the drawer, create, edit, stage moves, and both closing paths. `markWo
 `closed_at` and `closed_by` in the same statement as the stage, because `crm_deals_won_needs_close`
 refuses the row without them.
 
-**P0-2. Accounts — done.** `src/app/admin/dashboard/accounts/page.tsx`, `AccountDrawer.tsx`,
+**P0-2. Accounts — done.** `src/app/admin/dashboard/companies/page.tsx`, `AccountDrawer.tsx`,
 `actions.ts`. Lifecycle, the three exclusion flags, `first_contact_at`, and the account picker on
 `crm/ContactDrawer.tsx`. Domains are written lowercase, which is why
 `registrations/actions.ts` now matches them with `ilike` rather than `eq`.
@@ -478,7 +478,7 @@ day offsets that become dated follow ups do not need it at all, and that
 is what shipped: `crm_sequences`, `crm_sequence_steps`,
 `crm_sequence_enrollments`, plus `sequence_id` and `email_template_key`
 on `crm_tasks`. An email step becomes "Send: …" and opens
-`/admin/dashboard/crm/compose` with the template rendered against the
+`/admin/dashboard/people/compose` with the template rendered against the
 real person; a person presses send, and the send ticks the follow up off.
 No scheduler, no background job, no auto-advance.
 

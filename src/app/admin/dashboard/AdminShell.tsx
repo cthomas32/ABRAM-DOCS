@@ -191,7 +191,7 @@ function DashboardChrome({
             {groups.map((group) => (
               <div key={group.id} className="flex flex-col gap-1.5">
                 {group.label && (
-                  <span className="text-xs uppercase font-bold tracking-widest text-gray-400 px-3 mb-0.5">
+                  <span className="text-xs uppercase font-bold tracking-widest text-zinc-400 px-3 mb-0.5">
                     {group.label}
                   </span>
                 )}
@@ -260,7 +260,7 @@ function DashboardChrome({
             <div className="shrink-0 px-5 pt-3 pb-2">
               <div className="w-10 h-1 rounded-full bg-white/15 mx-auto mb-4" />
               <div className="flex items-center justify-between gap-3">
-                <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
+                <span className="text-xs uppercase font-bold tracking-widest text-zinc-400">
                   Go to
                 </span>
                 <button
@@ -277,7 +277,7 @@ function DashboardChrome({
               {groups.map((group) => (
                 <div key={group.id} className="mb-2">
                   {group.label && (
-                    <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 px-3 pt-4 pb-2">
+                    <span className="block text-xs uppercase font-bold tracking-widest text-zinc-400 px-3 pt-4 pb-2">
                       {group.label}
                     </span>
                   )}

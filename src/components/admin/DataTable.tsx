@@ -197,7 +197,7 @@ export default function DataTable<Row>({
                 return (
                   <th
                     key={column.id}
-                    className={`px-3 py-2.5 bg-white/[0.03] text-xs uppercase font-bold tracking-widest text-gray-400 whitespace-nowrap ${
+                    className={`px-3 py-2.5 bg-white/[0.03] text-xs uppercase font-bold tracking-widest text-zinc-400 whitespace-nowrap ${
                       column.numeric ? "text-right" : ""
                     }`}
                   >

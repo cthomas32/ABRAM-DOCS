@@ -23,7 +23,7 @@
  */
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { normalizeEmail } from "./subscriberLink";
+import { ilikeEscape, normalizeEmail } from "./emailKey";
 import {
   advanceLifecycle,
   withSource,
@@ -36,14 +36,102 @@ export interface FeedPerson {
   fullName?: string | null;
   company?: string | null;
   jobTitle?: string | null;
-  /** How they reached us this time. */
+  /** How they reached us this time. Also the `source` column when new. */
   source: ContactSource;
+  /**
+   * Other ways in that are true at the same moment.
+   *
+   * A person can be on two lists at once and regularly is: 23 of the 30
+   * people in Resend are on the app application segment *and* the
+   * marketing one. Before this existed the second fact was dropped, so
+   * somebody who applied for the app and takes the newsletter looked like
+   * a newsletter address and scored like one.
+   *
+   * Merged into `sources` only, never into the `source` column, which
+   * stays the single first way in.
+   */
+  alsoSources?: readonly ContactSource[];
   /** The furthest this feed is entitled to claim. Never moves anybody back. */
   lifecycle: LifecycleStage;
   /** Set when the feed is the mailing list, so the link is recorded too. */
   subscriberId?: string | null;
   /** Set when the feed is an event signup. */
   eventId?: string | null;
+  /**
+   * Who will work this person, when the feed knows.
+   *
+   * Stamped on creation only, and only by the console feeds where a real
+   * person pressed the button: a CSV import and a subscriber conversion.
+   * The public newsletter route leaves it null because nobody chose.
+   *
+   * This is `owner_user_id` and never `sourced_by`. The two look
+   * interchangeable and are not: sourcing decides who a commission is
+   * owed to, and the person who happened to upload a spreadsheet did not
+   * source the four hundred people in it. Owning decides whose queue they
+   * land in, which is exactly what an importer is asserting.
+   *
+   * It also satisfies the insert policy on `crm_contacts`, which requires
+   * a partner to be creating somebody they can then read back.
+   */
+  ownerUserId?: string | null;
+}
+
+/**
+ * A row of `subscribers`, as much of it as the person mapping reads.
+ *
+ * The two list flags are the interesting part. They are not two audiences
+ * that happen to live in one table: `is_marketing_list` means they take
+ * the newsletter, and `is_application_list` means they asked for access
+ * to the product, which is a different and much stronger signal. Both are
+ * mirrored from Resend segments by `admin/resend-actions.ts`.
+ */
+export interface SubscriberRow {
+  id: string;
+  email: string;
+  first_name?: string | null;
+  last_name?: string | null;
+  job_title?: string | null;
+  is_marketing_list?: boolean | null;
+  is_application_list?: boolean | null;
+}
+
+/**
+ * What a subscriber row means as a person.
+ *
+ * One function because two callers need to agree: the console's convert
+ * button and the backfill script. They disagreed for as long as this did
+ * not exist, in that only one of them existed.
+ *
+ * SOMEBODY WHO APPLIED IS NOT A SUBSCRIBER. Applying for access is an act
+ * with intent behind it, so it lands as `app_signup` and as a `lead`,
+ * which is "a person we have a reason to contact". Somebody who only
+ * takes the newsletter stays `newsletter` and `subscriber`, which is "on
+ * the mailing list and nothing more". Filing the first as the second is
+ * how a pipeline ends up with nothing in it while the mailing list grows.
+ *
+ * It stops at `lead` rather than reaching for `mql`. Nobody has spoken to
+ * these people, and a CRM that qualifies its own leads is a CRM whose
+ * qualified count means nothing. `advanceLifecycle` never moves anybody
+ * backwards, so promoting later is a human's call and this cannot undo it.
+ */
+export function feedPersonFromSubscriber(
+  row: SubscriberRow,
+  ownerUserId?: string | null
+): FeedPerson {
+  const applied = Boolean(row.is_application_list);
+  const onList = Boolean(row.is_marketing_list);
+
+  return {
+    email: row.email,
+    fullName: [row.first_name, row.last_name].filter(Boolean).join(" ") || null,
+    jobTitle: row.job_title ?? null,
+    source: applied ? "app_signup" : "newsletter",
+    // Both facts are kept when both are true, which is most of them.
+    alsoSources: applied && onList ? (["newsletter"] as const) : [],
+    lifecycle: applied ? "lead" : "subscriber",
+    subscriberId: row.id,
+    ownerUserId: ownerUserId ?? null,
+  };
 }
 
 export type SyncOutcome = "created" | "linked" | "unchanged" | "refused";
@@ -73,6 +161,21 @@ async function firstProfileId(supabase: SupabaseClient): Promise<string | null> 
   return (row as { id?: string } | null)?.id ?? null;
 }
 
+/**
+ * Every way in this feed knows about, folded onto what is already there.
+ *
+ * `withSource` takes one at a time and is order-stable and idempotent, so
+ * reducing over it keeps both properties.
+ */
+function allSources(
+  existing: readonly string[] | null | undefined,
+  person: FeedPerson
+): ContactSource[] {
+  let next = withSource(existing, person.source);
+  for (const extra of person.alsoSources ?? []) next = withSource(next, extra);
+  return next;
+}
+
 export async function syncFeedPerson(
   supabase: SupabaseClient,
   person: FeedPerson
@@ -94,7 +197,11 @@ export async function syncFeedPerson(
     .from("crm_contacts")
     .select("id, sources, lifecycle_stage, subscriber_id, event_id")
     .eq("archived", false)
-    .ilike("email", email)
+    // Escaped, because ILIKE reads % and _ as wildcards and an address is
+    // allowed to contain both. Its sibling in subscriberLink.ts has always
+    // escaped; this one did not, so "a_b@x.com" matched "axb@x.com" and
+    // merged two different people.
+    .ilike("email", ilikeEscape(email))
     .limit(1);
 
   if (existing.error) {
@@ -112,7 +219,7 @@ export async function syncFeedPerson(
     | undefined;
 
   if (match) {
-    const sources = withSource(match.sources, person.source);
+    const sources = allSources(match.sources, person);
     const lifecycle = advanceLifecycle(match.lifecycle_stage, person.lifecycle);
     const subscriberId = match.subscriber_id ?? person.subscriberId ?? null;
     const eventId = match.event_id ?? person.eventId ?? null;
@@ -165,10 +272,11 @@ export async function syncFeedPerson(
       company: person.company ?? null,
       job_title: person.jobTitle ?? null,
       source: person.source,
-      sources: withSource([], person.source),
+      sources: allSources([], person),
       lifecycle_stage: person.lifecycle,
       subscriber_id: person.subscriberId ?? null,
       event_id: person.eventId ?? null,
+      owner_user_id: person.ownerUserId ?? null,
     })
     .select("id")
     .limit(1);

@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { announceBlocked, blockedReason } from "@/lib/email/outbound";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "./supabase/server";
 import { sendWelcomeEmail } from "@/lib/funnel/welcomeEmail";
@@ -485,6 +486,16 @@ export async function createDraftCampaign(input: CreateDraftCampaignInput) {
  * Enforces strict "draft" status validation, optimistic locking, and logs audit data.
  */
 export async function approveAndSendCampaign(campaignId: string, approval: ApprovalDetails) {
+  /* Checked before the optimistic lock below, on purpose. Guarding after
+     it would leave the campaign in "sending" with nothing dispatching,
+     which no interface can recover from. A blocked campaign stays a
+     draft and can be sent later without being rebuilt. */
+  const blocked = blockedReason();
+  if (blocked) {
+    announceBlocked("campaign dispatch");
+    throw new Error(blocked);
+  }
+
   const resend = getResendClient();
   if (!resend) {
     throw new Error("Resend integration is not configured on the server.");

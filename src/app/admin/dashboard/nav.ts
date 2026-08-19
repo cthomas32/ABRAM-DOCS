@@ -83,7 +83,7 @@ export const NAV_GROUPS: AdminNavGroup[] = [
       {
         id: "contacts",
         label: "People",
-        href: "/admin/dashboard/crm/people",
+        href: "/admin/dashboard/people",
         icon: Contact,
         hint: "Every person, wherever they came from",
         permission: "crm.contacts.read.own",
@@ -104,7 +104,7 @@ export const NAV_GROUPS: AdminNavGroup[] = [
       {
         id: "accounts",
         label: "Companies",
-        href: "/admin/dashboard/accounts",
+        href: "/admin/dashboard/companies",
         icon: Building2,
         hint: "Accounts, and what pays commission",
         permission: "crm.accounts.manage",

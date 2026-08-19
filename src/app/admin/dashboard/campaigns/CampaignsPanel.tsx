@@ -392,7 +392,7 @@ export default function CampaignsPanel() {
                 {/* Two lines are reserved whether the label wraps or not, so
                     the values stay on one baseline across the row. */}
                 <div className="flex justify-between items-start gap-2 min-h-[2.2em]">
-                  <span className="text-xs uppercase font-bold tracking-widest text-gray-400 break-words leading-tight">
+                  <span className="text-xs uppercase font-bold tracking-widest text-zinc-400 break-words leading-tight">
                     {kpi.label}
                   </span>
                   <Icon className="w-4 h-4 text-zinc-400 shrink-0" />
@@ -475,7 +475,7 @@ function FunnelCard({ funnel }: { funnel: Funnel }) {
 
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 h-full">
-      <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
+      <h2 className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans">
         Conversion Funnel
       </h2>
       <p className="text-[10px] text-zinc-400 mt-1 mb-5">Share of visitors reaching each stage.</p>
@@ -514,7 +514,7 @@ function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
   if (!rows || rows.length === 0) {
     return (
       <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 h-full flex flex-col">
-        <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
+        <h2 className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans">
           Daily Traffic
         </h2>
         <div className="flex-1 flex items-center justify-center text-xs text-zinc-400 min-h-[160px]">
@@ -529,7 +529,7 @@ function TrendCard({ rows }: { rows: TimeseriesRow[] }) {
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 h-full">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
+        <h2 className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans">
           Daily Traffic
         </h2>
         <div className="flex items-center gap-4 text-[9px] text-zinc-400 uppercase tracking-wider font-bold">
@@ -588,7 +588,7 @@ function SourceTable({ rows }: { rows: SourceRow[] }) {
           <p className="text-[9px] text-zinc-400 mb-2 md:hidden">Swipe to view &rarr;</p>
           <table className="w-full text-[11px] min-w-[420px]">
             <thead>
-              <tr className="text-left text-gray-400 uppercase tracking-widest text-[10px] font-bold">
+              <tr className="text-left text-zinc-400 uppercase tracking-widest text-[10px] font-bold">
                 <th className="pb-2 font-bold">Source</th>
                 <th className="pb-2 font-bold text-right">Visitors</th>
                 <th className="pb-2 font-bold text-right">Clicked</th>
@@ -630,7 +630,7 @@ function PageTable({ rows }: { rows: PageRow[] }) {
           <p className="text-[9px] text-zinc-400 mb-2 md:hidden">Swipe to view &rarr;</p>
           <table className="w-full text-[11px] min-w-[420px]">
             <thead>
-              <tr className="text-left text-gray-400 uppercase tracking-widest text-[10px] font-bold">
+              <tr className="text-left text-zinc-400 uppercase tracking-widest text-[10px] font-bold">
                 <th className="pb-2 font-bold">Page</th>
                 <th className="pb-2 font-bold text-right">Visitors</th>
                 <th className="pb-2 font-bold text-right">Avg scroll</th>
@@ -671,7 +671,7 @@ function CampaignTable({ rows }: { rows: CampaignRow[] }) {
         <p className="text-[9px] text-zinc-400 mb-2 md:hidden">Swipe to view &rarr;</p>
         <table className="w-full text-[11px] min-w-[520px]">
           <thead>
-            <tr className="text-left text-gray-400 uppercase tracking-widest text-[10px] font-bold">
+            <tr className="text-left text-zinc-400 uppercase tracking-widest text-[10px] font-bold">
               <th className="pb-2 font-bold">Campaign</th>
               <th className="pb-2 font-bold">Content tag</th>
               <th className="pb-2 font-bold">Source</th>
@@ -714,7 +714,7 @@ function BreakdownCard({
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
+        <h2 className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans">
           {title}
         </h2>
         <Icon className="w-4 h-4 text-zinc-400" />
@@ -895,7 +895,7 @@ function RecentVisitors({ rows }: { rows: RecentRow[] }) {
           <p className="text-[9px] text-zinc-400 mb-2 md:hidden">Swipe to view &rarr;</p>
           <table className="w-full text-[11px] min-w-[760px]">
             <thead>
-              <tr className="text-left text-gray-400 uppercase tracking-widest text-[10px] font-bold">
+              <tr className="text-left text-zinc-400 uppercase tracking-widest text-[10px] font-bold">
                 <th className="pb-2 font-bold">When</th>
                 <th className="pb-2 font-bold">Page</th>
                 <th className="pb-2 font-bold">Source</th>

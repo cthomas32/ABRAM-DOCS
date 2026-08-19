@@ -511,7 +511,7 @@ function TaskRow({
 
           {!done && task.email_template_key && (
             <Link
-              href={`/admin/dashboard/crm/compose?contact=${encodeURIComponent(
+              href={`/admin/dashboard/people/compose?contact=${encodeURIComponent(
                 task.contact_id
               )}&template=${encodeURIComponent(task.email_template_key)}&task=${encodeURIComponent(
                 task.id

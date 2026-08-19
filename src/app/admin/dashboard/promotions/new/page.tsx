@@ -367,7 +367,7 @@ export default function NewCampaignPage() {
           </Section>
 
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-            <span className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans block mb-1.5">
+            <span className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans block mb-1.5">
               This reads as
             </span>
             <p className="text-sm text-white font-sans">{preview}</p>
@@ -409,7 +409,7 @@ export default function NewCampaignPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-3">
-      <h2 className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">{title}</h2>
+      <h2 className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans">{title}</h2>
       <div className="glass-panel rounded-2xl border border-white/5 p-5">{children}</div>
     </section>
   );
@@ -418,7 +418,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans block mb-1.5">
+      <label className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans block mb-1.5">
         {label}
       </label>
       {children}

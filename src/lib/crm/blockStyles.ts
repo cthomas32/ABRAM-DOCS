@@ -13,7 +13,7 @@
  */
 
 /** The one label recipe. */
-export const LABEL_CAPS = "text-xs uppercase font-bold tracking-widest text-gray-400";
+export const LABEL_CAPS = "text-xs uppercase font-bold tracking-widest text-zinc-400";
 
 /** The column a set of blocks sits in. 312px, wider than a phone, so the rail snaps. */
 export const BLOCK_LANE = "rounded-2xl border border-white/5 bg-white/[0.02] p-3";

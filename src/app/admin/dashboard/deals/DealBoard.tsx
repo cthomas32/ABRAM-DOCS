@@ -330,8 +330,20 @@ function DealCard({
         )}
       </div>
 
-      {/* Row 2 — the deal */}
-      <p className={`${BLOCK_TITLE} line-clamp-2`}>{deal.name}</p>
+      {/* Row 2 — the deal. A link, because until the record page existed a
+          card could be dragged and re-staged and never opened: there was
+          no way from this board to the deal it draws. `draggable={false}`
+          so pulling the title moves the card rather than starting a link
+          drag, and stopPropagation so a click reads the deal rather than
+          being eaten by the card. */}
+      <Link
+        href={`/admin/dashboard/deals/${deal.id}`}
+        draggable={false}
+        onClick={(event) => event.stopPropagation()}
+        className={`${BLOCK_TITLE} line-clamp-2 block hover:underline`}
+      >
+        {deal.name}
+      </Link>
 
       {/* Row 3 — amount and expected close */}
       <div className="flex items-center justify-between gap-1.5">

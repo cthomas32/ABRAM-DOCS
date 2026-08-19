@@ -45,6 +45,7 @@ import {
 } from "@/lib/crm/emailTemplates";
 import { loadCrmEmailContent } from "@/lib/crm/emailTemplateStore";
 import { unsubscribeUrl } from "./unsubscribeToken";
+import { announceBlocked, blockedReason } from "@/lib/email/outbound";
 
 const DEFAULT_FROM = "ABRAM <hello@abram.network>";
 
@@ -134,6 +135,15 @@ async function send(supabase: SupabaseClient, input: WelcomeEmailInput): Promise
 
   if (!rendered.subject.trim() || (!rendered.text.trim() && !rendered.html.trim())) {
     console.error("Welcome email: rendered empty, nothing sent.");
+    await release(supabase, email);
+    return false;
+  }
+
+  /* Blocked deployments release the once-guard before returning, so the
+     address is not left stamped as welcomed by a send that never left. */
+  const blocked = blockedReason();
+  if (blocked) {
+    announceBlocked("welcome email");
     await release(supabase, email);
     return false;
   }

@@ -265,7 +265,7 @@ function CampaignRow({
               {campaign.status}
             </span>
             {campaign.new_customers_only && (
-              <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
+              <span className="text-xs uppercase font-bold tracking-widest text-zinc-400">
                 New customers
               </span>
             )}
@@ -318,7 +318,7 @@ function CampaignRow({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <span className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans block">
+      <span className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans block">
         {label}
       </span>
       <span className="text-lg font-bold tracking-tight text-white font-sans">{value}</span>
@@ -518,7 +518,7 @@ function CampaignDetail({
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans">
+            <span className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans">
               Codes ({codes.length})
             </span>
             {codes.length > 0 && (
@@ -573,7 +573,7 @@ function CampaignDetail({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="text-xs uppercase font-bold tracking-widest text-gray-400 font-sans block mb-1.5">
+      <label className="text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans block mb-1.5">
         {label}
       </label>
       {children}

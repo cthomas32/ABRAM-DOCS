@@ -222,7 +222,7 @@ export default function TrafficPanel() {
       value: metrics.subscribersCount.toLocaleString(),
       hint: `${metrics.marketingListCount.toLocaleString()} on the marketing list`,
       icon: Users,
-      route: "/admin/dashboard/subscribers",
+      route: "/admin/dashboard/people?tab=list&list=subscribers",
     },
     {
       label: "Blog Views",
@@ -244,7 +244,7 @@ export default function TrafficPanel() {
       value: calculatedConversion === null ? "—" : `${calculatedConversion}%`,
       hint: calculatedConversion === null ? "No traffic recorded yet" : "Subscribers per estimated visit",
       icon: Percent,
-      route: "/admin/dashboard/subscribers",
+      route: "/admin/dashboard/people?tab=list&list=subscribers",
     },
   ];
 
@@ -303,7 +303,7 @@ export default function TrafficPanel() {
                   className="glass-panel glass-panel-hover p-4 sm:p-5 rounded-2xl flex flex-col justify-between h-28 sm:h-32 border-white/8 hover:border-white/25 select-none"
                 >
                   <div className="flex justify-between items-start gap-2">
-                    <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
+                    <span className="text-xs uppercase font-bold tracking-widest text-zinc-400">
                       {kpi.label}
                     </span>
                     <Icon className="w-4 h-4 text-zinc-400 shrink-0" />
@@ -511,7 +511,7 @@ function TrailingTrendsChart({ data }: { data: SparklinePoint[] }) {
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <div className="space-y-1 min-w-0">
-          <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
+          <span className="text-xs uppercase font-bold tracking-widest text-zinc-400">
             Traffic &amp; Audience Growth
           </span>
           <p className="text-[11px] text-zinc-400">Comparing page views and newsletter sign-ups over 30 days</p>
@@ -573,7 +573,7 @@ function TopContentGrid({ items }: { items: ContentPerformance[] }) {
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl h-full flex flex-col justify-between">
       <div>
-        <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
+        <span className="text-xs uppercase font-bold tracking-widest text-zinc-400">
           Top Content Engagement
         </span>
         <p className="text-[11px] text-zinc-400 mt-0.5">Performance index by page views and read ratios</p>
@@ -620,7 +620,7 @@ function CampaignsStatusList({ items }: { items: CampaignPerformance[] }) {
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-4 shadow-xl h-full flex flex-col justify-between">
       <div>
-        <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
+        <span className="text-xs uppercase font-bold tracking-widest text-zinc-400">
           Active Campaign Telemetry
         </span>
         <p className="text-[11px] text-zinc-400 mt-0.5">Response tracking for marketing newsletters</p>
@@ -678,7 +678,7 @@ function ListSegmentationCard({ marketingCount, appCount }: { marketingCount: nu
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border-white/8 space-y-5 shadow-xl h-full flex flex-col justify-between">
       <div>
-        <span className="text-xs uppercase font-bold tracking-widest text-gray-400">
+        <span className="text-xs uppercase font-bold tracking-widest text-zinc-400">
           List Segmentation
         </span>
         <p className="text-[11px] text-zinc-400 mt-0.5">Audience split across subscription categories</p>

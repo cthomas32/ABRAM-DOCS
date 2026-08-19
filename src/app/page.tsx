@@ -58,7 +58,15 @@ export default function LandingPage() {
                 "@id": "https://abram.network/#website",
                 "url": "https://abram.network",
                 "name": "ABRAM Network",
-                "publisher": { "@id": "https://abram.network/#organization" }
+                "publisher": { "@id": "https://abram.network/#organization" },
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "https://abram.network/docs?search={search_term_string}"
+                  },
+                  "query-input": "required name=search_term_string"
+                }
               },
               {
                 "@type": "Organization",
@@ -69,6 +77,61 @@ export default function LandingPage() {
                 "sameAs": [
                   "https://twitter.com/abramnetwork",
                   "https://linkedin.com/company/abramnetwork"
+                ]
+              },
+              {
+                "@type": "SiteNavigationElement",
+                "@id": "https://abram.network/#sitenav",
+                "name": "Primary Navigation",
+                "hasPart": [
+                  {
+                    "@type": "WebPage",
+                    "name": "Film Production",
+                    "url": "https://abram.network/film-production",
+                    "description": "AI script breakdown, stripboard scheduling, digital call sheets, and production budgeting."
+                  },
+                  {
+                    "@type": "WebPage",
+                    "name": "Agency Operations",
+                    "url": "https://abram.network/agency",
+                    "description": "Client intake forms, crew roster management, capacity planning, and smart scheduling."
+                  },
+                  {
+                    "@type": "WebPage",
+                    "name": "Creative Intelligence",
+                    "url": "https://abram.network/intelligence",
+                    "description": "AI co-pilots, brief intelligence, and crew matchmaking for production workflows."
+                  },
+                  {
+                    "@type": "WebPage",
+                    "name": "Creators & Influencers",
+                    "url": "https://abram.network/influencers",
+                    "description": "Content calendars, brand deal tracking, rate cards, and production schedules for creators."
+                  },
+                  {
+                    "@type": "WebPage",
+                    "name": "Pricing",
+                    "url": "https://abram.network/pricing",
+                    "description": "Transparent pricing plans for independent filmmakers, agencies, and studios."
+                  },
+                  {
+                    "@type": "WebPage",
+                    "name": "Documentation",
+                    "url": "https://abram.network/docs",
+                    "description": "Complete user guides, tutorials, and system documentation for ABRAM."
+                  },
+                  {
+                    "@type": "WebPage",
+                    "name": "Release Notes",
+                    "url": "https://abram.network/changelog",
+                    "description": "Latest updates, new features, and product improvements for ABRAM."
+                  },
+                  {
+                    "@type": "WebPage",
+                    "name": "Blog & Insights",
+                    "url": "https://abram.network/blog",
+                    "description": "Articles, industry insights, and creative production best practices."
+                  }
                 ]
               },
               {
@@ -100,6 +163,41 @@ export default function LandingPage() {
                     "name": "Creative Intelligence Suite",
                     "description": "AI co-pilots, brief intelligence, and crew matchmaking for production workflows.",
                     "url": "https://abram.network/intelligence"
+                  },
+                  {
+                    "@type": "WebPage",
+                    "@id": "https://abram.network/influencers#webpage",
+                    "name": "Content Creators & Influencers",
+                    "description": "Content calendars, brand deal tracking, rate cards, and production schedules for creators.",
+                    "url": "https://abram.network/influencers"
+                  },
+                  {
+                    "@type": "WebPage",
+                    "@id": "https://abram.network/pricing#webpage",
+                    "name": "Pricing & Plans",
+                    "description": "Transparent pricing plans for independent filmmakers, agencies, and studios.",
+                    "url": "https://abram.network/pricing"
+                  },
+                  {
+                    "@type": "WebPage",
+                    "@id": "https://abram.network/docs#webpage",
+                    "name": "Documentation & User Guide",
+                    "description": "Complete user guides, tutorials, and system documentation for ABRAM.",
+                    "url": "https://abram.network/docs"
+                  },
+                  {
+                    "@type": "WebPage",
+                    "@id": "https://abram.network/changelog#webpage",
+                    "name": "Release Notes & Changelog",
+                    "description": "Latest updates, new features, and product improvements for ABRAM.",
+                    "url": "https://abram.network/changelog"
+                  },
+                  {
+                    "@type": "WebPage",
+                    "@id": "https://abram.network/blog#webpage",
+                    "name": "Blog & Industry Insights",
+                    "description": "Articles, industry insights, and creative production best practices.",
+                    "url": "https://abram.network/blog"
                   }
                 ]
               },

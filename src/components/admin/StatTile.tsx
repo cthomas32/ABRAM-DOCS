@@ -50,7 +50,7 @@ export function StatCell({
 }) {
   return (
     <div className="min-w-0">
-      <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-0.5">
+      <span className="block text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans mb-0.5">
         {label}
       </span>
       <div className="text-lg leading-snug tabular-nums text-white">{value}</div>
@@ -115,7 +115,7 @@ export function StatRow({
         const under = stat.hint ?? stat.caption;
         return (
           <div key={stat.label} className="min-w-0">
-            <span className="block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-0.5">
+            <span className="block text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans mb-0.5">
               {stat.label}
             </span>
             {loading ? (

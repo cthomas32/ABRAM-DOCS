@@ -8,6 +8,12 @@
  *
  * It names its section. It does not tease it, so no kicker text and no
  * sentence fragments leading into a heading.
+ *
+ * The colour is `zinc`, not `gray`. DESIGN.md allows one grey ramp and it
+ * is zinc; the two are close enough that a stray `gray` reads as correct
+ * and cool enough apart that a screen mixing them looks slightly dirty
+ * without anybody being able to say why. Both labels below are the same
+ * recipe, so this is the only file that has to hold the line.
  */
 
 import React from "react";
@@ -23,7 +29,7 @@ export default function Overline({
   className?: string;
 }) {
   return (
-    <Tag className={`block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans ${className}`}>
+    <Tag className={`block text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans ${className}`}>
       {children}
     </Tag>
   );
@@ -48,7 +54,7 @@ export function FieldLabel({
   return (
     <label
       htmlFor={htmlFor}
-      className={`block text-xs uppercase font-bold tracking-widest text-gray-400 font-sans mb-1.5 ${className}`}
+      className={`block text-xs uppercase font-bold tracking-widest text-zinc-400 font-sans mb-1.5 ${className}`}
     >
       {children}
       {hint && <span className="text-zinc-400 normal-case tracking-normal font-medium"> {hint}</span>}

@@ -24,24 +24,12 @@ import { addSubscriber, createServiceClient } from "@/utils/resend";
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
-/**
- * Deliberately strict. A malformed address that reaches the list costs a
- * bounce against the sending domain, and the capture form asks for an email
- * without insisting on one, so a typo is the expected failure here.
- */
-const EMAIL = /^[^\s@,;<>"]+@[^\s@,;<>".]+\.[^\s@,;<>"]{2,}$/;
-
-export function normalizeEmail(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  const trimmed = value.trim().toLowerCase();
-  if (!trimmed || trimmed.length > 200) return null;
-  return EMAIL.test(trimmed) ? trimmed : null;
-}
-
-/** Escapes the characters ILIKE treats as wildcards, underscore included. */
-function ilikeEscape(value: string): string {
-  return value.replace(/[\\%_]/g, (char) => `\\${char}`);
-}
+/* The address-as-key functions moved to `./emailKey`, a module with no
+   imports, so `contactSync.ts` can be loaded outside a Next request. Both
+   are re-exported here because this file's callers have always had them
+   from this path. */
+export { ilikeEscape, normalizeEmail } from "./emailKey";
+import { ilikeEscape, normalizeEmail } from "./emailKey";
 
 /** "Jane Q. Doe" becomes Jane, and Q. Doe. A single word has no surname. */
 function splitName(fullName: string | null | undefined): {

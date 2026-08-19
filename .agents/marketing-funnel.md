@@ -44,7 +44,7 @@ It matters more than it sounds. Opens and clicks are the substrate for segments,
 
 The first automatic email the list sends, and as of this file the only one.
 
-It lives in the same registry as the conference follow up (`src/lib/crm/emailTemplates.ts`, key `newsletter_welcome`), goes through the same store, the same fallbacks and the same editor at `/admin/dashboard/crm/emails`. Four rules hold it up, and they are in the file header of `src/lib/funnel/welcomeEmail.ts` because they are the kind of thing that gets refactored away by somebody who does not know why they are there:
+It lives in the same registry as the conference follow up (`src/lib/crm/emailTemplates.ts`, key `newsletter_welcome`), goes through the same store, the same fallbacks and the same editor at `/admin/dashboard/people/emails`. Four rules hold it up, and they are in the file header of `src/lib/funnel/welcomeEmail.ts` because they are the kind of thing that gets refactored away by somebody who does not know why they are there:
 
 1. **It never fails the signup.** Nothing in it throws.
 2. **It sends once**, guarded by a *conditional* claim on `subscribers.welcome_email_sent_at` — the update only matches while the column is null, so two racing requests produce one send. The claim happens **before** the send, which means a send that fails after claiming leaves somebody permanently unwelcomed. That is the deliberate trade: the alternative sends duplicates exactly when mail is already misbehaving.

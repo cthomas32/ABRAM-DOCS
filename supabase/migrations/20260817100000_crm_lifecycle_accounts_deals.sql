@@ -87,7 +87,7 @@ COMMENT ON TABLE public.crm_accounts IS
     'The company, as distinct from the people at it. A deal belongs here because the person who takes the first meeting is regularly not the person who signs.';
 
 COMMENT ON COLUMN public.crm_accounts.carve_out IS
-    'Names an agreement that removes this account from commission entirely — "abry_portfolio" for introductions to Abry Partners or its portfolio. Non-null means the ledger skips it regardless of who sourced or closed it.';
+    'Names an agreement that removes this account from commission entirely, for example an introduction made through an investor whose portfolio is excluded by contract. Non-null means the ledger skips it regardless of who sourced or closed it.';
 
 COMMENT ON COLUMN public.crm_accounts.first_contact_at IS
     'A deal registration is only valid if filed before this instant. Stored rather than recalled, because the whole point of registration is that it settles a dispute.';
@@ -431,7 +431,13 @@ CREATE TRIGGER trg_crm_deals_protect_source BEFORE UPDATE ON public.crm_deals
 -- alongside the ones that do — a person asking "why was this not paid"
 -- needs to find the row, not fail to find it.
 -- ---------------------------------------------------------------------
-CREATE OR REPLACE VIEW public.crm_attribution_audit AS
+-- `security_invoker` is set here as well as by the ALTER in
+-- 20260817110000, and the repetition is the point: CREATE OR REPLACE VIEW
+-- resets any option the statement does not name, so the next person to
+-- add a column to this view would silently hand it back the definer's
+-- rights and let it read straight past the policies on crm_deals.
+CREATE OR REPLACE VIEW public.crm_attribution_audit
+WITH (security_invoker = on) AS
 SELECT
     d.id                     AS deal_id,
     d.name                   AS deal_name,

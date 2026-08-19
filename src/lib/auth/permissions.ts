@@ -90,7 +90,15 @@ export type Permission =
   | "broadcasts.send"
   | "subscribers.read"
 
-  /* Content — the admin console proper */
+  /* Content — the admin console proper.
+   *
+   * `content.brain` is the odd one: it is a *write* permission with no
+   * matching read permission, because the brain is readable by everybody
+   * who can enter the console and that is deliberate. A brand voice
+   * nobody may read is a brand voice nobody follows. What is guarded is
+   * changing what the company believes, which in the file version of this
+   * store is guarded by somebody approving a pull request. */
+  | "content.brain"
   | "content.docs"
   | "content.blog"
   | "content.changelog"
@@ -146,6 +154,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "broadcasts.draft",
     "broadcasts.send",
     "subscribers.read",
+    "content.brain",
     "content.docs",
     "content.blog",
     "content.changelog",
@@ -180,6 +189,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "broadcasts.draft",
     "broadcasts.send",
     "subscribers.read",
+    "content.brain",
     "content.docs",
     "content.blog",
     "content.changelog",
@@ -299,7 +309,7 @@ export function seesWholePipeline(user: Pick<ConsoleUser, "role" | "growthStage"
  * Which permission a path requires.
  *
  * Ordered most specific first, and matched by prefix. The middleware
- * walks this list and takes the first hit, so `/admin/dashboard/crm` has
+ * walks this list and takes the first hit, so `/admin/dashboard/people` has
  * to appear before `/admin/dashboard` or the general rule would swallow
  * it.
  *
@@ -309,12 +319,18 @@ export function seesWholePipeline(user: Pick<ConsoleUser, "role" | "growthStage"
  * immediately, instead of shipping open and nobody noticing at all.
  */
 export const ROUTE_PERMISSIONS: { prefix: string; permission: Permission }[] = [
-  /* CRM: five objects, each one address with tabs inside it. */
-  { prefix: "/admin/dashboard/crm/people", permission: "crm.contacts.read.own" },
-  { prefix: "/admin/dashboard/crm", permission: "crm.contacts.read.own" },
-  { prefix: "/admin/dashboard/accounts", permission: "crm.accounts.manage" },
+  /* CRM: four objects, each one address, with tabs inside it and a page
+     per record beneath it. A prefix rule covers the record pages for
+     free, which is the point of giving a record a real address. */
+  { prefix: "/admin/dashboard/people", permission: "crm.contacts.read.own" },
+  { prefix: "/admin/dashboard/companies", permission: "crm.accounts.manage" },
   { prefix: "/admin/dashboard/deals", permission: "crm.deals.manage" },
   { prefix: "/admin/dashboard/activities", permission: "crm.contacts.read.own" },
+
+  /* Capture is its own short address rather than a tab, because it is
+     used one handed at a stand and the URL gets typed. It writes a
+     person, so it needs the writing permission and not the reading one. */
+  { prefix: "/admin/dashboard/capture", permission: "crm.contacts.write.own" },
 
   /* The four tool sets. Each hub is entered with console.admin and then
      draws only the tabs the reader actually holds, because the tabs
@@ -322,6 +338,9 @@ export const ROUTE_PERMISSIONS: { prefix: string; permission: Permission }[] = [
      rule cannot express that. The tab bodies check their own. */
   { prefix: "/admin/dashboard/growth", permission: "console.admin" },
   { prefix: "/admin/dashboard/content", permission: "console.admin" },
+  /* A brain document is its own address so it can be pasted into a
+     message. Reading it needs only a login that works here. */
+  { prefix: "/admin/dashboard/brain", permission: "console.admin" },
   { prefix: "/admin/dashboard/money", permission: "commission.read.own" },
   { prefix: "/admin/dashboard/team", permission: "console.admin" },
 
