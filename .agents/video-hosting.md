@@ -98,11 +98,66 @@ it asks. Mux is deleted first: if that fails the row stays, because a row with a
 dead playback ID is a visible problem somebody can retry, whereas a deleted row
 pointing at an asset still being billed for is invisible.
 
+## A folder is a filter now, not a section
+
+The migration header says a folder is a section rather than a filter, and that was
+right for three demos. At nineteen across seven folders the page was one long scroll
+of headings, which reads as one library chopped up rather than as seven folders. So
+`DemoLibrary.tsx` draws a rail of labels above the grid — All, then one per folder —
+and picking one filters the grid to it.
+
+Three rules hold it together.
+
+**All is the default and it still groups.** Under All every folder appears in order
+with a small caps label and a count over it (`FOR FILM PROGRAMS · 5`), quieter than
+the heading it replaced. Inside one folder there is no label, because the rail is
+already saying which one you are in.
+
+**The rail is a shareable address.** `?f=<folder-slug>` selects a label, alongside
+`?v=<slug>` for a single demo, and both survive the password form. A folder slug that
+no longer exists falls back to All rather than to an empty page. The folder is
+*replaced* into history rather than pushed — filtering a page is not going to a new
+one, and pushing would make Back mean "undo one click of a filter".
+
+**Empty never renders.** `getDemoLibrary` already drops folders with no published
+videos, so a label only ever exists for a folder with something behind it, and the
+search box narrows whatever the rail has left rather than a second list. The labels
+wrap rather than scroll sideways, so nothing hides past the edge of a phone.
+
+## The password on the page
+
+`/demos` is behind one shared word. The library is finished work that is not ready to
+be public, so this is a curtain rather than a vault: everyone let in gets the same
+word and the word is expected to travel.
+
+**Where the word comes from**, in order: the `demos_password` row of `site_settings`,
+then `DEMOS_PASSWORD`, then `ABRAMDEMOS`. Blank counts as unset at every level. The
+database first is the whole point — Content → Demos → *Demo page password* changes it
+from the console, where an environment variable would need Vercel and a redeploy.
+
+**The console never sees the current word.** `DemosPanel` reads the row, and what it
+hands the browser is a length and where the value came from. A card that could show
+you the password would be a card that puts the password in the page source.
+
+**Changing it locks out everybody who was already in.** The unlock cookie holds a
+marker derived from the password — sixteen hex characters of a salted hash — rather
+than the fixed string it used to hold, so a cookie issued under the old word stops
+matching the moment a new one is saved. This is the behaviour somebody changing a
+shared password is asking for: the word is changed *because* it travelled too far,
+and a change that left every existing browser signed in would undo nothing.
+
+The public read is cached for sixty seconds per instance and made with the service
+key, because `site_settings` has no anon policy at all. A change is felt everywhere
+within the minute.
+
 ## Where things live
 
 | | |
 |---|---|
 | `supabase/migrations/20260819090000_demo_videos.sql` | `demo_folders`, `demo_videos`, the RLS |
+| `supabase/migrations/20260819140000_site_settings.sql` | `site_settings`, console-read only |
+| [`src/lib/demosGate.ts`](../src/lib/demosGate.ts) | Resolution order, the cookie marker, the comparison |
+| [`src/lib/demosSettings.ts`](../src/lib/demosSettings.ts) | The cached service-key read of the stored password |
 | [`src/lib/demos.ts`](../src/lib/demos.ts) | Row types, the public query, the Mux URL builders |
 | [`src/lib/mux/client.ts`](../src/lib/mux/client.ts) | Four endpoints and basic auth |
 | [`src/app/admin/dashboard/demos/`](../src/app/admin/dashboard/demos/) | The console screen and its server actions |

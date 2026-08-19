@@ -6,6 +6,8 @@ import { createClient } from "@/utils/supabase/server";
 import { readConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
 import { toSlug, toVideo, type DemoVideo } from "@/lib/demos";
+import { DEMOS_PASSWORD_KEY } from "@/lib/demosGate";
+import { forgetDemosPassword } from "@/lib/demosSettings";
 import {
   createDirectUpload,
   deleteAsset,
@@ -571,6 +573,47 @@ export async function deleteVideo(id: string): Promise<DemoResult> {
 
   const { error } = await gate.supabase.from("demo_videos").delete().eq("id", id);
   if (error) return { ok: false, error: refusal(error.code, error.message) };
+  refresh();
+  return { ok: true };
+}
+
+/* ------------------------------------------------------------------ */
+/*  The password on the public page                                    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Change the word that opens /demos.
+ *
+ * It is stored in `site_settings` rather than in the environment so that
+ * changing it is a field on this screen instead of a Vercel variable and
+ * a redeploy. Saving one **locks out every browser that was already in**:
+ * the unlock cookie holds a marker derived from the password, so an old
+ * cookie stops matching the moment a new word is saved. That is the
+ * behaviour somebody changing a shared password is asking for.
+ *
+ * The value is written in plain text. It is a shared curtain that gets
+ * read out on a call, and a hash would mean the console could never show
+ * the owner what the current word is — which is the main thing they open
+ * this card to find out.
+ */
+export async function setDemosPassword(next: string): Promise<DemoResult> {
+  const gate = await writer();
+  if ("error" in gate) return { ok: false, error: gate.error };
+
+  const clean = (next ?? "").trim();
+  if (clean.length < 6) return { ok: false, error: "Use at least six characters." };
+  if (clean.length > 100) return { ok: false, error: "That is longer than a hundred characters." };
+  if (/\s/.test(clean)) {
+    return { ok: false, error: "No spaces. This gets typed off a screen share." };
+  }
+
+  const { error } = await gate.supabase
+    .from("site_settings")
+    .upsert({ key: DEMOS_PASSWORD_KEY, value: clean }, { onConflict: "key" });
+
+  if (error) return { ok: false, error: refusal(error.code, error.message) };
+
+  forgetDemosPassword();
   refresh();
   return { ok: true };
 }

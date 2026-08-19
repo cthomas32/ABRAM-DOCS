@@ -3,8 +3,10 @@ import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can } from "@/lib/auth/permissions";
 import { muxIsConfigured } from "@/lib/mux/client";
 import { toVideo, UNSORTED_ID, type DemoFolder, type DemoVideo } from "@/lib/demos";
+import { DEMOS_PASSWORD_KEY, resolveDemosPassword } from "@/lib/demosGate";
 import Panel from "@/components/admin/Panel";
 import DemosClient from "./DemosClient";
+import DemosPasswordCard, { type PasswordSource } from "./DemosPasswordCard";
 
 /**
  * The demo library, in the console.
@@ -28,14 +30,26 @@ export default async function DemosPanel() {
 
   const supabase = await createClient();
 
-  const [folderResult, videoResult] = await Promise.all([
+  const [folderResult, videoResult, passwordResult] = await Promise.all([
     supabase
       .from("demo_folders")
       .select("id, slug, name, description, position")
       .eq("archived", false)
       .order("position"),
     supabase.from("demo_videos").select(VIDEO_COLUMNS).order("position"),
+    supabase.from("site_settings").select("value").eq("key", DEMOS_PASSWORD_KEY).maybeSingle(),
   ]);
+
+  /* Read here rather than passed to the client, and only its length goes
+     any further. The word itself never reaches the browser. */
+  const stored = (passwordResult.data?.value as string | undefined)?.trim() ?? "";
+  const password = resolveDemosPassword(stored);
+  const source: PasswordSource =
+    stored.length > 0
+      ? "saved"
+      : (process.env.DEMOS_PASSWORD?.trim() ?? "").length > 0
+        ? "environment"
+        : "default";
 
   const loadError = folderResult.error?.message ?? videoResult.error?.message ?? null;
 
@@ -74,6 +88,8 @@ export default async function DemosPanel() {
           Everything else on this screen works. See .agents/video-hosting.md.
         </Panel>
       )}
+
+      <DemosPasswordCard length={password.length} source={source} mayWrite={mayWrite} />
 
       <DemosClient folders={folders} mayWrite={mayWrite} uploadsReady={muxIsConfigured()} />
     </div>

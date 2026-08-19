@@ -18,6 +18,7 @@ import {
   passwordMatches,
   safeDemosReturn,
 } from "@/lib/demosGate";
+import { currentDemosPassword } from "@/lib/demosSettings";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,8 +26,9 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const form = await request.formData();
   const target = safeDemosReturn(form.get("next"));
+  const password = await currentDemosPassword();
 
-  if (!passwordMatches(form.get("password"))) {
+  if (!passwordMatches(form.get("password"), password)) {
     const back = new URL(target, request.nextUrl.origin);
     back.searchParams.set("locked", "1");
     return NextResponse.redirect(back, { status: 303 });
@@ -35,6 +37,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const response = NextResponse.redirect(new URL(target, request.nextUrl.origin), {
     status: 303,
   });
-  response.cookies.set(demosCookieOptions());
+  response.cookies.set(demosCookieOptions(password));
   return response;
 }

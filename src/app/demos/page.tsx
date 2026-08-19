@@ -3,11 +3,12 @@ import { cookies } from "next/headers";
 import DemoLibrary from "./DemoLibrary";
 import DemosGate from "./DemosGate";
 import { DEMOS_COOKIE, unlockedByCookie } from "@/lib/demosGate";
+import { currentDemosPassword } from "@/lib/demosSettings";
 import { getDemoLibrary, streamUrl, thumbnailUrl } from "@/lib/demos";
 
 async function demosUnlocked(): Promise<boolean> {
-  const store = await cookies();
-  return unlockedByCookie(store.get(DEMOS_COOKIE)?.value);
+  const [store, password] = await Promise.all([cookies(), currentDemosPassword()]);
+  return unlockedByCookie(store.get(DEMOS_COOKIE)?.value, password);
 }
 
 /* The page reads a cookie to decide whether it may show anything, so it
@@ -16,7 +17,7 @@ async function demosUnlocked(): Promise<boolean> {
 export const dynamic = "force-dynamic";
 
 type DemosPageProps = {
-  searchParams: Promise<{ v?: string; locked?: string }>;
+  searchParams: Promise<{ v?: string; f?: string; locked?: string }>;
 };
 
 /**
@@ -70,18 +71,21 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function DemosPage({ searchParams }: DemosPageProps) {
-  const { v, locked } = await searchParams;
+  const { v, f, locked } = await searchParams;
 
   /* Gate first, and before any library fetch. A locked render must not
      build the JSON-LD block below, because that block is the whole
      catalogue — titles, descriptions, thumbnails and stream urls. */
   if (!(await demosUnlocked())) {
-    return (
-      <DemosGate
-        next={v ? `/demos?v=${encodeURIComponent(v)}` : "/demos"}
-        failed={locked === "1"}
-      />
-    );
+    /* The address somebody was sent survives the form, so a link to one
+       demo or to one folder lands where it was pointed rather than at the
+       top of the library. */
+    const query = new URLSearchParams();
+    if (v) query.set("v", v);
+    if (f) query.set("f", f);
+    const search = query.toString();
+
+    return <DemosGate next={search ? `/demos?${search}` : "/demos"} failed={locked === "1"} />;
   }
 
   const folders = await getDemoLibrary();
