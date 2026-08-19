@@ -1,42 +1,89 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import DemoLibrary from "./DemoLibrary";
+import DemosGate from "./DemosGate";
+import { DEMOS_COOKIE, unlockedByCookie } from "@/lib/demosGate";
 import { getDemoLibrary, streamUrl, thumbnailUrl } from "@/lib/demos";
 
-/* Publishing a demo in the console should put it on the site without a
-   deploy, so the page revalidates on the same cadence as the changelog. */
-export const revalidate = 60;
+async function demosUnlocked(): Promise<boolean> {
+  const store = await cookies();
+  return unlockedByCookie(store.get(DEMOS_COOKIE)?.value);
+}
 
-export const metadata: Metadata = {
-  title: "Demos | ABRAM",
-  description:
-    "Short product demos of ABRAM — script breakdown, call sheets, scheduling, crew payouts, and the client portal, shown end to end.",
-  keywords: [
-    "ABRAM demo",
-    "ABRAM walkthrough",
-    "creative production software demo",
-    "film production software walkthrough",
-    "call sheet software demo",
-    "creative operations platform demo",
-  ],
-  alternates: {
-    canonical: "https://abram.network/demos",
-  },
-  openGraph: {
-    title: "Demos | ABRAM",
-    description: "Short product demos of ABRAM, shown end to end.",
-    url: "https://abram.network/demos",
-    siteName: "ABRAM Network",
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Demos | ABRAM",
-    description: "Short product demos of ABRAM, shown end to end.",
-  },
+/* The page reads a cookie to decide whether it may show anything, so it
+   cannot be rendered ahead of a request. Publishing a demo in the console
+   still puts it on the site without a deploy — every view is fresh. */
+export const dynamic = "force-dynamic";
+
+type DemosPageProps = {
+  searchParams: Promise<{ v?: string; locked?: string }>;
 };
 
-export default async function DemosPage() {
+/**
+ * The library is private, so nothing about it is offered to a crawler.
+ * A locked page — which is every request without the cookie, and so every
+ * request a bot will ever make — answers noindex and describes nothing.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const unlocked = await demosUnlocked();
+
+  if (!unlocked) {
+    return {
+      title: "Demos | ABRAM",
+      description: "This page is private.",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  return {
+    title: "Demos | ABRAM",
+    description:
+      "Short product demos of ABRAM — script breakdown, call sheets, scheduling, crew payouts, and the client portal, shown end to end.",
+    keywords: [
+      "ABRAM demo",
+      "ABRAM walkthrough",
+      "creative production software demo",
+      "film production software walkthrough",
+      "call sheet software demo",
+      "creative operations platform demo",
+    ],
+    /* Still noindex once unlocked: the cookie is what a person has, not
+       what a crawler has, and the page is private either way. */
+    robots: { index: false, follow: false },
+    alternates: {
+      canonical: "https://abram.network/demos",
+    },
+    openGraph: {
+      title: "Demos | ABRAM",
+      description: "Short product demos of ABRAM, shown end to end.",
+      url: "https://abram.network/demos",
+      siteName: "ABRAM Network",
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Demos | ABRAM",
+      description: "Short product demos of ABRAM, shown end to end.",
+    },
+  };
+}
+
+export default async function DemosPage({ searchParams }: DemosPageProps) {
+  const { v, locked } = await searchParams;
+
+  /* Gate first, and before any library fetch. A locked render must not
+     build the JSON-LD block below, because that block is the whole
+     catalogue — titles, descriptions, thumbnails and stream urls. */
+  if (!(await demosUnlocked())) {
+    return (
+      <DemosGate
+        next={v ? `/demos?v=${encodeURIComponent(v)}` : "/demos"}
+        failed={locked === "1"}
+      />
+    );
+  }
+
   const folders = await getDemoLibrary();
   const videos = folders.flatMap((folder) => folder.videos);
 
