@@ -163,16 +163,117 @@ function UpNext({
   );
 }
 
+/**
+ * The folder rail.
+ *
+ * Folders read as folders here rather than as a stack of headed sections:
+ * one label per folder, plus All, and picking one filters the grid. The
+ * labels wrap rather than scroll, because a row that scrolls sideways on a
+ * phone hides the folders past the edge and there is nothing to tell you
+ * they are there.
+ */
+function FolderRail({
+  folders,
+  active,
+  onSelect,
+  query,
+  onQuery,
+}: {
+  folders: DemoFolder[];
+  active: string | null;
+  onSelect: (slug: string | null) => void;
+  query: string;
+  onQuery: (value: string) => void;
+}) {
+  const chip = (selected: boolean) =>
+    `cursor-pointer rounded-full border px-3.5 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 ${
+      selected
+        ? "border-white bg-white text-black"
+        : "border-white/10 bg-white/[0.03] text-zinc-400 hover:border-white/20 hover:text-white"
+    }`;
+
+  return (
+    <div className="mb-9 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+      <div className="flex flex-wrap gap-2">
+        <button type="button" onClick={() => onSelect(null)} className={chip(active === null)}>
+          All
+        </button>
+        {folders.map((folder) => (
+          <button
+            key={folder.id}
+            type="button"
+            onClick={() => onSelect(folder.slug)}
+            className={chip(active === folder.slug)}
+          >
+            {folder.name}
+          </button>
+        ))}
+      </div>
+
+      <label className="sm:w-56 sm:shrink-0">
+        <span className="sr-only">Search demos</span>
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => onQuery(event.target.value)}
+          placeholder="Search demos"
+          className="h-8 w-full rounded-full border border-white/10 bg-white/[0.03] px-4 text-xs text-white placeholder:text-zinc-600 focus:border-white/20 focus:outline-none"
+        />
+      </label>
+    </div>
+  );
+}
+
+/** "FOR FILM PROGRAMS · 5" over a group in the All view. */
+function GroupLabel({ folder }: { folder: DemoFolder }) {
+  return (
+    <div className="mb-4 flex items-baseline gap-2">
+      <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+        {folder.name}
+      </span>
+      <span className="font-sans text-[10px] font-medium tracking-wide text-zinc-600">
+        · {folder.videos.length}
+      </span>
+    </div>
+  );
+}
+
 export default function DemoLibrary({ folders }: { folders: DemoFolder[] }) {
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  const [folderSlug, setFolderSlug] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   const all = useMemo(() => folders.flatMap((folder) => folder.videos), [folders]);
   const active = all.find((video) => video.slug === activeSlug) ?? null;
 
-  /* A folder heading over the only section on the page is a label for
-     something with nothing to distinguish it from. Headings appear once
-     there is more than one section to tell apart. */
-  const showHeadings = folders.length > 1;
+  /* One folder is not a set of folders, so the rail only appears once
+     there is something to choose between. */
+  const showRail = folders.length > 1;
+
+  /* Search runs across whatever the rail has left, so a word typed inside
+     a folder searches that folder and the same word under All searches
+     everything. */
+  const shown = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    const matches = (video: DemoVideo) =>
+      needle.length === 0 ||
+      video.title.toLowerCase().includes(needle) ||
+      (video.description ?? "").toLowerCase().includes(needle);
+
+    return folders
+      .filter((folder) => !folderSlug || folder.slug === folderSlug)
+      .map((folder) => ({ ...folder, videos: folder.videos.filter(matches) }))
+      .filter((folder) => folder.videos.length > 0);
+  }, [folders, folderSlug, query]);
+
+  /** The folder the rail is on, when it is on one. */
+  const selected = folderSlug
+    ? (folders.find((folder) => folder.slug === folderSlug) ?? null)
+    : null;
+
+  /* The entrance stagger counts down the page rather than restarting in
+     each group, so the second folder does not replay the first one's. */
+  const order = useMemo(() => shown.flatMap((folder) => folder.videos.map((v) => v.id)), [shown]);
 
   /* ?v=<slug> is the shareable address of a single demo. Read from
      location rather than useSearchParams so this component does not have
@@ -186,20 +287,40 @@ export default function DemoLibrary({ folders }: { folders: DemoFolder[] }) {
     else window.history.replaceState({ v: slug }, "", next);
   }, []);
 
+  /* ?f=<folder-slug> is the shareable address of one folder. Replaced
+     rather than pushed: picking a label is filtering a page, not going to
+     a new one, so it should not need three back presses to undo. */
+  const selectFolder = useCallback((slug: string | null) => {
+    setFolderSlug(slug);
+    const url = new URL(window.location.href);
+    if (slug) url.searchParams.set("f", slug);
+    else url.searchParams.delete("f");
+    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}`);
+  }, []);
+
   useEffect(() => {
     const known = (slug: string | null) => Boolean(slug && all.some((v) => v.slug === slug));
+    const knownFolder = (slug: string | null) =>
+      slug && folders.some((folder) => folder.slug === slug) ? slug : null;
 
-    const fromUrl = new URLSearchParams(window.location.search).get("v");
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get("v");
     if (known(fromUrl)) setActiveSlug(fromUrl);
+
+    /* An unknown or emptied folder is All rather than an error. A link
+       to a folder that has since been renamed still shows the library. */
+    setFolderSlug(knownFolder(params.get("f")));
 
     /* Back out of a demo with the browser's back button, not just ours. */
     const onPop = () => {
-      const slug = new URLSearchParams(window.location.search).get("v");
+      const current = new URLSearchParams(window.location.search);
+      const slug = current.get("v");
       setActiveSlug(known(slug) ? slug : null);
+      setFolderSlug(knownFolder(current.get("f")));
     };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
-  }, [all]);
+  }, [all, folders]);
 
   const select = useCallback(
     (slug: string) => {
@@ -284,36 +405,54 @@ export default function DemoLibrary({ folders }: { folders: DemoFolder[] }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: DURATION, ease: EASE }}
-            className="space-y-16"
           >
-            {folders.map((folder, folderIndex) => (
-              <section key={folder.id}>
-                {showHeadings && (
-                  <div className="mb-6 max-w-2xl">
-                    <h2 className="text-sm font-medium tracking-tight text-white">{folder.name}</h2>
-                    {folder.description && (
-                      <p className="mt-1 text-xs leading-relaxed text-zinc-500">
-                        {folder.description}
-                      </p>
-                    )}
-                  </div>
-                )}
+            {showRail && (
+              <FolderRail
+                folders={folders}
+                active={folderSlug}
+                onSelect={selectFolder}
+                query={query}
+                onQuery={setQuery}
+              />
+            )}
 
-                <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
-                  {folder.videos.map((video, index) => (
-                    <DemoCard
-                      key={video.id}
-                      video={video}
-                      onSelect={select}
-                      /* Stagger runs across the whole page rather than
-                         restarting per section, so the second folder does
-                         not replay the first folder's entrance. */
-                      index={folderIndex === 0 ? index : index + 3}
-                    />
-                  ))}
-                </div>
-              </section>
-            ))}
+            {selected?.description && (
+              <p className="mb-8 max-w-2xl text-xs leading-relaxed text-zinc-500">
+                {selected.description}
+              </p>
+            )}
+
+            {shown.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.01] px-6 py-14 text-center">
+                <p className="text-sm text-zinc-400">Nothing here matches that.</p>
+                <p className="mt-1.5 text-xs text-zinc-600">
+                  Try another word, or pick All to search every folder.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-14">
+                {shown.map((folder) => (
+                  <section key={folder.id}>
+                    {/* Under All the folder is named over its group; inside
+                        one folder the rail is already saying which. */}
+                    {folderSlug === null && showRail && <GroupLabel folder={folder} />}
+
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+                      {folder.videos.map((video) => (
+                        <DemoCard
+                          key={video.id}
+                          video={video}
+                          onSelect={select}
+                          /* Capped, because a library this long would
+                             otherwise take a second to finish arriving. */
+                          index={Math.min(order.indexOf(video.id), 8)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
