@@ -292,7 +292,26 @@ for (const r of publicRoutes) {
 const guideFiles = walk(USER_GUIDE, (f) => /\.mdx?$/.test(f));
 const docsJson = fs.existsSync(DOCS_JSON) ? read(DOCS_JSON) : '';
 
+// Not every file under user-guide/ is a navigable article. Four of them are the *source
+// text* for dedicated legal routes (/privacy-policy reads ABRAM_Privacy_Policy.md straight
+// off disk), and README.md documents the folder for people editing it. None of the three
+// article rules apply to those: they carry no sidebarTitle because they never appear in a
+// sidebar, and they are absent from docs.json on purpose — registering them would put a
+// second copy of each legal page in the docs tree competing with the route that already
+// renders it.
+//
+// The backing files are discovered rather than hardcoded, so a new legal route stops being
+// a false positive the moment it ships instead of the next time someone edits this list.
+const routeBackedGuides = new Set(
+  walk(APP_DIR, (f) => /page\.tsx$/.test(f))
+    .flatMap((f) => read(f).match(/[A-Za-z0-9_]+\.mdx?/g) || [])
+);
+const NON_ARTICLE_GUIDES = new Set(['README.md']);
+
 for (const file of guideFiles) {
+  const base = path.basename(file);
+  if (routeBackedGuides.has(base) || NON_ARTICLE_GUIDES.has(base)) continue;
+
   const rel = path.relative(ROOT, file);
   const src = read(file);
   const fm = src.match(/^---\r?\n([\s\S]*?)\r?\n---/);
