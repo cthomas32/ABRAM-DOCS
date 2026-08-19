@@ -11,6 +11,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const CAMPAIGN_PAGE_DATE = new Date('2026-07-28');
   // Creator vertical landing page and its comparison
   const CREATOR_PAGE_DATE = new Date('2026-08-12');
+  // Product demo library, hosted on Mux
+  const DEMOS_PAGE_DATE = new Date('2026-08-19');
 
   // Track the latest overall modified date for the homepage and /docs index
   let latestModifiedOverall = new Date(DEFAULT_RELEASE_DATE);
@@ -207,6 +209,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: filmProdDate,
       changeFrequency: 'monthly' as const,
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/demos`,
+      lastModified: DEMOS_PAGE_DATE,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/agency`,

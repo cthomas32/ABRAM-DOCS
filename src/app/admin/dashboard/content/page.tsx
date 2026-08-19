@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { BookOpen, Brain, Newspaper, Tag } from "lucide-react";
+import { BookOpen, Brain, Clapperboard, Newspaper, Tag } from "lucide-react";
 import { getConsoleUser } from "@/lib/auth/consoleUser";
 import { can, type Permission } from "@/lib/auth/permissions";
 import ObjectTabs, { resolveTab, type ObjectTab } from "@/components/admin/ObjectTabs";
@@ -8,6 +8,7 @@ import BlogPanel from "../blog/BlogPanel";
 import DocsPanel from "../docs/DocsPanel";
 import ChangelogPanel from "../changelog/ChangelogPanel";
 import BrainPanel from "../brain/BrainPanel";
+import DemosPanel from "../demos/DemosPanel";
 
 /**
  * Everything that stays up, on one address.
@@ -23,6 +24,9 @@ const TABS: (ObjectTab & { permission: Permission })[] = [
   { id: "blog", label: "Blog", icon: Newspaper, permission: "content.blog" },
   { id: "docs", label: "Docs", icon: BookOpen, permission: "content.docs" },
   { id: "changelog", label: "Release notes", icon: Tag, permission: "content.changelog" },
+  /* A demo video is a product claim that ships to the marketing site, so
+     it sits at the release notes' bar rather than a blog post's. */
+  { id: "demos", label: "Demos", icon: Clapperboard, permission: "content.demos" },
   /* The brain is gated on `console.admin` rather than on `content.brain`,
      because `content.brain` is the permission to *change* what the company
      believes and everybody who works here may read it. The panel draws its
@@ -60,6 +64,7 @@ export default async function ContentPage({
           {tab === "blog" && <BlogPanel />}
           {tab === "docs" && <DocsPanel />}
           {tab === "changelog" && <ChangelogPanel />}
+          {tab === "demos" && <DemosPanel />}
           {tab === "brain" && <BrainPanel />}
         </>
       )}

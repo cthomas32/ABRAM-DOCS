@@ -102,6 +102,12 @@ export type Permission =
   | "content.docs"
   | "content.blog"
   | "content.changelog"
+  /* A demo video is a product claim that ships to the marketing site,
+   * so it sits at the same bar as the release notes rather than the
+   * same bar as a blog post. Owner and admin only, which is exactly
+   * what the RLS policy on demo_videos enforces — keep the two in
+   * step. See 20260819090000_demo_videos.sql. */
+  | "content.demos"
   | "content.team"
 
   /* Acquisition surfaces */
@@ -158,6 +164,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "content.docs",
     "content.blog",
     "content.changelog",
+    "content.demos",
     "content.team",
     "social.manage",
     "campaigns.manage",
@@ -193,6 +200,7 @@ const ROLE_PERMISSIONS: Record<ConsoleRole, Permission[]> = {
     "content.docs",
     "content.blog",
     "content.changelog",
+    "content.demos",
     "content.team",
     "social.manage",
     "campaigns.manage",

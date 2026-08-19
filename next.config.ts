@@ -41,6 +41,11 @@ const nextConfig: NextConfig = {
    */
   async redirects() {
     return [
+      /* The demo library was briefly at /videos. Nothing external points
+         there, but the footer did for an afternoon and a bookmark costs
+         nothing to honour. Temporary, because a 308 is cached by the
+         browser forever and this shape is days old. */
+      { source: "/videos", destination: "/demos", permanent: false },
       /* People, and everything that used to hang off /crm. The longer
          sources are listed before the bare one because Next takes the
          first match and /crm would otherwise swallow /crm/capture. */
