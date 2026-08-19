@@ -169,10 +169,39 @@ every visitor who scrolls past.
 is right for screen recordings, which are flat colour and text rather than film
 grain. Change it in `createDirectUpload` if a demo ever needs to look like footage.
 
+## Filling the library from the masters
+
+The nineteen finished cuts live in the sibling `abram-demos` repository under
+`masters/Final/`, and [`scripts/seed-demo-library.js`](../scripts/seed-demo-library.js)
+is the manifest that files them: folder, title, slug, description, runtime and poster
+offset, one entry per recording. It is idempotent on the slug, so re-running rewrites
+the words and leaves the video alone, and it never sets `published`.
+
+It is the console's three step upload done from a laptop instead of a browser, so it
+needs the same two variables. Without `MUX_TOKEN_ID` and `MUX_TOKEN_SECRET` it writes
+every row in `pending` with nothing to play and says so; with them it creates the
+upload, PUTs the file, waits for the asset and writes the playback ID back into the
+row it already made.
+
+```
+node scripts/seed-demo-library.js                    # folders and rows, upload if Mux is set
+node scripts/seed-demo-library.js --list             # what is in the database now
+node scripts/seed-demo-library.js --publish <slug>   # or --publish all
+```
+
+Publishing through the script refuses a row with no playback ID rather than setting
+the flag on it. The read policy would hide it anyway, and a published row nobody can
+see is a worse thing to debug than a refusal.
+
+Seeded rows sit in `pending`, which is a state the console polls. `syncVideo` returns
+immediately for a row that holds no upload id, so the cost is one request every five
+seconds per row while somebody has the Demos tab open, and nothing else.
+
 ## Still to do
 
-- Record the demos. The library ships with one empty folder and the page renders an
-  empty state until it isn't.
+- Upload the nineteen masters. The rows and the folders are in place and waiting on
+  `MUX_TOKEN_ID` and `MUX_TOKEN_SECRET` in `.env.local`, which are set in Vercel and
+  not on a laptop.
 - Decide whether `/demos` earns a slot in the main navigation. It is in the footer
   under Resources; the navbar's mega-menus are all product surfaces and a demo
   library is not one.
