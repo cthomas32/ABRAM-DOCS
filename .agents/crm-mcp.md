@@ -87,15 +87,56 @@ Two conventions carried over from the files, and both matter more than they look
 
 The reader renders Markdown without a compiler (`src/components/admin/Markdown.tsx`). MDX would compile at render time and a half typed `<` in a draft would throw inside a server component, which is a blank screen. A document store whose reader crashes on a draft is a document store nobody drafts in.
 
-## Connecting, and checking it works
+## Signing in, rather than pasting a token
 
-Console: **Team → Claude access**. Name a token, copy it once, add the server in Claude:
+There are two ways in, and the second one is the fallback.
 
-- URL `https://abram.network/api/mcp`
-- Header `Authorization: Bearer <token>`
+**Signing in.** Add `https://abram.network/api/mcp` in Claude, leave the client ID and secret boxes empty, click connect. It sends you to `/authorize`, you sign in to the console if you are not already, you read who is about to get access and click Allow. No token is shown and nothing is pasted.
+
+**A token.** Console: **Team → Claude access**. Name one, copy it once, send it as `Authorization: Bearer <token>`.
+
+The reason both exist is a limitation on the other side. **The claude.ai connector dialog has a URL box and no header box** — it takes OAuth and nothing else — so on the web, on desktop and on a phone, a token is not merely inconvenient, it is impossible. Claude Code does let you set a header, and so does anything talking to the endpoint directly, and neither has a browser to send somebody to.
+
+### What went wrong before this existed, because it will look familiar
+
+Adding the server to claude.ai landed on a blank page at `https://abram.network/authorize?...&client_id=Connor&...`. Nothing was broken. `/api/mcp` answered a request with no token exactly as designed, with `401` and `WWW-Authenticate: Bearer realm="abram-crm"` — and **that header named no discovery document**. A client told to use a bearer token and nothing about where to get one falls back to guessing the OAuth endpoint names at the origin, so it guessed `/authorize`, which was a 404. The `client_id=Connor` was a person typing their name into a box the app fills in for itself.
+
+The lesson is worth keeping: **a 401 that does not name its `resource_metadata` sends people to a blank page rather than to a sign-in.** The header now carries it.
+
+## The authorization server
+
+Five addresses, and the last act of all of them is a row in `mcp_tokens`.
+
+| Address | What it is |
+|---|---|
+| `/.well-known/oauth-protected-resource/api/mcp` | RFC 9728. What this resource is and who vouches for callers |
+| `/.well-known/oauth-authorization-server` | RFC 8414. Where the three endpoints are |
+| `/api/oauth/register` | RFC 7591. A client introducing itself |
+| `/authorize` | The consent screen |
+| `/api/oauth/token` | A code, spent once, for a token |
+
+Both discovery documents are also served at the other of the two addresses clients probe, because answering costs four lines and a 404 sends a client back to guessing.
+
+**It issues no new kind of credential.** The end of the flow is an insert into the same `mcp_tokens` table the team screen writes to, with `oauth_client_id` filled in. `/api/mcp` and `session.ts` are untouched and cannot tell the two apart. That is the point: an OAuth layer is the most likely place for a second definition of who may see what to appear, and there is not one. Row level security still decides every answer.
+
+Four things hold it up:
+
+- **Public clients, PKCE, S256 only.** No client secrets are issued anywhere. A secret handed to a desktop app is a secret in a file on a machine nobody here administers, and PKCE replaces it with a proof. `plain` is refused; it exists for devices that cannot hash and is a downgrade attack everywhere else.
+- **Registration is open, and that is not the hole it looks like.** Dynamic registration has to accept strangers, or a connector that has never seen this server could never connect — which was the entire original failure. A client id buys the right to send somebody to a consent page. Between that page and one row of the CRM stand a console password, an active `admin_users` row, and a person clicking Allow.
+- **The redirect address is matched whole, against a list registered before the flow began.** Never by prefix: a prefix test on `https://claude.ai/` also passes `https://claude.ai.evil.test/`. This one comparison is what stands between an authorization code and somebody else's server, and it is the reason an unknown client gets a message on the page and *no redirect at all*, while a registered client sending a malformed request gets redirected back with an error.
+- **A code presented twice revokes what the first presentation bought.** Two uses of a single-use code means somebody else has seen it. A client retrying loses its connection and reconnects, which is the cheaper of the two mistakes.
+
+Re-authorizing the same client revokes its previous token rather than stacking a second one, so reconnecting four times does not leave four live keys walking towards the ten-token cap.
+
+**The consent screen never reads an identity from the request.** It comes from the session cookie. A form field naming the person to authorize would let anybody mint a token for anybody, and that is the failure the whole file is arranged around.
+
+**`oauth_codes` has RLS on and no policy at all, deliberately.** It will appear in result 2 of `scripts/audit-open-policies.sql` as a table nobody can read. That is correct: it is written and read only by route handlers holding the service role, on the same reasoning that keeps an INSERT policy off `mcp_tokens`. Whoever can choose the hash can choose the credential.
+
+## Checking it works
 
 The check worth running after any change here, because it is the one thing the type checker cannot see:
 
+0. **Connect from claude.ai** with the client ID and secret boxes empty. Expect a consent screen, not a blank page, and a working connection afterwards.
 1. Sign in as an **owner**, ask for the pipeline. Expect every deal.
 2. Sign in as a **growth advisor**, ask the same thing. Expect their own accounts, and `pipeline_summary` to refuse in words.
 3. Sign in as a **contributor**, ask for anybody. Expect `tools/list` to carry the brain tools and no CRM tools at all.
@@ -128,10 +169,19 @@ The fallback for a rate limited `generateLink` is written up above and was not n
 |---|---|
 | `src/lib/mcp/session.ts` | Tokens, the session exchange, the cache, every refusal |
 | `src/lib/mcp/tools.ts` | The tool registry and every answer's wording |
-| `src/app/api/mcp/route.ts` | The JSON-RPC subset |
+| `src/app/api/mcp/route.ts` | The JSON-RPC subset, and the 401 that names the discovery document |
+| `src/lib/mcp/oauth.ts` | PKCE, redirect matching, the resource check. No Next imports, so it is testable |
+| `src/lib/mcp/origin.ts` | The issuer, read from the request so previews authorize against themselves |
+| `src/lib/mcp/metadata.ts` | The two discovery documents |
+| `src/app/.well-known/` | Four routes serving those two documents |
+| `src/app/api/oauth/register/` | Dynamic client registration |
+| `src/app/api/oauth/token/` | Code for token, PKCE verified here |
+| `src/app/authorize/` | The consent screen and its two buttons |
 | `src/app/admin/dashboard/team/mcpActions.ts` | Minting and revoking |
 | `src/lib/brain/collections.ts` | The five shelves, and the ninety day rule |
 | `src/app/admin/dashboard/brain/` | The shelf, the reader, the editor |
 | `supabase/migrations/20260818150000_brain_docs.sql` | Brain schema, revisions trigger, policies |
 | `supabase/migrations/20260818160000_mcp_tokens.sql` | Token schema and policies |
+| `supabase/migrations/20260819170000_mcp_oauth.sql` | Clients, codes, and `mcp_tokens.oauth_client_id` |
 | `tests/mcp-tokens.test.mts` | Minting, hashing, and reading the header |
+| `tests/mcp-oauth.test.mts` | Redirect matching, PKCE, and the resource check |

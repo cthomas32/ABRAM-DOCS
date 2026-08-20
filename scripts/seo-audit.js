@@ -144,6 +144,7 @@ const routes = pageFiles.map((file) => {
     dynamic: isDynamicRoute(route),
     private: isPrivate(route),
     redirectsTo: redirectTargetOf(src),
+    noindex: isNoindex(structural),
     hasStaticMetadata,
     hasGenerateMetadata,
     hasMetadata: hasStaticMetadata || hasGenerateMetadata,
@@ -154,6 +155,33 @@ const routes = pageFiles.map((file) => {
     openGraph: /openGraph\s*:/.test(structural),
   };
 });
+
+/**
+ * Whether the page tells search engines to stay away.
+ *
+ * A step inside a flow -- the OAuth consent screen, a checkout interstitial -- is a real
+ * public route and not public surface. It has no business in the sitemap, nothing links to
+ * it on purpose, and a canonical URL on a page that must never be indexed is noise. Next
+ * spells this `robots: { index: false }`, and honouring it here is what stops every future
+ * flow page arriving with four warnings that all mean "this is not an article".
+ *
+ * Deliberately narrow: only an explicit literal `index: false` inside a `robots` block
+ * counts. A computed value is left to fire the ordinary checks, because a guess in the
+ * permissive direction is the one that hides a genuinely missing canonical.
+ */
+function isNoindex(src) {
+  const m = src.match(/robots\s*:\s*\{/);
+  if (!m) return false;
+  // Read the balanced block rather than trusting a lazy regex: `robots` nests `googleBot`.
+  let depth = 0;
+  let i = m.index + m[0].length - 1;
+  const start = i;
+  for (; i < src.length; i++) {
+    if (src[i] === '{') depth++;
+    else if (src[i] === '}' && --depth === 0) break;
+  }
+  return /\bindex\s*:\s*false\b/.test(src.slice(start, i + 1));
+}
 
 /**
  * Pull `title: '...'` / `description: "..."` out of a metadata literal. Template literals
@@ -170,12 +198,20 @@ function firstStringField(src, field) {
 // held separately so the sitemap check can still catch one being listed, which is a genuine
 // problem, without every other check firing on a four-line file that is behaving correctly.
 const auditableRoutes = routes.filter((r) => !r.private && !r.dynamic);
-const publicRoutes = auditableRoutes.filter((r) => !r.redirectsTo);
+const publicRoutes = auditableRoutes.filter((r) => !r.redirectsTo && !r.noindex);
 const redirectRoutes = auditableRoutes.filter((r) => r.redirectsTo);
+// Held out for the same reason as a redirect stub: a real route that is not public surface.
+const noindexRoutes = auditableRoutes.filter((r) => !r.redirectsTo && r.noindex);
 
 for (const r of redirectRoutes) {
   report('info', 'redirect-route', r.route,
     `Permanent redirect to ${r.redirectsTo}; excluded from metadata, sitemap, JSON-LD and orphan checks.`,
+    r.file);
+}
+
+for (const r of noindexRoutes) {
+  report('info', 'noindex-route', r.route,
+    'Marked robots noindex; excluded from metadata, sitemap, JSON-LD and orphan checks. Listing it in the sitemap is still reported, because a noindex page in a sitemap is a contradiction.',
     r.file);
 }
 

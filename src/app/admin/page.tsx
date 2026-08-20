@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, requestPasswordReset } from "./actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, AlertCircle, CheckCircle } from "lucide-react";
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,6 +14,25 @@ export default function LoginPage() {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  /**
+   * Where to go after signing in.
+   *
+   * Almost always the dashboard. The exception is the OAuth consent
+   * screen, which sends people here when they are not signed in and needs
+   * them back on the request they interrupted.
+   *
+   * Only a path on this site is honoured, and it has to start with a
+   * single slash. A value beginning "//" is a protocol-relative URL to
+   * another host, which is how a login page becomes an open redirector
+   * that lands somebody on a convincing copy of itself.
+   */
+  const nextPath = (() => {
+    const raw = searchParams?.get("next");
+    if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return "/admin/dashboard";
+    return raw;
+  })();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +45,7 @@ export default function LoginPage() {
       setError(result.error);
       setLoading(false);
     } else {
-      router.push("/admin/dashboard");
+      router.push(nextPath);
       router.refresh();
     }
   };
@@ -230,5 +249,19 @@ export default function LoginPage() {
         </AnimatePresence>
       </motion.div>
     </main>
+  );
+}
+
+/**
+ * `useSearchParams` reads the `next` the consent screen sends people here
+ * with, and reading it opts the page out of being prerendered. A boundary
+ * is what lets the shell render at build time and the form fill in on the
+ * client, which is the difference between this and a build failure.
+ */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-[#0A0A0A]" />}>
+      <LoginForm />
+    </Suspense>
   );
 }

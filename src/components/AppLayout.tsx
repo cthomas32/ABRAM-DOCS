@@ -41,8 +41,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // /l/<slug> is the same page for a creator's own organization, served
   // from the abram-network product's Supabase rather than this repo's —
   // same reasoning, same bare treatment.
+  //
+  // /authorize is the OAuth consent screen. It renders bare because the
+  // question on it -- hand this app a key to the CRM as you, yes or no --
+  // is the only thing that should be on the screen. A nav bar offering
+  // ten other places to go is a way of not answering it.
   const isBarePage =
-    cleanPathname === "/links" || cleanPathname.startsWith("/c/") || cleanPathname.startsWith("/l/");
+    cleanPathname === "/links" ||
+    cleanPathname === "/authorize" ||
+    cleanPathname.startsWith("/c/") ||
+    cleanPathname.startsWith("/l/");
   // Conversion pages: single goal, so they get a logo-only header with no
   // navigation and no competing call to action.
   const isCampaignPage = cleanPathname === "/start" || cleanPathname.startsWith("/start/");

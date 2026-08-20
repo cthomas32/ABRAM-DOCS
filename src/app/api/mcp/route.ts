@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { can } from "@/lib/auth/permissions";
+import { MCP_PATH } from "@/lib/mcp/oauth";
+import { issuerOrigin } from "@/lib/mcp/origin";
 import { failureMessage, identify } from "@/lib/mcp/session";
 import { toolByName, visibleTools, type ToolContext } from "@/lib/mcp/tools";
 
@@ -115,10 +117,25 @@ export async function POST(request: Request) {
 
     /* 401 with a WWW-Authenticate header is what the specification asks
        for and what a client shows the person as "sign in", rather than
-       burying it in a tool result nobody reads. */
+       burying it in a tool result nobody reads.
+
+       `resource_metadata` is the part that has to be here. Without it a
+       client has been told to use a bearer token and nothing about where
+       to get one, so it falls back to guessing the OAuth endpoint names
+       at the origin -- which is exactly how adding this server to
+       claude.ai sent somebody to /authorize and showed them a blank page.
+       Naming the document turns that guess into a lookup. See
+       src/lib/mcp/oauth.ts. */
+    const origin = await issuerOrigin();
+
     return NextResponse.json(
       { jsonrpc: "2.0", id: id ?? null, error: { code: -32001, message } },
-      { status: 401, headers: { "WWW-Authenticate": 'Bearer realm="abram-crm"' } }
+      {
+        status: 401,
+        headers: {
+          "WWW-Authenticate": `Bearer realm="abram-crm", resource_metadata="${origin}/.well-known/oauth-protected-resource${MCP_PATH}"`,
+        },
+      }
     );
   }
 
@@ -168,8 +185,9 @@ export async function GET() {
       name: "abram-crm",
       transport: "streamable-http, POST only",
       protocolVersion: PROTOCOL_VERSION,
+      authorization: "OAuth 2.1 with PKCE, discoverable at /.well-known/oauth-protected-resource/api/mcp. A static Authorization: Bearer token also works.",
       instructions:
-        "Add this URL to Claude as a custom MCP server with an Authorization: Bearer header. Create the token at /admin/dashboard/team.",
+        "Add this URL to Claude as a custom connector and sign in when it asks. In a client that lets you set headers, an Authorization: Bearer token from /admin/dashboard/team works too.",
     },
     { status: 200 }
   );

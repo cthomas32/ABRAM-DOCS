@@ -19,6 +19,13 @@ import McpTokens, { type McpTokenRow } from "./McpTokens";
  * the console, so a growth advisor connecting Claude gets their own
  * accounts and no more, and there is no configuration anywhere that can
  * widen it without widening their console access too.
+ *
+ * **Two ways in, listed in the order they should be tried.** Signing in
+ * is the one to reach for: the connector dialog on claude.ai has a URL
+ * box and no header box, so a token is not merely inconvenient there, it
+ * is impossible. Tokens stay because a client that does let you set a
+ * header -- Claude Code, a script, anything talking to the endpoint
+ * directly -- has no browser to send anybody to.
  */
 
 export const dynamic = "force-dynamic";
@@ -52,25 +59,48 @@ export default async function McpPanel() {
         <Overline as="h2">Connecting</Overline>
         <ol className="rounded-2xl border border-white/5 bg-white/[0.02] divide-y divide-white/5 text-xs text-zinc-300">
           <li className="px-4 py-3">
-            <span className="text-white">1.</span> Make a token below and copy it. It is shown once.
-          </li>
-          <li className="px-4 py-3">
-            <span className="text-white">2.</span> In Claude, add a custom MCP server at{" "}
+            <span className="text-white">1.</span> In Claude, add a custom connector at{" "}
             <code className="font-mono text-[11px] px-1 py-0.5 rounded bg-white/[0.06] text-zinc-200 break-all">
               {base}/api/mcp
             </code>
           </li>
           <li className="px-4 py-3">
-            <span className="text-white">3.</span> Give it the header{" "}
-            <code className="font-mono text-[11px] px-1 py-0.5 rounded bg-white/[0.06] text-zinc-200 break-all">
-              Authorization: Bearer &lt;your token&gt;
-            </code>
+            <span className="text-white">2.</span> Leave the client ID and secret boxes empty.
+            Claude fills those in for itself, and anything typed there stops the sign-in working.
+          </li>
+          <li className="px-4 py-3">
+            <span className="text-white">3.</span> Click connect. It sends you here to sign in and
+            asks you to allow it. No token to copy, and nothing to paste.
           </li>
           <li className="px-4 py-3">
             <span className="text-white">4.</span> Ask it something. &quot;Who did I meet at the
             Northern Screen Summit that I have not followed up?&quot; is a fair first test.
           </li>
         </ol>
+      </section>
+
+      <section aria-label="Connecting with a token" className="space-y-3 mb-10">
+        <Overline as="h2">Or with a token</Overline>
+        <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 space-y-2.5 text-[11px] text-zinc-400 leading-relaxed">
+          <p>
+            For a client that lets you set headers, and for anything talking to the endpoint
+            directly. Make a token below, copy it once, and send it as{" "}
+            <code className="font-mono text-[10px] px-1 py-0.5 rounded bg-white/[0.06] text-zinc-200 break-all">
+              Authorization: Bearer &lt;your token&gt;
+            </code>
+          </p>
+          <p>
+            In Claude Code that is one line:{" "}
+            <code className="font-mono text-[10px] px-1 py-0.5 rounded bg-white/[0.06] text-zinc-200 break-all">
+              claude mcp add --transport http abram {base}/api/mcp --header &quot;Authorization:
+              Bearer &lt;your token&gt;&quot;
+            </code>
+          </p>
+          <p className="text-zinc-300">
+            Both routes end at the same place. Signing in makes one of these tokens for you and
+            names it after the app, so everything you connect shows up in the same list below.
+          </p>
+        </div>
       </section>
 
       <section aria-label="What it can do" className="space-y-3 mb-10">
