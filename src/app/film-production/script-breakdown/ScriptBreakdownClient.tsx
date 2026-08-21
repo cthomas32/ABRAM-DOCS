@@ -40,7 +40,7 @@ export default function ScriptBreakdownClient() {
               custom={0.1}
               className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.12] mb-6 font-sans select-text"
             >
-              Break down a screenplay into a shoot plan in under a minute.
+              Turn a screenplay into a tagged shoot plan you can schedule.
             </motion.h1>
 
             {/* Hero Subtitle */}
@@ -49,7 +49,7 @@ export default function ScriptBreakdownClient() {
               custom={0.2}
               className="text-base sm:text-lg md:text-xl font-normal leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans select-text"
             >
-              Convert screenplay PDFs or Word documents into categorizable scheduling items automatically.
+              Drop in a PDF, a Word file, a Final Draft script, or a Fountain file. ABRAM reads the scenes and tags what each one needs.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -133,10 +133,10 @@ export default function ScriptBreakdownClient() {
                   <Cpu className="w-4 h-4 text-zinc-400" />
                 </div>
                 <h3 className="text-sm font-semibold tracking-tight text-zinc-50 font-sans mb-2">
-                  Turn Days into Seconds
+                  Every scene, tagged
                 </h3>
                 <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                  ABRAM breaks down scripts automatically in under a minute, saving hours of manual work.
+                  ABRAM reads the script and tags scenes, cast, props, and locations, then hands you the list to check before it is saved.
                 </p>
               </div>
             </div>
