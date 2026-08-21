@@ -23,7 +23,7 @@ const differentiators = [
   {
     icon: Cloud,
     title: "Cloud collaboration for the whole team",
-    body: "ABRAM runs entirely in your browser so producers, coordinators, and accountants work in the same project simultaneously without single-user desktop files.",
+    body: "ABRAM runs in your browser. Producers, coordinators, and accountants open the same project at once, and what they change is connected to crew, gear, budget, and client approvals.",
     points: ["Real-time multi-user editing", "Zero-install web architecture"],
   },
   {
@@ -63,36 +63,36 @@ const comparison = [
   },
   {
     feature: "Real-time multi-user collaboration",
-    abram: "Entire team works in the same cloud project simultaneously",
-    them: "Single-user desktop files (one editor at a time)",
+    abram: "One project covering schedule, crew, gear, budget, and approvals",
+    them: "Shared cloud schedule with real-time edits, added March 2026",
     abramYes: true,
-    themYes: false,
+    themYes: true,
   },
   {
     feature: "Connected schedule & budget",
     abram: "Schedule, call sheets, and budget share one live dataset",
-    them: "Scheduling and Budgeting sold as separate products",
+    them: "Separate products, with elements transferred from the board into Budgeting",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "Crew payouts & client billing",
     abram: "Milestone crew payouts and client invoicing built in",
-    them: "Not offered",
+    them: "Not a Movie Magic Scheduling or Budgeting feature",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "Client approval portal",
     abram: "Token-based client portals with quote approval & payment",
-    them: "Not offered",
+    them: "Not a Movie Magic Scheduling or Budgeting feature",
     abramYes: true,
     themYes: false,
   },
   {
     feature: "AI production copilot",
     abram: "ABRAM Core parses briefs, generates schedules, and automates tasks",
-    them: "Not offered",
+    them: "Not a Movie Magic Scheduling or Budgeting feature",
     abramYes: true,
     themYes: false,
   },
@@ -101,18 +101,18 @@ const comparison = [
 const migration = [
   {
     step: "1",
-    title: "Rebuild schedule in the cloud",
-    body: "Import screenplays and set up your stripboard in ABRAM so the entire team can collaborate live.",
+    title: "Open your schedule in ABRAM",
+    body: "Drop your Movie Magic Scheduling file straight into a project. Scenes, strips, elements, cast, and call sheets come across, and you review every row before anything is saved.",
   },
   {
     step: "2",
-    title: "Connect project budget",
-    body: "Attach your budget to track live variance and actuals, eliminating manual data copying.",
+    title: "Bring the budget across",
+    body: "Run Movie Magic Budgeting's own export and drop the file in the same place. Your account codes and line items land against the schedule they belong to.",
   },
   {
     step: "3",
-    title: "Enable payouts & portals",
-    body: "Activate milestone payouts and client portals for seamless approval and payment workflows.",
+    title: "Add the crew, the gear, and the client",
+    body: "Book people and kit against the days you just imported, then invite the client to approve and pay from the same workspace.",
   },
 ];
 
@@ -136,7 +136,7 @@ export default function MovieMagicClient({ faqs }: { faqs: Faq[] }) {
               Put Schedules, Budgets & Call Sheets in One Cloud Workspace
             </motion.h1>
             <motion.p variants={revealVariants} custom={0.2} className="text-base sm:text-lg md:text-xl leading-7 text-zinc-400 max-w-2xl mx-auto mb-8 font-sans">
-              Upgrade from single-user desktop files to a real-time cloud platform where schedules automatically update budgets and sync with the crew.
+              Bring your Movie Magic schedule into a workspace where the same days drive the budget, the crew bookings, the call sheets, and the client approvals.
             </motion.p>
             <motion.div variants={revealVariants} custom={0.3} className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
               <Link href="/pricing" className="btn-glass rounded-full px-4 py-1.5 text-xs w-full sm:w-auto min-h-[44px] md:min-h-0">
@@ -246,7 +246,7 @@ export default function MovieMagicClient({ faqs }: { faqs: Faq[] }) {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 max-w-2xl mx-auto">
             <h2 className="text-xl font-semibold tracking-tight text-zinc-50 font-sans mb-3">Switching from Movie Magic to ABRAM</h2>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">Teams usually rebuild one production in the cloud first, then bring finance and clients into the same workspace.</p>
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">Start with one production. Import its schedule, bring the budget across, then add finance and clients to the same workspace.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {migration.map((m, i) => (

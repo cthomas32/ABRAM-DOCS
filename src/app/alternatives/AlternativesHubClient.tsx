@@ -29,9 +29,9 @@ const alternativesList: AltItem[] = [
   {
     slug: "moviemagic",
     name: "Movie Magic",
-    tagline: "Legacy Scheduling & Budgeting",
-    summary: "Modernizes offline single-user desktop files into real-time browser collaboration, AI script breakdown, and instant call sheets.",
-    highlights: ["Real-Time Cloud Collaboration", "AI Screenplay Parsing (PDF/FDX)", "Cloud Roster Management", "Live Schedule & Call Sheet Sync"],
+    tagline: "Scheduling & Budgeting",
+    summary: "Imports your Movie Magic schedule, then drives crew bookings, gear, budget variance, call sheets, and client approvals from those same days.",
+    highlights: ["Movie Magic Schedule Import", "AI Screenplay Parsing (PDF/FDX)", "Cloud Roster Management", "Live Schedule & Call Sheet Sync"],
   },
   {
     slug: "workfront",
