@@ -159,7 +159,7 @@ export default function CeltxClient({ faqs }: { faqs: Faq[] }) {
               AUTOMATED SCRIPT PARSER
             </span>
             <h2 className="text-xl sm:text-2xl font-medium tracking-tight text-white font-sans">
-              Parse Screenplays into Tagged Shooting Lists in Seconds
+              Parse Screenplays into Tagged Shooting Lists
             </h2>
           </div>
           <div className="rounded-2xl border border-white/10 bg-zinc-950/60 backdrop-blur-md p-4 sm:p-6 shadow-2xl">

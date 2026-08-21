@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'AI Script Breakdown & Screenplay Parsing Software | ABRAM Network',
-    description: 'Transform screenplays into production-ready stripboards in seconds with AI tools built on the ABRAM creative operations platform.',
+    description: 'Turn a screenplay into a tagged, production-ready stripboard with the AI built into the ABRAM creative operations platform.',
     type: 'website',
     url: 'https://abram.network/film-production/script-breakdown',
     siteName: 'ABRAM Network',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'AI Script Breakdown & Screenplay Parsing Software | ABRAM Network',
-    description: 'Transform screenplays into production-ready stripboards in seconds with AI tools built on the ABRAM creative operations platform.',
+    description: 'Turn a screenplay into a tagged, production-ready stripboard with the AI built into the ABRAM creative operations platform.',
   },
 };
 
