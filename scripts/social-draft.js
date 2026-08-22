@@ -340,7 +340,14 @@ function normalizeSlide(slide, where) {
     // Everywhere else it is the switch that puts one under the words.
     showMockup: raw.showMockup === true,
     brand: BRAND_KINDS.includes(raw.brand) ? raw.brand : "lockup",
-    showRule: raw.showRule !== false,
+    // Opt-in, the same test `normalizeSpec` in spec.ts makes. This read
+    // `!== false`, which is the behaviour the corner rule had before it was
+    // turned off by default: an absent flag was written into the row as
+    // `true`, so every card KIPP filed carried the streak and no proposal
+    // could get rid of it without naming a field the options output does
+    // not print. The streak sits above the mark and takes the first look
+    // off the words, which is why it became something a card asks for.
+    showRule: raw.showRule === true,
   };
 }
 
